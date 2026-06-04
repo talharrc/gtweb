@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
 import brandmarkLogo from '../assets/images/galaxatech_revised_logo_1780005309031.png';
 import { 
@@ -46,11 +47,18 @@ export default function Navbar({
   isDhakaOpen,
   currentUser
 }: NavbarProps) {
+  const navigate = useNavigate();
   const [scrolled, setScrolled] = useState(false);
   const [visible, setVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
   const [activeDropdown, setActiveDropdown] = useState<'hubs' | 'expertise' | null>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  const goToHub = (path: string) => {
+    navigate(path);
+    setActiveDropdown(null);
+    setMobileMenuOpen(false);
+  };
 
   // Manage visibility on scroll
   useEffect(() => {
@@ -171,8 +179,8 @@ export default function Navbar({
                     <div className="col-span-3 p-5 flex flex-col gap-2.5">
                       <h4 className="text-[11px] uppercase tracking-wider text-primary font-bold mb-1 px-2.5">Galaxa Hubs</h4>
                       
-                      <button 
-                        onClick={() => handlePageSelect('visitor-hub')}
+                      <button
+                        onClick={() => goToHub('/hub/visitor')}
                         className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-white/5 text-left transition-all duration-200 group/item"
                       >
                         <div className="w-8 h-8 rounded-lg bg-pink-500/20 flex items-center justify-center text-pink-400 group-hover/item:scale-110 transition-transform">
@@ -184,8 +192,8 @@ export default function Navbar({
                         </div>
                       </button>
 
-                      <button 
-                        onClick={() => handlePageSelect('client-hub')}
+                      <button
+                        onClick={() => goToHub('/hub/client')}
                         className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-white/5 text-left transition-all duration-200 group/item"
                       >
                         <div className="w-8 h-8 rounded-lg bg-cyan-500/20 flex items-center justify-center text-cyan-400 group-hover/item:scale-110 transition-transform">
@@ -197,8 +205,8 @@ export default function Navbar({
                         </div>
                       </button>
 
-                      <button 
-                        onClick={() => handlePageSelect('builders-program')}
+                      <button
+                        onClick={() => goToHub('/hub/builder')}
                         className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-white/5 text-left transition-all duration-200 group/item"
                       >
                         <div className="w-8 h-8 rounded-lg bg-emerald-500/20 flex items-center justify-center text-emerald-400 group-hover/item:scale-110 transition-transform">
@@ -206,7 +214,7 @@ export default function Navbar({
                         </div>
                         <div>
                           <p className="text-xs font-bold text-white mb-0.5">Builder's Hub</p>
-                          <p className="text-[10px] text-white/50">Live student operational tasks</p>
+                          <p className="text-[10px] text-white/50">Project management & payments</p>
                         </div>
                       </button>
                     </div>
@@ -458,26 +466,26 @@ export default function Navbar({
                     <div className="px-5 py-2.5 border-b border-white/10">
                       <span className="text-[9px] font-bold text-primary tracking-widest uppercase font-mono block mb-2">Ecosystem Portals</span>
                       <div className="flex flex-col gap-1.5">
-                        <button 
-                          onClick={() => handlePageSelect('visitor-hub')}
+                        <button
+                          onClick={() => goToHub('/hub/visitor')}
                           className="w-full flex items-center gap-3 py-1 text-white/75 hover:text-white transition-all cursor-pointer text-left focus:outline-none"
                         >
                           <Compass className="w-3.5 h-3.5 text-pink-400" />
                           <span className="text-xs font-semibold">Visitor Resource Hub</span>
                         </button>
-                        <button 
-                          onClick={() => handlePageSelect('client-hub')}
+                        <button
+                          onClick={() => goToHub('/hub/client')}
                           className="w-full flex items-center gap-3 py-1 text-white/75 hover:text-white transition-all cursor-pointer text-left focus:outline-none"
                         >
                           <Lock className="w-3.5 h-3.5 text-cyan-400" />
                           <span className="text-xs font-semibold">Client Operations Hub</span>
                         </button>
-                        <button 
-                          onClick={() => handlePageSelect('builders-program')}
+                        <button
+                          onClick={() => goToHub('/hub/builder')}
                           className="w-full flex items-center gap-3 py-1 text-white/75 hover:text-white transition-all cursor-pointer text-left focus:outline-none"
                         >
                           <BookOpen className="w-3.5 h-3.5 text-emerald-400" />
-                          <span className="text-xs font-semibold">Builders Academy</span>
+                          <span className="text-xs font-semibold">Builder's Hub</span>
                         </button>
                       </div>
                     </div>

@@ -1,11 +1,12 @@
+import { useNavigate } from 'react-router-dom';
 import { PageType } from '../types';
 import brandmarkLogo from '../assets/images/galaxatech_revised_logo_1780005309031.png';
-import { 
-  ArrowUpRight, 
-  Mail, 
-  Linkedin, 
-  Github, 
-  Twitter, 
+import {
+  ArrowUpRight,
+  Mail,
+  Linkedin,
+  Github,
+  Twitter,
   Sparkles,
   Timer
 } from 'lucide-react';
@@ -16,6 +17,8 @@ interface FooterProps {
 }
 
 export default function Footer({ onPageChange, dhakaTime }: FooterProps) {
+  const navigate = useNavigate();
+
   const handleLinkClick = (page: PageType) => {
     onPageChange(page);
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -151,10 +154,16 @@ export default function Footer({ onPageChange, dhakaTime }: FooterProps) {
           <div>
             © {new Date().getFullYear()} GalaxaTech. Built in alignment with the Dhaka Studio Standard.
           </div>
-          <div className="flex gap-6 font-medium">
+          <div className="flex gap-6 font-medium items-center">
             <a href="#privacy" className="hover:text-primary transition-colors">Privacy Policy</a>
             <a href="#terms" className="hover:text-primary transition-colors">Terms of Service</a>
             <a href="#cookies" className="hover:text-primary transition-colors">Cookie Settings</a>
+            <button
+              onClick={() => navigate('/admin')}
+              className="text-white/[0.06] hover:text-white/20 text-[9px] font-mono transition-colors cursor-pointer focus:outline-none"
+            >
+              ••
+            </button>
           </div>
         </div>
       </div>

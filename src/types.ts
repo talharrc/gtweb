@@ -1,3 +1,7 @@
+import { Timestamp } from 'firebase/firestore';
+
+// ── Marketing site types (unchanged) ──────────────────────────────────────────
+
 export type PageType = 'home' | 'services' | 'portfolio' | 'about' | 'contact' | 'visitor-hub' | 'client-hub' | 'builders-program';
 
 export interface Project {
@@ -39,3 +43,105 @@ export interface ServiceDetail {
   features: string[];
 }
 
+// ── Firestore / Hub types ──────────────────────────────────────────────────────
+
+export type UserRole = 'admin' | 'client' | 'builder' | 'visitor';
+
+export interface UserProfile {
+  uid: string;
+  email: string;
+  role: UserRole;
+  displayName: string;
+  photoURL: string;
+  createdAt: Timestamp;
+}
+
+export interface Milestone {
+  id: string;
+  title: string;
+  status: 'pending' | 'active' | 'completed';
+  completedAt?: Timestamp;
+}
+
+export interface GTProject {
+  id: string;
+  name: string;
+  description: string;
+  status: 'active' | 'completed' | 'paused' | 'archived';
+  progressPercent: number;
+  deadline: Timestamp;
+  milestones: Milestone[];
+  clientUid: string;
+  builderUids: string[];
+  whatsappGroupUrl?: string;
+  createdAt: Timestamp;
+}
+
+export interface ProjectUpdate {
+  id: string;
+  projectId: string;
+  authorUid: string;
+  date: Timestamp;
+  summary: string;
+  attachments: string[];
+}
+
+export interface GTDocument {
+  id: string;
+  projectId: string;
+  type: 'agreement' | 'proposal' | 'invoice' | 'deliverable' | 'handover';
+  name: string;
+  fileUrl: string;
+  version: string;
+  uploadedBy: string;
+  uploadedAt: Timestamp;
+  isLatest: boolean;
+}
+
+export interface FormField {
+  key: string;
+  label: string;
+  type: 'text' | 'textarea' | 'select' | 'checkbox';
+  options?: string[];
+  required: boolean;
+}
+
+export interface GTForm {
+  id: string;
+  projectId: string;
+  title: string;
+  fields: FormField[];
+  requestedByUid: string;
+  status: 'pending' | 'submitted';
+  submittedData?: Record<string, string | boolean>;
+  submittedAt?: Timestamp;
+}
+
+export interface BuilderRequest {
+  id: string;
+  projectId: string;
+  builderUid: string;
+  type: string;
+  detail: string;
+  status: 'open' | 'in-review' | 'resolved';
+  createdAt: Timestamp;
+}
+
+export interface Payment {
+  id: string;
+  projectId: string;
+  projectValue: number;
+  builderUid: string;
+  builderSharePercent: number;
+  clientPaidAmount: number;
+  builderPaidAmount: number;
+}
+
+export interface ContentItem {
+  id: string;
+  type: 'blog' | 'prompt' | 'resource' | 'newsletter';
+  title: string;
+  body: string;
+  isPublic: boolean;
+  createdAt: Timestamp;
+}

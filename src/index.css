@@ -103,3 +103,20 @@ body {
 .animate-marquee:hover {
   animation-play-state: paused;
 }
+
+/* Admin / Hub form inputs */
+.admin-input {
+  width: 100%;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 0.75rem;
+  padding: 0.5rem 0.875rem;
+  color: #fff;
+  font-size: 0.875rem;
+}
+.admin-input:focus {
+  outline: none;
+  border-color: rgba(139,44,255,0.5);
+}
+.admin-input::placeholder { color: rgba(255,255,255,0.3); }
+.admin-input option { background: #0b1326; color: #fff; }
