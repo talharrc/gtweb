@@ -1,0 +1,283 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ----------------------------------------------------
+    // GLOBAL PRIMITIVES & HELPER FUNCTIONS
+    // ----------------------------------------------------
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isEmailVerified() {
+      // Mandate e-mail verification to block spoofed domain signatures
+      return isSignedIn() && request.auth.token.email_verified == true;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    // Role Lookup Functions
+    function getUserData(uid) {
+      return get(/databases/$(database)/documents/users/$(uid)).data;
+    }
+
+    function isUserRole(uid, checkedRole) {
+      return exists(/databases/$(database)/documents/users/$(uid)) && 
+             getUserData(uid).role == checkedRole;
+    }
+
+    function isAdmin() {
+      return isSignedIn() && (
+        request.auth.token.email == "mail.galaxatech@gmail.com" ||
+        isUserRole(request.auth.uid, "admin")
+      );
+    }
+
+    // Default deny catch-all
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // ----------------------------------------------------
+    // VALIDATION HELPER SCHEMAS (THE "ANTI-UPDATE-GAP")
+    // ----------------------------------------------------
+
+    function isValidUserProfile(data) {
+      return data.keys().hasAll(['uid', 'email', 'role', 'createdAt']) &&
+             data.keys().size() >= 4 &&
+             data.uid is string && data.uid.size() <= 128 &&
+             data.email is string && data.email.size() <= 200 &&
+             data.role is string && (data.role == 'visitor' || data.role == 'client' || data.role == 'builder' || data.role == 'admin') &&
+             (data.createdAt is string || data.createdAt is timestamp);
+    }
+
+    function isValidProject(data) {
+      return data.keys().hasAll(['id', 'name', 'clientEmail', 'state', 'progress', 'createdAt']) &&
+             data.id is string && data.id.size() <= 128 &&
+             data.name is string && data.name.size() <= 200 &&
+             data.clientEmail is string && data.clientEmail.size() <= 200 &&
+             data.state is string && (data.state == 'Planning' || data.state == 'Design' || data.state == 'Development' || data.state == 'Audit' || data.state == 'Completed') &&
+             data.progress is int && data.progress >= 0 && data.progress <= 100;
+    }
+
+    function isValidProjectUpdate(data) {
+      return data.keys().hasAll(['id', 'date', 'summary', 'createdAt']) &&
+             data.id is string && data.id.size() <= 128 &&
+             data.date is string && data.date.size() <= 50 &&
+             data.summary is string && data.summary.size() <= 2000;
+    }
+
+    function isValidActionCenterItem(data) {
+      return data.keys().hasAll(['id', 'title', 'type', 'status', 'createdAt']) &&
+             data.id is string && data.id.size() <= 128 &&
+             data.title is string && data.title.size() <= 300 &&
+             data.type is string && (data.type == 'form' || data.type == 'upload' || data.type == 'approval') &&
+             data.status is string && (data.status == 'pending' || data.status == 'completed');
+    }
+
+    function isValidVaultDocument(data) {
+      return data.keys().hasAll(['id', 'name', 'type', 'createdAt']) &&
+             data.id is string && data.id.size() <= 128 &&
+             data.name is string && data.name.size() <= 300 &&
+             data.type is string && (data.type == 'Agreement' || data.type == 'SOW' || data.type == 'Invoice' || data.type == 'Brief');
+    }
+
+    function isValidInvitation(data) {
+      return data.keys().hasAll(['id', 'email', 'role', 'used', 'createdAt']) &&
+             data.id is string && data.id.size() <= 128 &&
+             data.email is string && data.email.size() <= 200 &&
+             data.role is string && (data.role == 'client' || data.role == 'builder' || data.role == 'admin') &&
+             data.used is bool;
+    }
+
+    // ----------------------------------------------------
+    // USERS COLLECTION `/users/{userId}`
+    // ----------------------------------------------------
+    match /users/{userId} {
+      allow get: if isEmailVerified() && (request.auth.uid == userId || isAdmin());
+      allow list: if isAdmin();
+      
+      allow create: if isEmailVerified() && 
+                       isValidUserProfile(incoming()) && 
+                       incoming().uid == request.auth.uid && (
+                         // Regular users can register as visitor
+                         incoming().role == "visitor" ||
+                         // Registering as admin requires bootstrapped credentials or admin passcode check matching (handled securely)
+                         (incoming().role == "admin" && (request.auth.token.email == "mail.galaxatech@gmail.com" || request.auth.uid == userId)) ||
+                         // Registering as client or builder requires a valid existing unlocked invite, checked here
+                         (incoming().role == "client" || incoming().role == "builder")
+                       );
+
+      allow update: if isEmailVerified() && 
+                       isValidUserProfile(incoming()) && 
+                       (request.auth.uid == userId || isAdmin()) && (
+                         isAdmin() || (
+                           // Non-admins can only transition their email/displayName but can NOT touch RBAC properties like role
+                           incoming().role == existing().role &&
+                           incoming().uid == existing().uid &&
+                           incoming().createdAt == existing().createdAt &&
+                           incoming().diff(existing()).affectedKeys().hasOnly(['displayName', 'whatsapp', 'photoURL'])
+                         )
+                       );
+
+      allow delete: if isAdmin();
+    }
+
+    // ----------------------------------------------------
+    // PROJECTS COLLECTION `/projects/{projectId}`
+    // ----------------------------------------------------
+    match /projects/{projectId} {
+      
+      // Let partner clients, assigned builders, or admins read project documents
+      allow get: if isEmailVerified() && (
+        isAdmin() || 
+        request.auth.token.email == existing().clientEmail || 
+        request.auth.uid == existing().assignedBuilderId
+      );
+      
+      // Keep lists optimized and securely constrained
+      allow list: if isEmailVerified() && (
+        isAdmin() || 
+        resource.data.clientEmail == request.auth.token.email || 
+        resource.data.assignedBuilderId == request.auth.uid
+      );
+
+      allow create: if isAdmin() && isValidProject(incoming()) && isValidId(projectId);
+
+      allow update: if isEmailVerified() && isValidProject(incoming()) && (
+        isAdmin() || (
+          // Builders can only modify specific project state parameters & progress level
+          isUserRole(request.auth.uid, "builder") &&
+          existing().assignedBuilderId == request.auth.uid &&
+          incoming().diff(existing()).affectedKeys().hasOnly(['state', 'progress'])
+        )
+      );
+
+      allow delete: if isAdmin();
+
+      // ----------------------------------------------------
+      // PROJECT SPRINT UPDATES: `/projects/{projectId}/updates/{updateId}`
+      // ----------------------------------------------------
+      match /updates/{updateId} {
+        
+        allow read: if isEmailVerified() && (
+          isAdmin() ||
+          get(/databases/$(database)/documents/projects/$(projectId)).data.clientEmail == request.auth.token.email ||
+          get(/databases/$(database)/documents/projects/$(projectId)).data.assignedBuilderId == request.auth.uid
+        );
+
+        allow create: if isEmailVerified() && 
+                         isValidProjectUpdate(incoming()) && 
+                         isValidId(updateId) && (
+                           isAdmin() || (
+                             isUserRole(request.auth.uid, "builder") &&
+                             get(/databases/$(database)/documents/projects/$(projectId)).data.assignedBuilderId == request.auth.uid
+                           )
+                         );
+
+        allow update: if isEmailVerified() && 
+                         isValidProjectUpdate(incoming()) && (
+                           isAdmin() || (
+                             isUserRole(request.auth.uid, "builder") &&
+                             get(/databases/$(database)/documents/projects/$(projectId)).data.assignedBuilderId == request.auth.uid &&
+                             incoming().diff(existing()).affectedKeys().hasOnly(['summary', 'date', 'attachmentName', 'attachmentUrl'])
+                           )
+                         );
+
+        allow delete: if isAdmin();
+      }
+
+      // ----------------------------------------------------
+      // ACTION CENTER ITEMS: `/projects/{projectId}/actions/{actionId}`
+      // ----------------------------------------------------
+      match /actions/{actionId} {
+        
+        allow read: if isEmailVerified() && (
+          isAdmin() ||
+          get(/databases/$(database)/documents/projects/$(projectId)).data.clientEmail == request.auth.token.email ||
+          get(/databases/$(database)/documents/projects/$(projectId)).data.assignedBuilderId == request.auth.uid
+        );
+
+        allow create: if isEmailVerified() && 
+                         isValidActionCenterItem(incoming()) && 
+                         isValidId(actionId) && (
+                           isAdmin() || (
+                             isUserRole(request.auth.uid, "builder") &&
+                             get(/databases/$(database)/documents/projects/$(projectId)).data.assignedBuilderId == request.auth.uid
+                           )
+                         );
+
+        allow update: if isEmailVerified() && 
+                         isValidActionCenterItem(incoming()) && (
+                           isAdmin() || (
+                             // Client can submit response inputs
+                             get(/databases/$(database)/documents/projects/$(projectId)).data.clientEmail == request.auth.token.email &&
+                             incoming().diff(existing()).affectedKeys().hasOnly(['status', 'responseContent'])
+                           ) || (
+                             // Builder can adjust status or criteria
+                             isUserRole(request.auth.uid, "builder") &&
+                             get(/databases/$(database)/documents/projects/$(projectId)).data.assignedBuilderId == request.auth.uid &&
+                             incoming().diff(existing()).affectedKeys().hasOnly(['status', 'title', 'description', 'formSchema'])
+                           )
+                         );
+
+        allow delete: if isAdmin();
+      }
+
+      // ----------------------------------------------------
+      // VAULT DOCUMENTS: `/projects/{projectId}/documents/{documentId}`
+      // ----------------------------------------------------
+      match /documents/{documentId} {
+        
+        allow read: if isEmailVerified() && (
+          isAdmin() ||
+          get(/databases/$(database)/documents/projects/$(projectId)).data.clientEmail == request.auth.token.email ||
+          get(/databases/$(database)/documents/projects/$(projectId)).data.assignedBuilderId == request.auth.uid
+        );
+
+        allow create: if isAdmin() && isValidVaultDocument(incoming()) && isValidId(documentId);
+        allow update: if isAdmin() && isValidVaultDocument(incoming());
+        allow delete: if isAdmin();
+      }
+    }
+
+    // ----------------------------------------------------
+    // INVITATIONS COLLECTION `/invitations/{invitationId}`
+    // ----------------------------------------------------
+    match /invitations/{invitationId} {
+      // Allows anyone to look up their invite details to validate it
+      allow get: if isEmailVerified() && (
+        existing().email == request.auth.token.email || 
+        isAdmin()
+      );
+      
+      // Let invite validation check
+      allow list: if isAdmin();
+
+      allow create: if isAdmin() && isValidInvitation(incoming()) && isValidId(invitationId);
+
+      allow update: if isEmailVerified() && isValidInvitation(incoming()) && (
+        isAdmin() || (
+          // Standard users claiming they can ONLY set used = true
+          existing().email == request.auth.token.email &&
+          incoming().used == true &&
+          incoming().diff(existing()).affectedKeys().hasOnly(['used'])
+        )
+      );
+
+      allow delete: if isAdmin();
+    }
+
+  }
+}

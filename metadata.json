@@ -1,0 +1,8 @@
+{
+  "name": "Remix: GalaxaTech",
+  "description": "The high-octane digital agency combining world-class UI/UX design, web development, and digital marketing with a black tinted glassmorphic cyber-minimalist interface.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
