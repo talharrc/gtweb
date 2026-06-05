@@ -21,7 +21,8 @@ import {
   DollarSign,
   AlertCircle
 } from 'lucide-react';
-import { googleSignIn, logout } from '../lib/firebase';
+import { getCredentialByUsername } from '../services/credentialService';
+import { signInLocalWithUid, clearLocalSession } from '../lib/localAuth';
 import { PageType } from '../types';
 
 interface ClientHubViewProps {
@@ -30,7 +31,10 @@ interface ClientHubViewProps {
 }
 
 export default function ClientHubView({ currentUser, onPageChange }: ClientHubViewProps) {
+  const [loginUsername, setLoginUsername] = useState('');
+  const [loginPassword, setLoginPassword] = useState('');
   const [isAuthenticating, setIsAuthenticating] = useState(false);
+  const [loginError, setLoginError] = useState('');
   const [isDownloading, setIsDownloading] = useState<string | null>(null);
   const [downloadSuccess, setDownloadSuccess] = useState<string | null>(null);
   
@@ -44,12 +48,24 @@ export default function ClientHubView({ currentUser, onPageChange }: ClientHubVi
     { id: "log-2", topic: "Nginx Sub-Routing", status: "In Reviews", date: "May 28, 2026", desc: "Configuring reverse proxy rules on development instances." }
   ]);
 
-  const handleLoginClick = async () => {
+  const handleLoginSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!loginUsername.trim() || !loginPassword.trim()) return;
     setIsAuthenticating(true);
+    setLoginError('');
     try {
-      await googleSignIn();
+      const cred = await getCredentialByUsername(loginUsername.trim().toLowerCase());
+      if (!cred || cred.password !== loginPassword) {
+        setLoginError('Invalid username or password.');
+        return;
+      }
+      if (cred.role !== 'client') {
+        setLoginError('These credentials are not for the Client Hub.');
+        return;
+      }
+      signInLocalWithUid(cred.uid, cred.username, cred.displayName, 'client', cred.projectId);
     } catch (err) {
-      console.error("Auth popup failed", err);
+      setLoginError('Login failed. Please try again.');
     } finally {
       setIsAuthenticating(false);
     }
@@ -119,36 +135,41 @@ export default function ClientHubView({ currentUser, onPageChange }: ClientHubVi
                 Authentication required. Once you become a Galaxa Tech client with active agreements, we grant instant dashboard credentials to access legal agreements, milestones, and task boards.
               </p>
 
-              {/* Official Google Sign In button styling */}
-              <button 
-                onClick={handleLoginClick}
-                disabled={isAuthenticating}
-                className="gsi-material-button mx-auto focus:outline-none cursor-pointer flex items-center justify-center"
-              >
-                <div className="gsi-material-button-state"></div>
-                <div className="gsi-material-button-content-wrapper flex items-center gap-2">
-                  <div className="gsi-material-button-icon shrink-0">
-                    {isAuthenticating ? (
-                      <Loader2 className="w-5 h-5 text-primary animate-spin" />
-                    ) : (
-                      <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" className="w-5 h-5 block">
-                        <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"></path>
-                        <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"></path>
-                        <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"></path>
-                        <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"></path>
-                        <path fill="none" d="M0 0h48v48H0z"></path>
-                      </svg>
-                    )}
-                  </div>
-                  <span className="text-sm font-bold text-gray-900 pr-1 select-none">
-                    {isAuthenticating ? "Opening security pipeline..." : "Sign in with Google"}
-                  </span>
-                </div>
-              </button>
+              <form onSubmit={handleLoginSubmit} className="w-full flex flex-col gap-3">
+                <input
+                  type="text"
+                  value={loginUsername}
+                  onChange={e => setLoginUsername(e.target.value)}
+                  placeholder="Username"
+                  autoComplete="username"
+                  className="bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-sm placeholder:text-white/30 focus:outline-none focus:border-primary/50"
+                />
+                <input
+                  type="password"
+                  value={loginPassword}
+                  onChange={e => setLoginPassword(e.target.value)}
+                  placeholder="Password"
+                  autoComplete="current-password"
+                  className="bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-sm placeholder:text-white/30 focus:outline-none focus:border-primary/50"
+                />
+                {loginError && (
+                  <p className="text-red-400 text-xs text-center flex items-center justify-center gap-1.5">
+                    <AlertCircle className="w-3.5 h-3.5" /> {loginError}
+                  </p>
+                )}
+                <button
+                  type="submit"
+                  disabled={isAuthenticating}
+                  className="flex items-center justify-center gap-2 w-full py-3 rounded-xl bg-primary/80 hover:bg-primary text-white font-bold text-sm transition-all disabled:opacity-50 cursor-pointer"
+                >
+                  {isAuthenticating ? <Loader2 className="w-4 h-4 animate-spin" /> : <Lock className="w-4 h-4" />}
+                  {isAuthenticating ? 'Verifying...' : 'Access Hub'}
+                </button>
+              </form>
 
-              <div className="mt-8 pt-5 border-t border-white/5 flex items-center justify-center gap-2 text-[9px] font-mono tracking-wider text-white/30 uppercase">
+              <div className="mt-6 pt-5 border-t border-white/5 flex items-center justify-center gap-2 text-[9px] font-mono tracking-wider text-white/30 uppercase">
                 <AlertCircle className="w-3.5 h-3.5" />
-                <span>Encrypted secure Google login protocol verified</span>
+                <span>Credentials provided by GalaxaTech admin</span>
               </div>
             </motion.div>
           ) : (
@@ -183,8 +204,8 @@ export default function ClientHubView({ currentUser, onPageChange }: ClientHubVi
                   </div>
                 </div>
 
-                <button 
-                  onClick={logout}
+                <button
+                  onClick={() => clearLocalSession()}
                   className="bg-white/5 hover:bg-red-500/10 text-white/70 hover:text-red-400 border border-white/10 hover:border-red-500/20 rounded-full py-3 px-5 text-xs font-mono font-bold transition-all flex items-center justify-center gap-2 self-start md:self-auto cursor-pointer focus:outline-none select-none"
                 >
                   <LogOut className="w-4 h-4" />

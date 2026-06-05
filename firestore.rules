@@ -1,0 +1,130 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isAdmin() {
+      return request.auth != null &&
+             request.auth.token.email == 'mail.galaxatech@gmail.com';
+    }
+
+    function isClient(projectId) {
+      return request.auth != null &&
+             get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'client' &&
+             projectId in get(/databases/$(database)/documents/users/$(request.auth.uid)).data.projectIds;
+    }
+
+    function isBuilder(projectId) {
+      return request.auth != null &&
+             get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'builder' &&
+             projectId in get(/databases/$(database)/documents/users/$(request.auth.uid)).data.projectIds;
+    }
+
+    function isAnyHubUser() {
+      return request.auth != null;
+    }
+
+    // Users — self-read, admin write; visitors can create their own doc on first sign-in
+    match /users/{uid} {
+      allow read: if request.auth.uid == uid || isAdmin();
+      allow create: if request.auth.uid == uid;
+      allow update, delete: if isAdmin();
+    }
+
+    // Projects
+    match /projects/{projectId} {
+      allow read: if isAdmin() || isClient(projectId) || isBuilder(projectId);
+      allow write: if isAdmin();
+    }
+
+    // Updates — builders post, clients/admin read; admin full control
+    match /updates/{updateId} {
+      allow read: if isAdmin() ||
+                     isClient(resource.data.projectId) ||
+                     isBuilder(resource.data.projectId);
+      allow create: if isAdmin() || isBuilder(resource.data.projectId);
+      allow update, delete: if isAdmin();
+    }
+
+    // Documents
+    match /documents/{docId} {
+      allow read: if isAdmin() ||
+                     isClient(resource.data.projectId) ||
+                     isBuilder(resource.data.projectId);
+      allow write: if isAdmin();
+    }
+
+    // Forms — builder creates, client updates (submits)
+    match /forms/{formId} {
+      allow read: if isAdmin() ||
+                     isClient(resource.data.projectId) ||
+                     isBuilder(resource.data.projectId);
+      allow create: if isAdmin() || isBuilder(resource.data.projectId);
+      allow update: if isAdmin() || isClient(resource.data.projectId);
+    }
+
+    // Payments — builder reads their own, admin full control
+    match /payments/{paymentId} {
+      allow read: if isAdmin() || isBuilder(resource.data.projectId);
+      allow write: if isAdmin();
+    }
+
+    // Messages — project participants can send and read
+    match /messages/{messageId} {
+      allow read: if isAdmin() ||
+                     isClient(resource.data.projectId) ||
+                     isBuilder(resource.data.projectId);
+      allow create: if isAdmin() ||
+                       isClient(resource.data.projectId) ||
+                       isBuilder(resource.data.projectId);
+      allow update, delete: if isAdmin();
+    }
+
+    // Notifications
+    match /notifications/{notifId} {
+      allow read, update: if request.auth.uid == resource.data.recipientUid || isAdmin();
+      allow create, delete: if isAdmin();
+    }
+
+    // Deliverable reviews
+    match /deliverable_reviews/{reviewId} {
+      allow read: if isAdmin() ||
+                     isClient(resource.data.projectId) ||
+                     isBuilder(resource.data.projectId);
+      allow create: if isAdmin() || isBuilder(resource.data.projectId);
+      allow update: if isAdmin() || isClient(resource.data.projectId);
+    }
+
+    // Public write collections (no auth required for form submissions)
+    match /audit_submissions/{id} {
+      allow create: if true;
+      allow read, update, delete: if isAdmin();
+    }
+
+    match /contact_submissions/{id} {
+      allow create: if true;
+      allow read, update, delete: if isAdmin();
+    }
+
+    match /gbp_applications/{id} {
+      allow create: if true;
+      allow read, update, delete: if isAdmin();
+    }
+
+    // Credentials collection (legacy plaintext store — admin only)
+    match /credentials/{id} {
+      allow read, write: if isAdmin();
+    }
+
+    // Content — public items readable by all, members-only require auth
+    match /content/{contentId} {
+      allow read: if resource.data.isPublic == true || isAnyHubUser() || isAdmin();
+      allow write: if isAdmin();
+    }
+
+    // Site config — public read, admin write
+    match /site_config/{configId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+  }
+}

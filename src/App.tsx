@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Routes, Route, useLocation, useNavigate, Navigate } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import HomeView from './components/HomeView';
@@ -18,9 +18,8 @@ import VisitorHubView from './components/visitor-hub/VisitorHubView';
 import ClientHubView from './components/client-hub/ClientHubView';
 import BuilderHubView from './components/builder-hub/BuilderHubView';
 import AdminPanelView from './components/admin/AdminPanelView';
-import { AuthProvider } from './context/AuthContext';
+import { AuthProvider, useAuth } from './context/AuthContext';
 import { PageType } from './types';
-import { getLocalSession, LocalSession } from './lib/localAuth';
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -43,20 +42,14 @@ const PAGE_ROUTES: Record<PageType, string> = {
   'builders-program': '/gbp',
 };
 
-export default function App() {
+function AppInner() {
   const location = useLocation();
   const navigate = useNavigate();
+  const { firebaseUser } = useAuth();
   const isHubRoute = location.pathname.startsWith('/hub') || location.pathname.startsWith('/admin');
 
-  const [currentUser, setCurrentUser] = useState<LocalSession | null>(() => getLocalSession());
   const [dhakaTime, setDhakaTime] = useState<string>('Dhaka HQ');
   const [isDhakaOpen, setIsDhakaOpen] = useState<boolean>(true);
-
-  useEffect(() => {
-    const handle = () => setCurrentUser(getLocalSession());
-    window.addEventListener('gt-auth-change', handle);
-    return () => window.removeEventListener('gt-auth-change', handle);
-  }, []);
 
   useEffect(() => {
     const tick = () => {
@@ -81,55 +74,57 @@ export default function App() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  // ── Hub / Admin routes ─────────────────────────────────────────────────────
   if (isHubRoute) {
     return (
-      <AuthProvider>
-        <div className="min-h-screen relative">
-          <div className="bg-mesh" />
-          <ScrollToTop />
-          <Routes>
-            <Route path="/hub/visitor/*" element={<VisitorHubView />} />
-            <Route path="/hub/client/*" element={<ClientHubView />} />
-            <Route path="/hub/builder/*" element={<BuilderHubView />} />
-            <Route path="/admin/*" element={<AdminPanelView />} />
-          </Routes>
-        </div>
-      </AuthProvider>
+      <div className="min-h-screen relative">
+        <div className="bg-mesh" />
+        <ScrollToTop />
+        <Routes>
+          <Route path="/hub/visitor/*" element={<VisitorHubView />} />
+          <Route path="/hub/client/*"  element={<ClientHubView />} />
+          <Route path="/hub/builder/*" element={<BuilderHubView />} />
+          <Route path="/admin/*"       element={<AdminPanelView />} />
+        </Routes>
+      </div>
     );
   }
 
-  // ── Marketing site ─────────────────────────────────────────────────────────
+  return (
+    <div className="min-h-screen relative flex flex-col justify-between">
+      <div className="bg-mesh" />
+      <ScrollToTop />
+      <Navbar
+        onPageChange={handlePageSelect}
+        dhakaTime={dhakaTime}
+        isDhakaOpen={isDhakaOpen}
+        currentUser={firebaseUser ? { displayName: firebaseUser.displayName ?? '', photoURL: firebaseUser.photoURL ?? '' } : null}
+      />
+      <main className="flex-grow">
+        <Routes>
+          <Route path="/" element={<HomeView isDhakaOpen={isDhakaOpen} dhakaTime={dhakaTime} currentUser={null} />} />
+          <Route path="/services"          element={<ServicesView />} />
+          <Route path="/portfolio"         element={<PortfolioView />} />
+          <Route path="/portfolio/:slug"   element={<PortfolioCaseStudy />} />
+          <Route path="/about"             element={<AboutView />} />
+          <Route path="/contact"           element={<ContactView />} />
+          <Route path="/audit"             element={<AuditView />} />
+          <Route path="/gbp"              element={<GBPView />} />
+          <Route path="/builders-program" element={<Navigate to="/gbp" replace />} />
+          <Route path="/privacy"           element={<PrivacyView />} />
+          <Route path="/terms"             element={<TermsView />} />
+          <Route path="*"                  element={<NotFoundView />} />
+        </Routes>
+      </main>
+      <Footer onPageChange={handlePageSelect} dhakaTime={dhakaTime} />
+      <CookieBanner />
+    </div>
+  );
+}
+
+export default function App() {
   return (
     <AuthProvider>
-      <div className="min-h-screen relative flex flex-col justify-between">
-        <div className="bg-mesh" />
-        <ScrollToTop />
-        <Navbar
-          onPageChange={handlePageSelect}
-          dhakaTime={dhakaTime}
-          isDhakaOpen={isDhakaOpen}
-          currentUser={currentUser}
-        />
-        <main className="flex-grow">
-          <Routes>
-            <Route path="/" element={<HomeView isDhakaOpen={isDhakaOpen} dhakaTime={dhakaTime} currentUser={currentUser} />} />
-            <Route path="/services" element={<ServicesView />} />
-            <Route path="/portfolio" element={<PortfolioView />} />
-            <Route path="/portfolio/:slug" element={<PortfolioCaseStudy />} />
-            <Route path="/about" element={<AboutView />} />
-            <Route path="/contact" element={<ContactView />} />
-            <Route path="/audit" element={<AuditView />} />
-            <Route path="/gbp" element={<GBPView />} />
-            <Route path="/builders-program" element={<Navigate to="/gbp" replace />} />
-            <Route path="/privacy" element={<PrivacyView />} />
-            <Route path="/terms" element={<TermsView />} />
-            <Route path="*" element={<NotFoundView />} />
-          </Routes>
-        </main>
-        <Footer onPageChange={handlePageSelect} dhakaTime={dhakaTime} />
-        <CookieBanner />
-      </div>
+      <AppInner />
     </AuthProvider>
   );
 }

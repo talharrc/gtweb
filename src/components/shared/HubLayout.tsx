@@ -1,9 +1,8 @@
 import { ReactNode, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Menu, X, Home, LogOut } from 'lucide-react';
-import { logout } from '../../lib/firebase';
 import { useAuth } from '../../context/AuthContext';
-import brandmarkLogo from '../../assets/images/galaxatech_revised_logo_1780005309031.png';
+import brandmarkLogo from '../../assets/images/logo.png';
 import StatusBadge from './StatusBadge';
 
 export interface NavItem {
@@ -22,25 +21,24 @@ interface HubLayoutProps {
 
 export default function HubLayout({ title, navItems, activeSection, onSectionChange, children }: HubLayoutProps) {
   const navigate = useNavigate();
-  const { userProfile, firebaseUser } = useAuth();
+  const { firebaseUser, userProfile, signOut } = useAuth();
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
+  const displayName = firebaseUser?.displayName ?? userProfile?.displayName ?? null;
+  const photoURL = firebaseUser?.photoURL ?? null;
+  const hasUser = firebaseUser !== null || userProfile !== null;
+
   const handleLogout = async () => {
-    await logout();
+    await signOut();
     navigate('/');
   };
 
   return (
     <div className="min-h-screen flex">
-      {/* Mobile overlay */}
       {sidebarOpen && (
-        <div
-          className="fixed inset-0 bg-black/60 z-30 lg:hidden"
-          onClick={() => setSidebarOpen(false)}
-        />
+        <div className="fixed inset-0 bg-black/60 z-30 lg:hidden" onClick={() => setSidebarOpen(false)} />
       )}
 
-      {/* Sidebar */}
       <aside className={`
         fixed top-0 left-0 h-full w-64 z-40 flex flex-col
         bg-[#070d1e] border-r border-white/5
@@ -48,22 +46,17 @@ export default function HubLayout({ title, navItems, activeSection, onSectionCha
         ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
         lg:translate-x-0 lg:relative lg:z-auto
       `}>
-        {/* Brand */}
         <div className="flex items-center gap-3 px-5 py-5 border-b border-white/5">
           <img src={brandmarkLogo} alt="GalaxaTech" className="w-7 h-7 rounded-lg object-contain" />
           <div>
             <p className="text-white font-bold text-sm leading-none">GalaxaTech</p>
             <p className="text-white/40 text-[10px] font-mono mt-0.5">{title}</p>
           </div>
-          <button
-            onClick={() => setSidebarOpen(false)}
-            className="ml-auto lg:hidden text-white/40 hover:text-white"
-          >
+          <button onClick={() => setSidebarOpen(false)} className="ml-auto lg:hidden text-white/40 hover:text-white">
             <X className="w-4 h-4" />
           </button>
         </div>
 
-        {/* Nav items */}
         <nav className="flex-1 py-4 px-3 overflow-y-auto">
           {navItems.map((item) => {
             const isActive = activeSection === item.path;
@@ -87,19 +80,18 @@ export default function HubLayout({ title, navItems, activeSection, onSectionCha
           })}
         </nav>
 
-        {/* User + signout */}
         <div className="p-4 border-t border-white/5">
-          {firebaseUser && (
+          {hasUser && (
             <div className="flex items-center gap-2.5 mb-3">
-              {firebaseUser.photoURL ? (
-                <img src={firebaseUser.photoURL} alt="" className="w-7 h-7 rounded-full object-cover" />
+              {photoURL ? (
+                <img src={photoURL} alt="" className="w-7 h-7 rounded-full object-cover" />
               ) : (
                 <div className="w-7 h-7 rounded-full bg-primary/30 flex items-center justify-center text-primary text-xs font-bold">
-                  {firebaseUser.displayName?.[0] ?? '?'}
+                  {displayName?.[0]?.toUpperCase() ?? '?'}
                 </div>
               )}
               <div className="flex-1 min-w-0">
-                <p className="text-white text-xs font-semibold truncate">{firebaseUser.displayName}</p>
+                <p className="text-white text-xs font-semibold truncate">{displayName ?? 'User'}</p>
                 {userProfile && <StatusBadge status={userProfile.role} />}
               </div>
             </div>
@@ -121,17 +113,13 @@ export default function HubLayout({ title, navItems, activeSection, onSectionCha
         </div>
       </aside>
 
-      {/* Main content */}
       <div className="flex-1 flex flex-col min-w-0 lg:ml-0">
-        {/* Mobile top bar */}
         <div className="lg:hidden flex items-center gap-3 px-4 py-3 border-b border-white/5 bg-[#070d1e]/80 backdrop-blur-sm sticky top-0 z-20">
           <button onClick={() => setSidebarOpen(true)} className="text-white/60 hover:text-white">
             <Menu className="w-5 h-5" />
           </button>
           <p className="text-white font-semibold text-sm">{title}</p>
-          {firebaseUser?.photoURL && (
-            <img src={firebaseUser.photoURL} alt="" className="w-7 h-7 rounded-full object-cover ml-auto" />
-          )}
+          {photoURL && <img src={photoURL} alt="" className="w-7 h-7 rounded-full object-cover ml-auto" />}
         </div>
 
         <main className="flex-1 p-4 lg:p-8 overflow-y-auto">

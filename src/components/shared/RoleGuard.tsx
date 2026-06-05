@@ -12,7 +12,7 @@ interface RoleGuardProps {
 }
 
 export default function RoleGuard({ allowedRoles, children, requireAuth = true }: RoleGuardProps) {
-  const { firebaseUser, role, isLoading } = useAuth();
+  const { isSignedIn, role, isLoading } = useAuth();
   const navigate = useNavigate();
 
   if (isLoading) {
@@ -23,16 +23,16 @@ export default function RoleGuard({ allowedRoles, children, requireAuth = true }
     );
   }
 
-  if (requireAuth && !firebaseUser) {
+  if (requireAuth && !isSignedIn) {
     return (
       <div className="min-h-screen flex items-center justify-center px-6">
         <div className="glass-card max-w-sm w-full p-8 text-center rounded-2xl">
           <div className="w-12 h-12 rounded-2xl bg-primary/15 flex items-center justify-center mx-auto mb-4">
             <Shield className="w-6 h-6 text-primary" />
           </div>
-          <h2 className="text-white font-bold text-lg mb-2">Sign in required</h2>
+          <h2 className="text-white font-bold text-lg mb-2">Access required</h2>
           <p className="text-white/50 text-sm mb-6">
-            Sign in with your Google account to access this area.
+            Enter your credentials to access this area.
           </p>
           <GoogleSignInButton />
         </div>
@@ -40,7 +40,7 @@ export default function RoleGuard({ allowedRoles, children, requireAuth = true }
     );
   }
 
-  if (firebaseUser && !allowedRoles.includes(role)) {
+  if (isSignedIn && !allowedRoles.includes(role)) {
     return (
       <div className="min-h-screen flex items-center justify-center px-6">
         <div className="glass-card max-w-sm w-full p-8 text-center rounded-2xl">

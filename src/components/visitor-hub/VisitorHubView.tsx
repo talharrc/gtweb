@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Compass, Sparkles, BookOpen, Globe, Lock, LogOut, Copy, Check, ArrowLeft } from 'lucide-react';
+import { Compass, Sparkles, BookOpen, Globe, Lock, LogOut, Copy, Check, ArrowLeft, Loader2, Chrome } from 'lucide-react';
+import { signInWithPopup } from 'firebase/auth';
+import { auth, googleProvider } from '../../lib/firebase';
 import { useAuth } from '../../context/AuthContext';
 import { useContent } from '../../hooks/useContent';
-import { logout } from '../../lib/firebase';
-import GoogleSignInButton from '../shared/GoogleSignInButton';
 import EmptyState from '../shared/EmptyState';
 import brandmarkLogo from '../../assets/images/galaxatech_revised_logo_1780005309031.png';
 
@@ -17,6 +17,7 @@ const STATIC_INSIGHTS = [
     excerpt: 'A step-by-step guide to deploying your first automation with zero code.',
     readTime: '5 min read',
     tag: 'Automation',
+    content: 'Modern no-code tools like Zapier, Make, and native AI assistants make automation accessible to anyone. Start by identifying one repetitive task—email sorting, meeting summaries, or lead follow-ups. Connect your email to an AI-powered workflow, define triggers (e.g., "new email from client"), and set actions (e.g., "summarize and label"). Most platforms have visual drag-and-drop builders. Within 15 minutes you can have your first automation running.',
   },
   {
     id: '2',
@@ -24,6 +25,7 @@ const STATIC_INSIGHTS = [
     excerpt: "Midjourney, DALL·E, Ideogram, and Flux — we tested them so you don't have to.",
     readTime: '8 min read',
     tag: 'AI Tools',
+    content: 'Midjourney v6 leads for artistic quality and photorealism. DALL·E 3 (via ChatGPT) wins on prompt adherence and ease of use. Ideogram excels at text-in-image tasks—logos, posters, social banners. Flux (by Black Forest Labs) is the best open-source option with exceptional detail. For business use: Ideogram for branding, Midjourney for creative campaigns, DALL·E for day-to-day content.',
   },
   {
     id: '3',
@@ -31,6 +33,7 @@ const STATIC_INSIGHTS = [
     excerpt: 'Calendar scheduling, email triage, and lead follow-ups — all running on autopilot.',
     readTime: '4 min read',
     tag: 'Productivity',
+    content: '1. Calendly + AI: Let clients book meetings without back-and-forth. Add an AI confirmation email that auto-prepares a brief before each call. 2. Email Triage: Use Gmail filters + AI labels to auto-sort newsletters, client emails, and invoices. 3. Lead Follow-Ups: Connect your contact form to a CRM (Notion, Airtable) and trigger a personalized follow-up sequence via Make or Zapier. Each takes under 30 minutes to set up.',
   },
 ];
 
@@ -57,19 +60,22 @@ function MembersVault() {
   const { items: newsletters, loading: l3 } = useContent('newsletter', true);
   const [expanded, setExpanded] = useState<string | null>(null);
 
-  if (l1 || l2 || l3) return <div className="text-white/40 text-sm text-center py-8">Loading…</div>;
+  if (l1 || l2 || l3) return <div className="text-white/40 text-sm text-center py-8"><Loader2 className="w-5 h-5 animate-spin mx-auto" /></div>;
 
   const all = [...prompts, ...resources, ...newsletters];
 
+  if (all.length === 0) {
+    return (
+      <EmptyState
+        title="Members content coming soon"
+        description="Premium prompts, templates, and newsletter archives will appear here."
+        icon={<Lock className="w-5 h-5" />}
+      />
+    );
+  }
+
   return (
     <div>
-      {all.length === 0 && (
-        <EmptyState
-          title="Members content coming soon"
-          description="Premium prompts, templates, and newsletter archives will appear here."
-          icon={<Lock className="w-5 h-5" />}
-        />
-      )}
       {prompts.length > 0 && (
         <div className="mb-6">
           <h3 className="text-white font-semibold text-sm mb-3 flex items-center gap-2">
@@ -141,20 +147,70 @@ function MembersVault() {
   );
 }
 
-export default function VisitorHubView(props?: any) {
+function GoogleSignInGate() {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+
+  const handleSignIn = async () => {
+    setLoading(true);
+    setError('');
+    try {
+      await signInWithPopup(auth, googleProvider);
+    } catch (err: any) {
+      if (err?.code !== 'auth/popup-closed-by-user') {
+        setError('Sign-in failed. Please try again.');
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="min-h-screen flex items-center justify-center px-6">
+      <div className="glass-card max-w-sm w-full p-8 rounded-2xl text-center">
+        <img src={brandmarkLogo} alt="GalaxaTech" className="w-12 h-12 rounded-xl object-contain mx-auto mb-5" />
+        <h2 className="text-white font-bold text-xl mb-2">Visitor Hub</h2>
+        <p className="text-white/40 text-sm mb-6">
+          Join GalaxaTech's community. Get access to our prompt collection, downloadable templates, newsletter archive, and more.
+          <span className="block mt-2 text-primary/80">It's free.</span>
+        </p>
+        {error && <p className="text-red-400 text-xs mb-3">{error}</p>}
+        <button
+          onClick={handleSignIn}
+          disabled={loading}
+          className="w-full py-2.5 rounded-xl bg-white text-[#0b1326] text-sm font-bold transition-all flex items-center justify-center gap-2 hover:bg-white/90 disabled:opacity-60"
+        >
+          {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Chrome className="w-4 h-4" />}
+          Continue with Google
+        </button>
+        <p className="text-white/20 text-xs mt-4">No password required. Secure Google sign-in.</p>
+      </div>
+    </div>
+  );
+}
+
+export default function VisitorHubView() {
   const navigate = useNavigate();
-  const { firebaseUser, isLoading } = useAuth();
+  const { isSignedIn, isLoading, firebaseUser, signOut } = useAuth();
   const [activeTab, setActiveTab] = useState<Tab>('insights');
   const [expandedInsight, setExpandedInsight] = useState<string | null>(null);
   const [expandedPrompt, setExpandedPrompt] = useState<string | null>(null);
 
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <Loader2 className="w-8 h-8 text-primary animate-spin" />
+      </div>
+    );
+  }
+
+  if (!isSignedIn) return <GoogleSignInGate />;
+
   const tabs = [
     { id: 'insights' as Tab, label: 'Insights & Guides', icon: <Globe className="w-3.5 h-3.5" /> },
     { id: 'prompts' as Tab, label: 'Prompt Vault', icon: <Sparkles className="w-3.5 h-3.5" /> },
-    { id: 'members' as Tab, label: 'Members Vault', icon: <Lock className="w-3.5 h-3.5" />, gated: !firebaseUser },
+    { id: 'members' as Tab, label: 'Members Vault', icon: <Lock className="w-3.5 h-3.5" /> },
   ];
-
-  const handleLogout = async () => { await logout(); };
 
   return (
     <div className="min-h-screen relative">
@@ -171,16 +227,14 @@ export default function VisitorHubView(props?: any) {
               <p className="text-white/30 text-xs">GalaxaTech Resource Center</p>
             </div>
           </div>
-          {firebaseUser ? (
-            <div className="flex items-center gap-2">
-              {firebaseUser.photoURL && <img src={firebaseUser.photoURL} alt="" className="w-7 h-7 rounded-full" />}
-              <button onClick={handleLogout} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-white/50 hover:text-white text-xs transition-all">
-                <LogOut className="w-3.5 h-3.5" /> Sign out
-              </button>
-            </div>
-          ) : (
-            <GoogleSignInButton label="Sign in" className="!py-1.5 !px-3 !text-xs" />
-          )}
+          <div className="flex items-center gap-2">
+            {firebaseUser?.photoURL && (
+              <img src={firebaseUser.photoURL} alt="" className="w-7 h-7 rounded-full object-cover" />
+            )}
+            <button onClick={signOut} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-white/50 hover:text-white text-xs transition-all">
+              <LogOut className="w-3.5 h-3.5" /> Sign out
+            </button>
+          </div>
         </div>
 
         {/* Tabs */}
@@ -192,7 +246,6 @@ export default function VisitorHubView(props?: any) {
               className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all ${activeTab === tab.id ? 'bg-primary/20 text-primary border border-primary/30' : 'bg-white/5 text-white/50 border border-white/10 hover:border-white/20'}`}
             >
               {tab.icon} {tab.label}
-              {tab.gated && <Lock className="w-3 h-3 text-white/30" />}
             </button>
           ))}
         </div>
@@ -216,7 +269,7 @@ export default function VisitorHubView(props?: any) {
                 </button>
                 {expandedInsight === item.id && (
                   <div className="px-5 pb-4 border-t border-white/5 pt-3">
-                    <p className="text-white/60 text-sm">Full article coming soon. Subscribe to the GalaxaTech newsletter for in-depth guides.</p>
+                    <p className="text-white/60 text-sm leading-relaxed">{item.content}</p>
                   </div>
                 )}
               </div>
@@ -245,22 +298,7 @@ export default function VisitorHubView(props?: any) {
         )}
 
         {/* Members Vault */}
-        {activeTab === 'members' && (
-          !firebaseUser ? (
-            <div className="glass-card rounded-2xl p-8 text-center">
-              <div className="w-12 h-12 rounded-2xl bg-primary/15 flex items-center justify-center mx-auto mb-4">
-                <Lock className="w-6 h-6 text-primary" />
-              </div>
-              <h3 className="text-white font-bold text-lg mb-2">Members Only</h3>
-              <p className="text-white/50 text-sm mb-6 max-w-xs mx-auto">
-                Sign in with Google to unlock premium prompts, resource templates, and the newsletter archive — completely free.
-              </p>
-              <GoogleSignInButton label="Unlock Members Vault" />
-            </div>
-          ) : (
-            <MembersVault />
-          )
-        )}
+        {activeTab === 'members' && <MembersVault />}
       </div>
     </div>
   );
