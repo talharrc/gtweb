@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /hub
+Sitemap: https://gt-web-iota.vercel.app/sitemap.xml

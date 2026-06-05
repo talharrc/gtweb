@@ -4,18 +4,23 @@ import Navbar from './components/Navbar';
 import HomeView from './components/HomeView';
 import ServicesView from './components/ServicesView';
 import PortfolioView from './components/PortfolioView';
+import PortfolioCaseStudy from './components/PortfolioCaseStudy';
 import AboutView from './components/AboutView';
 import ContactView from './components/ContactView';
+import AuditView from './components/AuditView';
+import GBPView from './components/GBPView';
+import PrivacyView from './components/PrivacyView';
+import TermsView from './components/TermsView';
+import NotFoundView from './components/NotFoundView';
+import CookieBanner from './components/CookieBanner';
 import Footer from './components/Footer';
-import BuildersProgramView from './components/BuildersProgramView';
 import VisitorHubView from './components/visitor-hub/VisitorHubView';
 import ClientHubView from './components/client-hub/ClientHubView';
 import BuilderHubView from './components/builder-hub/BuilderHubView';
 import AdminPanelView from './components/admin/AdminPanelView';
 import { AuthProvider } from './context/AuthContext';
 import { PageType } from './types';
-import { auth } from './lib/firebase';
-import { onAuthStateChanged, User } from 'firebase/auth';
+import { getLocalSession, LocalSession } from './lib/localAuth';
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -23,21 +28,34 @@ function ScrollToTop() {
   return null;
 }
 
+const PAGE_ROUTES: Record<PageType, string> = {
+  home: '/',
+  services: '/services',
+  portfolio: '/portfolio',
+  about: '/about',
+  contact: '/contact',
+  audit: '/audit',
+  gbp: '/gbp',
+  privacy: '/privacy',
+  terms: '/terms',
+  'visitor-hub': '/hub/visitor',
+  'client-hub': '/hub/client',
+  'builders-program': '/gbp',
+};
+
 export default function App() {
   const location = useLocation();
   const navigate = useNavigate();
   const isHubRoute = location.pathname.startsWith('/hub') || location.pathname.startsWith('/admin');
 
-  // ── Marketing site state (unchanged) ──────────────────────────────────────
-  const [currentPage, setCurrentPage] = useState<PageType>('home');
-  const [inquiryPreset, setInquiryPreset] = useState<string>('');
-  const [currentUser, setCurrentUser] = useState<User | null>(null);
+  const [currentUser, setCurrentUser] = useState<LocalSession | null>(() => getLocalSession());
   const [dhakaTime, setDhakaTime] = useState<string>('Dhaka HQ');
   const [isDhakaOpen, setIsDhakaOpen] = useState<boolean>(true);
 
   useEffect(() => {
-    const unsub = onAuthStateChanged(auth, (user) => setCurrentUser(user));
-    return () => unsub();
+    const handle = () => setCurrentUser(getLocalSession());
+    window.addEventListener('gt-auth-change', handle);
+    return () => window.removeEventListener('gt-auth-change', handle);
   }, []);
 
   useEffect(() => {
@@ -58,17 +76,8 @@ export default function App() {
   }, []);
 
   const handlePageSelect = (page: PageType) => {
-    // Hub types redirect to proper routes rather than rendering inline
-    if (page === 'visitor-hub') { navigate('/hub/visitor'); return; }
-    if (page === 'client-hub') { navigate('/hub/client'); return; }
-    if (page === 'builders-program') { navigate('/hub/builder'); return; }
-    setCurrentPage(page);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
-
-  const handleBookAudit = () => {
-    setInquiryPreset('Hi, I want to book a free software audit for my digital brand.');
-    setCurrentPage('contact');
+    const route = PAGE_ROUTES[page] || '/';
+    navigate(route);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -95,38 +104,31 @@ export default function App() {
     <AuthProvider>
       <div className="min-h-screen relative flex flex-col justify-between">
         <div className="bg-mesh" />
+        <ScrollToTop />
         <Navbar
-          currentPage={currentPage}
           onPageChange={handlePageSelect}
-          onBookAudit={handleBookAudit}
           dhakaTime={dhakaTime}
           isDhakaOpen={isDhakaOpen}
           currentUser={currentUser}
         />
         <main className="flex-grow">
-          {currentPage === 'home' && (
-            <HomeView
-              onPageChange={handlePageSelect}
-              isDhakaOpen={isDhakaOpen}
-              dhakaTime={dhakaTime}
-              currentUser={currentUser}
-              onSetInquiryPreset={setInquiryPreset}
-            />
-          )}
-          {currentPage === 'services' && (
-            <ServicesView onPageChange={handlePageSelect} onSetInquiryPreset={setInquiryPreset} />
-          )}
-          {currentPage === 'portfolio' && <PortfolioView />}
-          {currentPage === 'about' && <AboutView />}
-          {currentPage === 'contact' && (
-            <ContactView inquiryPreset={inquiryPreset} onClearPreset={() => setInquiryPreset('')} />
-          )}
-          {/* builders-program kept as public marketing/recruitment page */}
-          {currentPage === 'builders-program' && (
-            <BuildersProgramView currentUser={currentUser} onPageChange={handlePageSelect} />
-          )}
+          <Routes>
+            <Route path="/" element={<HomeView isDhakaOpen={isDhakaOpen} dhakaTime={dhakaTime} currentUser={currentUser} />} />
+            <Route path="/services" element={<ServicesView />} />
+            <Route path="/portfolio" element={<PortfolioView />} />
+            <Route path="/portfolio/:slug" element={<PortfolioCaseStudy />} />
+            <Route path="/about" element={<AboutView />} />
+            <Route path="/contact" element={<ContactView />} />
+            <Route path="/audit" element={<AuditView />} />
+            <Route path="/gbp" element={<GBPView />} />
+            <Route path="/builders-program" element={<Navigate to="/gbp" replace />} />
+            <Route path="/privacy" element={<PrivacyView />} />
+            <Route path="/terms" element={<TermsView />} />
+            <Route path="*" element={<NotFoundView />} />
+          </Routes>
         </main>
         <Footer onPageChange={handlePageSelect} dhakaTime={dhakaTime} />
+        <CookieBanner />
       </div>
     </AuthProvider>
   );

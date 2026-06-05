@@ -2,7 +2,7 @@ import { Timestamp } from 'firebase/firestore';
 
 // ── Marketing site types (unchanged) ──────────────────────────────────────────
 
-export type PageType = 'home' | 'services' | 'portfolio' | 'about' | 'contact' | 'visitor-hub' | 'client-hub' | 'builders-program';
+export type PageType = 'home' | 'services' | 'portfolio' | 'about' | 'contact' | 'visitor-hub' | 'client-hub' | 'builders-program' | 'audit' | 'gbp' | 'privacy' | 'terms';
 
 export interface Project {
   id: string;
@@ -63,6 +63,13 @@ export interface Milestone {
   completedAt?: Timestamp;
 }
 
+export interface BuilderInfo {
+  uid: string;
+  name: string;
+  specialty?: string;
+  email?: string;
+}
+
 export interface GTProject {
   id: string;
   name: string;
@@ -74,6 +81,22 @@ export interface GTProject {
   clientUid: string;
   builderUids: string[];
   whatsappGroupUrl?: string;
+  category?: string;
+  projectValue?: number;
+  clientInfo?: { name: string; company?: string; email?: string; phone?: string; };
+  builders?: BuilderInfo[];
+  createdAt: Timestamp;
+}
+
+export interface HubCredential {
+  id: string;
+  projectId: string;
+  projectName: string;
+  role: 'client' | 'builder';
+  username: string;
+  password: string;
+  displayName: string;
+  uid: string;
   createdAt: Timestamp;
 }
 
