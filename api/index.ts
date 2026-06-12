@@ -58,74 +58,8 @@ function getStaticFallbackItems(todayStr: string) {
   ];
 }
 
-let gAccessToken: string | null = null;
-let gSpreadsheetId: string | null = null;
-let adminEmail: string | null = null;
 let localOfflineQueue: { email: string; timestamp: string }[] = [];
 let apiCooldownUntil = 0;
-
-async function initGoogleSheet(accessToken: string): Promise<string> {
-  const searchQuery = encodeURIComponent("name = 'GalaxaTech Newsletter Subscribers' and mimeType = 'application/vnd.google-apps.spreadsheet' and trashed = false");
-  const searchRes = await fetch(`https://www.googleapis.com/drive/v3/files?q=${searchQuery}`, {
-    headers: { Authorization: `Bearer ${accessToken}` }
-  });
-
-  if (searchRes.ok) {
-    const searchData: any = await searchRes.json();
-    if (searchData?.files?.length > 0) {
-      return searchData.files[0].id;
-    }
-  }
-
-  const createRes = await fetch("https://www.googleapis.com/drive/v3/files", {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      name: "GalaxaTech Newsletter Subscribers",
-      mimeType: "application/vnd.google-apps.spreadsheet"
-    })
-  });
-
-  if (!createRes.ok) {
-    const errText = await createRes.text();
-    throw new Error(`Failed to create Google Sheet: ${errText}`);
-  }
-
-  const fileData: any = await createRes.json();
-  const newSheetId = fileData.id;
-
-  await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${newSheetId}/values/A1:C1?valueInputOption=USER_ENTERED`, {
-    method: "PUT",
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      values: [["Subscriber Email", "Captured At (UTC)", "Sync Node Tag"]]
-    })
-  });
-
-  return newSheetId;
-}
-
-async function drainOfflineQueue(accessToken: string, spreadsheetId: string) {
-  if (localOfflineQueue.length === 0) return;
-  const valuesToAppend = localOfflineQueue.map(item => [item.email, item.timestamp, "Cloud Sync Engine"]);
-  const res = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/A:C:append?valueInputOption=USER_ENTERED`, {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({ values: valuesToAppend })
-  });
-  if (res.ok) {
-    localOfflineQueue = [];
-  }
-}
 
 // API Route: Today's Dynamic Live AI Briefing Feed
 app.get("/api/feed", async (req, res) => {
@@ -218,95 +152,18 @@ Avoid boring developer jargon or complex architecture/token specs. Write in simp
   return res.json({ source: "fallback_on_error", items: fallbackFeed });
 });
 
-// API Route: Authorize Admin
-app.post("/api/admin/authorize", async (req, res) => {
-  const { accessToken } = req.body;
-  if (!accessToken) return res.status(400).json({ error: "No Access Token provided" });
-
-  try {
-    const userRes = await fetch("https://www.googleapis.com/oauth2/v3/userinfo", {
-      headers: { Authorization: `Bearer ${accessToken}` }
-    });
-
-    if (!userRes.ok) return res.status(401).json({ error: "Invalid Google credentials or token expired." });
-
-    const userData: any = await userRes.json();
-    adminEmail = userData.email;
-    gAccessToken = accessToken;
-    gSpreadsheetId = await initGoogleSheet(accessToken);
-
-    if (localOfflineQueue.length > 0) {
-      await drainOfflineQueue(accessToken, gSpreadsheetId);
-    }
-
-    return res.json({
-      success: true,
-      adminEmail,
-      spreadsheetId: gSpreadsheetId,
-      spreadsheetUrl: `https://docs.google.com/spreadsheets/d/${gSpreadsheetId}/edit`
-    });
-  } catch (e: any) {
-    return res.status(500).json({ error: "Internal workspace pairing failure" });
-  }
-});
-
-// API Route: Admin Status
-app.get("/api/admin/status", (req, res) => {
-  return res.json({
-    connected: !!gAccessToken,
-    adminEmail,
-    spreadsheetId: gSpreadsheetId,
-    spreadsheetUrl: gSpreadsheetId ? `https://docs.google.com/spreadsheets/d/${gSpreadsheetId}/edit` : null,
-    queueSize: localOfflineQueue.length
-  });
-});
-
-// API Route: Revoke Admin
-app.post("/api/admin/revoke", (req, res) => {
-  gAccessToken = null;
-  gSpreadsheetId = null;
-  adminEmail = null;
-  return res.json({ success: true });
-});
-
 // API Route: Newsletter Subscribe
 app.post("/api/newsletter/subscribe", async (req, res) => {
   const { email } = req.body;
   if (!email || !email.includes("@")) return res.status(400).json({ error: "Invalid email address" });
 
   const timestamp = new Date().toISOString();
-
-  if (gAccessToken && gSpreadsheetId) {
-    try {
-      const appendRes = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${gSpreadsheetId}/values/A:C:append?valueInputOption=USER_ENTERED`, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${gAccessToken}`,
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ values: [[email, timestamp, "Live Cloud API Sync"]] })
-      });
-
-      if (appendRes.ok) {
-        return res.json({ success: true, count: localOfflineQueue.length, cloudWritten: true });
-      }
-    } catch (err: any) {
-      // fall through to queue
-    }
-  }
-
   const isDuplicate = localOfflineQueue.some(item => item.email === email);
   if (!isDuplicate) {
     localOfflineQueue.push({ email, timestamp });
   }
 
-  return res.json({
-    success: true,
-    count: localOfflineQueue.length,
-    cloudWritten: false,
-    queued: true,
-    message: "Subscription captured! Connect your Google Account in the admin console to push directly to Drive."
-  });
+  return res.json({ success: true, count: localOfflineQueue.length });
 });
 
 // API Route: Newsletter Count
