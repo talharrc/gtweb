@@ -103,7 +103,7 @@ export default function Navbar({ onPageChange, dhakaTime, isDhakaOpen, currentUs
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40 pointer-events-auto"
+            className="fixed inset-0 bg-black/30 backdrop-blur-[2px] z-40 pointer-events-auto"
             onClick={() => { setActiveDropdown(null); setMoreMenuOpen(false); }}
           />
         )}
@@ -114,8 +114,10 @@ export default function Navbar({ onPageChange, dhakaTime, isDhakaOpen, currentUs
           visible ? 'translate-y-0' : '-translate-y-32'
         }`}
       >
-        <div className={`relative border border-white/10 rounded-full max-w-fit px-6 py-2.5 shadow-[0_12px_40px_rgba(0,0,0,0.6)] flex items-center gap-8 text-white transition-all duration-300 ${
-          scrolled ? 'bg-black/90 backdrop-blur-3xl border-white/15' : 'bg-black/75 backdrop-blur-2xl'
+        <div className={`relative border rounded-full max-w-fit px-6 py-2.5 flex items-center gap-8 text-white transition-all duration-300 [backdrop-filter:blur(22px)_saturate(140%)] [-webkit-backdrop-filter:blur(22px)_saturate(140%)] ${
+          scrolled
+            ? 'bg-white/[0.07] border-[rgba(181,141,255,0.32)] shadow-[inset_0_1px_0_rgba(255,255,255,0.12),inset_0_0_28px_rgba(124,42,235,0.08),0_20px_60px_rgba(0,0,0,0.60)]'
+            : 'bg-white/[0.042] border-[rgba(181,141,255,0.20)] shadow-[inset_0_1px_0_rgba(255,255,255,0.09),inset_0_0_28px_rgba(124,42,235,0.05),0_20px_60px_rgba(0,0,0,0.50)]'
         }`}>
 
           {/* Logo */}
@@ -149,24 +151,24 @@ export default function Navbar({ onPageChange, dhakaTime, isDhakaOpen, currentUs
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, y: -10, scale: 0.95 }}
                     transition={{ duration: 0.25 }}
-                    className="absolute top-full left-1/2 -translate-x-1/2 mt-1 w-[460px] bg-black/85 backdrop-blur-3xl border border-white/10 rounded-[2rem] overflow-hidden shadow-[0_24px_50px_rgba(0,0,0,0.9)] z-50 grid grid-cols-5"
+                    className="absolute top-full left-1/2 -translate-x-1/2 mt-1 w-[460px] bg-white/[0.042] [backdrop-filter:blur(22px)_saturate(140%)] [-webkit-backdrop-filter:blur(22px)_saturate(140%)] border border-[rgba(181,141,255,0.20)] rounded-[24px] overflow-hidden shadow-[inset_0_1px_0_rgba(255,255,255,0.09),inset_0_0_28px_rgba(124,42,235,0.05),0_24px_60px_rgba(0,0,0,0.70)] z-50 grid grid-cols-5"
                   >
                     <div className="col-span-3 p-5 flex flex-col gap-2.5">
                       <h4 className="text-[11px] uppercase tracking-wider text-primary font-bold mb-1 px-2.5">Galaxa Hubs</h4>
-                      <button onClick={() => goToHub('/hub/visitor')} className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-white/5 text-left transition-all group/item">
+                      <button onClick={() => goToHub('/hub/visitor')} className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-[rgba(124,42,235,0.08)] text-left transition-all group/item">
                         <div className="w-8 h-8 rounded-lg bg-pink-500/20 flex items-center justify-center text-pink-400 group-hover/item:scale-110 transition-transform"><Compass className="w-4 h-4" /></div>
                         <div><p className="text-xs font-bold text-white mb-0.5">Visitor's Hub</p><p className="text-[10px] text-white/50">Zero-code AI guides & prompts</p></div>
                       </button>
-                      <button onClick={() => goToHub('/hub/client')} className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-white/5 text-left transition-all group/item">
+                      <button onClick={() => goToHub('/hub/client')} className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-[rgba(124,42,235,0.08)] text-left transition-all group/item">
                         <div className="w-8 h-8 rounded-lg bg-cyan-500/20 flex items-center justify-center text-cyan-400 group-hover/item:scale-110 transition-transform"><Lock className="w-4 h-4" /></div>
                         <div><p className="text-xs font-bold text-white mb-0.5">Client's Hub</p><p className="text-[10px] text-white/50">Agreements, metrics & live logs</p></div>
                       </button>
-                      <button onClick={() => goToHub('/hub/builder')} className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-white/5 text-left transition-all group/item">
+                      <button onClick={() => goToHub('/hub/builder')} className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-[rgba(124,42,235,0.08)] text-left transition-all group/item">
                         <div className="w-8 h-8 rounded-lg bg-emerald-500/20 flex items-center justify-center text-emerald-400 group-hover/item:scale-110 transition-transform"><BookOpen className="w-4 h-4" /></div>
                         <div><p className="text-xs font-bold text-white mb-0.5">Builder's Hub</p><p className="text-[10px] text-white/50">Project management & payments</p></div>
                       </button>
                     </div>
-                    <div className="col-span-2 bg-white/5 p-5 flex flex-col justify-between border-l border-white/10 text-left">
+                    <div className="col-span-2 bg-white/[0.04] p-5 flex flex-col justify-between border-l border-[rgba(181,141,255,0.15)] text-left">
                       <div>
                         <h4 className="text-[10px] uppercase tracking-wider text-white/40 font-bold mb-2">Workspace HQ</h4>
                         <div className="flex items-center gap-1.5 mb-1.5">
@@ -198,7 +200,7 @@ export default function Navbar({ onPageChange, dhakaTime, isDhakaOpen, currentUs
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, y: -10, scale: 0.95 }}
                     transition={{ duration: 0.25 }}
-                    className="absolute top-full left-1/2 -translate-x-1/2 mt-1 w-[500px] bg-black/85 backdrop-blur-3xl border border-white/10 rounded-[2rem] overflow-hidden shadow-[0_24px_50px_rgba(0,0,0,0.9)] z-50 p-5 grid grid-cols-2 gap-3"
+                    className="absolute top-full left-1/2 -translate-x-1/2 mt-1 w-[500px] bg-white/[0.042] [backdrop-filter:blur(22px)_saturate(140%)] [-webkit-backdrop-filter:blur(22px)_saturate(140%)] border border-[rgba(181,141,255,0.20)] rounded-[24px] overflow-hidden shadow-[inset_0_1px_0_rgba(255,255,255,0.09),inset_0_0_28px_rgba(124,42,235,0.05),0_24px_60px_rgba(0,0,0,0.70)] z-50 p-5 grid grid-cols-2 gap-3"
                   >
                     <div className="col-span-2 mb-1">
                       <h4 className="text-[11px] uppercase tracking-wider text-secondary font-bold mb-1 px-2">Galaxa Expertise</h4>
@@ -207,7 +209,7 @@ export default function Navbar({ onPageChange, dhakaTime, isDhakaOpen, currentUs
                       <button
                         key={item.anchor}
                         onClick={() => navTo(`/services#${item.anchor}`)}
-                        className="flex items-start gap-3 p-3 rounded-2xl hover:bg-white/5 text-left transition-all group/exp"
+                        className="flex items-start gap-3 p-3 rounded-2xl hover:bg-[rgba(124,42,235,0.08)] text-left transition-all group/exp"
                       >
                         <div className={`w-8 h-8 rounded-xl flex items-center justify-center border group-hover/exp:scale-110 transition-transform flex-shrink-0 ${COLOR_MAP[item.color]}`}>
                           <item.icon className="w-4 h-4" />
@@ -255,11 +257,11 @@ export default function Navbar({ onPageChange, dhakaTime, isDhakaOpen, currentUs
                     animate={{ opacity: 1, scale: 1, y: 0 }}
                     exit={{ opacity: 0, scale: 0.9, y: 15 }}
                     transition={{ duration: 0.25 }}
-                    className="absolute right-0 top-full mt-3 w-64 bg-black/90 backdrop-blur-3xl border border-white/10 rounded-2xl overflow-hidden shadow-[0_15px_30px_rgba(0,0,0,0.8)] z-50 text-left"
+                    className="absolute right-0 top-full mt-3 w-64 bg-white/[0.042] [backdrop-filter:blur(22px)_saturate(140%)] [-webkit-backdrop-filter:blur(22px)_saturate(140%)] border border-[rgba(181,141,255,0.20)] rounded-[18px] overflow-hidden shadow-[inset_0_1px_0_rgba(255,255,255,0.09),inset_0_0_28px_rgba(124,42,235,0.05),0_20px_60px_rgba(0,0,0,0.70)] z-50 text-left"
                   >
                     {/* User profile (if signed in) */}
                     {currentUser && (
-                      <div className="px-5 py-4 border-b border-white/10 bg-white/[0.02]">
+                      <div className="px-5 py-4 border-b border-[rgba(181,141,255,0.15)] bg-white/[0.03]">
                         <div className="flex items-center gap-2.5 mb-2.5">
                           {currentUser.photoURL ? (
                             <img src={currentUser.photoURL} alt={currentUser.displayName || 'Profile'} className="w-8 h-8 rounded-full border border-primary/40 object-cover" referrerPolicy="no-referrer" />
@@ -281,7 +283,7 @@ export default function Navbar({ onPageChange, dhakaTime, isDhakaOpen, currentUs
 
                     {/* Desktop-only: Profile, Settings, social links */}
                     <div className="hidden md:block">
-                      <div className="px-5 py-3 border-b border-white/10">
+                      <div className="px-5 py-3 border-b border-[rgba(181,141,255,0.15)]">
                         <button disabled className="w-full flex items-center gap-3 py-2 text-white/35 text-xs font-semibold cursor-not-allowed">
                           <User className="w-3.5 h-3.5" /> My Profile
                           <span className="ml-auto text-[9px] bg-white/10 rounded px-1.5 py-0.5 font-mono">Soon</span>
@@ -307,7 +309,7 @@ export default function Navbar({ onPageChange, dhakaTime, isDhakaOpen, currentUs
                     {/* Mobile-only: full navigation */}
                     <div className="md:hidden">
                       {/* Main nav links */}
-                      <div className="flex flex-col border-b border-white/10 pb-2 pt-1">
+                      <div className="flex flex-col border-b border-[rgba(181,141,255,0.15)] pb-2 pt-1">
                         {[
                           { label: 'Home', path: '/', icon: Home },
                           { label: 'Services', path: '/services', icon: Briefcase },
@@ -315,13 +317,13 @@ export default function Navbar({ onPageChange, dhakaTime, isDhakaOpen, currentUs
                           { label: 'About', path: '/about', icon: Users },
                           { label: 'Contact', path: '/contact', icon: Mail },
                         ].map(({ label, path, icon: Icon }) => (
-                          <button key={path} onClick={() => navTo(path)} className={`px-5 py-3 hover:bg-white/5 text-sm font-semibold flex items-center gap-3 cursor-pointer text-left ${currentPath === path ? 'text-primary' : 'text-white/80'}`}>
+                          <button key={path} onClick={() => navTo(path)} className={`px-5 py-3 hover:bg-[rgba(124,42,235,0.08)] text-sm font-semibold flex items-center gap-3 cursor-pointer text-left ${currentPath === path ? 'text-primary' : 'text-white/80'}`}>
                             <Icon className="w-4 h-4" /> {label}
                           </button>
                         ))}
                       </div>
                       {/* Hubs */}
-                      <div className="px-5 py-3 border-b border-white/10">
+                      <div className="px-5 py-3 border-b border-[rgba(181,141,255,0.15)]">
                         <span className="text-[9px] font-bold text-primary tracking-widest uppercase font-mono block mb-2">Hubs</span>
                         <div className="flex flex-col gap-1">
                           <button onClick={() => goToHub('/hub/visitor')} className="py-2.5 text-white/75 hover:text-white text-sm font-semibold flex items-center gap-3"><Compass className="w-4 h-4 text-pink-400" /> Visitor Hub</button>
@@ -330,7 +332,7 @@ export default function Navbar({ onPageChange, dhakaTime, isDhakaOpen, currentUs
                         </div>
                       </div>
                       {/* Services */}
-                      <div className="px-5 py-3 border-b border-white/10">
+                      <div className="px-5 py-3 border-b border-[rgba(181,141,255,0.15)]">
                         <span className="text-[9px] font-bold text-secondary tracking-widest uppercase font-mono block mb-2">Expertise</span>
                         <div className="flex flex-col gap-0.5">
                           {EXPERTISE_ITEMS.map((item) => (
