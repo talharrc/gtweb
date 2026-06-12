@@ -1,4 +1,4 @@
-import { useState, FormEvent } from 'react';
+﻿import { useState, FormEvent } from 'react';
 import { useLocation } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
@@ -41,7 +41,7 @@ export default function ContactView() {
 
       <div className="max-w-7xl mx-auto px-6">
         <div className="text-center mb-16">
-          <h1 className="text-5xl md:text-6xl font-bold text-white mb-4" style={{ fontFamily: 'Syne, sans-serif' }}>Let's Talk.</h1>
+          <h1 className="text-5xl md:text-6xl font-bold text-white mb-4" style={{ fontFamily: 'Satoshi, sans-serif' }}>Let's Talk.</h1>
           <p className="text-white/60 text-lg">We're based in Dhaka and available via WhatsApp, email, or the form below.</p>
         </div>
 
@@ -124,14 +124,14 @@ export default function ContactView() {
             {done ? (
               <div className="flex flex-col items-center justify-center text-center h-full py-12">
                 <CheckCircle className="w-14 h-14 text-green-400 mb-5" />
-                <h3 className="text-white font-bold text-2xl mb-3" style={{ fontFamily: 'Syne, sans-serif' }}>Message received!</h3>
+                <h3 className="text-white font-bold text-2xl mb-3" style={{ fontFamily: 'Satoshi, sans-serif' }}>Message received!</h3>
                 <p className="text-white/60 leading-relaxed max-w-sm">
                   We've received your message. We'll get back to you within 24 hours on WhatsApp or email.
                 </p>
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="flex flex-col gap-5">
-                <h2 className="text-xl font-bold text-white mb-1" style={{ fontFamily: 'Syne, sans-serif' }}>Send us a message</h2>
+                <h2 className="text-xl font-bold text-white mb-1" style={{ fontFamily: 'Satoshi, sans-serif' }}>Send us a message</h2>
 
                 <div>
                   <label className="text-xs font-mono text-white/40 uppercase tracking-widest block mb-1.5">Name *</label>
@@ -175,7 +175,7 @@ export default function ContactView() {
                     onChange={e => setForm(f => ({ ...f, subject: e.target.value }))}
                     className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-primary/50 transition-colors appearance-none cursor-pointer"
                   >
-                    {SUBJECTS.map(s => <option key={s} value={s} className="bg-[#0b1326]">{s}</option>)}
+                    {SUBJECTS.map(s => <option key={s} value={s} className="bg-[#05030F]">{s}</option>)}
                   </select>
                 </div>
 
@@ -196,7 +196,7 @@ export default function ContactView() {
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="w-full py-4 bg-primary hover:bg-primary/90 disabled:opacity-50 text-white font-bold rounded-xl transition-all duration-300 shadow-[0_8px_30px_rgba(139,44,255,0.25)] min-h-[52px]"
+                  className="w-full py-4 bg-primary hover:bg-primary/90 disabled:opacity-50 text-white font-bold rounded-xl transition-all duration-300 shadow-[0_8px_30px_rgba(124,42,235,0.25)] min-h-[52px]"
                 >
                   {submitting ? 'Sending...' : 'Send Message'}
                 </button>

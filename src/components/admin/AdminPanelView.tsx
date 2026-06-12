@@ -1,4 +1,4 @@
-import { useState, FormEvent } from 'react';
+﻿import { useState, FormEvent } from 'react';
 import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import {
   Lock, FolderOpen, Users, CreditCard, FileText, ClipboardList,
@@ -138,7 +138,7 @@ export default function AdminPanelView() {
           <button
             onClick={handleGoogleSignIn}
             disabled={googleLoading}
-            className="w-full py-2.5 rounded-xl bg-white text-[#0b1326] text-sm font-bold transition-all flex items-center justify-center gap-2 hover:bg-white/90 disabled:opacity-60"
+            className="w-full py-2.5 rounded-xl bg-white text-[#05030F] text-sm font-bold transition-all flex items-center justify-center gap-2 hover:bg-white/90 disabled:opacity-60"
           >
             {googleLoading
               ? <Loader2 className="w-4 h-4 animate-spin" />

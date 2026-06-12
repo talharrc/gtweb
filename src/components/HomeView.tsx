@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+﻿import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { motion, AnimatePresence } from 'motion/react';
@@ -123,7 +123,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
 
       {/* ── Hero Section ──────────────────────────────────────────────────────── */}
       <section className="relative min-h-[92vh] flex flex-col items-center justify-center pt-28 pb-16 overflow-hidden">
-        <div className="absolute inset-0 z-0 select-none overflow-hidden bg-[#0b1326]">
+        <div className="absolute inset-0 z-0 select-none overflow-hidden bg-[#05030F]">
           <img
             alt="Hero MacBook Atmosphere"
             className="w-full h-full object-cover opacity-68 contrast-105 scale-100 pointer-events-none"
@@ -134,12 +134,12 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
             src={heroLaptopDashboard}
             referrerPolicy="no-referrer"
           />
-          <div className="absolute inset-0 bg-gradient-to-tr from-[#0b1326] via-[#8b2cff]/6 to-[#ff2c6d]/6 pointer-events-none" />
-          <div className="absolute inset-x-0 top-0 h-[60%] bg-gradient-to-b from-[#0b1326] via-[#0b1326]/90 to-transparent pointer-events-none" />
-          <div className="absolute inset-x-0 top-0 h-1/3 bg-gradient-to-b from-[#8b2cff]/10 via-transparent to-transparent pointer-events-none" />
-          <div className="absolute inset-x-0 bottom-0 h-1/4 bg-gradient-to-t from-[#0b1326] to-transparent pointer-events-none" />
-          <div className="absolute top-1/2 left-1/4 -translate-y-1/2 -translate-x-1/2 w-[400px] h-[400px] bg-[#8b2cff]/12 blur-[90px] rounded-full pointer-events-none" />
-          <div className="absolute top-1/2 right-1/4 -translate-y-1/2 translate-x-1/2 w-[350px] h-[350px] bg-[#ff2c6d]/10 blur-[90px] rounded-full pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-to-tr from-[#05030F] via-[#7C2AEB]/6 to-[#7C2AEB]/6 pointer-events-none" />
+          <div className="absolute inset-x-0 top-0 h-[60%] bg-gradient-to-b from-[#05030F] via-[#05030F]/90 to-transparent pointer-events-none" />
+          <div className="absolute inset-x-0 top-0 h-1/3 bg-gradient-to-b from-[#7C2AEB]/10 via-transparent to-transparent pointer-events-none" />
+          <div className="absolute inset-x-0 bottom-0 h-1/4 bg-gradient-to-t from-[#05030F] to-transparent pointer-events-none" />
+          <div className="absolute top-1/2 left-1/4 -translate-y-1/2 -translate-x-1/2 w-[400px] h-[400px] bg-[#7C2AEB]/12 blur-[90px] rounded-full pointer-events-none" />
+          <div className="absolute top-1/2 right-1/4 -translate-y-1/2 translate-x-1/2 w-[350px] h-[350px] bg-[#7C2AEB]/10 blur-[90px] rounded-full pointer-events-none" />
         </div>
 
         <div className="max-w-5xl mx-auto px-6 text-center relative z-10 pt-12">
@@ -187,7 +187,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
       </section>
 
       {/* ── Stats Strip ────────────────────────────────────────────────────────── */}
-      <section className="border-y border-white/5 bg-[#0b1326]">
+      <section className="border-y border-white/5 bg-[#05030F]">
         <div className="max-w-7xl mx-auto px-6 py-6 overflow-x-auto">
           <div className="flex items-center min-w-max gap-0 divide-x divide-white/10 mx-auto md:justify-center">
             {[
@@ -210,7 +210,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
       <section className="py-24 px-6">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold text-white mb-4" style={{ fontFamily: 'Syne, sans-serif' }}>What We Build</h2>
+            <h2 className="text-4xl md:text-5xl font-bold text-white mb-4" style={{ fontFamily: 'Satoshi, sans-serif' }}>What We Build</h2>
             <p className="text-white/60 text-lg max-w-xl mx-auto">End-to-end digital systems — from strategy to deployment.</p>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
@@ -218,7 +218,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
               <button
                 key={svc.anchor}
                 onClick={() => navigate(`/services#${svc.anchor}`)}
-                className="glass-card rounded-2xl p-6 text-left group hover:border-primary/30 hover:shadow-[0_0_30px_rgba(139,44,255,0.12)] transition-all duration-300 cursor-pointer"
+                className="glass-card rounded-2xl p-6 text-left group hover:border-primary/30 hover:shadow-[0_0_30px_rgba(124,42,235,0.12)] transition-all duration-300 cursor-pointer"
               >
                 <div className={`w-11 h-11 rounded-xl flex items-center justify-center border mb-4 ${CARD_COLORS[svc.color]}`}>
                   <svc.icon className="w-5 h-5" />
@@ -235,10 +235,10 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
       </section>
 
       {/* ── How We Work ────────────────────────────────────────────────────────── */}
-      <section className="py-24 px-6 bg-[#070d1f]">
+      <section className="py-24 px-6 bg-[#0A0825]">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold text-white mb-4" style={{ fontFamily: 'Syne, sans-serif' }}>How We Work</h2>
+            <h2 className="text-4xl md:text-5xl font-bold text-white mb-4" style={{ fontFamily: 'Satoshi, sans-serif' }}>How We Work</h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6 relative">
             {/* Connector line — desktop only */}
@@ -246,7 +246,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
             {PROCESS_STEPS.map((step, i) => (
               <div key={step.num} className="relative flex flex-col items-center text-center md:items-center">
                 <div className="w-14 h-14 rounded-full border-2 border-primary/40 bg-primary/10 flex items-center justify-center mb-5 relative z-10">
-                  <span className="text-lg font-bold text-primary" style={{ fontFamily: 'Syne, sans-serif' }}>{step.num}</span>
+                  <span className="text-lg font-bold text-primary" style={{ fontFamily: 'Satoshi, sans-serif' }}>{step.num}</span>
                 </div>
                 {/* Vertical connector — mobile only */}
                 {i < PROCESS_STEPS.length - 1 && (
@@ -264,14 +264,14 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
       <section className="py-24 px-6">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold text-white mb-4" style={{ fontFamily: 'Syne, sans-serif' }}>Selected Work</h2>
+            <h2 className="text-4xl md:text-5xl font-bold text-white mb-4" style={{ fontFamily: 'Satoshi, sans-serif' }}>Selected Work</h2>
             <p className="text-white/60 text-lg">Real projects. Real clients. Real results.</p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {PROJECTS.map((proj) => (
               <div key={proj.slug} className="glass-card rounded-2xl overflow-hidden group hover:border-primary/30 transition-all duration-300">
                 {/* TODO: replace placeholder with actual screenshot */}
-                <div className="h-44 bg-gradient-to-br from-primary/20 via-[#0b1326] to-secondary/20 flex items-center justify-center relative overflow-hidden">
+                <div className="h-44 bg-gradient-to-br from-primary/20 via-[#05030F] to-secondary/20 flex items-center justify-center relative overflow-hidden">
                   <Globe className="w-12 h-12 text-primary/30" />
                   <div className="absolute top-3 right-3 text-xl">{proj.country}</div>
                 </div>
@@ -298,10 +298,10 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
       </section>
 
       {/* ── FAQ ────────────────────────────────────────────────────────────────── */}
-      <section className="py-24 px-6 bg-[#070d1f]">
+      <section className="py-24 px-6 bg-[#0A0825]">
         <div className="max-w-3xl mx-auto">
           <div className="text-center mb-14">
-            <h2 className="text-4xl md:text-5xl font-bold text-white mb-4" style={{ fontFamily: 'Syne, sans-serif' }}>Common Questions</h2>
+            <h2 className="text-4xl md:text-5xl font-bold text-white mb-4" style={{ fontFamily: 'Satoshi, sans-serif' }}>Common Questions</h2>
           </div>
           <div className="flex flex-col gap-3">
             {FAQS.map((faq, i) => (
@@ -337,12 +337,12 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
         <div className="absolute inset-0 bg-gradient-to-br from-primary/8 via-transparent to-secondary/8 pointer-events-none" />
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] bg-primary/6 blur-[120px] rounded-full pointer-events-none" />
         <div className="max-w-3xl mx-auto text-center relative z-10">
-          <h2 className="text-4xl md:text-6xl font-bold text-white mb-5" style={{ fontFamily: 'Syne, sans-serif' }}>Ready to build something real?</h2>
+          <h2 className="text-4xl md:text-6xl font-bold text-white mb-5" style={{ fontFamily: 'Satoshi, sans-serif' }}>Ready to build something real?</h2>
           <p className="text-white/60 text-lg mb-10 max-w-xl mx-auto leading-relaxed">Start with a free audit — we'll tell you exactly where your brand stands.</p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <button
               onClick={() => navigate('/audit')}
-              className="px-8 py-4 bg-primary hover:bg-primary/90 text-white font-bold rounded-full transition-all duration-300 shadow-[0_8px_30px_rgba(139,44,255,0.35)] hover:shadow-[0_8px_40px_rgba(139,44,255,0.5)]"
+              className="px-8 py-4 bg-primary hover:bg-primary/90 text-white font-bold rounded-full transition-all duration-300 shadow-[0_8px_30px_rgba(124,42,235,0.35)] hover:shadow-[0_8px_40px_rgba(124,42,235,0.5)]"
             >
               Book a Free Audit
             </button>

@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom';
+﻿import { useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { Home, ArrowLeft } from 'lucide-react';
 
@@ -17,15 +17,15 @@ export default function NotFoundView() {
       </div>
 
       <div className="text-center relative z-10">
-        <p className="text-[120px] md:text-[180px] font-black text-white/5 leading-none select-none mb-0" style={{ fontFamily: 'Syne, sans-serif' }}>404</p>
+        <p className="text-[120px] md:text-[180px] font-black text-white/5 leading-none select-none mb-0" style={{ fontFamily: 'Satoshi, sans-serif' }}>404</p>
         <div className="-mt-8 md:-mt-12 mb-8">
-          <h1 className="text-4xl md:text-5xl font-bold text-white mb-4" style={{ fontFamily: 'Syne, sans-serif' }}>Lost in space.</h1>
+          <h1 className="text-4xl md:text-5xl font-bold text-white mb-4" style={{ fontFamily: 'Satoshi, sans-serif' }}>Lost in space.</h1>
           <p className="text-white/50 text-lg max-w-sm mx-auto">This page doesn't exist. Let's get you back to something real.</p>
         </div>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <button
             onClick={() => navigate('/')}
-            className="px-8 py-4 bg-primary hover:bg-primary/90 text-white font-bold rounded-full transition-all duration-300 shadow-[0_8px_30px_rgba(139,44,255,0.35)] flex items-center justify-center gap-2"
+            className="px-8 py-4 bg-primary hover:bg-primary/90 text-white font-bold rounded-full transition-all duration-300 shadow-[0_8px_30px_rgba(124,42,235,0.35)] flex items-center justify-center gap-2"
           >
             <Home className="w-4 h-4" /> Go Home
           </button>

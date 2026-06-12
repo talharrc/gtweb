@@ -1,4 +1,4 @@
-import { useState, FormEvent } from 'react';
+﻿import { useState, FormEvent } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '../lib/firebase';
@@ -55,7 +55,7 @@ function labelClass() {
 }
 
 function selectClass() {
-  return 'w-full bg-[#0e1930] border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-primary/50 transition-colors appearance-none cursor-pointer';
+  return 'w-full bg-[#0A0825] border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-primary/50 transition-colors appearance-none cursor-pointer';
 }
 
 interface CommonFields {
@@ -235,7 +235,7 @@ export default function AuditView() {
         {step === 0 && (
           <>
             <div className="text-center mb-14">
-              <h1 className="text-5xl md:text-6xl font-bold text-white mb-5" style={{ fontFamily: 'Syne, sans-serif' }}>Free Brand Audit</h1>
+              <h1 className="text-5xl md:text-6xl font-bold text-white mb-5" style={{ fontFamily: 'Satoshi, sans-serif' }}>Free Brand Audit</h1>
               <p className="text-white/60 text-lg max-w-xl mx-auto leading-relaxed">
                 Choose what you'd like us to audit. We'll prepare a personalized report within 24 hours.
               </p>
@@ -275,7 +275,7 @@ export default function AuditView() {
               >
                 <ArrowLeft className="w-4 h-4" /> Change audit type
               </button>
-              <h1 className="text-4xl font-bold text-white mb-3" style={{ fontFamily: 'Syne, sans-serif' }}>{auditLabel} Audit</h1>
+              <h1 className="text-4xl font-bold text-white mb-3" style={{ fontFamily: 'Satoshi, sans-serif' }}>{auditLabel} Audit</h1>
               <p className="text-white/50">Fill in the details below. We'll prepare your personalized audit report within 24 hours.</p>
             </div>
 
@@ -393,7 +393,7 @@ export default function AuditView() {
               <button
                 type="submit"
                 disabled={submitting}
-                className="w-full py-4 bg-primary hover:bg-primary/90 disabled:opacity-50 text-white font-bold rounded-xl transition-all duration-300 shadow-[0_8px_30px_rgba(139,44,255,0.25)] min-h-[52px] text-base"
+                className="w-full py-4 bg-primary hover:bg-primary/90 disabled:opacity-50 text-white font-bold rounded-xl transition-all duration-300 shadow-[0_8px_30px_rgba(124,42,235,0.25)] min-h-[52px] text-base"
               >
                 {submitting ? 'Submitting...' : 'Submit Audit Request'}
               </button>
@@ -407,7 +407,7 @@ export default function AuditView() {
           <div className="text-center">
             <div className="glass-card rounded-3xl p-14">
               <CheckCircle className="w-16 h-16 text-green-400 mx-auto mb-6" />
-              <h1 className="text-4xl font-bold text-white mb-4" style={{ fontFamily: 'Syne, sans-serif' }}>Thank you, {common.name}!</h1>
+              <h1 className="text-4xl font-bold text-white mb-4" style={{ fontFamily: 'Satoshi, sans-serif' }}>Thank you, {common.name}!</h1>
               <p className="text-white/65 leading-relaxed mb-3 max-w-lg mx-auto">
                 Your {auditLabel.toLowerCase()} audit request has been received. Our team will prepare your personalized audit report and send it to <span className="text-white font-medium">{common.email}</span> within 24 hours.
               </p>

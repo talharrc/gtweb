@@ -1,4 +1,4 @@
-import { useState } from 'react';
+﻿import { useState } from 'react';
 import { motion } from 'motion/react';
 import { Sparkles, Brain, Award, Send, ThumbsUp, Copy, Check, MessageSquare, Search, ArrowRight } from 'lucide-react';
 
@@ -109,7 +109,7 @@ export default function VisitorHubView() {
         
         {/* Page Header */}
         <div className="mb-12 relative z-10">
-          <div className="inline-flex items-center gap-2 bg-primary/10 border border-primary/25 rounded-full px-4 py-1.5 mb-4 shadow-[0_0_15px_rgba(139,44,255,0.15)]">
+          <div className="inline-flex items-center gap-2 bg-primary/10 border border-primary/25 rounded-full px-4 py-1.5 mb-4 shadow-[0_0_15px_rgba(124,42,235,0.15)]">
             <Brain className="w-4 h-4 text-primary-light" />
             <span className="text-[10px] sm:text-[11px] font-mono font-bold tracking-widest text-[#fff] uppercase">
               VISITOR'S RESOURCE HUB
@@ -343,7 +343,7 @@ export default function VisitorHubView() {
                   {/* Social actions bar */}
                   <div className="flex items-center gap-6 pt-4 border-t border-white/5 font-mono text-xs text-white/40">
                     <button className="flex items-center gap-1.5 hover:text-white transition-colors cursor-pointer text-xs focus:outline-none">
-                      <ThumbsUp className="w-4 h-4 text-[#ff2c6d]" />
+                      <ThumbsUp className="w-4 h-4 text-[#7C2AEB]" />
                       <span>{post.likes}</span>
                     </button>
                     <button className="flex items-center gap-1.5 hover:text-white transition-colors cursor-pointer text-xs focus:outline-none">

@@ -1,18 +1,26 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@1,400;1,500;1,600;1,700;1,800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Sora:wght@300;400;500;600;700;800&family=Syne:wght@400;600;700;800&display=swap');
+@import url('https://api.fontshare.com/v2/css?f%5B%5D=satoshi@300,400,500,700,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Noto+Sans+Bengali:wght@500;700&display=swap');
 @import "tailwindcss";
 
 @theme {
-  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
-  --font-display: "Plus Jakarta Sans", "Sora", sans-serif;
-  --font-syne: "Syne", sans-serif;
-  --font-serif: "Playfair Display", Georgia, serif;
-  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --font-sans: "Satoshi", "Segoe UI", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Satoshi", "Segoe UI", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 
-  --color-primary: #8b2cff;
-  --color-secondary: #ff2c6d;
-  --color-tertiary: #01dbe9;
-  --color-dark-bg: #0b1326;
-  --color-glass-dark: rgba(20, 18, 30, 0.65);
+  /* Brand palette — GalaxaTech v2.1 */
+  --color-void:     #05030F;
+  --color-midnight: #0A0825;
+  --color-indigo:   #1A133F;
+  --color-signal:   #5E29E8;
+  --color-primary:  #7C2AEB;
+  --color-lavender: #B58DFF;
+  --color-cool:     #78D5FF;
+
+  /* Tailwind semantic aliases */
+  --color-secondary: #B58DFF;
+  --color-tertiary:  #78D5FF;
+  --color-dark-bg:   #05030F;
+  --color-glass-dark: rgba(255,255,255,0.042);
 }
 
 :root {
@@ -20,64 +28,67 @@
 }
 
 body {
-  background-color: #0b1326;
-  color: #dbe2fd;
+  background-color: #05030F;
+  color: #A8A3BE;
   font-family: var(--font-sans);
   overflow-x: hidden;
   scroll-behavior: smooth;
 }
 
-/* Custom Glass Panels & Glow Effects */
+/* Glass Panels — brand kit spec */
 .glass-card {
-  background: rgba(20, 18, 30, 0.6);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255,255,255,0.042);
+  backdrop-filter: blur(22px) saturate(140%);
+  -webkit-backdrop-filter: blur(22px) saturate(140%);
+  border: 1px solid rgba(181,141,255,0.18);
+  border-radius: 18px;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.09),
+    inset 0 0 28px rgba(124,42,235,0.05),
+    0 20px 60px rgba(0,0,0,0.50);
 }
 
 .glass-nav {
-  background: rgba(0, 0, 0, 0.85);
+  background: rgba(0,0,0,0.85);
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(181,141,255,0.15);
 }
 
+/* Text gradients */
 .text-gradient {
-  background: linear-gradient(135deg, #8b2cff 0%, #ff2c6d 100%);
+  background: linear-gradient(135deg, #7C2AEB 0%, #B58DFF 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
 .text-gradient-cyan {
-  background: linear-gradient(135deg, #8b2cff 0%, #01dbe9 100%);
+  background: linear-gradient(135deg, #7C2AEB 0%, #78D5FF 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
+/* Button / section gradients */
 .primary-gradient {
-  background: linear-gradient(135deg, #8b2cff 0%, #ff2c6d 100%);
+  background: linear-gradient(135deg, #7C2AEB 0%, #B58DFF 100%);
 }
 
 .cyan-gradient {
-  background: linear-gradient(135deg, #00767e 0%, #01dbe9 100%);
+  background: linear-gradient(135deg, #5E29E8 0%, #78D5FF 100%);
 }
 
+/* Card hover glow */
 .glow-hover:hover {
-  box-shadow: 0 0 30px rgba(139, 44, 255, 0.4);
-  transform: translateY(-4px);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 0 40px rgba(124,42,235,0.45);
+  transform: translateY(-5px);
+  transition: all 0.35s cubic-bezier(0.2,0.7,0.2,1);
 }
 
-/* Custom Hide Scrollbar */
-.no-scrollbar::-webkit-scrollbar {
-  display: none;
-}
-.no-scrollbar {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
+/* Scrollbar hide */
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-/* Animated Grid Background */
+/* Ambient background mesh */
 .bg-mesh {
   position: fixed;
   top: 0;
@@ -85,11 +96,10 @@ body {
   width: 100%;
   height: 100%;
   z-index: -10;
-  background: 
-    radial-gradient(circle at 10% 20%, rgba(139, 44, 255, 0.12) 0%, transparent 40%),
-    radial-gradient(circle at 90% 80%, rgba(255, 44, 109, 0.1) 0%, transparent 40%),
-    radial-gradient(circle at 50% 50%, rgba(1, 219, 233, 0.05) 0%, transparent 50%),
-    #0b1326;
+  background:
+    radial-gradient(55% 45% at 88% 4%, rgba(124,42,235,0.22), transparent 60%),
+    radial-gradient(40% 35% at 4% 92%, rgba(120,213,255,0.10), transparent 60%),
+    #05030F;
 }
 
 @keyframes marquee {
@@ -97,13 +107,8 @@ body {
   100% { transform: translateX(-50%); }
 }
 
-.animate-marquee {
-  animation: marquee 35s linear infinite;
-}
-
-.animate-marquee:hover {
-  animation-play-state: paused;
-}
+.animate-marquee { animation: marquee 35s linear infinite; }
+.animate-marquee:hover { animation-play-state: paused; }
 
 /* Admin / Hub form inputs */
 .admin-input {
@@ -117,7 +122,7 @@ body {
 }
 .admin-input:focus {
   outline: none;
-  border-color: rgba(139,44,255,0.5);
+  border-color: rgba(124,42,235,0.5);
 }
 .admin-input::placeholder { color: rgba(255,255,255,0.3); }
-.admin-input option { background: #0b1326; color: #fff; }
+.admin-input option { background: #05030F; color: #fff; }

@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom';
+﻿import { useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { Globe, ArrowUpRight } from 'lucide-react';
 
@@ -45,16 +45,16 @@ export default function PortfolioView() {
 
       {/* Header */}
       <div className="max-w-7xl mx-auto px-6 mb-20 text-center">
-        <h1 className="text-5xl md:text-6xl font-bold text-white mb-5" style={{ fontFamily: 'Syne, sans-serif' }}>Selected Work</h1>
+        <h1 className="text-5xl md:text-6xl font-bold text-white mb-5" style={{ fontFamily: 'Satoshi, sans-serif' }}>Selected Work</h1>
         <p className="text-white/60 text-lg max-w-xl mx-auto">Real projects. Real clients. Real results.</p>
       </div>
 
       {/* Project Grid */}
       <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-6">
         {PROJECTS.map((proj) => (
-          <div key={proj.slug} className="glass-card rounded-2xl overflow-hidden flex flex-col hover:border-primary/30 hover:shadow-[0_0_30px_rgba(139,44,255,0.1)] transition-all duration-300 group">
+          <div key={proj.slug} className="glass-card rounded-2xl overflow-hidden flex flex-col hover:border-primary/30 hover:shadow-[0_0_30px_rgba(124,42,235,0.1)] transition-all duration-300 group">
             {/* Placeholder image — TODO: owner to provide real screenshots */}
-            <div className="h-48 bg-gradient-to-br from-primary/20 via-[#0b1326] to-secondary/20 flex items-center justify-center relative overflow-hidden">
+            <div className="h-48 bg-gradient-to-br from-primary/20 via-[#05030F] to-secondary/20 flex items-center justify-center relative overflow-hidden">
               <Globe className="w-14 h-14 text-primary/25" />
               <div className="absolute top-4 left-4">
                 <span className="text-2xl">{proj.country}</span>

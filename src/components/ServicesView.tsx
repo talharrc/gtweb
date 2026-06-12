@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom';
+﻿import { useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { Laptop, Smartphone, TrendingUp, Cpu, Brush, Workflow, ArrowUpRight, CheckCircle } from 'lucide-react';
 
@@ -132,7 +132,7 @@ export default function ServicesView() {
 
       {/* Page Header */}
       <div className="max-w-7xl mx-auto px-6 mb-20 text-center">
-        <h1 className="text-5xl md:text-6xl font-bold text-white mb-5" style={{ fontFamily: 'Syne, sans-serif' }}>Our Expertise</h1>
+        <h1 className="text-5xl md:text-6xl font-bold text-white mb-5" style={{ fontFamily: 'Satoshi, sans-serif' }}>Our Expertise</h1>
         <p className="text-white/60 text-lg max-w-2xl mx-auto leading-relaxed">
           Everything your brand needs to grow — strategy, design, development, and automation — delivered as one integrated system.
         </p>
@@ -153,7 +153,7 @@ export default function ServicesView() {
                   <svc.icon className="w-7 h-7" />
                 </div>
                 <div className="text-xs font-mono text-white/30 uppercase tracking-widest mb-2">0{idx + 1}</div>
-                <h2 className="text-3xl font-bold text-white mb-3" style={{ fontFamily: 'Syne, sans-serif' }}>{svc.title}</h2>
+                <h2 className="text-3xl font-bold text-white mb-3" style={{ fontFamily: 'Satoshi, sans-serif' }}>{svc.title}</h2>
                 <p className="text-white/60 text-base mb-6 leading-relaxed font-medium">{svc.subtitle}</p>
                 {svc.description.map((para, i) => (
                   <p key={i} className="text-white/50 text-sm leading-relaxed mb-4">{para}</p>
@@ -183,11 +183,11 @@ export default function ServicesView() {
       {/* Bottom CTA */}
       <div className="max-w-7xl mx-auto px-6 mt-20 text-center">
         <div className="glass-card rounded-3xl p-12">
-          <h2 className="text-3xl font-bold text-white mb-4" style={{ fontFamily: 'Syne, sans-serif' }}>Not sure which service you need?</h2>
+          <h2 className="text-3xl font-bold text-white mb-4" style={{ fontFamily: 'Satoshi, sans-serif' }}>Not sure which service you need?</h2>
           <p className="text-white/60 mb-8 max-w-lg mx-auto">Book a free audit. We'll look at your current digital presence and tell you exactly what will move the needle.</p>
           <button
             onClick={() => navigate('/audit')}
-            className="inline-flex items-center gap-2 px-8 py-4 bg-primary hover:bg-primary/90 text-white font-bold rounded-full transition-all duration-300 shadow-[0_8px_30px_rgba(139,44,255,0.35)]"
+            className="inline-flex items-center gap-2 px-8 py-4 bg-primary hover:bg-primary/90 text-white font-bold rounded-full transition-all duration-300 shadow-[0_8px_30px_rgba(124,42,235,0.35)]"
           >
             Book a Free Audit <ArrowUpRight className="w-4 h-4" />
           </button>

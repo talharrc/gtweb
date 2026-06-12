@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { 
   Lock, 
@@ -123,7 +123,7 @@ export default function ClientHubView({ currentUser, onPageChange }: ClientHubVi
               exit={{ opacity: 0, scale: 0.95 }}
               className="max-w-xl mx-auto text-center py-16 px-10 glass-card rounded-[2.5rem] border border-white/10 bg-black/45 shadow-3xl select-none"
             >
-              <div className="w-16 h-16 bg-primary/10 border border-primary/30 rounded-3xl flex items-center justify-center mx-auto mb-8 text-primary shadow-[0_0_20px_rgba(139,44,255,0.2)]">
+              <div className="w-16 h-16 bg-primary/10 border border-primary/30 rounded-3xl flex items-center justify-center mx-auto mb-8 text-primary shadow-[0_0_20px_rgba(124,42,235,0.2)]">
                 <Lock className="w-7 h-7" />
               </div>
               
@@ -466,7 +466,7 @@ export default function ClientHubView({ currentUser, onPageChange }: ClientHubVi
                   {/* Operational Resource Usage */}
                   <div className="glass-card p-6 rounded-[2rem] border border-white/5 bg-black/25 text-left">
                     <h3 className="font-display text-lg font-bold text-white mb-4 flex items-center gap-2">
-                      <TrendingUp className="w-5 h-5 text-[#ff2c6d]" />
+                      <TrendingUp className="w-5 h-5 text-[#7C2AEB]" />
                       Sprint Consumption
                     </h3>
 
@@ -490,7 +490,7 @@ export default function ClientHubView({ currentUser, onPageChange }: ClientHubVi
                           <span className="font-mono text-white/85">15 of 15 Units</span>
                         </div>
                         <div className="bg-white/5 rounded-full h-2 w-full overflow-hidden">
-                          <div className="bg-[#ff2c6d] h-full rounded-full" style={{ width: "100%" }} />
+                          <div className="bg-[#7C2AEB] h-full rounded-full" style={{ width: "100%" }} />
                         </div>
                       </div>
 

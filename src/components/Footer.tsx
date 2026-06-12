@@ -1,6 +1,6 @@
-import { useNavigate } from 'react-router-dom';
+﻿import { useNavigate } from 'react-router-dom';
 import { PageType } from '../types';
-import brandmarkLogo from '../assets/images/logo.png';
+import brandmarkLogo from '../assets/images/gt-logo-new.svg';
 import { Facebook, Twitter, Mail, Phone } from 'lucide-react';
 
 interface FooterProps {
@@ -26,7 +26,7 @@ export default function Footer({ onPageChange }: FooterProps) {
   };
 
   return (
-    <footer className="bg-[#070d1f] border-t border-white/5 relative overflow-hidden">
+    <footer className="bg-[#0A0825] border-t border-white/5 relative overflow-hidden">
       <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-primary/4 blur-[120px] rounded-full pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-6 py-16">

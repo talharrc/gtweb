@@ -1,10 +1,10 @@
-import type { ReactNode } from 'react';
+﻿import type { ReactNode } from 'react';
 import { Helmet } from 'react-helmet-async';
 
 function Section({ title, children }: { title: string; children: ReactNode }) {
   return (
     <div className="mb-10">
-      <h2 className="text-2xl font-bold text-white mb-4" style={{ fontFamily: 'Syne, sans-serif' }}>{title}</h2>
+      <h2 className="text-2xl font-bold text-white mb-4" style={{ fontFamily: 'Satoshi, sans-serif' }}>{title}</h2>
       <div className="text-white/60 text-sm leading-relaxed space-y-3">{children}</div>
     </div>
   );
@@ -20,7 +20,7 @@ export default function PrivacyView() {
 
       <div className="max-w-3xl mx-auto px-6">
         <div className="mb-14">
-          <h1 className="text-5xl font-bold text-white mb-4" style={{ fontFamily: 'Syne, sans-serif' }}>Privacy Policy</h1>
+          <h1 className="text-5xl font-bold text-white mb-4" style={{ fontFamily: 'Satoshi, sans-serif' }}>Privacy Policy</h1>
           <p className="text-white/40 text-sm">Last updated: June 2026 · GalaxaTech, Dhaka, Bangladesh</p>
         </div>
 

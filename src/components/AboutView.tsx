@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom';
+﻿import { useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { ArrowUpRight, MessageCircle, Cpu, Layers, Hammer } from 'lucide-react';
 
@@ -16,7 +16,7 @@ export default function AboutView() {
       <div className="max-w-7xl mx-auto px-6">
         {/* Hero heading */}
         <div className="text-center mb-20">
-          <h1 className="text-5xl md:text-7xl font-bold text-white mb-5" style={{ fontFamily: 'Syne, sans-serif' }}>We are GalaxaTech.</h1>
+          <h1 className="text-5xl md:text-7xl font-bold text-white mb-5" style={{ fontFamily: 'Satoshi, sans-serif' }}>We are GalaxaTech.</h1>
           <p className="text-white/60 text-xl max-w-3xl mx-auto leading-relaxed">
             A systems-driven creative tech agency from Dhaka, building digital ecosystems for brands across 6 countries.
           </p>
@@ -25,7 +25,7 @@ export default function AboutView() {
         {/* Section 1 — The Mission */}
         <div className="glass-card rounded-3xl p-10 md:p-14 mb-10">
           <div className="text-xs font-mono text-primary/60 uppercase tracking-widest mb-4">Our Mission</div>
-          <h2 className="text-4xl font-bold text-white mb-8" style={{ fontFamily: 'Syne, sans-serif' }}>"Ecosystems, Optimized."</h2>
+          <h2 className="text-4xl font-bold text-white mb-8" style={{ fontFamily: 'Satoshi, sans-serif' }}>"Ecosystems, Optimized."</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <p className="text-white/60 leading-relaxed">
               GalaxaTech was built on the belief that most businesses don't need more tools — they need a smarter system. We design, build, and optimize digital ecosystems that work together: your website, your app, your brand, your social presence, your workflows — as one unified, high-performance machine.
@@ -38,7 +38,7 @@ export default function AboutView() {
 
         {/* Section 2 — Why We're Different */}
         <div className="mb-10">
-          <h2 className="text-3xl font-bold text-white mb-8 text-center" style={{ fontFamily: 'Syne, sans-serif' }}>Why We're Different</h2>
+          <h2 className="text-3xl font-bold text-white mb-8 text-center" style={{ fontFamily: 'Satoshi, sans-serif' }}>Why We're Different</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {[
               {
@@ -76,7 +76,7 @@ export default function AboutView() {
           <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/5 blur-[80px] rounded-full pointer-events-none" />
           <div className="relative z-10">
             <div className="text-xs font-mono text-emerald-400/70 uppercase tracking-widest mb-4">The Galaxa Builders Program</div>
-            <h2 className="text-3xl font-bold text-white mb-6" style={{ fontFamily: 'Syne, sans-serif' }}>We built a program where students work on real projects.</h2>
+            <h2 className="text-3xl font-bold text-white mb-6" style={{ fontFamily: 'Satoshi, sans-serif' }}>We built a program where students work on real projects.</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-7">
               <p className="text-white/60 leading-relaxed">
                 Not practice exercises. Not case studies from a textbook. Real client projects, real task assignments, real accountability. The best builders join our core team. That's how we hire.
@@ -98,12 +98,12 @@ export default function AboutView() {
         <div className="text-center glass-card rounded-3xl p-14 relative overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-br from-primary/8 via-transparent to-secondary/8 pointer-events-none" />
           <div className="relative z-10">
-            <h2 className="text-4xl font-bold text-white mb-5" style={{ fontFamily: 'Syne, sans-serif' }}>Let's build something.</h2>
+            <h2 className="text-4xl font-bold text-white mb-5" style={{ fontFamily: 'Satoshi, sans-serif' }}>Let's build something.</h2>
             <p className="text-white/60 mb-10 max-w-md mx-auto">Ready to talk? Start with a free audit or reach out directly on WhatsApp.</p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <button
                 onClick={() => navigate('/audit')}
-                className="px-8 py-4 bg-primary hover:bg-primary/90 text-white font-bold rounded-full transition-all duration-300 shadow-[0_8px_30px_rgba(139,44,255,0.35)]"
+                className="px-8 py-4 bg-primary hover:bg-primary/90 text-white font-bold rounded-full transition-all duration-300 shadow-[0_8px_30px_rgba(124,42,235,0.35)]"
               >
                 Book an Audit
               </button>

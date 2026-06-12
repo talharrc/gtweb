@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react';
+﻿import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
-import brandmarkLogo from '../assets/images/logo.png';
+import brandmarkLogo from '../assets/images/gt-logo-new.svg';
 import {
   ChevronDown,
   ArrowUpRight,
@@ -229,7 +229,7 @@ export default function Navbar({ onPageChange, dhakaTime, isDhakaOpen, currentUs
             {/* Book an Audit pill */}
             <button
               onClick={() => navTo('/audit')}
-              className="relative flex items-center w-10 hover:w-[160px] h-10 bg-gradient-to-tr from-secondary to-primary text-white rounded-full transition-all duration-500 overflow-hidden group focus:outline-none cursor-pointer shadow-[0_8px_20px_-6px_rgba(139,44,255,0.4)]"
+              className="relative flex items-center w-10 hover:w-[160px] h-10 bg-gradient-to-tr from-secondary to-primary text-white rounded-full transition-all duration-500 overflow-hidden group focus:outline-none cursor-pointer shadow-[0_8px_20px_-6px_rgba(124,42,235,0.4)]"
             >
               <div className="w-10 h-10 flex items-center justify-center flex-shrink-0 group-hover:rotate-45 transition-transform duration-500">
                 <ArrowUpRight className="w-4 h-4 text-white" />

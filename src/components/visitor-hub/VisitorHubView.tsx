@@ -1,4 +1,4 @@
-import { useState } from 'react';
+﻿import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Compass, Sparkles, BookOpen, Globe, Lock, LogOut, Copy, Check, ArrowLeft, Loader2, Chrome } from 'lucide-react';
 import { signInWithPopup } from 'firebase/auth';
@@ -178,7 +178,7 @@ function GoogleSignInGate() {
         <button
           onClick={handleSignIn}
           disabled={loading}
-          className="w-full py-2.5 rounded-xl bg-white text-[#0b1326] text-sm font-bold transition-all flex items-center justify-center gap-2 hover:bg-white/90 disabled:opacity-60"
+          className="w-full py-2.5 rounded-xl bg-white text-[#05030F] text-sm font-bold transition-all flex items-center justify-center gap-2 hover:bg-white/90 disabled:opacity-60"
         >
           {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Chrome className="w-4 h-4" />}
           Continue with Google
