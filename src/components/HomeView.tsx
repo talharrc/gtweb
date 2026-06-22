@@ -1125,166 +1125,173 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
       </section>
 
       {/* ── Closing CTA — Toggle ───────────────────────────────────────────── */}
-      <section className="py-24 px-6 relative overflow-hidden bg-[#05030F]">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[500px] bg-primary/5 blur-[140px] rounded-full pointer-events-none" />
-        
+      <section className="py-28 px-6 relative overflow-hidden bg-[#05030F]">
+        {/* Central glow blob */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1000px] h-[700px] bg-primary/4 blur-[180px] rounded-full pointer-events-none" />
+        {/* Floor glow */}
+        <div className="absolute bottom-0 left-0 right-0 h-[280px] pointer-events-none" style={{ background: 'radial-gradient(ellipse at 50% 100%, rgba(124,42,235,0.28) 0%, rgba(94,41,232,0.10) 40%, transparent 68%)' }} />
+        {/* Horizon gleam line */}
+        <div className="absolute bottom-[80px] left-1/2 -translate-x-1/2 pointer-events-none" style={{ width: '720px', height: '1px', background: 'linear-gradient(to right, transparent, rgba(181,141,255,0.12) 20%, rgba(181,141,255,0.5) 50%, rgba(181,141,255,0.12) 80%, transparent)', filter: 'blur(0.4px)' }} />
+        {/* Scatter stars */}
+        <div aria-hidden className="absolute inset-0 pointer-events-none">
+          {[0,1,2,3,4,5,6,7,8,9,10,11,12,13].map(i => (
+            <span key={i} className="absolute rounded-full" style={{
+              width: i % 4 === 0 ? '3px' : '2px', height: i % 4 === 0 ? '3px' : '2px',
+              left: `${3 + i * 6.8}%`, top: `${7 + (i % 5) * 18}%`,
+              background: i % 3 === 0 ? '#B58DFF' : 'rgba(255,255,255,0.55)',
+              opacity: 0.25 + (i % 3) * 0.18,
+              animation: `particle-drift ${3.0 + i * 0.38}s ${i * 0.22}s ease-in-out infinite`,
+            }} />
+          ))}
+        </div>
+
         <div className="max-w-5xl mx-auto text-center relative z-10">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-primary/25 bg-primary/5 text-[10px] font-mono tracking-widest text-primary/70 uppercase mb-5 select-none">
+          {/* Badge */}
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-primary/30 bg-primary/8 backdrop-blur-sm text-[11px] font-mono tracking-widest text-primary/80 uppercase mb-6 select-none" style={{ backdropFilter: 'blur(12px)' }}>
             <Users className="w-3.5 h-3.5 text-primary" />
             Builders Community
           </div>
-          <h2 className="text-4xl md:text-5xl font-extrabold text-white mb-5 tracking-tight" style={{ fontFamily: 'Satoshi, sans-serif' }}>
+
+          {/* Heading */}
+          <h2 className="text-5xl md:text-6xl font-extrabold text-white mb-4 tracking-tight leading-[1.05]" style={{ fontFamily: 'Satoshi, sans-serif' }}>
             Wanna join the<br /><span className="gradient-word">Galaxa</span> team?
           </h2>
-          <p className="text-white/50 text-base mb-12 max-w-md mx-auto leading-relaxed">
+          <p className="text-white/45 text-base mb-14 max-w-sm mx-auto leading-relaxed">
             Slide to join our builders/newsletter community and hear about opportunities first.
           </p>
 
-          <div className="relative flex flex-col md:flex-row items-center justify-center gap-12 md:gap-20 max-w-4xl mx-auto min-h-[360px]">
-            {/* Left side: Toggle */}
-            <div className="flex flex-col items-center gap-4 z-10">
+          {/* Interaction row */}
+          <div className="relative flex flex-col md:flex-row items-center justify-center gap-10 md:gap-16 max-w-4xl mx-auto">
+
+            {/* LEFT: Slider */}
+            <div className="flex flex-col items-center gap-5 z-10">
               <div
-                className="relative flex items-center rounded-full p-1 cursor-pointer select-none bg-white/[0.04] border border-white/10 shadow-lg"
+                className="relative flex items-center cursor-pointer select-none"
                 style={{
-                  width: '280px',
-                  height: '52px',
+                  width: '380px',
+                  height: '68px',
+                  borderRadius: '999px',
+                  padding: '6px',
+                  background: 'rgba(255,255,255,0.022)',
+                  border: '1px solid rgba(255,255,255,0.07)',
+                  boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.06), 0 0 0 9px rgba(124,42,235,0.07), 0 0 0 20px rgba(124,42,235,0.032)',
                 }}
                 onClick={() => setToggled(t => !t)}
               >
-                {/* Background Labels */}
-                <span className="absolute left-10 text-xs font-bold text-white/35">Not yet</span>
-                <span className="absolute right-8 text-xs font-bold text-white/35">Yes, I'm in</span>
+                {/* "Yes, I'm in" right label */}
+                <span style={{ position: 'absolute', right: '30px', fontSize: '13px', fontWeight: 700, color: 'rgba(255,255,255,0.32)', letterSpacing: '0.02em', pointerEvents: 'none' }}>
+                  Yes, I'm in
+                </span>
 
-                {/* Sliding Knob */}
+                {/* Knob with halo rings */}
                 <div
-                  className="relative flex items-center justify-center gap-2"
                   style={{
-                    width: '136px',
-                    height: '42px',
+                    width: '178px',
+                    height: '56px',
                     borderRadius: '999px',
-                    background: 'linear-gradient(135deg, #5E29E8, #7C2AEB)',
-                    boxShadow: '0 4px 20px rgba(124,42,235,0.5)',
-                    transform: toggled ? 'translateX(132px)' : 'translateX(0px)',
-                    transition: '0.35s cubic-bezier(.2,.7,.2,1)',
+                    background: 'linear-gradient(135deg, #5E29E8 0%, #8B3FF0 55%, #7C2AEB 100%)',
+                    boxShadow: '0 0 0 5px rgba(124,42,235,0.22), 0 0 0 13px rgba(124,42,235,0.10), 0 0 0 22px rgba(124,42,235,0.04), 0 8px 34px rgba(124,42,235,0.65)',
+                    transform: toggled ? 'translateX(190px)' : 'translateX(0px)',
+                    transition: '0.42s cubic-bezier(.2,.7,.2,1)',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px',
+                    flexShrink: 0,
                   }}
                 >
                   <Users className="w-4 h-4 text-white" />
-                  <span className="text-xs font-extrabold text-white font-mono uppercase tracking-wider">
-                    {toggled ? "Yes, I'm in" : "Not yet"}
+                  <span style={{ fontSize: '13px', fontWeight: 800, color: 'white', letterSpacing: '0.03em' }}>
+                    {toggled ? "Yes, I'm in" : 'Not yet'}
                   </span>
                 </div>
               </div>
 
-              <span className="text-white/30 text-xs font-mono select-none animate-pulse">
-                « Slide right to join
-              </span>
+              {/* Hint */}
+              <div className="flex items-center gap-0.5 text-white/28 text-xs font-mono select-none">
+                <ChevronLeft className="w-3.5 h-3.5" />
+                <ChevronLeft className="w-3.5 h-3.5 -ml-2 opacity-55" />
+                <span className="ml-1">Slide right to join</span>
+              </div>
             </div>
 
-            {/* Dotted Line Connection (Desktop only) */}
+            {/* Arc connection */}
             {toggled && (
-              <div className="hidden md:block absolute left-[calc(50%-130px)] top-[28%] w-[180px] h-[100px] pointer-events-none z-0">
-                <svg className="w-full h-full" viewBox="0 0 100 50">
-                  <path
-                    d="M 10 40 Q 50 10, 85 20"
-                    fill="none"
-                    stroke="#7C2AEB"
-                    strokeWidth="1.5"
-                    strokeDasharray="4,4"
-                    className="animate-pulse"
-                  />
-                  <path
-                    d="M 85 20 L 78 16 M 85 20 L 80 26"
-                    fill="none"
-                    stroke="#7C2AEB"
-                    strokeWidth="1.5"
-                  />
+              <div className="hidden md:block absolute left-[calc(50%-110px)] top-[16%] w-[165px] h-[95px] pointer-events-none z-0">
+                <svg className="w-full h-full" viewBox="0 0 100 52">
+                  <path d="M 6 44 Q 48 6, 93 24" fill="none" stroke="url(#ctaArcGrad)" strokeWidth="1.5" strokeDasharray="4,4" />
+                  <path d="M 93 24 L 86 17 M 93 24 L 87 30" fill="none" stroke="#9B59FF" strokeWidth="1.5" />
+                  <defs>
+                    <linearGradient id="ctaArcGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                      <stop offset="0%" stopColor="#5E29E8" stopOpacity="0.5" />
+                      <stop offset="100%" stopColor="#C4A0FF" stopOpacity="1" />
+                    </linearGradient>
+                  </defs>
                 </svg>
               </div>
             )}
 
-            {/* Right side: Revealed Form */}
-            <div className="w-full max-w-[340px] z-10 min-h-[300px] flex items-center justify-center">
+            {/* RIGHT: Form card */}
+            <div className="w-full max-w-[310px] z-10 min-h-[260px] flex items-center justify-center">
               <AnimatePresence>
                 {toggled && (
                   <motion.div
-                    initial={{ opacity: 0, x: 50, rotate: 4 }}
+                    initial={{ opacity: 0, x: 44, rotate: 6 }}
                     animate={{ opacity: 1, x: 0, rotate: 2 }}
-                    exit={{ opacity: 0, x: 50, rotate: 4 }}
+                    exit={{ opacity: 0, x: 44, rotate: 6 }}
                     transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
                     className="w-full"
                   >
                     {submitted ? (
                       <div
                         className="flex flex-col items-center gap-3 py-10 px-8 text-center"
-                        style={{
-                          ...GLASS_STYLE,
-                          borderRadius: '20px',
-                          background: 'rgba(255,255,255,0.03)',
-                          borderColor: 'rgba(181,141,255,0.25)',
-                        }}
+                        style={{ ...GLASS_STYLE, borderRadius: '20px', background: 'rgba(255,255,255,0.03)', borderColor: 'rgba(181,141,255,0.28)' }}
                       >
                         <Sparkles className="w-8 h-8 text-primary" />
-                        <p className="text-white font-extrabold text-lg" style={{ fontFamily: 'Satoshi, sans-serif' }}>
-                          You're in the circle. ✦
-                        </p>
+                        <p className="text-white font-extrabold text-lg" style={{ fontFamily: 'Satoshi, sans-serif' }}>You're in the circle. ✦</p>
                         <p className="text-white/40 text-sm">We'll reach out with opportunities first.</p>
                       </div>
                     ) : (
                       <form
                         onSubmit={handleNewsletterSubmit}
                         className="flex flex-col p-6 gap-4 text-left"
-                        style={{
-                          ...GLASS_STYLE,
-                          borderRadius: '20px',
-                          background: 'rgba(255,255,255,0.03)',
-                          borderColor: 'rgba(181,141,255,0.25)',
-                          boxShadow: '0 20px 50px rgba(0,0,0,0.6), 0 0 30px rgba(124,42,235,0.15)',
-                        }}
+                        style={{ ...GLASS_STYLE, borderRadius: '20px', background: 'rgba(255,255,255,0.03)', borderColor: 'rgba(181,141,255,0.28)', boxShadow: '0 24px 64px rgba(0,0,0,0.7), 0 0 40px rgba(124,42,235,0.22)' }}
                       >
-                        <div className="flex items-center gap-3 mb-1 select-none">
-                          <div className="w-8 h-8 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center">
-                            <Mail className="w-4 h-4 text-primary" />
-                          </div>
-                          <div>
-                            <h4 className="text-white font-extrabold text-sm" style={{ fontFamily: 'Satoshi, sans-serif' }}>
-                              Join the Galaxa circle
-                            </h4>
-                            <p className="text-white/40 text-[11px]">
-                              Get early access, opportunities, and builder-only updates.
-                            </p>
-                          </div>
+                        {/* Circle icon */}
+                        <div className="w-12 h-12 rounded-full bg-primary/10 border border-primary/22 flex items-center justify-center select-none mb-0.5">
+                          <Mail className="w-5 h-5 text-primary" />
                         </div>
-                        
-                        <div className="flex flex-col gap-2.5">
-                          <input
-                            type="text"
-                            placeholder="Your name"
-                            value={subName}
-                            onChange={e => setSubName(e.target.value)}
-                            className="w-full px-4 py-3 rounded-xl text-sm text-white bg-white/[0.03] border border-white/10 placeholder-white/30 outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/30 transition-all"
-                          />
-                          <input
-                            type="email"
-                            placeholder="you@galaxa.tech"
-                            value={subEmail}
-                            onChange={e => setSubEmail(e.target.value)}
-                            required
-                            className="w-full px-4 py-3 rounded-xl text-sm text-white bg-white/[0.03] border border-white/10 placeholder-white/30 outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/30 transition-all"
-                          />
+
+                        {/* Title */}
+                        <div className="select-none">
+                          <h4 className="text-white font-extrabold text-xl leading-tight" style={{ fontFamily: 'Satoshi, sans-serif' }}>
+                            Join the <span className="gradient-word">Galaxa</span> circle
+                          </h4>
+                          <p className="text-white/38 text-xs mt-1.5 leading-relaxed">
+                            Get early access, opportunities,<br />and builder-only updates.
+                          </p>
                         </div>
-                        
+
+                        {/* Email field only */}
+                        <input
+                          type="email"
+                          placeholder="you@galaxa.tech"
+                          value={subEmail}
+                          onChange={e => setSubEmail(e.target.value)}
+                          required
+                          className="w-full px-4 py-3 rounded-xl text-sm text-white bg-white/[0.04] border border-white/10 placeholder-white/28 outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/30 transition-all"
+                        />
+
+                        {/* Submit */}
                         <button
                           type="submit"
                           disabled={submitting}
-                          className="w-full flex items-center justify-between px-5 py-3 rounded-xl text-white font-bold text-sm transition-all duration-300 bg-gradient-to-r from-[#5E29E8] to-[#7C2AEB] shadow-[0_8px_30px_rgba(124,42,235,0.35)] cursor-pointer hover:shadow-[0_8px_40px_rgba(124,42,235,0.5)] active:scale-[0.98] disabled:opacity-50"
+                          className="w-full flex items-center justify-between px-5 py-3.5 rounded-xl text-white font-bold text-sm transition-all duration-300 bg-gradient-to-r from-[#5E29E8] to-[#7C2AEB] shadow-[0_8px_32px_rgba(124,42,235,0.48)] cursor-pointer hover:shadow-[0_8px_48px_rgba(124,42,235,0.68)] active:scale-[0.98] disabled:opacity-50"
                         >
                           <span>{submitting ? 'Sending…' : 'Join the circle'}</span>
-                          <div className="w-6 h-6 rounded-full bg-white/10 flex items-center justify-center">
-                            <ChevronRight className="w-3.5 h-3.5 text-white" />
+                          <div className="w-7 h-7 rounded-full bg-white/15 flex items-center justify-center">
+                            <ChevronRight className="w-4 h-4 text-white" />
                           </div>
                         </button>
-                        
-                        <div className="flex items-center justify-center gap-1.5 text-[10px] text-white/35 font-mono select-none">
+
+                        <div className="flex items-center justify-center gap-1.5 text-[10px] text-white/30 font-mono select-none">
                           <Lock className="w-3 h-3" />
                           <span>No spam. Unsubscribe anytime.</span>
                         </div>
