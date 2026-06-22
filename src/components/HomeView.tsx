@@ -275,6 +275,22 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
   const maxIlluminated = illuminatedSteps.size > 0 ? Math.max(...illuminatedSteps) : -1;
   const lineProgress = maxIlluminated >= 0 ? (maxIlluminated / (PROCESS_STEPS.length - 1)) * 100 : 0;
 
+  const handleCardTilt = (e: React.MouseEvent<HTMLDivElement>) => {
+    const el = e.currentTarget as HTMLDivElement;
+    const { left, top, width, height } = el.getBoundingClientRect();
+    const rotX = ((e.clientY - top - height / 2) / (height / 2)) * -8;
+    const rotY = ((e.clientX - left - width / 2) / (width / 2)) * 8;
+    el.style.transform = `translateY(-6px) perspective(900px) rotateX(${rotX}deg) rotateY(${rotY}deg)`;
+    el.style.borderColor = 'rgba(181,141,255,0.55)';
+    el.style.boxShadow = '0 20px 55px rgba(124,42,235,0.45), inset 0 1px 0 rgba(255,255,255,0.18)';
+  };
+  const resetCardTilt = (e: React.MouseEvent<HTMLDivElement>) => {
+    const el = e.currentTarget as HTMLDivElement;
+    el.style.transform = 'translateY(0)';
+    el.style.borderColor = 'rgba(181,141,255,0.18)';
+    el.style.boxShadow = 'inset 0 1px 0 rgba(255,255,255,0.1), inset 0 0 28px rgba(124,42,235,0.05), 0 20px 60px rgba(0,0,0,0.5)';
+  };
+
   return (
     <div className="relative">
       <Helmet>
@@ -350,6 +366,27 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
               <span className="text-md font-bold text-white">Book an Audit</span>
             </button>
           </div>
+
+          {/* Hero stats */}
+          <div className="flex flex-wrap items-center justify-center gap-4 mt-14 select-none">
+            {([
+              { num: '2024', label: 'Founded' },
+              { num: '6+',   label: 'Countries Served' },
+              { num: '50+',  label: 'Projects Delivered' },
+              { num: '●',    label: 'Client Success', highlight: true },
+            ] as const).map((s, i) => (
+              <div
+                key={i}
+                className={`flex flex-col items-center gap-1 px-5 py-3 rounded-2xl backdrop-blur-sm border ${s.highlight ? 'border-primary/40 bg-primary/10' : 'border-white/8 bg-white/[0.035]'} transition-all duration-300 hover:scale-105`}
+                style={{ animation: `stats-glow ${2.5 + i * 0.4}s ease-in-out ${i * 0.2}s infinite` }}
+              >
+                <span className={`text-xl font-extrabold ${s.highlight ? 'text-primary' : 'text-white'}`} style={{ fontFamily: 'Satoshi, sans-serif' }}>
+                  {s.num}
+                </span>
+                <span className="text-[9px] font-mono text-white/35 tracking-widest uppercase">{s.label}</span>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -361,80 +398,146 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
         }
         .marquee-wrapper {
           position: relative;
-          mask-image: linear-gradient(to right, transparent, white 15%, white 85%, transparent);
-          -webkit-mask-image: linear-gradient(to right, transparent, white 15%, white 85%, transparent);
+          mask-image: linear-gradient(to right, transparent, white 12%, white 88%, transparent);
+          -webkit-mask-image: linear-gradient(to right, transparent, white 12%, white 88%, transparent);
         }
         .marquee-track {
           display: flex;
           width: max-content;
-          animation: marquee-scroll 22s linear infinite;
+          animation: marquee-scroll 28s linear infinite;
         }
-        .marquee-wrapper:hover .marquee-track {
-          animation-play-state: paused;
-        }
+        .marquee-wrapper:hover .marquee-track { animation-play-state: paused; }
+
         @keyframes line-draw-h {
           from { transform: scaleX(0); }
           to   { transform: scaleX(1); }
         }
+
+        /* ── Gradient keyword shimmer ── */
+        .gradient-word {
+          background: linear-gradient(135deg, #C4A0FF 0%, #9B59FF 35%, #7C2AEB 65%, #5E29E8 100%);
+          background-size: 250% auto;
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+          animation: shimmer-sweep 5s linear infinite;
+          display: inline-block;
+        }
+        @keyframes shimmer-sweep {
+          0%   { background-position: 0% center; }
+          100% { background-position: 250% center; }
+        }
+
+        /* ── Ambient particle drift ── */
+        @keyframes particle-drift {
+          0%   { transform: translateY(0px)  translateX(0px)  scale(1);    opacity: 0; }
+          12%  { opacity: 0.7; }
+          85%  { opacity: 0.3; }
+          100% { transform: translateY(-100px) translateX(16px) scale(0.3); opacity: 0; }
+        }
+
+        /* ── Subtle float ── */
+        @keyframes float-y {
+          0%, 100% { transform: translateY(0px); }
+          50%       { transform: translateY(-7px); }
+        }
+        .animate-float { animation: float-y 3.5s ease-in-out infinite; }
+
+        /* ── Badge hover bounce ── */
+        @keyframes badge-bounce {
+          0%, 100% { transform: translateY(0); }
+          50%       { transform: translateY(-4px); }
+        }
+
+        /* ── Fade-up reveal ── */
+        @keyframes fade-up-in {
+          from { opacity: 0; transform: translateY(30px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ── Card tilt transition ── */
+        .card-tilt {
+          transition: transform 0.10s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+          will-change: transform;
+        }
+
+        /* ── Glow pulse ring ── */
+        @keyframes glow-ring {
+          0%, 100% { box-shadow: 0 0 0 0 rgba(124,42,235,0); }
+          50%       { box-shadow: 0 0 30px 8px rgba(124,42,235,0.18); }
+        }
+
+        /* ── Stats shimmer ── */
+        @keyframes stats-glow {
+          0%, 100% { opacity: 0.6; }
+          50%       { opacity: 1; }
+        }
+
         @media (max-width: 640px) {
-          .card-fan-0 {
-            transform: translateX(-50%) translateY(-50%) rotate(-8deg) translate(-55px, -60px) scale(0.72) !important;
-          }
-          .card-fan-1 {
-            transform: translateX(-50%) translateY(-50%) rotate(0deg) translate(0px, -110px) scale(0.72) !important;
-          }
-          .card-fan-2 {
-            transform: translateX(-50%) translateY(-50%) rotate(8deg) translate(55px, -60px) scale(0.72) !important;
-          }
-          .card-stack-0 {
-            transform: translateX(-50%) translateY(-50%) rotate(-3deg) translate(-4px, 4px) scale(0.72) !important;
-          }
-          .card-stack-1 {
-            transform: translateX(-50%) translateY(-50%) rotate(0deg) translate(0px, 0px) scale(0.72) !important;
-          }
-          .card-stack-2 {
-            transform: translateX(-50%) translateY(-50%) rotate(3deg) translate(4px, -3px) scale(0.72) !important;
-          }
+          .card-fan-0 { transform: translateX(-50%) translateY(-50%) rotate(-8deg) translate(-55px,-60px) scale(0.72) !important; }
+          .card-fan-1 { transform: translateX(-50%) translateY(-50%) rotate(0deg) translate(0px,-110px) scale(0.72) !important; }
+          .card-fan-2 { transform: translateX(-50%) translateY(-50%) rotate(8deg) translate(55px,-60px) scale(0.72) !important; }
+          .card-stack-0 { transform: translateX(-50%) translateY(-50%) rotate(-3deg) translate(-4px,4px) scale(0.72) !important; }
+          .card-stack-1 { transform: translateX(-50%) translateY(-50%) rotate(0deg) translate(0px,0px) scale(0.72) !important; }
+          .card-stack-2 { transform: translateX(-50%) translateY(-50%) rotate(3deg) translate(4px,-3px) scale(0.72) !important; }
         }
       `}</style>
       <section className="py-16 md:py-24 px-6 border-y border-white/5 bg-[#05030F] overflow-hidden">
         <div className="max-w-7xl mx-auto">
-          <p className="text-center text-[10px] font-mono tracking-[0.25em] text-white/30 uppercase mb-8">
-            Global Presence
-          </p>
-          <div className="marquee-wrapper overflow-hidden">
+          <div className="text-center mb-10">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-white/10 bg-white/[0.03] text-[10px] font-mono tracking-[0.2em] text-white/35 uppercase mb-5 animate-float">
+              <Globe className="w-3 h-3 text-primary/60" />
+              Global Presence
+            </div>
+            <h2 className="text-3xl md:text-4xl font-extrabold text-white mb-2.5 tracking-tight" style={{ fontFamily: 'Satoshi, sans-serif' }}>
+              Serving clients across{' '}
+              <em className="gradient-word not-italic">6 countries</em>
+            </h2>
+            <p className="text-white/35 text-sm">Delivering digital solutions across markets</p>
+          </div>
+
+          <div className="marquee-wrapper overflow-hidden mb-9">
             <div className="marquee-track">
               {[...COUNTRIES, ...COUNTRIES].map((c, i) => (
                 <div
                   key={i}
-                  className="flex items-center gap-3 mx-8 select-none"
+                  className="flex items-center gap-2.5 mx-2.5 px-4 py-2.5 rounded-full border border-white/10 bg-white/[0.03] backdrop-blur-sm select-none hover:border-primary/35 hover:bg-primary/5 transition-all duration-300 cursor-default"
                   style={{ minWidth: 'max-content' }}
                 >
-                  <span className="text-3xl leading-none">{c.flag}</span>
-                  <span
-                    className="text-white/60 font-semibold text-sm"
-                    style={{ fontFamily: 'Satoshi, sans-serif' }}
-                  >
-                    {c.name}
-                  </span>
-                  <span className="w-1 h-1 rounded-full bg-primary/40 ml-4" />
+                  <span className="text-xl leading-none">{c.flag}</span>
+                  <span className="text-white/65 font-semibold text-sm" style={{ fontFamily: 'Satoshi, sans-serif' }}>{c.name}</span>
                 </div>
               ))}
             </div>
+          </div>
+
+          <div className="flex items-center justify-center gap-2.5">
+            <div className="w-6 h-6 rounded-full border border-primary/30 flex items-center justify-center bg-primary/5 flex-shrink-0">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-3.5 h-3.5 text-primary/70">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+              </svg>
+            </div>
+            <p className="text-white/30 text-sm">Trusted by businesses worldwide to drive growth and innovation.</p>
           </div>
         </div>
       </section>
 
       {/* ── Daily AI Feed ──────────────────────────────────────────────────── */}
-      <section className="py-24 px-6 bg-[#0A0825] bg-[radial-gradient(ellipse_at_top,rgba(124,42,235,0.08)_0%,transparent_60%)]">
+      <section className="relative overflow-hidden py-24 px-6 bg-[#0A0825] bg-[radial-gradient(ellipse_at_top,rgba(124,42,235,0.08)_0%,transparent_60%)]">
+        <div aria-hidden className="absolute inset-0 pointer-events-none">
+          {[0,1,2,3,4,5,6,7].map(pi => (
+            <span key={pi} className="absolute rounded-full bg-violet-400"
+              style={{ width: pi%3===0?'3px':'2px', height: pi%3===0?'3px':'2px', left:`${6+pi*12}%`, top:`${8+(pi%4)*23}%`, opacity:0, animation:`particle-drift ${2.2+pi*0.5}s ${pi*0.28}s ease-in-out infinite` }} />
+          ))}
+        </div>
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col items-center text-center mb-16">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-emerald-500/30 bg-emerald-500/10 text-[10px] font-mono tracking-[0.2em] font-semibold text-emerald-400 uppercase mb-4">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_8px_#34d399]" />
               Live
             </div>
-            <h2 className="text-4xl md:text-5xl font-extrabold text-white mb-4 tracking-tight animate-fade-in" style={{ fontFamily: 'Satoshi, sans-serif' }}>
-              Daily AI Feed
+            <h2 className="text-4xl md:text-5xl font-extrabold text-white mb-4 tracking-tight" style={{ fontFamily: 'Satoshi, sans-serif' }}>
+              Daily <span className="gradient-word">AI Feed</span>
             </h2>
             <p className="text-white/50 text-base max-w-2xl">
               Signals on tools, trends, research, and market shifts — refreshed daily.
@@ -453,7 +556,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
               return (
                 <div
                   key={i}
-                  className="flex flex-col p-6 cursor-default transition-all duration-500 rounded-[20px] border border-violet-500/15 shadow-[0_0_30px_-10px_rgba(124,42,235,0.25)]"
+                  className="card-tilt flex flex-col p-6 cursor-default rounded-[20px] border border-violet-500/15 shadow-[0_0_30px_-10px_rgba(124,42,235,0.25)]"
                   style={{
                     background: 'rgba(255,255,255,0.042)',
                     backdropFilter: 'blur(22px) saturate(140%)',
@@ -461,18 +564,8 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
                     border: '1px solid rgba(181,141,255,0.18)',
                     boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.1), inset 0 0 28px rgba(124,42,235,0.05), 0 20px 60px rgba(0,0,0,0.5)',
                   }}
-                  onMouseEnter={e => {
-                    const el = e.currentTarget as HTMLDivElement;
-                    el.style.transform = 'translateY(-8px)';
-                    el.style.borderColor = 'rgba(181,141,255,0.45)';
-                    el.style.boxShadow = '0 15px 45px rgba(124,42,235,0.35), inset 0 1px 0 rgba(255,255,255,0.15)';
-                  }}
-                  onMouseLeave={e => {
-                    const el = e.currentTarget as HTMLDivElement;
-                    el.style.transform = 'translateY(0px)';
-                    el.style.borderColor = 'rgba(181,141,255,0.18)';
-                    el.style.boxShadow = 'inset 0 1px 0 rgba(255,255,255,0.1), inset 0 0 28px rgba(124,42,235,0.05), 0 20px 60px rgba(0,0,0,0.5)';
-                  }}
+                  onMouseMove={handleCardTilt}
+                  onMouseLeave={resetCardTilt}
                 >
                   <div className="flex items-center justify-between mb-5">
                     <div
@@ -526,7 +619,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
               Service Carousel
             </div>
             <h2 className="text-4xl md:text-5xl font-extrabold text-white mb-4 tracking-tight" style={{ fontFamily: 'Satoshi, sans-serif' }}>
-              What We Build
+              What <span className="gradient-word">We Build</span>
             </h2>
             <p className="text-white/50 text-base max-w-xl mx-auto">
               Interactive digital systems and growth solutions crafted for modern businesses.
@@ -656,7 +749,13 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
       </section>
 
       {/* ── How We Work ────────────────────────────────────────────────────── */}
-      <section className="py-24 px-6 bg-[#0A0825] bg-[radial-gradient(ellipse_at_top,rgba(124,42,235,0.08)_0%,transparent_60%)]" ref={sectionRef}>
+      <section className="relative overflow-hidden py-24 px-6 bg-[#0A0825] bg-[radial-gradient(ellipse_at_top,rgba(124,42,235,0.08)_0%,transparent_60%)]" ref={sectionRef}>
+        <div aria-hidden className="absolute inset-0 pointer-events-none">
+          {[0,1,2,3,4,5].map(pi => (
+            <span key={pi} className="absolute rounded-full bg-violet-500"
+              style={{ width:'2px', height:'2px', left:`${14+pi*15}%`, top:`${18+(pi%3)*28}%`, opacity:0, animation:`particle-drift ${2.8+pi*0.4}s ${pi*0.35}s ease-in-out infinite` }} />
+          ))}
+        </div>
         <div className="max-w-4xl mx-auto">
           <div className="flex flex-col items-center text-center mb-20">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-primary/25 bg-primary/5 text-[10px] font-mono tracking-widest text-primary/70 uppercase mb-4">
@@ -664,7 +763,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
               Process
             </div>
             <h2 className="text-4xl md:text-5xl font-extrabold text-white mb-4 tracking-tight" style={{ fontFamily: 'Satoshi, sans-serif' }}>
-              How We Work
+              How <span className="gradient-word">We Work</span>
             </h2>
             <p className="text-white/50 text-base max-w-xl">
               A clear, collaborative journey from idea to deployed digital systems.
@@ -733,7 +832,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
                   <div
                     key={step.num}
                     ref={el => { stepRefs.current[i] = el; }}
-                    className="flex items-center justify-between p-6 rounded-[20px] transition-all duration-700 group cursor-default border border-violet-500/15 shadow-[0_0_30px_-10px_rgba(124,42,235,0.25)]"
+                    className="flex items-center justify-between p-6 rounded-[20px] transition-all duration-500 group cursor-default border border-violet-500/15 shadow-[0_0_30px_-10px_rgba(124,42,235,0.25)] hover:scale-[1.018] hover:-translate-y-1"
                     style={{
                       background: lit ? 'rgba(255,255,255,0.06)' : 'rgba(255,255,255,0.02)',
                       backdropFilter: 'blur(22px) saturate(140%)',
@@ -781,7 +880,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
               Portfolio
             </div>
             <h2 className="text-4xl md:text-5xl font-extrabold text-white mb-4 tracking-tight" style={{ fontFamily: 'Satoshi, sans-serif' }}>
-              Selected Work
+              Selected <span className="gradient-word">Work</span>
             </h2>
             <p className="text-white/50 text-base max-w-xl">
               A few projects, systems, and brands we've helped shape.
@@ -982,11 +1081,19 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
         </div>
       </section>
 
-      {/* ── FAQ (unchanged) ────────────────────────────────────────────────── */}
-      <section className="py-24 px-6 bg-[#0A0825] bg-[radial-gradient(ellipse_at_top,rgba(124,42,235,0.08)_0%,transparent_60%)]">
+      {/* ── FAQ ───────────────────────────────────────────────────────────── */}
+      <section className="relative overflow-hidden py-24 px-6 bg-[#0A0825] bg-[radial-gradient(ellipse_at_top,rgba(124,42,235,0.08)_0%,transparent_60%)]">
+        <div aria-hidden className="absolute inset-0 pointer-events-none">
+          {[0,1,2,3,4].map(pi => (
+            <span key={pi} className="absolute rounded-full bg-violet-400"
+              style={{ width:'2px', height:'2px', left:`${12+pi*18}%`, top:`${10+(pi%3)*32}%`, opacity:0, animation:`particle-drift ${2.6+pi*0.55}s ${pi*0.4}s ease-in-out infinite` }} />
+          ))}
+        </div>
         <div className="max-w-3xl mx-auto">
           <div className="text-center mb-14">
-            <h2 className="text-4xl md:text-5xl font-bold text-white mb-4" style={{ fontFamily: 'Satoshi, sans-serif' }}>Common Questions</h2>
+            <h2 className="text-4xl md:text-5xl font-bold text-white mb-4" style={{ fontFamily: 'Satoshi, sans-serif' }}>
+              Common <span className="gradient-word">Questions</span>
+            </h2>
           </div>
           <div className="flex flex-col gap-3">
             {FAQS.map((faq, i) => (
@@ -1027,7 +1134,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
             Builders Community
           </div>
           <h2 className="text-4xl md:text-5xl font-extrabold text-white mb-5 tracking-tight" style={{ fontFamily: 'Satoshi, sans-serif' }}>
-            Wanna join the<br />Galaxa team?
+            Wanna join the<br /><span className="gradient-word">Galaxa</span> team?
           </h2>
           <p className="text-white/50 text-base mb-12 max-w-md mx-auto leading-relaxed">
             Slide to join our builders/newsletter community and hear about opportunities first.
