@@ -397,7 +397,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
           }
         }
       `}</style>
-      <section className="py-16 px-6 border-y border-white/5 bg-[#05030F] overflow-hidden">
+      <section className="py-16 md:py-24 px-6 border-y border-white/5 bg-[#05030F] overflow-hidden">
         <div className="max-w-7xl mx-auto">
           <p className="text-center text-[10px] font-mono tracking-[0.25em] text-white/30 uppercase mb-8">
             Global Presence
@@ -426,7 +426,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
       </section>
 
       {/* ── Daily AI Feed ──────────────────────────────────────────────────── */}
-      <section className="py-24 px-6 bg-[#0A0825]">
+      <section className="py-24 px-6 bg-[#0A0825] bg-[radial-gradient(ellipse_at_top,rgba(124,42,235,0.08)_0%,transparent_60%)]">
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col items-center text-center mb-16">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-emerald-500/30 bg-emerald-500/10 text-[10px] font-mono tracking-[0.2em] font-semibold text-emerald-400 uppercase mb-4">
@@ -453,7 +453,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
               return (
                 <div
                   key={i}
-                  className="flex flex-col p-6 cursor-default transition-all duration-500 rounded-[20px]"
+                  className="flex flex-col p-6 cursor-default transition-all duration-500 rounded-[20px] border border-violet-500/15 shadow-[0_0_30px_-10px_rgba(124,42,235,0.25)]"
                   style={{
                     background: 'rgba(255,255,255,0.042)',
                     backdropFilter: 'blur(22px) saturate(140%)',
@@ -556,6 +556,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
                 <div
                   key={svc.anchor}
                   onClick={() => { if (!isActive) setActiveIndex(i); else navigate(`/services#${svc.anchor}`); }}
+                  className="border border-violet-500/15 shadow-[0_0_30px_-10px_rgba(124,42,235,0.25)]"
                   style={{
                     position: 'absolute',
                     left: '50%',
@@ -655,7 +656,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
       </section>
 
       {/* ── How We Work ────────────────────────────────────────────────────── */}
-      <section className="py-24 px-6 bg-[#0A0825]" ref={sectionRef}>
+      <section className="py-24 px-6 bg-[#0A0825] bg-[radial-gradient(ellipse_at_top,rgba(124,42,235,0.08)_0%,transparent_60%)]" ref={sectionRef}>
         <div className="max-w-4xl mx-auto">
           <div className="flex flex-col items-center text-center mb-20">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-primary/25 bg-primary/5 text-[10px] font-mono tracking-widest text-primary/70 uppercase mb-4">
@@ -732,7 +733,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
                   <div
                     key={step.num}
                     ref={el => { stepRefs.current[i] = el; }}
-                    className="flex items-center justify-between p-6 rounded-[20px] transition-all duration-700 group cursor-default"
+                    className="flex items-center justify-between p-6 rounded-[20px] transition-all duration-700 group cursor-default border border-violet-500/15 shadow-[0_0_30px_-10px_rgba(124,42,235,0.25)]"
                     style={{
                       background: lit ? 'rgba(255,255,255,0.06)' : 'rgba(255,255,255,0.02)',
                       backdropFilter: 'blur(22px) saturate(140%)',
@@ -982,14 +983,14 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
       </section>
 
       {/* ── FAQ (unchanged) ────────────────────────────────────────────────── */}
-      <section className="py-24 px-6 bg-[#0A0825]">
+      <section className="py-24 px-6 bg-[#0A0825] bg-[radial-gradient(ellipse_at_top,rgba(124,42,235,0.08)_0%,transparent_60%)]">
         <div className="max-w-3xl mx-auto">
           <div className="text-center mb-14">
             <h2 className="text-4xl md:text-5xl font-bold text-white mb-4" style={{ fontFamily: 'Satoshi, sans-serif' }}>Common Questions</h2>
           </div>
           <div className="flex flex-col gap-3">
             {FAQS.map((faq, i) => (
-              <div key={i} className="glass-card rounded-xl overflow-hidden">
+              <div key={i} className="glass-card rounded-xl overflow-hidden border border-violet-500/15 shadow-[0_0_30px_-10px_rgba(124,42,235,0.25)]">
                 <button
                   onClick={() => setActiveFAQ(activeFAQ === i ? null : i)}
                   className="w-full flex items-center justify-between p-5 text-left"
