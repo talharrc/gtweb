@@ -391,7 +391,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
       {/* ╔══════════════════════════════════════════════════════════════════════╗ */}
       {/* ║  HERO                                                               ║ */}
       {/* ╚══════════════════════════════════════════════════════════════════════╝ */}
-      <section className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden bg-[#05030F]">
+      <section className="relative min-h-[100svh] flex flex-col items-center justify-center overflow-hidden bg-[#05030F]">
 
         {/* Background orbs */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden">
@@ -414,7 +414,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
         </div>
 
         {/* Content */}
-        <div className="relative z-10 w-full max-w-7xl mx-auto px-6 pt-32 pb-20 flex flex-col lg:flex-row items-center gap-16 lg:gap-20">
+        <div className="relative z-10 w-full max-w-7xl mx-auto px-5 sm:px-6 pt-24 sm:pt-28 lg:pt-32 pb-10 sm:pb-16 lg:pb-20 flex flex-col lg:flex-row items-center gap-8 sm:gap-12 lg:gap-20">
 
           {/* ── Left: Text ── */}
           <div className="flex-1 flex flex-col items-center lg:items-start text-center lg:text-left">
@@ -427,8 +427,9 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
               className="inline-flex items-center gap-2.5 bg-black/50 backdrop-blur-md rounded-full px-5 py-2.5 mb-8 border border-red-500/20 shadow-[0_0_15px_rgba(239,68,68,0.08)] animate-float"
             >
               <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse shadow-[0_0_8px_#ef4444]" />
-              <span className="text-[10px] sm:text-[11px] font-mono font-bold tracking-widest text-white/80 uppercase">
-                Live Studio • Agents Active • Last build: {buildMins}m ago
+              <span className="font-mono font-bold tracking-widest text-white/80 uppercase text-[8px] sm:text-[10px]">
+                <span className="sm:hidden">Agents Active · {buildMins}m ago</span>
+                <span className="hidden sm:inline">Live Studio • Agents Active • Last build: {buildMins}m ago</span>
               </span>
             </motion.div>
 
@@ -437,18 +438,18 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
               initial={{ opacity: 0, y: 24 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.1, ease: [0.16,1,0.3,1] }}
-              className="font-display text-5xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-white leading-[1.06] mb-4"
+              className="font-display text-[2.1rem] sm:text-5xl lg:text-7xl font-extrabold tracking-tight text-white leading-[1.1] mb-3 sm:mb-4"
             >
               Build your brand's
-              <span className="block mt-2 font-serif italic min-h-[1.2em] overflow-hidden">
+              <span className="block mt-1 sm:mt-2 font-serif italic min-h-[1.15em] overflow-hidden w-full">
                 <AnimatePresence mode="wait">
                   <motion.span
                     key={wordIndex}
-                    initial={{ y: 38, opacity: 0, filter: 'blur(6px)' }}
+                    initial={{ y: 32, opacity: 0, filter: 'blur(6px)' }}
                     animate={{ y: 0, opacity: 1, filter: 'blur(0px)' }}
-                    exit={{ y: -38, opacity: 0, filter: 'blur(6px)' }}
+                    exit={{ y: -32, opacity: 0, filter: 'blur(6px)' }}
                     transition={{ duration: 0.6, ease: [0.16,1,0.3,1] }}
-                    className="inline-block text-gradient"
+                    className="block text-gradient"
                   >
                     {HERO_WORDS[wordIndex]}
                   </motion.span>
@@ -461,7 +462,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.25, ease: [0.16,1,0.3,1] }}
-              className="text-base sm:text-lg text-white/55 max-w-lg mb-10 leading-relaxed"
+              className="text-sm sm:text-base lg:text-lg text-white/55 max-w-xs sm:max-w-lg mb-8 sm:mb-10 leading-relaxed"
             >
               GalaxaTech engineers web, app, AI, and brand systems that work together — for clients across 6 countries.
             </motion.p>
@@ -471,11 +472,11 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.35, ease: [0.16,1,0.3,1] }}
-              className="flex flex-wrap items-center gap-4"
+              className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full sm:w-auto"
             >
               <button
                 onClick={() => navigate('/audit')}
-                className="group flex items-center gap-3 bg-gradient-to-tr from-[#5E29E8] to-[#7C2AEB] text-white font-bold py-3.5 px-7 rounded-full transition-all duration-300 shadow-[0_8px_32px_rgba(124,42,235,0.45)] hover:shadow-[0_12px_48px_rgba(124,42,235,0.65)] hover:-translate-y-0.5 cursor-pointer"
+                className="group flex items-center justify-center gap-3 bg-gradient-to-tr from-[#5E29E8] to-[#7C2AEB] text-white font-bold py-3.5 px-7 rounded-full transition-all duration-300 shadow-[0_8px_32px_rgba(124,42,235,0.45)] hover:shadow-[0_12px_48px_rgba(124,42,235,0.65)] hover:-translate-y-0.5 active:scale-[0.97] cursor-pointer"
               >
                 <span>Book a Free Audit</span>
                 <span className="w-7 h-7 rounded-full bg-white/15 flex items-center justify-center group-hover:rotate-45 transition-transform duration-500">
@@ -484,7 +485,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
               </button>
               <button
                 onClick={() => navigate('/portfolio')}
-                className="flex items-center gap-2 text-white/70 hover:text-white border border-white/10 hover:border-white/25 py-3.5 px-7 rounded-full font-semibold transition-all duration-300 cursor-pointer"
+                className="flex items-center justify-center gap-2 text-white/70 hover:text-white border border-white/10 hover:border-white/25 py-3.5 px-7 rounded-full font-semibold transition-all duration-300 active:scale-[0.97] cursor-pointer"
               >
                 View Our Work <ChevronRight className="w-4 h-4" />
               </button>
@@ -495,7 +496,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.7, delay: 0.5 }}
-              className="flex flex-wrap gap-3 mt-12"
+              className="flex flex-wrap gap-2 sm:gap-3 mt-8 sm:mt-12"
             >
               {[
                 { num: '2024', label: 'Founded' },
@@ -504,17 +505,17 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
               ].map((s, i) => (
                 <div
                   key={i}
-                  className="flex items-center gap-2.5 px-4 py-2.5 rounded-xl border border-white/8 bg-white/[0.03] backdrop-blur-sm"
+                  className="flex items-center gap-2 px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl border border-white/8 bg-white/[0.03] backdrop-blur-sm"
                   style={{ animation: `stats-glow ${2.5 + i * 0.4}s ease-in-out ${i * 0.2}s infinite` }}
                 >
-                  <span className="text-base font-extrabold text-white" style={{ fontFamily: 'Satoshi, sans-serif' }}>{s.num}</span>
-                  <span className="text-[9px] font-mono text-white/35 tracking-widest uppercase">{s.label}</span>
+                  <span className="text-sm sm:text-base font-extrabold text-white" style={{ fontFamily: 'Satoshi, sans-serif' }}>{s.num}</span>
+                  <span className="text-[8px] sm:text-[9px] font-mono text-white/35 tracking-widest uppercase">{s.label}</span>
                 </div>
               ))}
-              <div className="flex items-center gap-2.5 px-4 py-2.5 rounded-xl border border-primary/30 bg-primary/8 backdrop-blur-sm"
+              <div className="flex items-center gap-2 px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl border border-primary/30 bg-primary/8 backdrop-blur-sm"
                 style={{ animation: 'stats-glow 2.2s ease-in-out 0.6s infinite' }}>
-                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_6px_#34d399]" />
-                <span className="text-[9px] font-mono text-white/55 tracking-widest uppercase">Client Success</span>
+                <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_6px_#34d399]" />
+                <span className="text-[8px] sm:text-[9px] font-mono text-white/55 tracking-widest uppercase">Client Success</span>
               </div>
             </motion.div>
           </div>
@@ -597,7 +598,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
       {/* ╔══════════════════════════════════════════════════════════════════════╗ */}
       {/* ║  GLOBAL PRESENCE MARQUEE                                           ║ */}
       {/* ╚══════════════════════════════════════════════════════════════════════╝ */}
-      <section className="py-12 border-y border-white/[0.06] bg-[#0A0825] overflow-hidden">
+      <section className="py-10 sm:py-12 border-y border-white/[0.06] bg-[#0A0825] overflow-hidden">
         <div className="max-w-7xl mx-auto px-6 mb-6 flex items-center gap-3 justify-center">
           <Globe className="w-3.5 h-3.5 text-primary/60" />
           <span className="text-[10px] font-mono tracking-[0.2em] text-white/30 uppercase">Serving clients across 6 countries</span>
@@ -622,7 +623,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
       {/* ╔══════════════════════════════════════════════════════════════════════╗ */}
       {/* ║  SERVICES GRID                                                      ║ */}
       {/* ╚══════════════════════════════════════════════════════════════════════╝ */}
-      <section className="relative py-28 px-6 bg-[#05030F]">
+      <section className="relative py-16 sm:py-24 lg:py-28 px-5 sm:px-6 bg-[#05030F]">
         {/* Background accent */}
         <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_at_center,rgba(124,42,235,0.05)_0%,transparent_70%)]" />
 
@@ -638,11 +639,11 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
               <Zap className="w-3 h-3 text-primary/60" />
               What We Build
             </div>
-            <h2 className="text-4xl md:text-5xl font-extrabold text-white mb-4 tracking-tight" style={{ fontFamily: 'Satoshi, sans-serif' }}>
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white mb-4 tracking-tight" style={{ fontFamily: 'Satoshi, sans-serif' }}>
               Six ways we <span className="gradient-word">level you up</span>
             </h2>
-            <p className="text-white/45 text-base max-w-lg mx-auto">
-              Digital systems that grow your brand, streamline your operations, and convert visitors into customers.
+            <p className="text-white/45 text-sm sm:text-base max-w-sm sm:max-w-lg mx-auto">
+              Digital systems that grow your brand, streamline operations, and convert visitors into customers.
             </p>
           </motion.div>
 
@@ -654,7 +655,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, amount: 0.2 }}
                 transition={{ duration: 0.55, delay: i * 0.07, ease: [0.16,1,0.3,1] }}
-                className="svc-card relative overflow-hidden rounded-[20px] p-7 cursor-pointer group"
+                className="svc-card relative overflow-hidden rounded-[20px] p-5 sm:p-7 cursor-pointer group"
                 style={{
                   background: hoveredService === i
                     ? `linear-gradient(135deg, rgba(255,255,255,0.055), rgba(255,255,255,0.025))`
@@ -743,7 +744,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
       {/* ╔══════════════════════════════════════════════════════════════════════╗ */}
       {/* ║  HOW WE WORK                                                        ║ */}
       {/* ╚══════════════════════════════════════════════════════════════════════╝ */}
-      <section className="relative py-28 px-6 bg-[#0A0825] overflow-hidden">
+      <section className="relative py-16 sm:py-24 lg:py-28 px-5 sm:px-6 bg-[#0A0825] overflow-hidden">
         <div aria-hidden className="absolute inset-0 pointer-events-none">
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(124,42,235,0.07)_0%,transparent_65%)]" />
           {[0,1,2,3,4].map(pi => (
@@ -764,16 +765,16 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
               <Sparkles className="w-3 h-3 text-primary/60" />
               Process
             </div>
-            <h2 className="text-4xl md:text-5xl font-extrabold text-white mb-4 tracking-tight" style={{ fontFamily: 'Satoshi, sans-serif' }}>
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white mb-4 tracking-tight" style={{ fontFamily: 'Satoshi, sans-serif' }}>
               How we <span className="gradient-word">work</span>
             </h2>
-            <p className="text-white/45 text-base max-w-xl mx-auto">
+            <p className="text-white/45 text-sm sm:text-base max-w-sm sm:max-w-xl mx-auto">
               A clear, collaborative journey from first conversation to deployed digital ecosystem.
             </p>
           </motion.div>
 
           {/* Steps grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 relative">
+          <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 relative">
             {/* Connecting line (desktop only) */}
             <div className="hidden lg:block absolute top-[60px] left-[12.5%] right-[12.5%] h-px pointer-events-none z-0"
               style={{ background: 'linear-gradient(to right, rgba(94,41,232,0.2), rgba(181,141,255,0.5), rgba(94,41,232,0.2))' }}>
@@ -791,7 +792,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, amount: 0.3 }}
                   transition={{ duration: 0.55, delay: i * 0.1, ease: [0.16,1,0.3,1] }}
-                  className="relative z-10 flex flex-col items-center text-center p-6 rounded-[20px] group"
+                  className="relative z-10 flex flex-col items-center text-center p-4 sm:p-6 rounded-[16px] sm:rounded-[20px] group"
                   style={{
                     background: lit ? 'rgba(255,255,255,0.048)' : 'rgba(255,255,255,0.022)',
                     backdropFilter: 'blur(20px)',
@@ -803,7 +804,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
                 >
                   {/* Step node */}
                   <div
-                    className="w-14 h-14 rounded-full flex items-center justify-center mb-5 transition-all duration-600"
+                    className="w-10 h-10 sm:w-14 sm:h-14 rounded-full flex items-center justify-center mb-3 sm:mb-5 transition-all duration-600"
                     style={{
                       background: lit ? 'rgba(124,42,235,0.15)' : 'rgba(255,255,255,0.04)',
                       border: lit ? '2px solid rgba(124,42,235,0.7)' : '2px solid rgba(181,141,255,0.15)',
@@ -816,9 +817,9 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
                     />
                   </div>
 
-                  <span className="text-[11px] font-mono font-bold text-primary/60 mb-1">{step.num}</span>
-                  <h3 className="text-white font-extrabold text-lg mb-2" style={{ fontFamily: 'Satoshi, sans-serif' }}>{step.title}</h3>
-                  <p className="text-white/45 text-sm leading-relaxed">{step.desc}</p>
+                  <span className="text-[10px] font-mono font-bold text-primary/60 mb-1">{step.num}</span>
+                  <h3 className="text-white font-extrabold text-base sm:text-lg mb-1 sm:mb-2" style={{ fontFamily: 'Satoshi, sans-serif' }}>{step.title}</h3>
+                  <p className="text-white/45 text-xs sm:text-sm leading-relaxed">{step.desc}</p>
                 </motion.div>
               );
             })}
@@ -840,7 +841,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
       {/* ╔══════════════════════════════════════════════════════════════════════╗ */}
       {/* ║  SELECTED WORK                                                      ║ */}
       {/* ╚══════════════════════════════════════════════════════════════════════╝ */}
-      <section className="py-28 px-6 bg-[#05030F]">
+      <section className="py-16 sm:py-24 lg:py-28 px-5 sm:px-6 bg-[#05030F]">
         <div className="max-w-7xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 24 }}
@@ -854,10 +855,10 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
                 <Sparkles className="w-3 h-3 text-primary/60" />
                 Portfolio
               </div>
-              <h2 className="text-4xl md:text-5xl font-extrabold text-white tracking-tight" style={{ fontFamily: 'Satoshi, sans-serif' }}>
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white tracking-tight" style={{ fontFamily: 'Satoshi, sans-serif' }}>
                 Selected <span className="gradient-word">Work</span>
               </h2>
-              <p className="text-white/45 text-base mt-3 max-w-md">
+              <p className="text-white/45 text-sm sm:text-base mt-3 max-w-sm sm:max-w-md">
                 Projects, systems, and brands we've helped shape across 6 countries.
               </p>
             </div>
@@ -963,11 +964,11 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
       {/* ╔══════════════════════════════════════════════════════════════════════╗ */}
       {/* ║  IMPACT NUMBERS                                                     ║ */}
       {/* ╚══════════════════════════════════════════════════════════════════════╝ */}
-      <section className="relative py-20 px-6 bg-[#0A0825] overflow-hidden">
+      <section className="relative py-14 sm:py-20 px-5 sm:px-6 bg-[#0A0825] overflow-hidden">
         <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_at_center,rgba(124,42,235,0.10)_0%,transparent_70%)]" />
 
         <div className="max-w-5xl mx-auto relative z-10">
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
             {IMPACT_STATS.map((stat, i) => (
               <motion.div
                 key={stat.label}
@@ -978,7 +979,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
                 className="flex flex-col items-center text-center"
               >
                 <span
-                  className="text-5xl md:text-6xl font-extrabold mb-2"
+                  className="text-4xl sm:text-5xl md:text-6xl font-extrabold mb-2"
                   style={{
                     fontFamily: 'Satoshi, sans-serif',
                     background: 'linear-gradient(135deg, #fff 30%, rgba(181,141,255,0.9) 100%)',
@@ -1000,7 +1001,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
       {/* ╔══════════════════════════════════════════════════════════════════════╗ */}
       {/* ║  DAILY AI FEED                                                      ║ */}
       {/* ╚══════════════════════════════════════════════════════════════════════╝ */}
-      <section className="relative py-28 px-6 bg-[#05030F] overflow-hidden">
+      <section className="relative py-16 sm:py-24 lg:py-28 px-5 sm:px-6 bg-[#05030F] overflow-hidden">
         <div aria-hidden className="absolute inset-0 pointer-events-none">
           {[0,1,2,3,4,5].map(pi => (
             <span key={pi} className="absolute rounded-full bg-violet-400"
@@ -1020,10 +1021,10 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_8px_#34d399]" />
               Live
             </div>
-            <h2 className="text-4xl md:text-5xl font-extrabold text-white mb-4 tracking-tight" style={{ fontFamily: 'Satoshi, sans-serif' }}>
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white mb-4 tracking-tight" style={{ fontFamily: 'Satoshi, sans-serif' }}>
               Daily <span className="gradient-word">AI Feed</span>
             </h2>
-            <p className="text-white/45 text-base max-w-lg">
+            <p className="text-white/45 text-sm sm:text-base max-w-sm sm:max-w-lg">
               Signals on tools, trends, research, and market shifts — curated daily by our intelligence layer.
             </p>
           </motion.div>
@@ -1114,7 +1115,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
       {/* ╔══════════════════════════════════════════════════════════════════════╗ */}
       {/* ║  FAQ                                                                ║ */}
       {/* ╚══════════════════════════════════════════════════════════════════════╝ */}
-      <section className="relative py-28 px-6 bg-[#0A0825] overflow-hidden">
+      <section className="relative py-16 sm:py-24 lg:py-28 px-5 sm:px-6 bg-[#0A0825] overflow-hidden">
         <div aria-hidden className="absolute inset-0 pointer-events-none">
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom,rgba(124,42,235,0.06)_0%,transparent_65%)]" />
         </div>
@@ -1126,7 +1127,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
             transition={{ duration: 0.6 }}
             className="text-center mb-14"
           >
-            <h2 className="text-4xl md:text-5xl font-bold text-white mb-3" style={{ fontFamily: 'Satoshi, sans-serif' }}>
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-3" style={{ fontFamily: 'Satoshi, sans-serif' }}>
               Common <span className="gradient-word">Questions</span>
             </h2>
             <p className="text-white/40 text-sm">Everything you need to know before we get started.</p>
@@ -1177,7 +1178,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
       {/* ╔══════════════════════════════════════════════════════════════════════╗ */}
       {/* ║  FINAL CTA                                                          ║ */}
       {/* ╚══════════════════════════════════════════════════════════════════════╝ */}
-      <section className="relative py-32 px-6 bg-[#05030F] overflow-hidden">
+      <section className="relative py-16 sm:py-24 lg:py-32 px-5 sm:px-6 bg-[#05030F] overflow-hidden">
         {/* Atmospheric background */}
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(124,42,235,0.14)_0%,transparent_60%)]" />
@@ -1218,10 +1219,10 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
               Join the Galaxa Circle
             </div>
 
-            <h2 className="text-5xl md:text-6xl font-extrabold text-white mb-5 tracking-tight leading-[1.06]" style={{ fontFamily: 'Satoshi, sans-serif' }}>
+            <h2 className="text-3xl sm:text-5xl md:text-6xl font-extrabold text-white mb-4 sm:mb-5 tracking-tight leading-[1.08]" style={{ fontFamily: 'Satoshi, sans-serif' }}>
               Ready to build something<br /><span className="gradient-word">remarkable?</span>
             </h2>
-            <p className="text-white/45 text-base mb-12 max-w-md mx-auto leading-relaxed">
+            <p className="text-white/45 text-sm sm:text-base mb-8 sm:mb-12 max-w-xs sm:max-w-md mx-auto leading-relaxed">
               Join the Galaxa newsletter for early access, opportunities, and builder-only updates.
             </p>
 
