@@ -123,7 +123,7 @@ export default function ServicesView() {
   const navigate = useNavigate();
 
   return (
-    <div className="relative pt-32 pb-24">
+    <div className="relative pt-24 sm:pt-32 pb-16 sm:pb-24">
       <Helmet>
         <title>Services — GalaxaTech</title>
         <meta name="description" content="End-to-end digital services: Web Development, App Development, Social Media, AI & Automation, Brand Identity, and Systems Consulting." />
@@ -131,15 +131,15 @@ export default function ServicesView() {
       </Helmet>
 
       {/* Page Header */}
-      <div className="max-w-7xl mx-auto px-6 mb-20 text-center">
-        <h1 className="text-5xl md:text-6xl font-bold text-white mb-5" style={{ fontFamily: 'Satoshi, sans-serif' }}>Our Expertise</h1>
-        <p className="text-white/60 text-lg max-w-2xl mx-auto leading-relaxed">
+      <div className="max-w-7xl mx-auto px-5 sm:px-6 mb-12 sm:mb-20 text-center">
+        <h1 className="text-3xl sm:text-5xl md:text-6xl font-bold text-white mb-4 sm:mb-5" style={{ fontFamily: 'Satoshi, sans-serif' }}>Our Expertise</h1>
+        <p className="text-white/60 text-base sm:text-lg max-w-2xl mx-auto leading-relaxed">
           Everything your brand needs to grow — strategy, design, development, and automation — delivered as one integrated system.
         </p>
       </div>
 
       {/* Service Sections */}
-      <div className="max-w-7xl mx-auto px-6 flex flex-col gap-12">
+      <div className="max-w-7xl mx-auto px-5 sm:px-6 flex flex-col gap-8 sm:gap-12">
         {SERVICES.map((svc, idx) => (
           <div
             key={svc.id}
@@ -181,9 +181,9 @@ export default function ServicesView() {
       </div>
 
       {/* Bottom CTA */}
-      <div className="max-w-7xl mx-auto px-6 mt-20 text-center">
-        <div className="glass-card rounded-3xl p-12">
-          <h2 className="text-3xl font-bold text-white mb-4" style={{ fontFamily: 'Satoshi, sans-serif' }}>Not sure which service you need?</h2>
+      <div className="max-w-7xl mx-auto px-5 sm:px-6 mt-12 sm:mt-20 text-center">
+        <div className="glass-card rounded-3xl p-7 sm:p-12">
+          <h2 className="text-2xl sm:text-3xl font-bold text-white mb-4" style={{ fontFamily: 'Satoshi, sans-serif' }}>Not sure which service you need?</h2>
           <p className="text-white/60 mb-8 max-w-lg mx-auto">Book a free audit. We'll look at your current digital presence and tell you exactly what will move the needle.</p>
           <button
             onClick={() => navigate('/audit')}

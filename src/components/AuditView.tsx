@@ -1,4 +1,4 @@
-﻿import { useState, FormEvent } from 'react';
+import { useState, FormEvent } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '../lib/firebase';
@@ -222,7 +222,7 @@ export default function AuditView() {
   const auditLabel = auditType === 'website' ? 'Website' : auditType === 'social' ? 'Social Media' : 'Brand & Digital Presence';
 
   return (
-    <div className="relative pt-32 pb-24">
+    <div className="relative pt-24 sm:pt-32 pb-16 sm:pb-24">
       <Helmet>
         <title>Free Brand Audit — GalaxaTech</title>
         <meta name="description" content="Book a free audit with GalaxaTech. We'll audit your website, social media, or full digital presence and send you a personalized report within 24 hours." />
@@ -235,7 +235,7 @@ export default function AuditView() {
         {step === 0 && (
           <>
             <div className="text-center mb-14">
-              <h1 className="text-5xl md:text-6xl font-bold text-white mb-5" style={{ fontFamily: 'Satoshi, sans-serif' }}>Free Brand Audit</h1>
+              <h1 className="text-3xl sm:text-5xl md:text-6xl font-bold text-white mb-5" style={{ fontFamily: 'Satoshi, sans-serif' }}>Free Brand Audit</h1>
               <p className="text-white/60 text-lg max-w-xl mx-auto leading-relaxed">
                 Choose what you'd like us to audit. We'll prepare a personalized report within 24 hours.
               </p>

@@ -1,26 +1,16 @@
-import { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { motion, AnimatePresence } from 'motion/react';
 import {
-  ArrowUpRight,
-  ChevronDown,
-  ChevronLeft,
-  ChevronRight,
-  Laptop,
-  Smartphone,
-  TrendingUp,
-  Cpu,
-  Brush,
-  Workflow,
-  Globe,
-  MessageCircle,
-  Sparkles,
-  Send,
+  ArrowUpRight, ChevronDown, ChevronRight,
+  Laptop, Smartphone, TrendingUp, Cpu, Brush, Workflow,
+  Globe, Sparkles, Search, Code, Rocket,
+  Package, BookOpen, Clock, Users, Lock,
+  Zap,
 } from 'lucide-react';
 import { doc, getDoc, collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '../lib/firebase';
-import heroLaptopDashboard from '../assets/images/hero_laptop_dashboard_1780081071809.png';
 
 interface HomeViewProps {
   isDhakaOpen: boolean;
@@ -35,58 +25,67 @@ interface FeedItem {
   time: string;
 }
 
-const TYPEWRITER_WORDS = ['Website Presence', 'Social Media Engagement', 'Client conversion'];
+// ── Data ──────────────────────────────────────────────────────────────────────
+
+const HERO_WORDS = ['Digital Presence', 'AI Infrastructure', 'Growth Engine'];
 
 const SERVICES = [
-  { icon: Laptop,     label: 'Web Development',               desc: 'Performant, scalable websites and web apps.',          anchor: 'web-development',    color: '#78D5FF' },
-  { icon: Smartphone, label: 'App Development',               desc: 'Cross-platform mobile applications.',                   anchor: 'app-development',    color: '#B58DFF' },
-  { icon: TrendingUp, label: 'Social Media & Content',        desc: 'Strategy, content creation, and growth systems.',      anchor: 'social-media',       color: '#7C2AEB' },
-  { icon: Cpu,        label: 'AI & Automation',               desc: 'Intelligent workflows that eliminate manual work.',    anchor: 'ai-automation',      color: '#5E29E8' },
-  { icon: Brush,      label: 'Brand Identity & Design',       desc: 'Visual systems that make your brand unforgettable.',   anchor: 'brand-identity',     color: '#78D5FF' },
-  { icon: Workflow,   label: 'Systems Consulting',            desc: 'Notion, process, and operations architecture.',        anchor: 'systems-consulting', color: '#B58DFF' },
+  { icon: Laptop,     label: 'Web Development',       desc: 'Fast, secure, and scalable websites built for performance and measurable growth.',         color: '#78D5FF', num: '01', tag: 'Frontend + Backend',  anchor: 'web-development' },
+  { icon: Smartphone, label: 'App Development',        desc: 'High-performance mobile and web apps tailored precisely to user needs and business goals.', color: '#B58DFF', num: '02', tag: 'iOS + Android + Web', anchor: 'app-development' },
+  { icon: TrendingUp, label: 'Social & Content',       desc: 'Engaging content and social strategies that build real brand presence and loyalty.',        color: '#FF8DC7', num: '03', tag: 'Growth + Community',  anchor: 'social-media' },
+  { icon: Cpu,        label: 'AI & Automation',        desc: 'Intelligent agents and automation pipelines that eliminate manual work and unlock scale.',   color: '#7C2AEB', num: '04', tag: 'LLMs + Agents',      anchor: 'ai-automation' },
+  { icon: Brush,      label: 'Brand Identity',         desc: 'Distinctive visual systems and brand experiences that leave a lasting, memorable impression.',color: '#FFD47A', num: '05', tag: 'Design + Systems',  anchor: 'brand-identity' },
+  { icon: Workflow,   label: 'Systems Consulting',     desc: 'Strategic guidance and system architectures that drive sustainable, compounding growth.',    color: '#5EEB8B', num: '06', tag: 'Notion + Process',  anchor: 'systems-consulting' },
 ];
 
 const PROCESS_STEPS = [
-  { num: '01', title: 'Discover',    desc: 'We understand your goals, audience, and gaps.' },
-  { num: '02', title: 'Strategize',  desc: 'We architect the solution before touching code.' },
-  { num: '03', title: 'Build',       desc: 'Our team executes with speed and precision.' },
-  { num: '04', title: 'Deploy',      desc: 'Launch, monitor, and continuously improve.' },
+  { num: '01', title: 'Discover',   desc: 'Understand goals, users, and market opportunities deeply.', icon: Search },
+  { num: '02', title: 'Strategize', desc: 'Shape the roadmap, system design, and execution plan.', icon: Workflow },
+  { num: '03', title: 'Build',      desc: 'Design and develop the core solution with precision.', icon: Code },
+  { num: '04', title: 'Deploy',     desc: 'Launch, refine, and optimize for continuous growth.', icon: Rocket },
 ];
 
 const PROJECTS = [
   {
-    slug: 'harmans-trading',
-    name: 'Harmans Trading',
-    clientType: 'Recruitment Firm',
-    country: '🇸🇦',
-    services: ['Web Development', 'Brand Identity'],
-    desc: 'A multilingual corporate website (EN/BN/AR with RTL) serving international recruitment clients.',
-  },
-  {
     slug: 'sunnah-grandeur',
+    num: '02',
     name: 'Sunnah Grandeur',
     clientType: 'Islamic Lifestyle E-Commerce',
-    country: '🇧🇩',
+    country: '🇧🇩 Bangladesh',
     services: ['Web Dev', 'App Dev', 'Systems'],
     desc: 'E-commerce web platform + Flutter app with unified Supabase backend and Stripe payments.',
+    accent: '#B58DFF',
+    accentBg: 'rgba(181,141,255,0.08)',
+  },
+  {
+    slug: 'harmans-trading',
+    num: '01',
+    name: 'Harmans Trading',
+    clientType: 'Recruitment Firm',
+    country: '🇸🇦 Saudi Arabia',
+    services: ['Web Development', 'Brand Identity'],
+    desc: 'A multilingual corporate website (EN/BN/AR with RTL) serving international recruitment clients.',
+    accent: '#78D5FF',
+    accentBg: 'rgba(120,213,255,0.08)',
   },
   {
     slug: 'salfas-bazar',
+    num: '03',
     name: 'Salfas Bazar',
     clientType: 'Organic Food Business',
-    country: '🇧🇩',
+    country: '🇧🇩 Bangladesh',
     services: ['Brand Identity', 'Web Development'],
     desc: 'Full brand kit and website for an organic food brand highlighting natural quality and trust.',
+    accent: '#5EEB8B',
+    accentBg: 'rgba(94,235,139,0.08)',
   },
 ];
 
-const FAQS = [
-  { q: 'What kind of businesses do you work with?', a: 'We work with startups, SMEs, and established businesses across 6 countries, primarily in tech, e-commerce, and service industries.' },
-  { q: 'How long does a typical project take?', a: 'Timelines vary by scope. A website takes 2–4 weeks; a full app can take 6–10 weeks. We agree on timelines upfront.' },
-  { q: 'How does pricing work?', a: 'Projects are quoted individually based on scope. We provide a detailed proposal before any agreement is signed.' },
-  { q: 'What is the Galaxa Builders Program?', a: 'GBP is our execution ecosystem for students. Real projects, real tasks, real output. Not a course — an experience.' },
-  { q: 'How do I track my project?', a: 'Every client gets access to a dedicated Client Hub — a private dashboard with live progress, updates, documents, and direct team contact.' },
-  { q: 'Can I book a free consultation?', a: "Yes. Book an audit or reach out via WhatsApp. We'll respond within 24 hours." },
+const IMPACT_STATS = [
+  { value: 50, suffix: '+', label: 'Projects Delivered' },
+  { value: 6,  suffix: '+', label: 'Countries Served' },
+  { value: 24, suffix: 'h', label: 'Avg. Response Time' },
+  { value: 100,suffix: '%', label: 'Client Success Rate' },
 ];
 
 const COUNTRIES = [
@@ -98,49 +97,75 @@ const COUNTRIES = [
   { flag: '🇧🇩', name: 'Bangladesh' },
 ];
 
-const PLACEHOLDER_FEED: FeedItem[] = [
-  {
-    category: 'AI News',
-    headline: 'Agents reshape enterprise workflows',
-    summary: 'Leading firms are deploying autonomous agents to handle repetitive ops tasks — cutting cycle times by up to 60%.',
-    time: '8 min ago',
-  },
-  {
-    category: 'Tech Insight',
-    headline: 'Edge computing meets AI inference',
-    summary: 'On-device AI models are shrinking. What used to need a data center now runs on a $30 chip at the edge.',
-    time: '22 min ago',
-  },
-  {
-    category: 'GalaxaTech',
-    headline: 'New automation deployed for client ops',
-    summary: 'Our latest workflow agent went live this morning, processing 400+ daily records for a Saudi recruitment firm.',
-    time: '1h ago',
-  },
+const FAQS = [
+  { q: 'What kind of businesses do you work with?', a: 'We work with startups, SMEs, and established businesses across 6 countries, primarily in tech, e-commerce, and service industries.' },
+  { q: 'How long does a typical project take?', a: 'Timelines vary by scope. A website takes 2–4 weeks; a full app can take 6–10 weeks. We agree on timelines upfront.' },
+  { q: 'How does pricing work?', a: 'Projects are quoted individually based on scope. We provide a detailed proposal before any agreement is signed.' },
+  { q: 'What is the Galaxa Builders Program?', a: 'GBP is our execution ecosystem for students. Real projects, real tasks, real output. Not a course — an experience.' },
+  { q: 'How do I track my project?', a: 'Every client gets access to a dedicated Client Hub — a private dashboard with live progress, updates, documents, and direct team contact.' },
+  { q: 'Can I book a free consultation?', a: "Yes. Book an audit or reach out via WhatsApp. We'll respond within 24 hours." },
 ];
 
-const GLASS_STYLE: React.CSSProperties = {
-  background: 'rgba(255,255,255,0.042)',
-  backdropFilter: 'blur(22px) saturate(140%)',
-  WebkitBackdropFilter: 'blur(22px) saturate(140%)',
-  border: '1px solid rgba(181,141,255,0.20)',
-  borderRadius: '20px',
-  boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.10), inset 0 0 28px rgba(124,42,235,0.05), 0 20px 60px rgba(0,0,0,0.50)',
-};
+const PLACEHOLDER_FEED: FeedItem[] = [
+  { category: 'TOOLS', headline: 'Open-source agent stacks gain traction', summary: 'Teams are adopting lightweight agent frameworks to automate workflows across operations and support.', time: '2h ago' },
+  { category: 'RESEARCH', headline: 'Multimodal models improve workflow accuracy', summary: 'New advances in multimodal reasoning boost accuracy in document and visual understanding tasks.', time: '5h ago' },
+  { category: 'MARKET', headline: 'SMBs accelerate AI adoption in operations', summary: 'Rising demand for automation and customer support tools drives strong momentum in SMEs globally.', time: 'Today' },
+];
 
-function getCarouselOffset(i: number, active: number, total: number): number {
-  let offset = i - active;
-  if (offset > total / 2) offset -= total;
-  if (offset < -total / 2) offset += total;
-  return offset;
+const TERMINAL_LINES = [
+  { text: '$ galaxa.agents.init()', cls: 'text-white/50' },
+  { text: '✓ 8 optimization agents online', cls: 'text-emerald-400' },
+  { text: '> Scanning ecosystem...', cls: 'text-white/50' },
+  { text: '✓ Performance: 94 / 100', cls: 'text-emerald-400' },
+  { text: '✓ SEO gaps: 12 found', cls: 'text-emerald-400' },
+  { text: '> Building growth roadmap', cls: 'text-white/50' },
+  { text: '▓▓▓▓▓▓░░░░ 73%', cls: 'text-primary' },
+  { text: '> Deploying to production', cls: 'text-white/50' },
+  { text: '✓ Live — response time 94ms', cls: 'text-emerald-400' },
+];
+
+// ── Animated counter ──────────────────────────────────────────────────────────
+function AnimatedStat({ value, suffix }: { value: number; suffix: string }) {
+  const [count, setCount] = useState(0);
+  const ref = useRef<HTMLSpanElement>(null);
+  const started = useRef(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !started.current) {
+          started.current = true;
+          const duration = 1600;
+          const startTime = performance.now();
+          const tick = (now: number) => {
+            const t = Math.min((now - startTime) / duration, 1);
+            const eased = 1 - Math.pow(1 - t, 3);
+            setCount(Math.floor(eased * value));
+            if (t < 1) requestAnimationFrame(tick);
+            else setCount(value);
+          };
+          requestAnimationFrame(tick);
+        }
+      },
+      { threshold: 0.5 }
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, [value]);
+
+  return <span ref={ref}>{count}{suffix}</span>;
 }
 
+// ── Component ─────────────────────────────────────────────────────────────────
 export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeViewProps) {
   const navigate = useNavigate();
 
   // Hero
   const [wordIndex, setWordIndex] = useState(0);
   const [buildMins, setBuildMins] = useState(42);
+  const [termLineCount, setTermLineCount] = useState(1);
 
   // FAQ
   const [activeFAQ, setActiveFAQ] = useState<number | null>(null);
@@ -148,35 +173,40 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
   // Daily AI Feed
   const [feedItems, setFeedItems] = useState<FeedItem[]>(PLACEHOLDER_FEED);
 
-  // Carousel
-  const [activeIndex, setActiveIndex] = useState(0);
-  const [dragStartX, setDragStartX] = useState<number | null>(null);
-
-  // How We Work
+  // Process step highlight
   const stepRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const [illuminatedSteps, setIlluminatedSteps] = useState<Set<number>>(new Set());
+  const [litSteps, setLitSteps] = useState<Set<number>>(new Set());
 
-  // Portfolio Folder
-  const [folderHovered, setFolderHovered] = useState(false);
-
-  // CTA Toggle
-  const [toggled, setToggled] = useState(false);
-  const [subName, setSubName] = useState('');
+  // Newsletter
   const [subEmail, setSubEmail] = useState('');
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
-  // ── Effects ────────────────────────────────────────────────────────────────
+  // Hovered service
+  const [hoveredService, setHoveredService] = useState<number | null>(null);
+
+  // ── Effects ──────────────────────────────────────────────────────────────────
   useEffect(() => {
-    const currentMins = new Date().getMinutes();
-    setBuildMins(currentMins === 0 ? 60 : currentMins);
-    const interval = setInterval(() => setBuildMins(prev => prev >= 59 ? 1 : prev + 1), 60000);
-    return () => clearInterval(interval);
+    const m = new Date().getMinutes();
+    setBuildMins(m === 0 ? 60 : m);
+    const iv = setInterval(() => setBuildMins(p => p >= 59 ? 1 : p + 1), 60000);
+    return () => clearInterval(iv);
   }, []);
 
   useEffect(() => {
-    const timer = setInterval(() => setWordIndex(prev => (prev + 1) % TYPEWRITER_WORDS.length), 3200);
-    return () => clearInterval(timer);
+    const iv = setInterval(() => setWordIndex(p => (p + 1) % HERO_WORDS.length), 3000);
+    return () => clearInterval(iv);
+  }, []);
+
+  // Terminal animation loop
+  useEffect(() => {
+    const iv = setInterval(() => {
+      setTermLineCount(p => {
+        if (p >= TERMINAL_LINES.length) return 1;
+        return p + 1;
+      });
+    }, 900);
+    return () => clearInterval(iv);
   }, []);
 
   useEffect(() => {
@@ -190,36 +220,22 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
     stepRefs.current.forEach((el, i) => {
       if (!el) return;
       const obs = new IntersectionObserver(
-        ([entry]) => { if (entry.isIntersecting) setIlluminatedSteps(prev => new Set([...prev, i])); },
-        { threshold: 0.5 }
+        ([entry]) => { if (entry.isIntersecting) setLitSteps(prev => new Set([...prev, i])); },
+        { threshold: 0.4 }
       );
       obs.observe(el);
       observers.push(obs);
     });
-    return () => observers.forEach(obs => obs.disconnect());
+    return () => observers.forEach(o => o.disconnect());
   }, []);
 
-  // ── Carousel helpers ───────────────────────────────────────────────────────
-  const carouselPrev = () => setActiveIndex(prev => (prev - 1 + SERVICES.length) % SERVICES.length);
-  const carouselNext = () => setActiveIndex(prev => (prev + 1) % SERVICES.length);
-
-  const handlePointerDown = (e: React.PointerEvent) => setDragStartX(e.clientX);
-  const handlePointerUp = (e: React.PointerEvent) => {
-    if (dragStartX === null) return;
-    const delta = e.clientX - dragStartX;
-    if (delta < -50) carouselNext();
-    else if (delta > 50) carouselPrev();
-    setDragStartX(null);
-  };
-
-  // ── Newsletter submit ──────────────────────────────────────────────────────
+  // ── Handlers ─────────────────────────────────────────────────────────────────
   const handleNewsletterSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!subEmail.trim()) return;
     setSubmitting(true);
     try {
       await addDoc(collection(db, 'newsletter_subscribers'), {
-        name: subName.trim(),
         email: subEmail.trim(),
         joinedAt: serverTimestamp(),
       });
@@ -229,12 +245,18 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
     }
   };
 
-  // ── Line progress ──────────────────────────────────────────────────────────
-  const maxIlluminated = illuminatedSteps.size > 0 ? Math.max(...illuminatedSteps) : -1;
-  const lineProgress = maxIlluminated >= 0 ? (maxIlluminated / (PROCESS_STEPS.length - 1)) * 100 : 0;
+  const getCategoryIcon = (cat: string) => {
+    const c = cat.toUpperCase();
+    if (c.includes('TOOL')) return <Package className="w-3.5 h-3.5" />;
+    if (c.includes('RESEARCH')) return <BookOpen className="w-3.5 h-3.5" />;
+    if (c.includes('MARKET')) return <TrendingUp className="w-3.5 h-3.5" />;
+    return <Sparkles className="w-3.5 h-3.5" />;
+  };
+
+  // ─────────────────────────────────────────────────────────────────────────────
 
   return (
-    <div className="relative">
+    <div className="relative overflow-x-hidden">
       <Helmet>
         <title>GalaxaTech — Ecosystems, Optimized</title>
         <meta name="description" content="GalaxaTech is a systems-driven creative tech agency from Dhaka, building digital ecosystems for brands across 6 countries." />
@@ -250,515 +272,889 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
         })}</script>
       </Helmet>
 
-      {/* ── Hero Section (unchanged) ───────────────────────────────────────── */}
-      <section className="relative min-h-[92vh] flex flex-col items-center justify-center pt-28 pb-16 overflow-hidden">
-        <div className="absolute inset-0 z-0 select-none overflow-hidden bg-[#05030F]">
-          <img
-            alt="Hero MacBook Atmosphere"
-            className="w-full h-full object-cover opacity-68 contrast-105 scale-100 pointer-events-none"
-            style={{
-              maskImage: 'radial-gradient(ellipse at 50% 55%, rgba(0,0,0,1) 40%, rgba(0,0,0,0.15) 85%, rgba(0,0,0,0) 100%)',
-              WebkitMaskImage: 'radial-gradient(ellipse at 50% 55%, rgba(0,0,0,1) 40%, rgba(0,0,0,0.15) 85%, rgba(0,0,0,0) 100%)',
-            }}
-            src={heroLaptopDashboard}
-            referrerPolicy="no-referrer"
-          />
-          <div className="absolute inset-0 bg-gradient-to-tr from-[#05030F] via-[#7C2AEB]/6 to-[#7C2AEB]/6 pointer-events-none" />
-          <div className="absolute inset-x-0 top-0 h-[60%] bg-gradient-to-b from-[#05030F] via-[#05030F]/90 to-transparent pointer-events-none" />
-          <div className="absolute inset-x-0 top-0 h-1/3 bg-gradient-to-b from-[#7C2AEB]/10 via-transparent to-transparent pointer-events-none" />
-          <div className="absolute inset-x-0 bottom-0 h-1/4 bg-gradient-to-t from-[#05030F] to-transparent pointer-events-none" />
-          <div className="absolute top-1/2 left-1/4 -translate-y-1/2 -translate-x-1/2 w-[400px] h-[400px] bg-[#7C2AEB]/12 blur-[90px] rounded-full pointer-events-none" />
-          <div className="absolute top-1/2 right-1/4 -translate-y-1/2 translate-x-1/2 w-[350px] h-[350px] bg-[#7C2AEB]/10 blur-[90px] rounded-full pointer-events-none" />
-        </div>
-        <div className="max-w-5xl mx-auto px-6 text-center relative z-10 pt-12">
-          <div className="inline-flex items-center gap-2.5 bg-black/50 backdrop-blur-md rounded-full px-5 py-2.5 mb-8 border border-red-500/20 shadow-[0_0_15px_rgba(239,68,68,0.1)]">
-            <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse shadow-[0_0_8px_#ef4444]" />
-            <span className="text-[10px] sm:text-[11px] font-mono font-bold tracking-widest text-white uppercase">
-              AUTONOMOUS OPTIMIZATION • AGENTS ACTIVE • LAST BUILD: {buildMins}M AGO
-            </span>
-          </div>
-          <h1 className="font-display text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight text-white mb-6 leading-[1.08] drop-shadow-[0_4px_24px_rgba(0,0,0,0.8)]">
-            Assure your brand's <br className="hidden md:block" />
-            <span className="font-serif italic font-bold typewriter-container block min-h-[1.15em] mt-2 pb-1 overflow-hidden">
-              <AnimatePresence mode="wait">
-                <motion.span
-                  key={wordIndex}
-                  initial={{ y: 35, opacity: 0, filter: 'blur(5px)' }}
-                  animate={{ y: 0, opacity: 1, filter: 'blur(0px)' }}
-                  exit={{ y: -35, opacity: 0, filter: 'blur(5px)' }}
-                  transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
-                  className="inline-block text-gradient"
-                >
-                  {TYPEWRITER_WORDS[wordIndex]}
-                </motion.span>
-              </AnimatePresence>
-            </span>
-          </h1>
-          <p className="text-base sm:text-lg text-white/70 max-w-2xl mx-auto mb-10 leading-relaxed font-sans">
-            By investing only FIVE minutes, giving us some information about your business.
-          </p>
-          <div className="flex justify-center">
-            <button
-              onClick={() => navigate('/audit')}
-              className="bg-black/40 backdrop-blur-md border border-white/10 group flex items-center gap-4 text-white hover:text-primary hover:border-primary/50 font-bold py-4 px-8 rounded-full transition-all duration-300 shadow-2xl cursor-pointer"
-            >
-              <span className="w-10 h-10 primary-gradient text-white rounded-full flex items-center justify-center group-hover:rotate-45 transition-transform duration-500">
-                <ArrowUpRight className="w-5 h-5" />
-              </span>
-              <span className="text-md font-bold text-white">Book an Audit</span>
-            </button>
-          </div>
-        </div>
-      </section>
-
-      {/* ── Global Presence ────────────────────────────────────────────────── */}
+      {/* ── Shared global styles ─────────────────────────────────────────────── */}
       <style>{`
+        /* Orb drift animations */
+        @keyframes orb-a {
+          0%,100% { transform: translate(0,0) scale(1); }
+          33%      { transform: translate(60px,-40px) scale(1.08); }
+          66%      { transform: translate(-30px,50px) scale(0.95); }
+        }
+        @keyframes orb-b {
+          0%,100% { transform: translate(0,0) scale(1); }
+          33%      { transform: translate(-50px,60px) scale(0.92); }
+          66%      { transform: translate(40px,-30px) scale(1.05); }
+        }
+        @keyframes orb-c {
+          0%,100% { transform: translate(0,0) scale(1); }
+          50%      { transform: translate(30px,50px) scale(1.1); }
+        }
+        .orb-a { animation: orb-a 18s ease-in-out infinite; }
+        .orb-b { animation: orb-b 22s ease-in-out infinite; }
+        .orb-c { animation: orb-c 14s ease-in-out infinite; }
+
+        /* Marquee */
         @keyframes marquee-scroll {
           from { transform: translateX(0); }
           to   { transform: translateX(-50%); }
         }
+        .marquee-wrapper {
+          mask-image: linear-gradient(to right, transparent, white 10%, white 90%, transparent);
+          -webkit-mask-image: linear-gradient(to right, transparent, white 10%, white 90%, transparent);
+        }
         .marquee-track {
           display: flex;
           width: max-content;
-          animation: marquee-scroll 22s linear infinite;
+          animation: marquee-scroll 28s linear infinite;
         }
-        .marquee-wrapper:hover .marquee-track {
-          animation-play-state: paused;
+        .marquee-wrapper:hover .marquee-track { animation-play-state: paused; }
+
+        /* Gradient keyword shimmer */
+        .gradient-word {
+          background: linear-gradient(135deg, #C4A0FF 0%, #9B59FF 35%, #7C2AEB 65%, #5E29E8 100%);
+          background-size: 250% auto;
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+          animation: shimmer-sweep 5s linear infinite;
+          display: inline-block;
         }
-        @keyframes line-draw-h {
+        @keyframes shimmer-sweep {
+          0%   { background-position: 0% center; }
+          100% { background-position: 250% center; }
+        }
+
+        /* Particle drift */
+        @keyframes particle-drift {
+          0%   { transform: translateY(0px) translateX(0px) scale(1);    opacity: 0; }
+          12%  { opacity: 0.6; }
+          85%  { opacity: 0.25; }
+          100% { transform: translateY(-90px) translateX(14px) scale(0.3); opacity: 0; }
+        }
+
+        /* Floating badge */
+        @keyframes float-y {
+          0%, 100% { transform: translateY(0px); }
+          50%       { transform: translateY(-5px); }
+        }
+        .animate-float { animation: float-y 3.5s ease-in-out infinite; }
+
+        /* Stats glow pulse */
+        @keyframes stats-glow {
+          0%, 100% { opacity: 0.6; }
+          50%       { opacity: 1; }
+        }
+
+        /* Service card number */
+        .svc-num {
+          font-size: 6rem;
+          line-height: 1;
+          font-weight: 900;
+          color: rgba(181,141,255,0.07);
+          position: absolute;
+          top: -8px;
+          right: 16px;
+          font-family: 'Satoshi', sans-serif;
+          pointer-events: none;
+          user-select: none;
+          transition: color 0.35s ease;
+        }
+        .svc-card:hover .svc-num { color: rgba(181,141,255,0.14); }
+
+        /* Dot grid for hero */
+        .dot-grid {
+          background-image: radial-gradient(circle, rgba(181,141,255,0.18) 1px, transparent 1px);
+          background-size: 32px 32px;
+        }
+
+        /* Process connecting line */
+        @keyframes line-grow {
           from { transform: scaleX(0); }
           to   { transform: scaleX(1); }
         }
+        .process-line { transform-origin: left center; }
+
+        /* Terminal cursor blink */
+        @keyframes cursor-blink {
+          0%, 100% { opacity: 1; }
+          50%       { opacity: 0; }
+        }
+        .term-cursor { animation: cursor-blink 1s ease-in-out infinite; }
+
+        /* Fade up reveal */
+        @keyframes fade-up {
+          from { opacity: 0; transform: translateY(24px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
       `}</style>
-      <section className="py-16 px-6 border-y border-white/5 bg-[#05030F] overflow-hidden">
-        <div className="max-w-7xl mx-auto">
-          <p className="text-center text-[10px] font-mono tracking-[0.25em] text-white/30 uppercase mb-8">
-            Global Presence
-          </p>
-          <div className="marquee-wrapper overflow-hidden">
-            <div className="marquee-track">
-              {[...COUNTRIES, ...COUNTRIES].map((c, i) => (
+
+      {/* ╔══════════════════════════════════════════════════════════════════════╗ */}
+      {/* ║  HERO                                                               ║ */}
+      {/* ╚══════════════════════════════════════════════════════════════════════╝ */}
+      <section className="relative min-h-[100svh] flex flex-col items-center justify-center overflow-hidden bg-[#05030F]">
+
+        {/* Background orbs */}
+        <div className="absolute inset-0 pointer-events-none overflow-hidden">
+          <div className="orb-a absolute w-[600px] h-[600px] rounded-full blur-[120px] opacity-[0.18]"
+            style={{ background: 'radial-gradient(circle, #7C2AEB, #5E29E8)', top: '-10%', left: '-8%' }} />
+          <div className="orb-b absolute w-[500px] h-[500px] rounded-full blur-[100px] opacity-[0.12]"
+            style={{ background: 'radial-gradient(circle, #78D5FF, #B58DFF)', bottom: '-5%', right: '-6%' }} />
+          <div className="orb-c absolute w-[300px] h-[300px] rounded-full blur-[80px] opacity-[0.08]"
+            style={{ background: '#7C2AEB', top: '40%', right: '20%' }} />
+          <div className="dot-grid absolute inset-0 opacity-30" />
+          <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-[#05030F] to-transparent" />
+        </div>
+
+        {/* Particles */}
+        <div aria-hidden className="absolute inset-0 pointer-events-none">
+          {[0,1,2,3,4,5,6,7,8].map(pi => (
+            <span key={pi} className="absolute rounded-full bg-violet-400"
+              style={{ width: pi%3===0?'3px':'2px', height: pi%3===0?'3px':'2px', left:`${5+pi*11}%`, top:`${8+(pi%4)*22}%`, opacity:0, animation:`particle-drift ${2.5+pi*0.4}s ${pi*0.3}s ease-in-out infinite` }} />
+          ))}
+        </div>
+
+        {/* Content */}
+        <div className="relative z-10 w-full max-w-7xl mx-auto px-5 sm:px-6 pt-24 sm:pt-28 lg:pt-32 pb-10 sm:pb-16 lg:pb-20 flex flex-col lg:flex-row items-center gap-8 sm:gap-12 lg:gap-20">
+
+          {/* ── Left: Text ── */}
+          <div className="flex-1 flex flex-col items-center lg:items-start text-center lg:text-left">
+
+            {/* Live badge */}
+            <motion.div
+              initial={{ opacity: 0, y: -16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, ease: [0.16,1,0.3,1] }}
+              className="inline-flex items-center gap-2.5 bg-black/50 backdrop-blur-md rounded-full px-5 py-2.5 mb-8 border border-red-500/20 shadow-[0_0_15px_rgba(239,68,68,0.08)] animate-float"
+            >
+              <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse shadow-[0_0_8px_#ef4444]" />
+              <span className="font-mono font-bold tracking-widest text-white/80 uppercase text-[8px] sm:text-[10px]">
+                <span className="sm:hidden">Agents Active · {buildMins}m ago</span>
+                <span className="hidden sm:inline">Live Studio • Agents Active • Last build: {buildMins}m ago</span>
+              </span>
+            </motion.div>
+
+            {/* Headline */}
+            <motion.h1
+              initial={{ opacity: 0, y: 24 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.1, ease: [0.16,1,0.3,1] }}
+              className="font-display text-[2.1rem] sm:text-5xl lg:text-7xl font-extrabold tracking-tight text-white leading-[1.1] mb-3 sm:mb-4"
+            >
+              Build your brand's
+              <span className="block mt-1 sm:mt-2 font-serif italic min-h-[1.15em] overflow-hidden w-full">
+                <AnimatePresence mode="wait">
+                  <motion.span
+                    key={wordIndex}
+                    initial={{ y: 32, opacity: 0, filter: 'blur(6px)' }}
+                    animate={{ y: 0, opacity: 1, filter: 'blur(0px)' }}
+                    exit={{ y: -32, opacity: 0, filter: 'blur(6px)' }}
+                    transition={{ duration: 0.6, ease: [0.16,1,0.3,1] }}
+                    className="block text-gradient"
+                  >
+                    {HERO_WORDS[wordIndex]}
+                  </motion.span>
+                </AnimatePresence>
+              </span>
+            </motion.h1>
+
+            {/* Sub */}
+            <motion.p
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.25, ease: [0.16,1,0.3,1] }}
+              className="text-sm sm:text-base lg:text-lg text-white/55 max-w-xs sm:max-w-lg mb-8 sm:mb-10 leading-relaxed"
+            >
+              GalaxaTech engineers web, app, AI, and brand systems that work together — for clients across 6 countries.
+            </motion.p>
+
+            {/* CTAs */}
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.35, ease: [0.16,1,0.3,1] }}
+              className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full sm:w-auto"
+            >
+              <button
+                onClick={() => navigate('/audit')}
+                className="group flex items-center justify-center gap-3 bg-gradient-to-tr from-[#5E29E8] to-[#7C2AEB] text-white font-bold py-3.5 px-7 rounded-full transition-all duration-300 shadow-[0_8px_32px_rgba(124,42,235,0.45)] hover:shadow-[0_12px_48px_rgba(124,42,235,0.65)] hover:-translate-y-0.5 active:scale-[0.97] cursor-pointer"
+              >
+                <span>Book a Free Audit</span>
+                <span className="w-7 h-7 rounded-full bg-white/15 flex items-center justify-center group-hover:rotate-45 transition-transform duration-500">
+                  <ArrowUpRight className="w-4 h-4" />
+                </span>
+              </button>
+              <button
+                onClick={() => navigate('/portfolio')}
+                className="flex items-center justify-center gap-2 text-white/70 hover:text-white border border-white/10 hover:border-white/25 py-3.5 px-7 rounded-full font-semibold transition-all duration-300 active:scale-[0.97] cursor-pointer"
+              >
+                View Our Work <ChevronRight className="w-4 h-4" />
+              </button>
+            </motion.div>
+
+            {/* Stats */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.7, delay: 0.5 }}
+              className="flex flex-wrap gap-2 sm:gap-3 mt-8 sm:mt-12"
+            >
+              {[
+                { num: '2024', label: 'Founded' },
+                { num: '6+',   label: 'Countries' },
+                { num: '50+',  label: 'Projects' },
+              ].map((s, i) => (
                 <div
                   key={i}
-                  className="flex items-center gap-3 mx-8 select-none"
-                  style={{ minWidth: 'max-content' }}
+                  className="flex items-center gap-2 px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl border border-white/8 bg-white/[0.03] backdrop-blur-sm"
+                  style={{ animation: `stats-glow ${2.5 + i * 0.4}s ease-in-out ${i * 0.2}s infinite` }}
                 >
-                  <span className="text-3xl leading-none">{c.flag}</span>
-                  <span
-                    className="text-white/60 font-semibold text-sm"
-                    style={{ fontFamily: 'Satoshi, sans-serif' }}
-                  >
-                    {c.name}
-                  </span>
-                  <span className="w-1 h-1 rounded-full bg-primary/40 ml-4" />
+                  <span className="text-sm sm:text-base font-extrabold text-white" style={{ fontFamily: 'Satoshi, sans-serif' }}>{s.num}</span>
+                  <span className="text-[8px] sm:text-[9px] font-mono text-white/35 tracking-widest uppercase">{s.label}</span>
                 </div>
               ))}
-            </div>
+              <div className="flex items-center gap-2 px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl border border-primary/30 bg-primary/8 backdrop-blur-sm"
+                style={{ animation: 'stats-glow 2.2s ease-in-out 0.6s infinite' }}>
+                <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_6px_#34d399]" />
+                <span className="text-[8px] sm:text-[9px] font-mono text-white/55 tracking-widest uppercase">Client Success</span>
+              </div>
+            </motion.div>
           </div>
+
+          {/* ── Right: Terminal Card ── */}
+          <motion.div
+            initial={{ opacity: 0, x: 40, rotate: 3 }}
+            animate={{ opacity: 1, x: 0, rotate: 0 }}
+            transition={{ duration: 0.9, delay: 0.4, ease: [0.16,1,0.3,1] }}
+            className="hidden lg:flex flex-col w-[380px] flex-shrink-0"
+            style={{
+              background: 'rgba(255,255,255,0.035)',
+              backdropFilter: 'blur(24px) saturate(140%)',
+              WebkitBackdropFilter: 'blur(24px) saturate(140%)',
+              border: '1px solid rgba(181,141,255,0.22)',
+              borderRadius: '20px',
+              boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.10), 0 32px 80px rgba(0,0,0,0.60), 0 0 0 1px rgba(124,42,235,0.08)',
+              overflow: 'hidden',
+            }}
+          >
+            {/* Terminal header bar */}
+            <div className="flex items-center gap-2 px-5 py-3.5 border-b border-white/[0.07] bg-white/[0.02]">
+              <span className="w-3 h-3 rounded-full bg-red-500/70" />
+              <span className="w-3 h-3 rounded-full bg-yellow-500/70" />
+              <span className="w-3 h-3 rounded-full bg-green-500/70" />
+              <span className="ml-3 text-[11px] font-mono text-white/40">galaxa.terminal — agents v2.4</span>
+              <span className="ml-auto flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                <span className="text-[10px] font-mono text-emerald-400">LIVE</span>
+              </span>
+            </div>
+
+            {/* Terminal body */}
+            <div className="p-5 font-mono text-[12px] leading-[1.9] min-h-[260px] flex flex-col justify-between">
+              <div className="flex flex-col gap-0.5">
+                {TERMINAL_LINES.slice(0, termLineCount).map((line, i) => (
+                  <motion.div
+                    key={i}
+                    initial={{ opacity: 0, x: -8 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.3 }}
+                    className={line.cls}
+                  >
+                    {line.text}
+                  </motion.div>
+                ))}
+                {termLineCount <= TERMINAL_LINES.length && (
+                  <span className="text-primary term-cursor">█</span>
+                )}
+              </div>
+
+              {/* Mini metrics */}
+              {termLineCount >= TERMINAL_LINES.length && (
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.3 }}
+                  className="mt-4 grid grid-cols-3 gap-2 pt-4 border-t border-white/[0.07]"
+                >
+                  {[
+                    { label: 'Response', val: '94ms' },
+                    { label: 'Uptime', val: '99.9%' },
+                    { label: 'Score', val: '94/100' },
+                  ].map(m => (
+                    <div key={m.label} className="flex flex-col gap-0.5">
+                      <span className="text-[10px] text-white/35 uppercase tracking-wider">{m.label}</span>
+                      <span className="text-white font-bold text-[13px]">{m.val}</span>
+                    </div>
+                  ))}
+                </motion.div>
+              )}
+            </div>
+
+            {/* Subtle glow at bottom */}
+            <div className="h-1 bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
+          </motion.div>
         </div>
       </section>
 
-      {/* ── Daily AI Feed ──────────────────────────────────────────────────── */}
-      <section className="py-24 px-6 bg-[#0A0825]">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-12 gap-4">
-            <div>
-              <p className="text-[10px] font-mono tracking-[0.25em] text-primary/60 uppercase mb-2">Live Intelligence</p>
-              <h2 className="text-3xl md:text-4xl font-bold text-white" style={{ fontFamily: 'Satoshi, sans-serif' }}>
-                Daily AI Feed
-              </h2>
-            </div>
-            <div className="flex items-center gap-2 px-4 py-2 rounded-full border border-primary/20" style={{ background: 'rgba(94,41,232,0.08)' }}>
-              <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
-              <span className="text-[10px] font-mono text-primary/70 tracking-widest uppercase">Agents Active</span>
-            </div>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-            {feedItems.map((item, i) => (
+      {/* ╔══════════════════════════════════════════════════════════════════════╗ */}
+      {/* ║  GLOBAL PRESENCE MARQUEE                                           ║ */}
+      {/* ╚══════════════════════════════════════════════════════════════════════╝ */}
+      <section className="py-10 sm:py-12 border-y border-white/[0.06] bg-[#0A0825] overflow-hidden">
+        <div className="max-w-7xl mx-auto px-6 mb-6 flex items-center gap-3 justify-center">
+          <Globe className="w-3.5 h-3.5 text-primary/60" />
+          <span className="text-[10px] font-mono tracking-[0.2em] text-white/30 uppercase">Serving clients across 6 countries</span>
+          <Globe className="w-3.5 h-3.5 text-primary/60" />
+        </div>
+        <div className="marquee-wrapper overflow-hidden">
+          <div className="marquee-track">
+            {[...COUNTRIES, ...COUNTRIES].map((c, i) => (
               <div
                 key={i}
-                className="flex flex-col p-6 cursor-default"
-                style={{
-                  ...GLASS_STYLE,
-                  transition: '0.35s cubic-bezier(.2,.7,.2,1)',
-                }}
-                onMouseEnter={e => {
-                  (e.currentTarget as HTMLDivElement).style.transform = 'translateY(-5px)';
-                  (e.currentTarget as HTMLDivElement).style.borderColor = 'rgba(181,141,255,0.35)';
-                  (e.currentTarget as HTMLDivElement).style.boxShadow = '0 0 40px rgba(124,42,235,0.4)';
-                }}
-                onMouseLeave={e => {
-                  (e.currentTarget as HTMLDivElement).style.transform = '';
-                  (e.currentTarget as HTMLDivElement).style.borderColor = '';
-                  (e.currentTarget as HTMLDivElement).style.boxShadow = '';
-                }}
+                className="flex items-center gap-2.5 mx-2.5 px-5 py-2.5 rounded-full border border-white/[0.08] bg-white/[0.02] select-none hover:border-primary/30 hover:bg-primary/[0.04] transition-all duration-300 cursor-default"
+                style={{ minWidth: 'max-content' }}
               >
-                <div className="flex items-center justify-between mb-4">
-                  <span
-                    className="text-[9px] tracking-[0.2em] uppercase px-2.5 py-1 rounded-full border"
-                    style={{
-                      fontFamily: 'JetBrains Mono, monospace',
-                      color: '#B58DFF',
-                      borderColor: 'rgba(181,141,255,0.25)',
-                      background: 'rgba(181,141,255,0.08)',
-                    }}
-                  >
-                    {item.category}
-                  </span>
-                  <span className="text-[10px] text-white/30 font-mono">{item.time}</span>
-                </div>
-                <h3 className="text-white font-bold text-base mb-3 leading-snug" style={{ fontFamily: 'Satoshi, sans-serif' }}>
-                  {item.headline}
-                </h3>
-                <p className="text-white/50 text-sm leading-relaxed flex-1">{item.summary}</p>
-                <div className="mt-5 pt-4 border-t border-white/5 flex items-center gap-2">
-                  <Sparkles className="w-3 h-3 text-primary/50" />
-                  <span className="text-[10px] font-mono text-white/25 tracking-wide">Generated by Galaxa agents</span>
-                </div>
+                <span className="text-xl leading-none">{c.flag}</span>
+                <span className="text-white/60 font-semibold text-sm">{c.name}</span>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ── What We Build — Service Carousel ──────────────────────────────── */}
-      <section className="py-24 px-6 bg-[#05030F] overflow-hidden">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <p className="text-[10px] font-mono tracking-[0.25em] text-primary/60 uppercase mb-3">Our Capabilities</p>
-            <h2 className="text-4xl md:text-5xl font-bold text-white mb-4" style={{ fontFamily: 'Satoshi, sans-serif' }}>
-              What We Build
-            </h2>
-            <p className="text-white/50 text-lg max-w-xl mx-auto">End-to-end digital systems — from strategy to deployment.</p>
-          </div>
+      {/* ╔══════════════════════════════════════════════════════════════════════╗ */}
+      {/* ║  SERVICES GRID                                                      ║ */}
+      {/* ╚══════════════════════════════════════════════════════════════════════╝ */}
+      <section className="relative py-16 sm:py-24 lg:py-28 px-5 sm:px-6 bg-[#05030F]">
+        {/* Background accent */}
+        <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_at_center,rgba(124,42,235,0.05)_0%,transparent_70%)]" />
 
-          {/* 3D Carousel */}
-          <div
-            className="relative select-none"
-            style={{ perspective: '1200px', height: '320px' }}
-            onPointerDown={handlePointerDown}
-            onPointerUp={handlePointerUp}
-            onPointerLeave={() => setDragStartX(null)}
+        <div className="max-w-7xl mx-auto relative z-10">
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.3 }}
+            transition={{ duration: 0.6 }}
+            className="text-center mb-16"
           >
-            {SERVICES.map((svc, i) => {
-              const offset = getCarouselOffset(i, activeIndex, SERVICES.length);
-              const absOff = Math.abs(offset);
-              const visible = absOff <= 2;
-              const x = offset * 220;
-              const rotY = offset * 30;
-              const z = -absOff * 140;
-              const scale = 1 - absOff * 0.14;
-              const opacity = visible ? 1 - absOff * 0.28 : 0;
-              const isActive = offset === 0;
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-primary/20 bg-primary/[0.04] text-[10px] font-mono tracking-[0.2em] text-primary/60 uppercase mb-5">
+              <Zap className="w-3 h-3 text-primary/60" />
+              What We Build
+            </div>
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white mb-4 tracking-tight" style={{ fontFamily: 'Satoshi, sans-serif' }}>
+              Six ways we <span className="gradient-word">level you up</span>
+            </h2>
+            <p className="text-white/45 text-sm sm:text-base max-w-sm sm:max-w-lg mx-auto">
+              Digital systems that grow your brand, streamline operations, and convert visitors into customers.
+            </p>
+          </motion.div>
 
-              return (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            {SERVICES.map((svc, i) => (
+              <motion.div
+                key={svc.anchor}
+                initial={{ opacity: 0, y: 28 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.2 }}
+                transition={{ duration: 0.55, delay: i * 0.07, ease: [0.16,1,0.3,1] }}
+                className="svc-card relative overflow-hidden rounded-[20px] p-5 sm:p-7 cursor-pointer group"
+                style={{
+                  background: hoveredService === i
+                    ? `linear-gradient(135deg, rgba(255,255,255,0.055), rgba(255,255,255,0.025))`
+                    : 'rgba(255,255,255,0.032)',
+                  backdropFilter: 'blur(20px) saturate(140%)',
+                  WebkitBackdropFilter: 'blur(20px) saturate(140%)',
+                  border: hoveredService === i
+                    ? `1px solid ${svc.color}40`
+                    : '1px solid rgba(181,141,255,0.14)',
+                  boxShadow: hoveredService === i
+                    ? `0 20px 60px rgba(0,0,0,0.5), 0 0 40px ${svc.color}14, inset 0 1px 0 rgba(255,255,255,0.12)`
+                    : 'inset 0 1px 0 rgba(255,255,255,0.07), 0 8px 32px rgba(0,0,0,0.4)',
+                  transition: 'all 0.35s cubic-bezier(0.2,0.7,0.2,1)',
+                  transform: hoveredService === i ? 'translateY(-4px)' : 'translateY(0)',
+                }}
+                onMouseEnter={() => setHoveredService(i)}
+                onMouseLeave={() => setHoveredService(null)}
+                onClick={() => navigate(`/services#${svc.anchor}`)}
+              >
+                {/* Large faded number */}
+                <span className="svc-num">{svc.num}</span>
+
+                {/* Icon */}
                 <div
-                  key={svc.anchor}
-                  onClick={() => { if (!isActive) setActiveIndex(i); else navigate(`/services#${svc.anchor}`); }}
+                  className="w-12 h-12 rounded-2xl flex items-center justify-center mb-5 relative z-10 transition-all duration-300"
                   style={{
-                    position: 'absolute',
-                    left: '50%',
-                    top: '50%',
-                    width: '260px',
-                    transform: `translateX(calc(-50% + ${x}px)) translateY(-50%) rotateY(${rotY}deg) translateZ(${z}px) scale(${scale})`,
-                    opacity,
-                    transition: 'all 0.55s cubic-bezier(.2,.7,.2,1)',
-                    pointerEvents: visible ? 'auto' : 'none',
-                    cursor: isActive ? 'pointer' : 'pointer',
-                    zIndex: 10 - absOff,
-                    ...GLASS_STYLE,
-                    borderRadius: '20px',
-                    ...(isActive ? {
-                      borderColor: 'rgba(181,141,255,0.45)',
-                      boxShadow: '0 0 60px rgba(124,42,235,0.5), inset 0 1px 0 rgba(255,255,255,0.15)',
-                    } : {}),
-                    padding: '28px 24px',
+                    background: `${svc.color}15`,
+                    border: `1px solid ${svc.color}28`,
+                    boxShadow: hoveredService === i ? `0 0 20px ${svc.color}22` : 'none',
                   }}
                 >
-                  <div
-                    className="w-12 h-12 rounded-2xl flex items-center justify-center mb-5"
-                    style={{ background: `${svc.color}18`, border: `1px solid ${svc.color}30` }}
-                  >
-                    <svc.icon className="w-6 h-6" style={{ color: svc.color }} />
-                  </div>
-                  <h3 className="text-white font-bold text-base mb-2" style={{ fontFamily: 'Satoshi, sans-serif' }}>
-                    {svc.label}
-                  </h3>
-                  <p className="text-white/50 text-sm leading-relaxed">{svc.desc}</p>
-                  {isActive && (
-                    <div className="flex items-center gap-1.5 mt-5 text-xs font-semibold" style={{ color: '#B58DFF' }}>
-                      Explore <ArrowUpRight className="w-3.5 h-3.5" />
-                    </div>
-                  )}
+                  <svc.icon className="w-5.5 h-5.5" style={{ color: svc.color, width: '22px', height: '22px' }} />
                 </div>
-              );
-            })}
+
+                {/* Content */}
+                <div className="relative z-10">
+                  <div className="flex items-center gap-2 mb-1">
+                    <h3 className="text-white font-extrabold text-[17px]" style={{ fontFamily: 'Satoshi, sans-serif' }}>
+                      {svc.label}
+                    </h3>
+                  </div>
+                  <span
+                    className="inline-block text-[9px] font-mono tracking-wider px-2 py-0.5 rounded mb-3"
+                    style={{ color: svc.color, background: `${svc.color}12`, border: `1px solid ${svc.color}20` }}
+                  >
+                    {svc.tag}
+                  </span>
+                  <p className="text-white/45 text-sm leading-relaxed group-hover:text-white/65 transition-colors duration-300">
+                    {svc.desc}
+                  </p>
+                </div>
+
+                {/* Arrow */}
+                <div
+                  className="absolute bottom-6 right-6 w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300"
+                  style={{
+                    background: hoveredService === i ? `${svc.color}18` : 'transparent',
+                    border: hoveredService === i ? `1px solid ${svc.color}35` : '1px solid rgba(255,255,255,0.08)',
+                    color: hoveredService === i ? svc.color : 'rgba(255,255,255,0.3)',
+                    transform: hoveredService === i ? 'rotate(45deg)' : 'rotate(0deg)',
+                  }}
+                >
+                  <ArrowUpRight className="w-4 h-4" />
+                </div>
+              </motion.div>
+            ))}
           </div>
 
-          {/* Nav */}
-          <div className="flex items-center justify-center gap-6 mt-8">
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.5 }}
+            className="mt-10 flex justify-center"
+          >
             <button
-              onClick={carouselPrev}
-              className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-white/60 hover:text-white hover:border-primary/40 transition-all duration-200"
+              onClick={() => navigate('/services')}
+              className="flex items-center gap-2 text-white/50 hover:text-white border border-white/[0.08] hover:border-white/20 py-3 px-8 rounded-full text-sm font-semibold transition-all duration-300 cursor-pointer"
             >
-              <ChevronLeft className="w-5 h-5" />
+              Explore all services <ArrowUpRight className="w-4 h-4" />
             </button>
-            <div className="flex gap-2">
-              {SERVICES.map((_, i) => (
-                <button
-                  key={i}
-                  onClick={() => setActiveIndex(i)}
-                  className="rounded-full transition-all duration-300"
-                  style={{
-                    width: i === activeIndex ? '24px' : '8px',
-                    height: '8px',
-                    background: i === activeIndex ? '#7C2AEB' : 'rgba(255,255,255,0.2)',
-                  }}
-                />
-              ))}
-            </div>
-            <button
-              onClick={carouselNext}
-              className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-white/60 hover:text-white hover:border-primary/40 transition-all duration-200"
-            >
-              <ChevronRight className="w-5 h-5" />
-            </button>
-          </div>
+          </motion.div>
         </div>
       </section>
 
-      {/* ── How We Work ────────────────────────────────────────────────────── */}
-      <section className="py-24 px-6 bg-[#0A0825]">
-        <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-20">
-            <p className="text-[10px] font-mono tracking-[0.25em] text-primary/60 uppercase mb-3">Our Process</p>
-            <h2 className="text-4xl md:text-5xl font-bold text-white" style={{ fontFamily: 'Satoshi, sans-serif' }}>
-              How We Work
-            </h2>
-          </div>
+      {/* ╔══════════════════════════════════════════════════════════════════════╗ */}
+      {/* ║  HOW WE WORK                                                        ║ */}
+      {/* ╚══════════════════════════════════════════════════════════════════════╝ */}
+      <section className="relative py-16 sm:py-24 lg:py-28 px-5 sm:px-6 bg-[#0A0825] overflow-hidden">
+        <div aria-hidden className="absolute inset-0 pointer-events-none">
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(124,42,235,0.07)_0%,transparent_65%)]" />
+          {[0,1,2,3,4].map(pi => (
+            <span key={pi} className="absolute rounded-full bg-violet-500"
+              style={{ width:'2px', height:'2px', left:`${12+pi*18}%`, top:`${20+(pi%3)*30}%`, opacity:0, animation:`particle-drift ${2.8+pi*0.4}s ${pi*0.35}s ease-in-out infinite` }} />
+          ))}
+        </div>
 
-          {/* Desktop: horizontal */}
-          <div className="hidden md:block relative">
-            {/* Background line track */}
-            <div
-              className="absolute top-7 left-0 right-0 h-px"
-              style={{ background: 'rgba(181,141,255,0.10)', transformOrigin: 'left' }}
-            />
-            {/* Animated fill line */}
-            <div
-              className="absolute top-7 left-0 h-px"
-              style={{
-                width: `${lineProgress}%`,
-                background: 'linear-gradient(90deg, #5E29E8, #B58DFF)',
-                boxShadow: '0 0 12px rgba(124,42,235,0.8)',
-                transition: 'width 0.8s cubic-bezier(.2,.7,.2,1)',
-              }}
-            />
-            <div className="grid grid-cols-4 gap-0 relative">
-              {PROCESS_STEPS.map((step, i) => {
-                const lit = illuminatedSteps.has(i);
-                return (
-                  <div
-                    key={step.num}
-                    ref={el => { stepRefs.current[i] = el; }}
-                    className="flex flex-col items-center text-center px-4"
-                  >
-                    <div
-                      className="w-14 h-14 rounded-full flex items-center justify-center mb-6 relative z-10"
-                      style={{
-                        border: `2px solid ${lit ? '#7C2AEB' : 'rgba(124,42,235,0.25)'}`,
-                        background: lit ? 'rgba(124,42,235,0.25)' : 'rgba(124,42,235,0.06)',
-                        boxShadow: lit ? '0 0 24px rgba(124,42,235,0.6)' : 'none',
-                        transition: '0.6s cubic-bezier(.2,.7,.2,1)',
-                      }}
-                    >
-                      <span
-                        className="text-sm font-bold"
-                        style={{
-                          fontFamily: 'JetBrains Mono, monospace',
-                          color: lit ? '#B58DFF' : 'rgba(181,141,255,0.4)',
-                          transition: '0.6s cubic-bezier(.2,.7,.2,1)',
-                        }}
-                      >
-                        {step.num}
-                      </span>
-                    </div>
-                    <h3
-                      className="font-bold text-base mb-2"
-                      style={{
-                        fontFamily: 'Satoshi, sans-serif',
-                        color: lit ? '#fff' : 'rgba(255,255,255,0.4)',
-                        transition: '0.6s cubic-bezier(.2,.7,.2,1)',
-                      }}
-                    >
-                      {step.title}
-                    </h3>
-                    <p className="text-sm leading-relaxed" style={{ color: lit ? 'rgba(255,255,255,0.55)' : 'rgba(255,255,255,0.2)', transition: '0.6s cubic-bezier(.2,.7,.2,1)' }}>
-                      {step.desc}
-                    </p>
-                  </div>
-                );
-              })}
+        <div className="max-w-6xl mx-auto relative z-10">
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.3 }}
+            transition={{ duration: 0.6 }}
+            className="text-center mb-20"
+          >
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-primary/20 bg-primary/[0.04] text-[10px] font-mono tracking-[0.2em] text-primary/60 uppercase mb-5">
+              <Sparkles className="w-3 h-3 text-primary/60" />
+              Process
             </div>
-          </div>
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white mb-4 tracking-tight" style={{ fontFamily: 'Satoshi, sans-serif' }}>
+              How we <span className="gradient-word">work</span>
+            </h2>
+            <p className="text-white/45 text-sm sm:text-base max-w-sm sm:max-w-xl mx-auto">
+              A clear, collaborative journey from first conversation to deployed digital ecosystem.
+            </p>
+          </motion.div>
 
-          {/* Mobile: vertical */}
-          <div className="md:hidden flex flex-col items-center gap-0 relative">
-            <div
-              className="absolute left-7 top-0 w-px"
-              style={{ background: 'rgba(181,141,255,0.10)', height: '100%' }}
-            />
-            <div
-              className="absolute left-7 top-0 w-px"
-              style={{
-                height: `${lineProgress}%`,
-                background: 'linear-gradient(180deg, #5E29E8, #B58DFF)',
-                boxShadow: '0 0 12px rgba(124,42,235,0.8)',
-                transition: 'height 0.8s cubic-bezier(.2,.7,.2,1)',
-              }}
-            />
+          {/* Steps grid */}
+          <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 relative">
+            {/* Connecting line (desktop only) */}
+            <div className="hidden lg:block absolute top-[60px] left-[12.5%] right-[12.5%] h-px pointer-events-none z-0"
+              style={{ background: 'linear-gradient(to right, rgba(94,41,232,0.2), rgba(181,141,255,0.5), rgba(94,41,232,0.2))' }}>
+              <div className="absolute inset-0 h-px"
+                style={{ background: 'repeating-linear-gradient(to right, rgba(181,141,255,0.5) 0, rgba(181,141,255,0.5) 6px, transparent 6px, transparent 14px)' }} />
+            </div>
+
             {PROCESS_STEPS.map((step, i) => {
-              const lit = illuminatedSteps.has(i);
+              const lit = litSteps.has(i);
               return (
-                <div
+                <motion.div
                   key={step.num}
                   ref={el => { stepRefs.current[i] = el; }}
-                  className="flex items-start gap-6 mb-10 relative z-10 w-full"
+                  initial={{ opacity: 0, y: 24 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, amount: 0.3 }}
+                  transition={{ duration: 0.55, delay: i * 0.1, ease: [0.16,1,0.3,1] }}
+                  className="relative z-10 flex flex-col items-center text-center p-4 sm:p-6 rounded-[16px] sm:rounded-[20px] group"
+                  style={{
+                    background: lit ? 'rgba(255,255,255,0.048)' : 'rgba(255,255,255,0.022)',
+                    backdropFilter: 'blur(20px)',
+                    WebkitBackdropFilter: 'blur(20px)',
+                    border: lit ? '1px solid rgba(181,141,255,0.30)' : '1px solid rgba(181,141,255,0.10)',
+                    boxShadow: lit ? '0 12px 40px rgba(124,42,235,0.14), inset 0 1px 0 rgba(255,255,255,0.10)' : 'none',
+                    transition: 'all 0.6s ease',
+                  }}
                 >
+                  {/* Step node */}
                   <div
-                    className="w-14 h-14 rounded-full flex items-center justify-center flex-shrink-0"
+                    className="w-10 h-10 sm:w-14 sm:h-14 rounded-full flex items-center justify-center mb-3 sm:mb-5 transition-all duration-600"
                     style={{
-                      border: `2px solid ${lit ? '#7C2AEB' : 'rgba(124,42,235,0.25)'}`,
-                      background: lit ? 'rgba(124,42,235,0.25)' : 'rgba(124,42,235,0.06)',
-                      boxShadow: lit ? '0 0 24px rgba(124,42,235,0.6)' : 'none',
-                      transition: '0.6s cubic-bezier(.2,.7,.2,1)',
+                      background: lit ? 'rgba(124,42,235,0.15)' : 'rgba(255,255,255,0.04)',
+                      border: lit ? '2px solid rgba(124,42,235,0.7)' : '2px solid rgba(181,141,255,0.15)',
+                      boxShadow: lit ? '0 0 28px rgba(124,42,235,0.5)' : 'none',
                     }}
                   >
-                    <span
-                      className="text-sm font-bold"
-                      style={{
-                        fontFamily: 'JetBrains Mono, monospace',
-                        color: lit ? '#B58DFF' : 'rgba(181,141,255,0.4)',
-                        transition: '0.6s cubic-bezier(.2,.7,.2,1)',
-                      }}
-                    >
-                      {step.num}
-                    </span>
+                    <step.icon
+                      className="w-5 h-5 transition-colors duration-500"
+                      style={{ color: lit ? '#B58DFF' : 'rgba(181,141,255,0.28)' }}
+                    />
                   </div>
-                  <div className="pt-3">
-                    <h3
-                      className="font-bold text-base mb-1"
-                      style={{
-                        fontFamily: 'Satoshi, sans-serif',
-                        color: lit ? '#fff' : 'rgba(255,255,255,0.4)',
-                        transition: '0.6s cubic-bezier(.2,.7,.2,1)',
-                      }}
-                    >
-                      {step.title}
-                    </h3>
-                    <p className="text-sm leading-relaxed" style={{ color: lit ? 'rgba(255,255,255,0.55)' : 'rgba(255,255,255,0.2)', transition: '0.6s cubic-bezier(.2,.7,.2,1)' }}>
-                      {step.desc}
-                    </p>
-                  </div>
-                </div>
+
+                  <span className="text-[10px] font-mono font-bold text-primary/60 mb-1">{step.num}</span>
+                  <h3 className="text-white font-extrabold text-base sm:text-lg mb-1 sm:mb-2" style={{ fontFamily: 'Satoshi, sans-serif' }}>{step.title}</h3>
+                  <p className="text-white/45 text-xs sm:text-sm leading-relaxed">{step.desc}</p>
+                </motion.div>
               );
             })}
           </div>
+
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.6 }}
+            className="mt-12 flex items-center justify-center gap-2 text-xs text-white/30 font-mono"
+          >
+            <Sparkles className="w-3.5 h-3.5 text-primary/50 animate-pulse" />
+            <span>Powered by the <span className="text-white/60">GalaxaTech</span> intelligence layer</span>
+          </motion.div>
         </div>
       </section>
 
-      {/* ── Selected Work — Portfolio Folder ──────────────────────────────── */}
-      <section className="py-24 px-6 bg-[#05030F]">
+      {/* ╔══════════════════════════════════════════════════════════════════════╗ */}
+      {/* ║  SELECTED WORK                                                      ║ */}
+      {/* ╚══════════════════════════════════════════════════════════════════════╝ */}
+      <section className="py-16 sm:py-24 lg:py-28 px-5 sm:px-6 bg-[#05030F]">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <p className="text-[10px] font-mono tracking-[0.25em] text-primary/60 uppercase mb-3">Case Studies</p>
-            <h2 className="text-4xl md:text-5xl font-bold text-white mb-4" style={{ fontFamily: 'Satoshi, sans-serif' }}>
-              Selected Work
-            </h2>
-            <p className="text-white/50 text-lg">Real projects. Real clients. Real results.</p>
-          </div>
-
-          {/* Folder + fan */}
-          <div className="flex flex-col items-center">
-            <div
-              className="relative cursor-pointer"
-              style={{ width: '320px', height: '260px' }}
-              onMouseEnter={() => setFolderHovered(true)}
-              onMouseLeave={() => setFolderHovered(false)}
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.3 }}
+            transition={{ duration: 0.6 }}
+            className="flex flex-col sm:flex-row items-start sm:items-end justify-between gap-6 mb-14"
+          >
+            <div>
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-primary/20 bg-primary/[0.04] text-[10px] font-mono tracking-[0.2em] text-primary/60 uppercase mb-4">
+                <Sparkles className="w-3 h-3 text-primary/60" />
+                Portfolio
+              </div>
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white tracking-tight" style={{ fontFamily: 'Satoshi, sans-serif' }}>
+                Selected <span className="gradient-word">Work</span>
+              </h2>
+              <p className="text-white/45 text-sm sm:text-base mt-3 max-w-sm sm:max-w-md">
+                Projects, systems, and brands we've helped shape across 6 countries.
+              </p>
+            </div>
+            <button
               onClick={() => navigate('/portfolio')}
+              className="flex items-center gap-2 text-white/60 hover:text-white border border-white/[0.08] hover:border-white/20 py-3 px-6 rounded-full text-sm font-semibold transition-all duration-300 cursor-pointer flex-shrink-0"
             >
-              {PROJECTS.map((proj, i) => {
-                const fanTransforms = [
-                  'rotate(-13deg) translateX(-110px) translateY(16px)',
-                  'rotate(0deg) translateY(-22px)',
-                  'rotate(13deg) translateX(110px) translateY(16px)',
-                ];
-                const stackTransforms = [
-                  'rotate(-3deg) translateX(-6px) translateY(6px)',
-                  'rotate(0deg) translateY(0px)',
-                  'rotate(3deg) translateX(6px) translateY(-4px)',
-                ];
-                return (
+              View all work <ArrowUpRight className="w-4 h-4" />
+            </button>
+          </motion.div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+            {PROJECTS.map((proj, i) => (
+              <motion.div
+                key={proj.slug}
+                initial={{ opacity: 0, y: 28 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.2 }}
+                transition={{ duration: 0.6, delay: i * 0.1, ease: [0.16,1,0.3,1] }}
+                onClick={() => navigate('/portfolio')}
+                className="group relative flex flex-col rounded-[20px] overflow-hidden cursor-pointer"
+                style={{
+                  background: 'rgba(255,255,255,0.028)',
+                  backdropFilter: 'blur(20px)',
+                  WebkitBackdropFilter: 'blur(20px)',
+                  border: `1px solid rgba(255,255,255,0.08)`,
+                  boxShadow: '0 8px 32px rgba(0,0,0,0.4)',
+                  transition: 'all 0.35s cubic-bezier(0.2,0.7,0.2,1)',
+                }}
+                onMouseEnter={e => {
+                  (e.currentTarget as HTMLDivElement).style.borderColor = `${proj.accent}40`;
+                  (e.currentTarget as HTMLDivElement).style.transform = 'translateY(-4px)';
+                  (e.currentTarget as HTMLDivElement).style.boxShadow = `0 20px 60px rgba(0,0,0,0.5), 0 0 40px ${proj.accent}12`;
+                }}
+                onMouseLeave={e => {
+                  (e.currentTarget as HTMLDivElement).style.borderColor = 'rgba(255,255,255,0.08)';
+                  (e.currentTarget as HTMLDivElement).style.transform = 'translateY(0)';
+                  (e.currentTarget as HTMLDivElement).style.boxShadow = '0 8px 32px rgba(0,0,0,0.4)';
+                }}
+              >
+                {/* Accent bar */}
+                <div className="h-1 w-full" style={{ background: `linear-gradient(to right, ${proj.accent}60, ${proj.accent}20, transparent)` }} />
+
+                {/* Mock visual area */}
+                <div
+                  className="h-40 w-full flex items-center justify-center relative overflow-hidden"
+                  style={{ background: proj.accentBg }}
+                >
+                  {/* Abstract geometric mockup */}
+                  <div className="absolute inset-0 flex items-center justify-center opacity-30">
+                    <div className="w-24 h-24 rounded-2xl border-2 rotate-12" style={{ borderColor: proj.accent }} />
+                    <div className="absolute w-16 h-16 rounded-xl border-2 -rotate-6" style={{ borderColor: proj.accent, opacity: 0.6 }} />
+                  </div>
+                  <div className="relative z-10 text-center">
+                    <span className="text-3xl font-extrabold font-mono" style={{ color: proj.accent, opacity: 0.8 }}>{proj.num}</span>
+                    <div className="text-[10px] font-mono mt-1" style={{ color: proj.accent, opacity: 0.5 }}>PROJECT</div>
+                  </div>
                   <div
-                    key={proj.slug}
-                    style={{
-                      position: 'absolute',
-                      left: '50%',
-                      top: '50%',
-                      width: '220px',
-                      transform: `translateX(-50%) translateY(-50%) ${folderHovered ? fanTransforms[i] : stackTransforms[i]}`,
-                      transition: `0.45s cubic-bezier(.2,.7,.2,1) ${i * 0.05}s`,
-                      zIndex: folderHovered ? (i === 1 ? 3 : i === 0 ? 2 : 1) : (2 - i),
-                      ...GLASS_STYLE,
-                      borderRadius: '16px',
-                      padding: '0',
-                      overflow: 'hidden',
-                    }}
+                    className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-center justify-center"
+                    style={{ background: `${proj.accent}08` }}
                   >
-                    <div
-                      className="h-28 flex items-center justify-center relative"
-                      style={{ background: 'linear-gradient(135deg, rgba(94,41,232,0.25) 0%, #05030F 60%, rgba(120,213,255,0.1) 100%)' }}
-                    >
-                      <Globe className="w-8 h-8" style={{ color: 'rgba(124,42,235,0.4)' }} />
-                      <div className="absolute top-2.5 right-3 text-lg">{proj.country}</div>
-                    </div>
-                    <div className="p-4">
-                      <p className="text-[9px] font-mono text-white/30 uppercase tracking-wider mb-1">{proj.clientType}</p>
-                      <h4 className="text-white font-bold text-sm" style={{ fontFamily: 'Satoshi, sans-serif' }}>{proj.name}</h4>
+                    <div className="flex items-center gap-2 text-sm font-bold" style={{ color: proj.accent }}>
+                      <span>View Case Study</span>
+                      <ArrowUpRight className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
                     </div>
                   </div>
-                );
-              })}
-            </div>
+                </div>
 
-            <div className="mt-8 text-center">
-              <p className="text-white/30 text-xs font-mono mb-5">Hover to explore · Click to view all</p>
-              <button
-                onClick={() => navigate('/portfolio')}
-                className="flex items-center gap-2 mx-auto px-6 py-3 rounded-full border border-primary/30 text-white/70 hover:text-white hover:border-primary text-sm font-semibold transition-all duration-300"
-              >
-                View All Work <ArrowUpRight className="w-4 h-4" />
-              </button>
-            </div>
+                {/* Card body */}
+                <div className="p-6 flex flex-col flex-1">
+                  <div className="flex items-start justify-between mb-3">
+                    <div>
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="text-[10px] font-mono font-bold" style={{ color: proj.accent }}>{proj.num}</span>
+                        <span className="text-[9px] font-mono text-white/30 uppercase tracking-wider">{proj.clientType}</span>
+                      </div>
+                      <h3 className="text-white font-extrabold text-lg" style={{ fontFamily: 'Satoshi, sans-serif' }}>{proj.name}</h3>
+                    </div>
+                    <span className="text-base ml-2 mt-0.5">{proj.country.split(' ')[0]}</span>
+                  </div>
+
+                  <p className="text-white/45 text-sm leading-relaxed mb-5 flex-1">{proj.desc}</p>
+
+                  <div className="flex flex-wrap gap-1.5 pt-4 border-t border-white/[0.06]">
+                    {proj.services.map(s => (
+                      <span
+                        key={s}
+                        className="text-[9px] font-mono px-2 py-0.5 rounded border"
+                        style={{ color: proj.accent, borderColor: `${proj.accent}25`, background: `${proj.accent}08` }}
+                      >
+                        {s}
+                      </span>
+                    ))}
+                    <span className="text-[9px] font-mono text-white/30 ml-auto">{proj.country}</span>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* ── FAQ (unchanged) ────────────────────────────────────────────────── */}
-      <section className="py-24 px-6 bg-[#0A0825]">
-        <div className="max-w-3xl mx-auto">
-          <div className="text-center mb-14">
-            <h2 className="text-4xl md:text-5xl font-bold text-white mb-4" style={{ fontFamily: 'Satoshi, sans-serif' }}>Common Questions</h2>
+      {/* ╔══════════════════════════════════════════════════════════════════════╗ */}
+      {/* ║  IMPACT NUMBERS                                                     ║ */}
+      {/* ╚══════════════════════════════════════════════════════════════════════╝ */}
+      <section className="relative py-14 sm:py-20 px-5 sm:px-6 bg-[#0A0825] overflow-hidden">
+        <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_at_center,rgba(124,42,235,0.10)_0%,transparent_70%)]" />
+
+        <div className="max-w-5xl mx-auto relative z-10">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
+            {IMPACT_STATS.map((stat, i) => (
+              <motion.div
+                key={stat.label}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.4 }}
+                transition={{ duration: 0.5, delay: i * 0.1 }}
+                className="flex flex-col items-center text-center"
+              >
+                <span
+                  className="text-4xl sm:text-5xl md:text-6xl font-extrabold mb-2"
+                  style={{
+                    fontFamily: 'Satoshi, sans-serif',
+                    background: 'linear-gradient(135deg, #fff 30%, rgba(181,141,255,0.9) 100%)',
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent',
+                    backgroundClip: 'text',
+                  }}
+                >
+                  <AnimatedStat value={stat.value} suffix={stat.suffix} />
+                </span>
+                <div className="w-8 h-px bg-primary/40 mb-2" />
+                <span className="text-white/40 text-xs font-mono tracking-wider uppercase">{stat.label}</span>
+              </motion.div>
+            ))}
           </div>
+        </div>
+      </section>
+
+      {/* ╔══════════════════════════════════════════════════════════════════════╗ */}
+      {/* ║  DAILY AI FEED                                                      ║ */}
+      {/* ╚══════════════════════════════════════════════════════════════════════╝ */}
+      <section className="relative py-16 sm:py-24 lg:py-28 px-5 sm:px-6 bg-[#05030F] overflow-hidden">
+        <div aria-hidden className="absolute inset-0 pointer-events-none">
+          {[0,1,2,3,4,5].map(pi => (
+            <span key={pi} className="absolute rounded-full bg-violet-400"
+              style={{ width:'2px', height:'2px', left:`${8+pi*16}%`, top:`${12+(pi%4)*22}%`, opacity:0, animation:`particle-drift ${2.2+pi*0.5}s ${pi*0.28}s ease-in-out infinite` }} />
+          ))}
+        </div>
+
+        <div className="max-w-7xl mx-auto relative z-10">
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.3 }}
+            transition={{ duration: 0.6 }}
+            className="flex flex-col items-center text-center mb-16"
+          >
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-emerald-500/30 bg-emerald-500/10 text-[10px] font-mono tracking-[0.2em] font-semibold text-emerald-400 uppercase mb-4">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_8px_#34d399]" />
+              Live
+            </div>
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white mb-4 tracking-tight" style={{ fontFamily: 'Satoshi, sans-serif' }}>
+              Daily <span className="gradient-word">AI Feed</span>
+            </h2>
+            <p className="text-white/45 text-sm sm:text-base max-w-sm sm:max-w-lg">
+              Signals on tools, trends, research, and market shifts — curated daily by our intelligence layer.
+            </p>
+          </motion.div>
+
+          {/* Editorial layout: 1 wide + 2 narrow */}
+          <div className="grid grid-cols-1 lg:grid-cols-5 gap-5">
+            {/* Featured card */}
+            {feedItems[0] && (
+              <motion.div
+                initial={{ opacity: 0, x: -24 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true, amount: 0.2 }}
+                transition={{ duration: 0.6, ease: [0.16,1,0.3,1] }}
+                className="lg:col-span-3 flex flex-col p-8 rounded-[20px]"
+                style={{
+                  background: 'rgba(255,255,255,0.042)',
+                  backdropFilter: 'blur(22px) saturate(140%)',
+                  WebkitBackdropFilter: 'blur(22px) saturate(140%)',
+                  border: '1px solid rgba(181,141,255,0.18)',
+                  boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.10), 0 20px 60px rgba(0,0,0,0.5)',
+                }}
+              >
+                <div className="flex items-center justify-between mb-6">
+                  <div className="flex items-center gap-2 px-3 py-1 rounded-lg border text-[10px] font-mono tracking-wider font-semibold text-[#B58DFF] border-[rgba(181,141,255,0.25)] bg-[rgba(181,141,255,0.08)]">
+                    {getCategoryIcon(feedItems[0].category)}
+                    <span>{feedItems[0].category}</span>
+                  </div>
+                  <span className="text-[10px] font-mono text-white/30 flex items-center gap-1.5">
+                    <Clock className="w-3 h-3" />{feedItems[0].time}
+                  </span>
+                </div>
+                <h3 className="text-white font-extrabold text-2xl mb-4 leading-snug flex-1" style={{ fontFamily: 'Satoshi, sans-serif' }}>
+                  {feedItems[0].headline}
+                </h3>
+                <p className="text-white/55 text-base leading-relaxed mb-6">{feedItems[0].summary}</p>
+                <div className="pt-5 border-t border-white/[0.06] flex items-center gap-1.5 text-[11px] text-white/35 font-mono">
+                  <Sparkles className="w-3.5 h-3.5 text-primary/50" />
+                  Generated by <span className="text-primary/70 ml-1">Galaxa agents</span>
+                </div>
+              </motion.div>
+            )}
+
+            {/* Two narrow cards */}
+            <div className="lg:col-span-2 flex flex-col gap-5">
+              {feedItems.slice(1, 3).map((item, i) => (
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, x: 24 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true, amount: 0.2 }}
+                  transition={{ duration: 0.6, delay: i * 0.1, ease: [0.16,1,0.3,1] }}
+                  className="flex flex-col p-6 rounded-[20px] flex-1"
+                  style={{
+                    background: 'rgba(255,255,255,0.032)',
+                    backdropFilter: 'blur(22px) saturate(140%)',
+                    WebkitBackdropFilter: 'blur(22px) saturate(140%)',
+                    border: '1px solid rgba(181,141,255,0.14)',
+                    boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.07), 0 8px 32px rgba(0,0,0,0.4)',
+                  }}
+                >
+                  <div className="flex items-center gap-2 px-2.5 py-1 rounded-lg border text-[9px] font-mono tracking-wider font-semibold text-[#B58DFF] border-[rgba(181,141,255,0.20)] bg-[rgba(181,141,255,0.06)] self-start mb-4">
+                    {getCategoryIcon(item.category)}
+                    <span>{item.category}</span>
+                  </div>
+                  <h3 className="text-white font-extrabold text-base mb-2 leading-snug flex-1" style={{ fontFamily: 'Satoshi, sans-serif' }}>
+                    {item.headline}
+                  </h3>
+                  <p className="text-white/45 text-sm leading-relaxed">{item.summary}</p>
+                  <div className="mt-4 flex items-center gap-1.5 text-[10px] text-white/30 font-mono">
+                    <Clock className="w-3 h-3" />{item.time}
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+
+          <div className="mt-10 flex items-center justify-center gap-4">
+            <div className="h-px flex-1 bg-gradient-to-r from-transparent to-primary/20" />
+            <div className="flex items-center gap-2 px-4 py-2 rounded-full border border-primary/15 bg-primary/[0.04] text-[10px] text-white/50 font-mono tracking-wide uppercase">
+              <Sparkles className="w-3.5 h-3.5 text-primary/60" />
+              Curated by <span className="text-white/70 ml-1">GalaxaTech</span>
+            </div>
+            <div className="h-px flex-1 bg-gradient-to-l from-transparent to-primary/20" />
+          </div>
+        </div>
+      </section>
+
+      {/* ╔══════════════════════════════════════════════════════════════════════╗ */}
+      {/* ║  FAQ                                                                ║ */}
+      {/* ╚══════════════════════════════════════════════════════════════════════╝ */}
+      <section className="relative py-16 sm:py-24 lg:py-28 px-5 sm:px-6 bg-[#0A0825] overflow-hidden">
+        <div aria-hidden className="absolute inset-0 pointer-events-none">
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom,rgba(124,42,235,0.06)_0%,transparent_65%)]" />
+        </div>
+        <div className="max-w-3xl mx-auto relative z-10">
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.3 }}
+            transition={{ duration: 0.6 }}
+            className="text-center mb-14"
+          >
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-3" style={{ fontFamily: 'Satoshi, sans-serif' }}>
+              Common <span className="gradient-word">Questions</span>
+            </h2>
+            <p className="text-white/40 text-sm">Everything you need to know before we get started.</p>
+          </motion.div>
+
           <div className="flex flex-col gap-3">
             {FAQS.map((faq, i) => (
-              <div key={i} className="glass-card rounded-xl overflow-hidden">
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 16 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.2 }}
+                transition={{ duration: 0.45, delay: i * 0.06 }}
+                className="rounded-xl overflow-hidden border border-violet-500/12"
+                style={{
+                  background: activeFAQ === i ? 'rgba(255,255,255,0.048)' : 'rgba(255,255,255,0.022)',
+                  backdropFilter: 'blur(20px)',
+                  WebkitBackdropFilter: 'blur(20px)',
+                  transition: 'background 0.3s ease',
+                }}
+              >
                 <button
                   onClick={() => setActiveFAQ(activeFAQ === i ? null : i)}
-                  className="w-full flex items-center justify-between p-5 text-left"
+                  className="w-full flex items-center justify-between p-5 text-left cursor-pointer"
                 >
-                  <span className="text-white font-semibold text-sm pr-4">{faq.q}</span>
-                  <ChevronDown className={`w-4 h-4 text-white/50 flex-shrink-0 transition-transform duration-300 ${activeFAQ === i ? 'rotate-180' : ''}`} />
+                  <span className="text-white font-semibold text-sm pr-4 leading-relaxed">{faq.q}</span>
+                  <ChevronDown className={`w-4 h-4 text-white/40 flex-shrink-0 transition-transform duration-300 ${activeFAQ === i ? 'rotate-180 text-primary' : ''}`} />
                 </button>
                 <AnimatePresence initial={false}>
                   {activeFAQ === i && (
@@ -769,140 +1165,139 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
                       transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
                       className="overflow-hidden"
                     >
-                      <p className="px-5 pb-5 text-white/60 text-sm leading-relaxed">{faq.a}</p>
+                      <p className="px-5 pb-5 text-white/55 text-sm leading-relaxed border-t border-white/[0.05] pt-3">{faq.a}</p>
                     </motion.div>
                   )}
                 </AnimatePresence>
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ── Closing CTA — Toggle ───────────────────────────────────────────── */}
-      <section className="py-24 px-6 relative overflow-hidden bg-[#05030F]">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[500px] bg-primary/5 blur-[140px] rounded-full pointer-events-none" />
-        <div className="max-w-3xl mx-auto text-center relative z-10">
-          <p className="text-[10px] font-mono tracking-[0.25em] text-primary/60 uppercase mb-5">Join Us</p>
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-5" style={{ fontFamily: 'Satoshi, sans-serif' }}>
-            Wanna join the<br />Galaxa team?
-          </h2>
-          <p className="text-white/50 text-base mb-12 max-w-md mx-auto leading-relaxed">
-            Slide to join our builders/newsletter community and hear about opportunities first.
-          </p>
+      {/* ╔══════════════════════════════════════════════════════════════════════╗ */}
+      {/* ║  FINAL CTA                                                          ║ */}
+      {/* ╚══════════════════════════════════════════════════════════════════════╝ */}
+      <section className="relative py-16 sm:py-24 lg:py-32 px-5 sm:px-6 bg-[#05030F] overflow-hidden">
+        {/* Atmospheric background */}
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(124,42,235,0.14)_0%,transparent_60%)]" />
+          <div className="absolute bottom-0 left-0 right-0 h-[300px]"
+            style={{ background: 'radial-gradient(ellipse at 50% 100%, rgba(124,42,235,0.22) 0%, rgba(94,41,232,0.08) 45%, transparent 68%)' }} />
+          <div className="absolute bottom-[60px] left-1/2 -translate-x-1/2 pointer-events-none"
+            style={{ width: '600px', height: '1px', background: 'linear-gradient(to right, transparent, rgba(181,141,255,0.1) 20%, rgba(181,141,255,0.45) 50%, rgba(181,141,255,0.1) 80%, transparent)', filter: 'blur(0.5px)' }} />
+          {[0,1,2,3,4,5,6,7,8,9,10].map(i => (
+            <span key={i} className="absolute rounded-full" style={{
+              width: i % 4 === 0 ? '3px' : '2px', height: i % 4 === 0 ? '3px' : '2px',
+              left: `${4 + i * 9}%`, top: `${10 + (i % 5) * 18}%`,
+              background: i % 3 === 0 ? '#B58DFF' : 'rgba(255,255,255,0.5)',
+              opacity: 0.2 + (i % 3) * 0.15,
+              animation: `particle-drift ${3.0 + i * 0.38}s ${i * 0.22}s ease-in-out infinite`,
+            }} />
+          ))}
+        </div>
 
-          {/* Toggle */}
-          <div className="flex flex-col items-center gap-8">
-            <div
-              className="relative flex items-center rounded-full p-1 cursor-pointer select-none"
-              style={{
-                width: '260px',
-                height: '48px',
-                background: 'rgba(255,255,255,0.06)',
-                border: '1px solid rgba(255,255,255,0.10)',
-              }}
-              onClick={() => setToggled(t => !t)}
-            >
-              {/* Knob */}
-              <div
-                style={{
-                  position: 'absolute',
-                  top: '4px',
-                  left: '4px',
-                  width: '120px',
-                  height: '38px',
-                  borderRadius: '999px',
-                  background: 'linear-gradient(135deg, #5E29E8, #7C2AEB)',
-                  boxShadow: '0 4px 20px rgba(124,42,235,0.5)',
-                  transform: toggled ? 'translateX(128px)' : 'translateX(0px)',
-                  transition: '0.35s cubic-bezier(.2,.7,.2,1)',
-                }}
-              />
-              <span
-                className="relative z-10 flex-1 text-center text-xs font-bold transition-colors duration-300"
-                style={{ color: toggled ? 'rgba(255,255,255,0.35)' : 'white' }}
-              >
-                Not yet
-              </span>
-              <span
-                className="relative z-10 flex-1 text-center text-xs font-bold transition-colors duration-300"
-                style={{ color: toggled ? 'white' : 'rgba(255,255,255,0.35)' }}
-              >
-                Yes, I'm in
-              </span>
+        {/* Large background word */}
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none overflow-hidden">
+          <span
+            className="text-[20vw] font-extrabold tracking-tighter opacity-[0.018]"
+            style={{ fontFamily: 'Satoshi, sans-serif', color: '#B58DFF', whiteSpace: 'nowrap' }}
+          >
+            GALAXA
+          </span>
+        </div>
+
+        <div className="max-w-3xl mx-auto text-center relative z-10">
+          <motion.div
+            initial={{ opacity: 0, y: 32 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.3 }}
+            transition={{ duration: 0.7, ease: [0.16,1,0.3,1] }}
+          >
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-primary/25 bg-primary/[0.06] text-[11px] font-mono tracking-widest text-primary/75 uppercase mb-8">
+              <Users className="w-3.5 h-3.5 text-primary/75" />
+              Join the Galaxa Circle
             </div>
 
-            {/* Reveal form */}
-            <div
-              style={{
-                maxHeight: toggled ? '340px' : '0px',
-                opacity: toggled ? 1 : 0,
-                overflow: 'hidden',
-                transition: 'max-height 0.5s cubic-bezier(.2,.7,.2,1), opacity 0.4s cubic-bezier(.2,.7,.2,1)',
-                width: '100%',
-                maxWidth: '420px',
-              }}
-            >
+            <h2 className="text-3xl sm:text-5xl md:text-6xl font-extrabold text-white mb-4 sm:mb-5 tracking-tight leading-[1.08]" style={{ fontFamily: 'Satoshi, sans-serif' }}>
+              Ready to build something<br /><span className="gradient-word">remarkable?</span>
+            </h2>
+            <p className="text-white/45 text-sm sm:text-base mb-8 sm:mb-12 max-w-xs sm:max-w-md mx-auto leading-relaxed">
+              Join the Galaxa newsletter for early access, opportunities, and builder-only updates.
+            </p>
+
+            {/* Inline form */}
+            <AnimatePresence mode="wait">
               {submitted ? (
-                <div
-                  className="flex flex-col items-center gap-3 py-10 px-8"
-                  style={{ ...GLASS_STYLE, borderRadius: '20px' }}
+                <motion.div
+                  key="success"
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  className="flex flex-col items-center gap-3 py-10"
                 >
-                  <Sparkles className="w-8 h-8" style={{ color: '#B58DFF' }} />
-                  <p className="text-white font-bold text-lg" style={{ fontFamily: 'Satoshi, sans-serif' }}>
-                    You're in the circle. ✦
-                  </p>
+                  <div className="w-14 h-14 rounded-full bg-primary/10 border border-primary/25 flex items-center justify-center mb-2">
+                    <Sparkles className="w-7 h-7 text-primary" />
+                  </div>
+                  <p className="text-white font-extrabold text-xl" style={{ fontFamily: 'Satoshi, sans-serif' }}>You're in the circle. ✦</p>
                   <p className="text-white/40 text-sm">We'll reach out with opportunities first.</p>
-                </div>
+                </motion.div>
               ) : (
-                <form
+                <motion.form
+                  key="form"
                   onSubmit={handleNewsletterSubmit}
-                  className="flex flex-col gap-3 p-6"
-                  style={{ ...GLASS_STYLE, borderRadius: '20px' }}
+                  initial={{ opacity: 0, y: 16 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto"
                 >
-                  <p className="text-white font-bold text-sm mb-1" style={{ fontFamily: 'Satoshi, sans-serif' }}>
-                    Join the Galaxa circle
-                  </p>
-                  <input
-                    type="text"
-                    placeholder="Your name"
-                    value={subName}
-                    onChange={e => setSubName(e.target.value)}
-                    className="w-full px-4 py-3 rounded-xl text-sm text-white placeholder-white/30 outline-none focus:ring-1"
-                    style={{
-                      background: 'rgba(255,255,255,0.05)',
-                      border: '1px solid rgba(181,141,255,0.15)',
-                      focusRingColor: '#7C2AEB',
-                    }}
-                  />
                   <input
                     type="email"
-                    placeholder="Your email"
+                    placeholder="you@example.com"
                     value={subEmail}
                     onChange={e => setSubEmail(e.target.value)}
                     required
-                    className="w-full px-4 py-3 rounded-xl text-sm text-white placeholder-white/30 outline-none focus:ring-1"
-                    style={{
-                      background: 'rgba(255,255,255,0.05)',
-                      border: '1px solid rgba(181,141,255,0.15)',
-                    }}
+                    className="flex-1 px-5 py-3.5 rounded-full text-sm text-white bg-white/[0.05] border border-white/10 placeholder-white/25 outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/30 transition-all backdrop-blur-sm"
                   />
                   <button
                     type="submit"
                     disabled={submitting}
-                    className="w-full flex items-center justify-center gap-2 py-3 rounded-xl text-white font-bold text-sm transition-all duration-300"
-                    style={{
-                      background: submitting ? 'rgba(94,41,232,0.5)' : 'linear-gradient(135deg, #5E29E8, #7C2AEB)',
-                      boxShadow: '0 8px 30px rgba(124,42,235,0.35)',
-                    }}
+                    className="flex items-center justify-center gap-2 px-7 py-3.5 rounded-full text-white font-bold text-sm bg-gradient-to-r from-[#5E29E8] to-[#7C2AEB] shadow-[0_8px_32px_rgba(124,42,235,0.45)] hover:shadow-[0_12px_48px_rgba(124,42,235,0.65)] transition-all duration-300 cursor-pointer hover:-translate-y-0.5 active:scale-[0.98] disabled:opacity-50 flex-shrink-0"
                   >
-                    <Send className="w-4 h-4" />
-                    {submitting ? 'Sending…' : 'Join the circle'}
+                    {submitting ? 'Joining…' : 'Join now'}
+                    {!submitting && <ArrowUpRight className="w-4 h-4" />}
                   </button>
-                </form>
+                </motion.form>
               )}
+            </AnimatePresence>
+
+            {!submitted && (
+              <p className="mt-4 flex items-center justify-center gap-1.5 text-[11px] text-white/25 font-mono">
+                <Lock className="w-3 h-3" /> No spam. Unsubscribe anytime.
+              </p>
+            )}
+
+            {/* Dual action row */}
+            <div className="mt-14 flex flex-col sm:flex-row items-center justify-center gap-4 pt-10 border-t border-white/[0.05]">
+              <button
+                onClick={() => navigate('/audit')}
+                className="group flex items-center gap-2 text-white/60 hover:text-white transition-all duration-300 text-sm font-semibold cursor-pointer"
+              >
+                <div className="w-9 h-9 rounded-full border border-white/10 group-hover:border-primary/40 group-hover:bg-primary/5 flex items-center justify-center transition-all duration-300 group-hover:rotate-45">
+                  <ArrowUpRight className="w-4 h-4" />
+                </div>
+                Book a free audit
+              </button>
+              <span className="hidden sm:block w-px h-6 bg-white/[0.08]" />
+              <button
+                onClick={() => navigate('/gbp')}
+                className="group flex items-center gap-2 text-white/60 hover:text-white transition-all duration-300 text-sm font-semibold cursor-pointer"
+              >
+                <div className="w-9 h-9 rounded-full border border-emerald-500/20 group-hover:border-emerald-500/50 group-hover:bg-emerald-500/5 flex items-center justify-center transition-all duration-300">
+                  <Users className="w-4 h-4 text-emerald-400/60 group-hover:text-emerald-400" />
+                </div>
+                Join the Builders Program
+              </button>
             </div>
-          </div>
+          </motion.div>
         </div>
       </section>
     </div>
