@@ -32,20 +32,20 @@ export default function ContactView() {
   };
 
   return (
-    <div className="relative pt-32 pb-24">
+    <div className="relative pt-24 sm:pt-32 pb-16 sm:pb-24">
       <Helmet>
         <title>Contact — GalaxaTech</title>
         <meta name="description" content="Get in touch with GalaxaTech — WhatsApp, email, or fill out the contact form. Based in Dhaka, serving clients globally." />
         <meta property="og:title" content="Contact — GalaxaTech" />
       </Helmet>
 
-      <div className="max-w-7xl mx-auto px-6">
-        <div className="text-center mb-16">
-          <h1 className="text-5xl md:text-6xl font-bold text-white mb-4" style={{ fontFamily: 'Satoshi, sans-serif' }}>Let's Talk.</h1>
-          <p className="text-white/60 text-lg">We're based in Dhaka and available via WhatsApp, email, or the form below.</p>
+      <div className="max-w-7xl mx-auto px-5 sm:px-6">
+        <div className="text-center mb-10 sm:mb-16">
+          <h1 className="text-3xl sm:text-5xl md:text-6xl font-bold text-white mb-3 sm:mb-4" style={{ fontFamily: 'Satoshi, sans-serif' }}>Let's Talk.</h1>
+          <p className="text-white/60 text-sm sm:text-lg">We're based in Dhaka and available via WhatsApp, email, or the form below.</p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-10">
           {/* Left — Contact info */}
           <div className="flex flex-col gap-4">
             <a
@@ -120,7 +120,7 @@ export default function ContactView() {
           </div>
 
           {/* Right — Contact form */}
-          <div className="glass-card rounded-2xl p-8">
+          <div className="glass-card rounded-2xl p-5 sm:p-8">
             {done ? (
               <div className="flex flex-col items-center justify-center text-center h-full py-12">
                 <CheckCircle className="w-14 h-14 text-green-400 mb-5" />

@@ -1,4 +1,4 @@
-﻿import { useState, FormEvent } from 'react';
+import { useState, FormEvent } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '../lib/firebase';
@@ -13,7 +13,7 @@ const HOW_IT_WORKS = [
 ];
 
 const WHAT_YOU_GET = [
-  { icon: Star, title: 'Real Portfolio Work', desc: 'Not practice projects — actual client deliverables you can show.' },
+  { icon: Star, title: 'Real Portfolio Work', desc: 'Not practice projects â€” actual client deliverables you can show.' },
   { icon: FileText, title: 'Performance Certificate', desc: 'Proof of real contribution, not just participation.' },
   { icon: Compass, title: 'Career Direction Clarity', desc: "You'll know what you're good at after doing it, not just studying it." },
   { icon: Users, title: 'Pathway to the Team', desc: 'Top performers have joined our core team. This is how we hire.' },
@@ -23,10 +23,10 @@ const TRACKS = ['Web Development', 'Social Media & Content', 'Graphic Design', '
 
 const FAQS = [
   { q: 'Is this paid?', a: 'Currently voluntary. Top performers may receive project-based compensation or referrals as the program grows.' },
-  { q: 'How long is the program?', a: 'Each batch is tied to a specific project. Duration varies — typically 3 to 8 weeks.' },
+  { q: 'How long is the program?', a: 'Each batch is tied to a specific project. Duration varies â€” typically 3 to 8 weeks.' },
   { q: 'What if I drop out?', a: 'No penalties. But since contribution is the basis of everything, dropping out simply means no certificate and no portfolio work from the program.' },
   { q: 'Who selects applicants?', a: 'Rihad Hamid, our Creative & Project Lead, reviews every application based on current project requirements.' },
-  { q: 'What kind of work is involved?', a: 'Varies per batch — design, development, content, social media strategy, research, and documentation.' },
+  { q: 'What kind of work is involved?', a: 'Varies per batch â€” design, development, content, social media strategy, research, and documentation.' },
   { q: 'Is it open to all students?', a: 'Yes, but selective. We take only those aligned with active project needs.' },
 ];
 
@@ -64,49 +64,49 @@ export default function GBPView() {
   const labelClass = 'text-xs font-mono text-white/40 uppercase tracking-widest block mb-1.5';
 
   return (
-    <div className="relative pt-32 pb-24">
+    <div className="relative pt-24 sm:pt-32 pb-16 sm:pb-24">
       <Helmet>
-        <title>Galaxa Builders Program — GalaxaTech</title>
-        <meta name="description" content="GBP is GalaxaTech's execution ecosystem for students — real projects, real output, real proof. Apply now." />
-        <meta property="og:title" content="Galaxa Builders Program — GalaxaTech" />
+        <title>Galaxa Builders Program â€” GalaxaTech</title>
+        <meta name="description" content="GBP is GalaxaTech's execution ecosystem for students â€” real projects, real output, real proof. Apply now." />
+        <meta property="og:title" content="Galaxa Builders Program â€” GalaxaTech" />
       </Helmet>
 
-      {/* ── Hero ─────────────────────────────────────────────────────────────── */}
-      <section className="max-w-4xl mx-auto px-6 text-center mb-20">
-        <div className="inline-flex items-center gap-2 bg-emerald-500/10 border border-emerald-500/20 rounded-full px-4 py-1.5 mb-6">
+      {/* â”€â”€ Hero â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+      <section className="max-w-4xl mx-auto px-5 sm:px-6 text-center mb-12 sm:mb-20">
+        <div className="inline-flex items-center gap-2 bg-emerald-500/10 border border-emerald-500/20 rounded-full px-4 py-1.5 mb-5 sm:mb-6">
           <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
           <span className="text-xs font-mono font-bold text-emerald-400 uppercase tracking-widest">Applications Open</span>
         </div>
-        <h1 className="text-5xl md:text-7xl font-bold text-white mb-5" style={{ fontFamily: 'Satoshi, sans-serif' }}>Real Work. Real Proof.</h1>
-        <p className="text-white/60 text-xl max-w-2xl mx-auto leading-relaxed mb-10">
+        <h1 className="text-3xl sm:text-5xl md:text-7xl font-bold text-white mb-4 sm:mb-5" style={{ fontFamily: 'Satoshi, sans-serif' }}>Real Work. Real Proof.</h1>
+        <p className="text-white/60 text-base sm:text-xl max-w-2xl mx-auto leading-relaxed mb-7 sm:mb-10">
           GalaxaTech's execution ecosystem for students ready to stop practicing and start doing.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <a href="#apply" className="px-8 py-4 bg-primary hover:bg-primary/90 text-white font-bold rounded-full transition-all duration-300 shadow-[0_8px_30px_rgba(124,42,235,0.35)]">Apply Now</a>
-          <a href="#how-it-works" className="px-8 py-4 border border-white/15 hover:border-white/30 text-white font-bold rounded-full transition-all duration-300">How It Works ↓</a>
+          <a href="#how-it-works" className="px-8 py-4 border border-white/15 hover:border-white/30 text-white font-bold rounded-full transition-all duration-300">How It Works â†“</a>
         </div>
       </section>
 
-      {/* ── Honest Introduction ──────────────────────────────────────────────── */}
-      <section className="max-w-4xl mx-auto px-6 mb-20">
-        <div className="glass-card rounded-3xl p-10 md:p-14 border-secondary/20">
+      {/* â”€â”€ Honest Introduction â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+      <section className="max-w-4xl mx-auto px-5 sm:px-6 mb-12 sm:mb-20">
+        <div className="glass-card rounded-3xl p-6 sm:p-10 md:p-14 border-secondary/20">
           <div className="space-y-4 mb-8">
             {['This is not an internship.', 'This is not a course.', 'This is not a training program.'].map(line => (
-              <p key={line} className="text-3xl md:text-4xl font-bold text-white/80 line-through decoration-secondary/50">{line}</p>
+              <p key={line} className="text-xl sm:text-3xl md:text-4xl font-bold text-white/80 line-through decoration-secondary/50">{line}</p>
             ))}
           </div>
           <div className="border-t border-white/10 pt-8">
             <p className="text-white/70 text-lg leading-relaxed mb-4">
-              GBP is a project participation system. You join a live project. You take on real tasks. You're evaluated on real output. What you learn — you learn because the work demanded it.
+              GBP is a project participation system. You join a live project. You take on real tasks. You're evaluated on real output. What you learn â€” you learn because the work demanded it.
             </p>
-            <p className="text-2xl font-bold text-secondary" style={{ fontFamily: 'Satoshi, sans-serif' }}>"We don't teach. We expose."</p>
+            <p className="text-xl sm:text-2xl font-bold text-secondary" style={{ fontFamily: 'Satoshi, sans-serif' }}>"We don't teach. We expose."</p>
           </div>
         </div>
       </section>
 
-      {/* ── How It Works ─────────────────────────────────────────────────────── */}
-      <section id="how-it-works" className="max-w-4xl mx-auto px-6 mb-20 scroll-mt-32">
-        <h2 className="text-4xl font-bold text-white mb-10 text-center" style={{ fontFamily: 'Satoshi, sans-serif' }}>How It Works</h2>
+      {/* â”€â”€ How It Works â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+      <section id="how-it-works" className="max-w-4xl mx-auto px-5 sm:px-6 mb-12 sm:mb-20 scroll-mt-32">
+        <h2 className="text-2xl sm:text-4xl font-bold text-white mb-7 sm:mb-10 text-center" style={{ fontFamily: 'Satoshi, sans-serif' }}>How It Works</h2>
         <div className="flex flex-col gap-4">
           {HOW_IT_WORKS.map((step, i) => (
             <div key={i} className="glass-card rounded-2xl p-6 flex items-start gap-5">
@@ -124,9 +124,9 @@ export default function GBPView() {
         </div>
       </section>
 
-      {/* ── What You Get ─────────────────────────────────────────────────────── */}
-      <section className="max-w-4xl mx-auto px-6 mb-20">
-        <h2 className="text-4xl font-bold text-white mb-10 text-center" style={{ fontFamily: 'Satoshi, sans-serif' }}>What You Get</h2>
+      {/* â”€â”€ What You Get â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+      <section className="max-w-4xl mx-auto px-5 sm:px-6 mb-12 sm:mb-20">
+        <h2 className="text-2xl sm:text-4xl font-bold text-white mb-7 sm:mb-10 text-center" style={{ fontFamily: 'Satoshi, sans-serif' }}>What You Get</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
           {WHAT_YOU_GET.map((item) => (
             <div key={item.title} className="glass-card rounded-2xl p-7">
@@ -140,8 +140,8 @@ export default function GBPView() {
         </div>
       </section>
 
-      {/* ── Certificate Philosophy ───────────────────────────────────────────── */}
-      <section className="max-w-4xl mx-auto px-6 mb-20">
+      {/* â”€â”€ Certificate Philosophy â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+      <section className="max-w-4xl mx-auto px-5 sm:px-6 mb-12 sm:mb-20">
         <div className="glass-card rounded-3xl p-10 md:p-14 text-center relative overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-br from-primary/6 via-transparent to-secondary/6 pointer-events-none" />
           <div className="relative z-10">
@@ -155,36 +155,36 @@ export default function GBPView() {
         </div>
       </section>
 
-      {/* ── Why We Built This ────────────────────────────────────────────────── */}
-      <section className="max-w-4xl mx-auto px-6 mb-20">
+      {/* â”€â”€ Why We Built This â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+      <section className="max-w-4xl mx-auto px-5 sm:px-6 mb-12 sm:mb-20">
         <h2 className="text-3xl font-bold text-white mb-2 text-center" style={{ fontFamily: 'Satoshi, sans-serif' }}>This is a win-win by design, not charity.</h2>
-        <p className="text-white/50 text-center mb-10 text-sm">Why we built GBP — from both sides of the table.</p>
+        <p className="text-white/50 text-center mb-10 text-sm">Why we built GBP â€” from both sides of the table.</p>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="glass-card rounded-2xl p-8">
             <div className="text-xs font-mono text-emerald-400/70 uppercase tracking-widest mb-3">For You</div>
             <h3 className="text-white font-bold text-xl mb-4">The Student</h3>
             <ul className="space-y-3 text-white/60 text-sm leading-relaxed">
-              <li>→ Structured exposure to real work environments</li>
-              <li>→ Technology and professional execution at real stakes</li>
-              <li>→ A place where skill builds through doing, not watching</li>
-              <li>→ Portfolio proof that's genuinely earned</li>
+              <li>â†’ Structured exposure to real work environments</li>
+              <li>â†’ Technology and professional execution at real stakes</li>
+              <li>â†’ A place where skill builds through doing, not watching</li>
+              <li>â†’ Portfolio proof that's genuinely earned</li>
             </ul>
           </div>
           <div className="glass-card rounded-2xl p-8">
             <div className="text-xs font-mono text-primary/70 uppercase tracking-widest mb-3">For Us</div>
             <h3 className="text-white font-bold text-xl mb-4">GalaxaTech</h3>
             <ul className="space-y-3 text-white/60 text-sm leading-relaxed">
-              <li>→ A performance-filtered execution team</li>
-              <li>→ Project delivery support at scale</li>
-              <li>→ A talent pipeline we actually trust</li>
-              <li>→ Builders who've already proven themselves on real work</li>
+              <li>â†’ A performance-filtered execution team</li>
+              <li>â†’ Project delivery support at scale</li>
+              <li>â†’ A talent pipeline we actually trust</li>
+              <li>â†’ Builders who've already proven themselves on real work</li>
             </ul>
           </div>
         </div>
       </section>
 
-      {/* ── Program Status ───────────────────────────────────────────────────── */}
-      <section className="max-w-4xl mx-auto px-6 mb-20">
+      {/* â”€â”€ Program Status â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+      <section className="max-w-4xl mx-auto px-5 sm:px-6 mb-12 sm:mb-20">
         <div className="glass-card rounded-2xl p-7 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-5">
           <div className="flex items-center gap-3">
             <div className="w-3 h-3 rounded-full bg-green-400 animate-pulse flex-shrink-0" />
@@ -201,9 +201,9 @@ export default function GBPView() {
         </div>
       </section>
 
-      {/* ── FAQ ─────────────────────────────────────────────────────────────── */}
-      <section className="max-w-4xl mx-auto px-6 mb-20">
-        <h2 className="text-4xl font-bold text-white mb-10 text-center" style={{ fontFamily: 'Satoshi, sans-serif' }}>Frequently Asked</h2>
+      {/* â”€â”€ FAQ â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+      <section className="max-w-4xl mx-auto px-5 sm:px-6 mb-12 sm:mb-20">
+        <h2 className="text-2xl sm:text-4xl font-bold text-white mb-7 sm:mb-10 text-center" style={{ fontFamily: 'Satoshi, sans-serif' }}>Frequently Asked</h2>
         <div className="flex flex-col gap-3">
           {FAQS.map((faq, i) => (
             <div key={i} className="glass-card rounded-xl overflow-hidden">
@@ -219,11 +219,11 @@ export default function GBPView() {
         </div>
       </section>
 
-      {/* ── Application Form ─────────────────────────────────────────────────── */}
+      {/* â”€â”€ Application Form â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
       <section id="apply" className="max-w-4xl mx-auto px-6 scroll-mt-32">
         <div className="text-center mb-10">
           <h2 className="text-4xl font-bold text-white mb-4" style={{ fontFamily: 'Satoshi, sans-serif' }}>Apply to GBP</h2>
-          <p className="text-white/55 max-w-xl mx-auto">Rihad reviews every application personally. Be honest — that's what gets you in.</p>
+          <p className="text-white/55 max-w-xl mx-auto">Rihad reviews every application personally. Be honest â€” that's what gets you in.</p>
         </div>
 
         <div className="glass-card rounded-2xl p-8">
