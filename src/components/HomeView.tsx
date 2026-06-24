@@ -151,6 +151,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
   // Carousel
   const [activeIndex, setActiveIndex] = useState(0);
   const [dragStartX, setDragStartX] = useState<number | null>(null);
+  const [hoveredCarouselIndex, setHoveredCarouselIndex] = useState<number | null>(null);
 
   // How We Work
   const stepRefs = useRef<(HTMLDivElement | null)[]>([]);
@@ -271,13 +272,20 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
           <div className="absolute top-1/2 right-1/4 -translate-y-1/2 translate-x-1/2 w-[350px] h-[350px] bg-[#7C2AEB]/10 blur-[90px] rounded-full pointer-events-none" />
         </div>
         <div className="max-w-5xl mx-auto px-6 text-center relative z-10 pt-12">
-          <div className="inline-flex items-center gap-2.5 bg-black/50 backdrop-blur-md rounded-full px-5 py-2.5 mb-8 border border-red-500/20 shadow-[0_0_15px_rgba(239,68,68,0.1)]">
-            <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse shadow-[0_0_8px_#ef4444]" />
-            <span className="text-[10px] sm:text-[11px] font-mono font-bold tracking-widest text-white uppercase">
-              AUTONOMOUS OPTIMIZATION • AGENTS ACTIVE • LAST BUILD: {buildMins}M AGO
-            </span>
-          </div>
-          <h1 className="font-display text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight text-white mb-6 leading-[1.08] drop-shadow-[0_4px_24px_rgba(0,0,0,0.8)]">
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, ease: [0.16,1,0.3,1] }}>
+            <div className="inline-flex items-center gap-2.5 bg-black/50 backdrop-blur-md rounded-full px-5 py-2.5 mb-8 border border-red-500/20 shadow-[0_0_15px_rgba(239,68,68,0.1)]">
+              <span className="w-2 h-2 rounded-full bg-red-500 dot-pulse-glow" />
+              <span className="text-[10px] sm:text-[11px] font-mono font-bold tracking-widest text-white uppercase">
+                AUTONOMOUS OPTIMIZATION • AGENTS ACTIVE • LAST BUILD: {buildMins}M AGO
+              </span>
+            </div>
+          </motion.div>
+          <motion.h1
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.1, ease: [0.16,1,0.3,1] }}
+            className="font-display text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight text-white mb-6 leading-[1.08] drop-shadow-[0_4px_24px_rgba(0,0,0,0.8)]"
+          >
             Assure your brand's <br className="hidden md:block" />
             <span className="font-serif italic font-bold typewriter-container block min-h-[1.15em] mt-2 pb-1 overflow-hidden">
               <AnimatePresence mode="wait">
@@ -293,21 +301,31 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
                 </motion.span>
               </AnimatePresence>
             </span>
-          </h1>
-          <p className="text-base sm:text-lg text-white/70 max-w-2xl mx-auto mb-10 leading-relaxed font-sans">
+          </motion.h1>
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2, ease: [0.16,1,0.3,1] }}
+            className="text-base sm:text-lg text-white/70 max-w-2xl mx-auto mb-10 leading-relaxed font-sans"
+          >
             By investing only FIVE minutes, giving us some information about your business.
-          </p>
-          <div className="flex justify-center">
+          </motion.p>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.3, ease: [0.16,1,0.3,1] }}
+            className="flex justify-center"
+          >
             <button
               onClick={() => navigate('/audit')}
-              className="bg-black/40 backdrop-blur-md border border-white/10 group flex items-center gap-4 text-white hover:text-primary hover:border-primary/50 font-bold py-4 px-8 rounded-full transition-all duration-300 shadow-2xl cursor-pointer"
+              className="bg-black/40 backdrop-blur-md border border-white/10 group flex items-center gap-4 text-white hover:text-primary hover:border-primary/50 font-bold py-4 px-8 rounded-full transition-all duration-300 shadow-2xl cursor-pointer hover:scale-[1.05] active:scale-[0.98]"
             >
               <span className="w-10 h-10 primary-gradient text-white rounded-full flex items-center justify-center group-hover:rotate-45 transition-transform duration-500">
                 <ArrowUpRight className="w-5 h-5" />
               </span>
               <span className="text-md font-bold text-white">Book an Audit</span>
             </button>
-          </div>
+          </motion.div>
         </div>
       </section>
 
@@ -329,8 +347,14 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
           from { transform: scaleX(0); }
           to   { transform: scaleX(1); }
         }
+        @keyframes dot-pulse-glow {
+          0%, 100% { box-shadow: 0 0 6px #ef4444, 0 0 14px rgba(239,68,68,0.4); opacity: 1; }
+          50%       { box-shadow: 0 0 14px #ef4444, 0 0 28px rgba(239,68,68,0.65); opacity: 0.6; }
+        }
+        .dot-pulse-glow { animation: dot-pulse-glow 2s ease-in-out infinite; }
       `}</style>
       <section className="py-16 px-6 border-y border-white/5 bg-[#05030F] overflow-hidden">
+        <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.6 }}>
         <div className="max-w-7xl mx-auto">
           <p className="text-center text-[10px] font-mono tracking-[0.25em] text-white/30 uppercase mb-8">
             Global Presence
@@ -356,11 +380,13 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
             </div>
           </div>
         </div>
+        </motion.div>
       </section>
 
       {/* ── Daily AI Feed ──────────────────────────────────────────────────── */}
       <section className="py-24 px-6 bg-[#0A0825]">
         <div className="max-w-7xl mx-auto">
+          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.6 }}>
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-12 gap-4">
             <div>
               <p className="text-[10px] font-mono tracking-[0.25em] text-primary/60 uppercase mb-2">Live Intelligence</p>
@@ -373,22 +399,26 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
               <span className="text-[10px] font-mono text-primary/70 tracking-widest uppercase">Agents Active</span>
             </div>
           </div>
+          </motion.div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
             {feedItems.map((item, i) => (
-              <div
+              <motion.div
                 key={i}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.2 }}
+                transition={{ duration: 0.5, delay: i * 0.1 }}
+                whileHover={{ scale: 1.02, transition: { duration: 0.2, ease: 'easeOut' } }}
                 className="flex flex-col p-6 cursor-default"
                 style={{
                   ...GLASS_STYLE,
-                  transition: '0.35s cubic-bezier(.2,.7,.2,1)',
+                  transition: '0.2s cubic-bezier(.2,.7,.2,1)',
                 }}
                 onMouseEnter={e => {
-                  (e.currentTarget as HTMLDivElement).style.transform = 'translateY(-5px)';
                   (e.currentTarget as HTMLDivElement).style.borderColor = 'rgba(181,141,255,0.35)';
                   (e.currentTarget as HTMLDivElement).style.boxShadow = '0 0 40px rgba(124,42,235,0.4)';
                 }}
                 onMouseLeave={e => {
-                  (e.currentTarget as HTMLDivElement).style.transform = '';
                   (e.currentTarget as HTMLDivElement).style.borderColor = '';
                   (e.currentTarget as HTMLDivElement).style.boxShadow = '';
                 }}
@@ -415,7 +445,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
                   <Sparkles className="w-3 h-3 text-primary/50" />
                   <span className="text-[10px] font-mono text-white/25 tracking-wide">Generated by Galaxa agents</span>
                 </div>
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>
@@ -424,13 +454,13 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
       {/* ── What We Build — Service Carousel ──────────────────────────────── */}
       <section className="py-24 px-6 bg-[#05030F] overflow-hidden">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
+          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.6 }} className="text-center mb-16">
             <p className="text-[10px] font-mono tracking-[0.25em] text-primary/60 uppercase mb-3">Our Capabilities</p>
             <h2 className="text-4xl md:text-5xl font-bold text-white mb-4" style={{ fontFamily: 'Satoshi, sans-serif' }}>
               What We Build
             </h2>
             <p className="text-white/50 text-lg max-w-xl mx-auto">End-to-end digital systems — from strategy to deployment.</p>
-          </div>
+          </motion.div>
 
           {/* 3D Carousel */}
           <div
@@ -455,14 +485,16 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
                 <div
                   key={svc.anchor}
                   onClick={() => { if (!isActive) setActiveIndex(i); else navigate(`/services#${svc.anchor}`); }}
+                  onMouseEnter={() => setHoveredCarouselIndex(i)}
+                  onMouseLeave={() => setHoveredCarouselIndex(null)}
                   style={{
                     position: 'absolute',
                     left: '50%',
                     top: '50%',
                     width: '260px',
-                    transform: `translateX(calc(-50% + ${x}px)) translateY(-50%) rotateY(${rotY}deg) translateZ(${z}px) scale(${scale})`,
+                    transform: `translateX(calc(-50% + ${x}px)) translateY(-50%) rotateY(${rotY}deg) translateZ(${z}px) scale(${scale * (hoveredCarouselIndex === i ? 1.02 : 1)})`,
                     opacity,
-                    transition: 'all 0.55s cubic-bezier(.2,.7,.2,1)',
+                    transition: 'all 0.2s cubic-bezier(.2,.7,.2,1)',
                     pointerEvents: visible ? 'auto' : 'none',
                     cursor: isActive ? 'pointer' : 'pointer',
                     zIndex: 10 - absOff,
@@ -470,7 +502,9 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
                     borderRadius: '20px',
                     ...(isActive ? {
                       borderColor: 'rgba(181,141,255,0.45)',
-                      boxShadow: '0 0 60px rgba(124,42,235,0.5), inset 0 1px 0 rgba(255,255,255,0.15)',
+                      boxShadow: hoveredCarouselIndex === i
+                        ? '0 0 80px rgba(124,42,235,0.65), inset 0 1px 0 rgba(255,255,255,0.15)'
+                        : '0 0 60px rgba(124,42,235,0.5), inset 0 1px 0 rgba(255,255,255,0.15)',
                     } : {}),
                     padding: '28px 24px',
                   }}
@@ -499,7 +533,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
           <div className="flex items-center justify-center gap-6 mt-8">
             <button
               onClick={carouselPrev}
-              className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-white/60 hover:text-white hover:border-primary/40 transition-all duration-200"
+              className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-white/60 hover:text-white hover:border-primary/40 transition-all duration-200 hover:scale-[1.05] active:scale-[0.98]"
             >
               <ChevronLeft className="w-5 h-5" />
             </button>
@@ -519,7 +553,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
             </div>
             <button
               onClick={carouselNext}
-              className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-white/60 hover:text-white hover:border-primary/40 transition-all duration-200"
+              className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-white/60 hover:text-white hover:border-primary/40 transition-all duration-200 hover:scale-[1.05] active:scale-[0.98]"
             >
               <ChevronRight className="w-5 h-5" />
             </button>
@@ -530,12 +564,12 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
       {/* ── How We Work ────────────────────────────────────────────────────── */}
       <section className="py-24 px-6 bg-[#0A0825]">
         <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-20">
+          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.6 }} className="text-center mb-20">
             <p className="text-[10px] font-mono tracking-[0.25em] text-primary/60 uppercase mb-3">Our Process</p>
             <h2 className="text-4xl md:text-5xl font-bold text-white" style={{ fontFamily: 'Satoshi, sans-serif' }}>
               How We Work
             </h2>
-          </div>
+          </motion.div>
 
           {/* Desktop: horizontal */}
           <div className="hidden md:block relative">
@@ -670,16 +704,16 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
       {/* ── Selected Work — Portfolio Folder ──────────────────────────────── */}
       <section className="py-24 px-6 bg-[#05030F]">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
+          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.6 }} className="text-center mb-16">
             <p className="text-[10px] font-mono tracking-[0.25em] text-primary/60 uppercase mb-3">Case Studies</p>
             <h2 className="text-4xl md:text-5xl font-bold text-white mb-4" style={{ fontFamily: 'Satoshi, sans-serif' }}>
               Selected Work
             </h2>
             <p className="text-white/50 text-lg">Real projects. Real clients. Real results.</p>
-          </div>
+          </motion.div>
 
           {/* Folder + fan */}
-          <div className="flex flex-col items-center">
+          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.6 }} className="flex flex-col items-center">
             <div
               className="relative cursor-pointer"
               style={{ width: '320px', height: '260px' }}
@@ -735,24 +769,32 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
               <p className="text-white/30 text-xs font-mono mb-5">Hover to explore · Click to view all</p>
               <button
                 onClick={() => navigate('/portfolio')}
-                className="flex items-center gap-2 mx-auto px-6 py-3 rounded-full border border-primary/30 text-white/70 hover:text-white hover:border-primary text-sm font-semibold transition-all duration-300"
+                className="flex items-center gap-2 mx-auto px-6 py-3 rounded-full border border-primary/30 text-white/70 hover:text-white hover:border-primary text-sm font-semibold transition-all duration-300 hover:scale-[1.05] active:scale-[0.98]"
               >
                 View All Work <ArrowUpRight className="w-4 h-4" />
               </button>
             </div>
-          </div>
+          </motion.div>
         </div>
       </section>
 
       {/* ── FAQ (unchanged) ────────────────────────────────────────────────── */}
       <section className="py-24 px-6 bg-[#0A0825]">
         <div className="max-w-3xl mx-auto">
-          <div className="text-center mb-14">
+          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.6 }} className="text-center mb-14">
             <h2 className="text-4xl md:text-5xl font-bold text-white mb-4" style={{ fontFamily: 'Satoshi, sans-serif' }}>Common Questions</h2>
-          </div>
+          </motion.div>
           <div className="flex flex-col gap-3">
             {FAQS.map((faq, i) => (
-              <div key={i} className="glass-card rounded-xl overflow-hidden">
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 16 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.2 }}
+                transition={{ duration: 0.45, delay: i * 0.06 }}
+                whileHover={{ scale: 1.02, transition: { duration: 0.2, ease: 'easeOut' } }}
+                className="glass-card rounded-xl overflow-hidden"
+              >
                 <button
                   onClick={() => setActiveFAQ(activeFAQ === i ? null : i)}
                   className="w-full flex items-center justify-between p-5 text-left"
@@ -773,7 +815,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
                     </motion.div>
                   )}
                 </AnimatePresence>
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>
@@ -782,7 +824,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
       {/* ── Closing CTA — Toggle ───────────────────────────────────────────── */}
       <section className="py-24 px-6 relative overflow-hidden bg-[#05030F]">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[500px] bg-primary/5 blur-[140px] rounded-full pointer-events-none" />
-        <div className="max-w-3xl mx-auto text-center relative z-10">
+        <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.6 }} className="max-w-3xl mx-auto text-center relative z-10">
           <p className="text-[10px] font-mono tracking-[0.25em] text-primary/60 uppercase mb-5">Join Us</p>
           <h2 className="text-4xl md:text-5xl font-bold text-white mb-5" style={{ fontFamily: 'Satoshi, sans-serif' }}>
             Wanna join the<br />Galaxa team?
@@ -794,12 +836,13 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
           {/* Toggle */}
           <div className="flex flex-col items-center gap-8">
             <div
-              className="relative flex items-center rounded-full p-1 cursor-pointer select-none"
+              className="relative flex items-center rounded-full p-1 cursor-pointer select-none hover:scale-[1.05] active:scale-[0.98]"
               style={{
                 width: '260px',
                 height: '48px',
                 background: 'rgba(255,255,255,0.06)',
                 border: '1px solid rgba(255,255,255,0.10)',
+                transition: 'transform 0.2s ease',
               }}
               onClick={() => setToggled(t => !t)}
             >
@@ -903,7 +946,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
               )}
             </div>
           </div>
-        </div>
+        </motion.div>
       </section>
     </div>
   );
