@@ -185,9 +185,9 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
       {/* ── Hero ─────────────────────────────────────────────────────────────── */}
       <section className="relative min-h-[92vh] flex flex-col items-center justify-center pt-28 pb-16 overflow-hidden">
         <div className="absolute inset-0 z-0 select-none overflow-hidden bg-[#05030F]">
-          <img alt="Hero MacBook Atmosphere" className="w-full h-full object-cover opacity-68 contrast-105 pointer-events-none" style={{ maskImage: 'radial-gradient(ellipse at 50% 55%, rgba(0,0,0,1) 40%, rgba(0,0,0,0.15) 85%, rgba(0,0,0,0) 100%)', WebkitMaskImage: 'radial-gradient(ellipse at 50% 55%, rgba(0,0,0,1) 40%, rgba(0,0,0,0.15) 85%, rgba(0,0,0,0) 100%)' }} src={heroLaptopDashboard} referrerPolicy="no-referrer" />
+          <img alt="Hero MacBook Atmosphere" className="w-full h-full object-cover opacity-50 contrast-105 pointer-events-none" style={{ maskImage: 'radial-gradient(ellipse at 50% 55%, rgba(0,0,0,1) 40%, rgba(0,0,0,0.15) 85%, rgba(0,0,0,0) 100%)', WebkitMaskImage: 'radial-gradient(ellipse at 50% 55%, rgba(0,0,0,1) 40%, rgba(0,0,0,0.15) 85%, rgba(0,0,0,0) 100%)', filter: 'drop-shadow(0 0 60px rgba(120,50,235,0.45))' }} src={heroLaptopDashboard} referrerPolicy="no-referrer" />
           <div className="absolute inset-0 bg-gradient-to-tr from-[#05030F] via-[#7C2AEB]/6 to-[#7C2AEB]/6 pointer-events-none" />
-          <div className="absolute inset-x-0 top-0 h-[60%] bg-gradient-to-b from-[#05030F] via-[#05030F]/90 to-transparent pointer-events-none" />
+          <div className="absolute inset-x-0 top-0 h-[60%] bg-gradient-to-b from-[#05030F]/35 via-[#05030F]/10 to-transparent pointer-events-none" />
           <div className="absolute inset-x-0 bottom-0 h-1/4 bg-gradient-to-t from-[#05030F] to-transparent pointer-events-none" />
           <div className="absolute top-1/2 left-1/4 -translate-y-1/2 -translate-x-1/2 w-[400px] h-[400px] bg-[#7C2AEB]/12 blur-[90px] rounded-full pointer-events-none" />
           <div className="absolute top-1/2 right-1/4 -translate-y-1/2 translate-x-1/2 w-[350px] h-[350px] bg-[#7C2AEB]/10 blur-[90px] rounded-full pointer-events-none" />

@@ -18,7 +18,7 @@ export default function CookieBanner() {
   if (!visible) return null;
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-[60] p-4 sm:p-6 flex justify-center">
+    <div className="fixed bottom-0 left-0 w-full z-50 flex justify-center px-4 sm:px-6 py-4 sm:py-5">
       <div className="glass-card rounded-2xl px-6 py-4 flex flex-col sm:flex-row items-center gap-4 max-w-2xl w-full shadow-[0_-4px_30px_rgba(0,0,0,0.4)]">
         <p className="text-sm text-white/65 flex-1 text-center sm:text-left">
           We use cookies to improve your experience.
