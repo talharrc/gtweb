@@ -225,9 +225,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
 
       {/* ── CSS ─────────────────────────────────────────────────────────────── */}
       <style>{`
-        @keyframes marquee-scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
-        .marquee-track { display: flex; width: max-content; animation: marquee-scroll 28s linear infinite; }
-        .marquee-wrapper:hover .marquee-track { animation-play-state: paused; }
+        @keyframes marquee-scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
         @keyframes dot-pulse-glow {
           0%,100% { box-shadow: 0 0 6px #ef4444, 0 0 14px rgba(239,68,68,0.4); opacity: 1; }
           50%      { box-shadow: 0 0 14px #ef4444, 0 0 28px rgba(239,68,68,0.65); opacity: 0.6; }
@@ -255,16 +253,20 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
             <p className="text-white/50 text-lg">Delivering digital solutions across markets</p>
           </div>
           {/* Marquee pills */}
-          <div className="max-w-5xl mx-auto mb-10">
-            <div className="marquee-wrapper overflow-hidden">
-              <div className="marquee-track">
-                {[...COUNTRIES, ...COUNTRIES].map((c, i) => (
-                  <div key={i} className="flex items-center gap-2.5 mx-3 select-none px-5 py-2.5 rounded-full" style={{ border: '1px solid rgba(255,255,255,0.12)', background: 'rgba(255,255,255,0.04)', minWidth: 'max-content' }}>
-                    <span className="text-2xl leading-none">{c.flag}</span>
-                    <span className="text-white/75 font-semibold text-sm" style={{ fontFamily: 'Satoshi, sans-serif' }}>{c.name}</span>
-                  </div>
-                ))}
-              </div>
+          <div className="max-w-5xl mx-auto mb-10 overflow-hidden"
+            onMouseEnter={e => { const t = e.currentTarget.querySelector<HTMLDivElement>('.mq-track'); if (t) t.style.animationPlayState = 'paused'; }}
+            onMouseLeave={e => { const t = e.currentTarget.querySelector<HTMLDivElement>('.mq-track'); if (t) t.style.animationPlayState = 'running'; }}
+          >
+            <div
+              className="mq-track"
+              style={{ display: 'flex', width: 'max-content', animation: 'marquee-scroll 28s linear infinite', willChange: 'transform' }}
+            >
+              {[...COUNTRIES, ...COUNTRIES].map((c, i) => (
+                <div key={i} className="flex items-center gap-2.5 mx-3 select-none px-5 py-2.5 rounded-full" style={{ border: '1px solid rgba(255,255,255,0.12)', background: 'rgba(255,255,255,0.04)', minWidth: 'max-content' }}>
+                  <span className="text-2xl leading-none">{c.flag}</span>
+                  <span className="text-white/75 font-semibold text-sm" style={{ fontFamily: 'Satoshi, sans-serif' }}>{c.name}</span>
+                </div>
+              ))}
             </div>
           </div>
           {/* Trust line */}
@@ -293,16 +295,10 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
           </motion.div>
 
           {/* 3D Cards — desktop */}
-          <div className="hidden md:block">
-            <div className="relative mx-auto" style={{ height: '370px', maxWidth: '960px', perspective: '1100px' }}>
+          <div className="hidden md:flex gap-6 max-w-[1020px] mx-auto" style={{ perspective: '1100px' }}>
               {feedItems.map((item, i) => {
                 const CatIcon = FEED_ICON[item.category] ?? Sparkles;
-                const positions = [
-                  { left: '0%',   rotY: '-12deg', tZ: '50px',  zIndex: 3 },
-                  { left: '29%',  rotY: '-3deg',  tZ: '10px',  zIndex: 2 },
-                  { left: '56%',  rotY:  '5deg',  tZ: '-20px', zIndex: 1 },
-                ];
-                const p = positions[i];
+                const rotations = ['-8deg', '-1deg', '5deg'];
                 return (
                   <motion.div
                     key={i}
@@ -311,14 +307,12 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
                     viewport={{ once: true, amount: 0.2 }}
                     transition={{ duration: 0.6, delay: i * 0.14 }}
                     style={{
-                      position: 'absolute',
-                      top: 0,
-                      left: p.left,
-                      width: '310px',
-                      height: '340px',
-                      transform: `rotateY(${p.rotY}) translateZ(${p.tZ})`,
-                      zIndex: p.zIndex,
+                      flex: '1',
+                      minHeight: '320px',
+                      transform: `rotateY(${rotations[i]})`,
                       ...GLASS_STYLE,
+                      border: '1px solid rgba(167,139,250,0.4)',
+                      boxShadow: '0 0 25px -5px rgba(124,42,235,0.5), inset 0 1px 0 rgba(255,255,255,0.10), 0 20px 60px rgba(0,0,0,0.50)',
                       display: 'flex',
                       flexDirection: 'column',
                       padding: '24px',
@@ -350,7 +344,6 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
                   </motion.div>
                 );
               })}
-            </div>
           </div>
 
           {/* Mobile: stacked cards */}
@@ -358,7 +351,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
             {feedItems.map((item, i) => {
               const CatIcon = FEED_ICON[item.category] ?? Sparkles;
               return (
-                <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.5, delay: i * 0.1 }} style={{ ...GLASS_STYLE, padding: '20px' }}>
+                <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.5, delay: i * 0.1 }} style={{ ...GLASS_STYLE, padding: '20px', border: '1px solid rgba(167,139,250,0.4)', boxShadow: '0 0 25px -5px rgba(124,42,235,0.5), inset 0 1px 0 rgba(255,255,255,0.10), 0 20px 60px rgba(0,0,0,0.50)' }}>
                   <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center gap-2 px-3 py-1.5 rounded-full" style={{ background: 'rgba(124,42,235,0.15)', border: '1px solid rgba(181,141,255,0.25)' }}>
                       <CatIcon className="w-3.5 h-3.5" style={{ color: '#B58DFF' }} />
@@ -411,7 +404,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
               const rotY = offset * 30;
               const z = -absOff * 140;
               const scale = 1 - absOff * 0.14;
-              const opacity = visible ? 1 - absOff * 0.28 : 0;
+              const opacity = visible ? Math.max(0.5, 1 - absOff * 0.18) : 0;
               const isActive = offset === 0;
               return (
                 <div
@@ -422,13 +415,18 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
                   style={{
                     position: 'absolute', left: '50%', top: '50%', width: '260px',
                     transform: `translateX(calc(-50% + ${x}px)) translateY(-50%) rotateY(${rotY}deg) translateZ(${z}px) scale(${scale * (hoveredCarouselIndex === i ? 1.02 : 1)})`,
-                    opacity, transition: 'all 0.2s cubic-bezier(.2,.7,.2,1)',
+                    opacity, transition: 'all 0.35s cubic-bezier(.2,.7,.2,1)',
                     pointerEvents: visible ? 'auto' : 'none', cursor: 'pointer',
                     zIndex: 10 - absOff, ...GLASS_STYLE, borderRadius: '20px',
                     ...(isActive ? {
-                      borderColor: 'rgba(181,141,255,0.45)',
-                      boxShadow: hoveredCarouselIndex === i ? '0 0 80px rgba(124,42,235,0.65),inset 0 1px 0 rgba(255,255,255,0.15)' : '0 0 60px rgba(124,42,235,0.5),inset 0 1px 0 rgba(255,255,255,0.15)',
-                    } : {}),
+                      borderColor: 'rgba(167,139,250,0.5)',
+                      boxShadow: hoveredCarouselIndex === i
+                        ? '0 0 80px rgba(124,42,235,0.65), 0 0 25px -5px rgba(124,42,235,0.5), inset 0 1px 0 rgba(255,255,255,0.15)'
+                        : '0 0 60px rgba(124,42,235,0.5), 0 0 25px -5px rgba(124,42,235,0.5), inset 0 1px 0 rgba(255,255,255,0.15)',
+                    } : {
+                      borderColor: 'rgba(167,139,250,0.28)',
+                      boxShadow: '0 0 25px -5px rgba(124,42,235,0.4), inset 0 1px 0 rgba(255,255,255,0.06)',
+                    }),
                     padding: '28px 24px',
                   }}
                 >
@@ -568,15 +566,19 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
               {/* Fan-out project cards */}
               {PROJECTS.map((proj, i) => {
                 const fan = [
-                  'translateX(-220px) translateY(-10px) rotate(-16deg)',
+                  'translateX(-230px) translateY(0px) rotate(-18deg)',
                   'translateX(0px) translateY(-30px) rotate(0deg)',
-                  'translateX(220px) translateY(-10px) rotate(16deg)',
+                  'translateX(230px) translateY(0px) rotate(18deg)',
                 ];
                 const stack = [
-                  'translateX(-10px) translateY(0px) rotate(-4deg)',
-                  'translateX(0px) translateY(-8px) rotate(0deg)',
-                  'translateX(10px) translateY(-4px) rotate(4deg)',
+                  'translateX(-70px) translateY(0px) rotate(-8deg)',
+                  'translateX(0px) translateY(-20px) rotate(0deg)',
+                  'translateX(70px) translateY(0px) rotate(8deg)',
                 ];
+                // Center card always on top; left/right swap depth on hover
+                const zIndex = folderHovered
+                  ? (i === 1 ? 5 : i === 0 ? 3 : 4)
+                  : (i === 1 ? 5 : i === 0 ? 3 : 4);
                 return (
                   <div
                     key={proj.slug}
@@ -589,10 +591,11 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
                       marginLeft: '-95px',
                       transform: folderHovered ? fan[i] : stack[i],
                       transition: `0.5s cubic-bezier(.2,.7,.2,1) ${i * 0.04}s`,
-                      zIndex: folderHovered ? (i === 1 ? 5 : 4 - i) : (2 - i + 3),
+                      zIndex,
                       borderRadius: '16px',
                       overflow: 'hidden',
-                      border: '1px solid rgba(181,141,255,0.25)',
+                      border: '1px solid rgba(167,139,250,0.4)',
+                      boxShadow: '0 0 25px -5px rgba(124,42,235,0.5)',
                     }}
                   >
                     {/* Card image area */}
