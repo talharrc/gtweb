@@ -2,7 +2,6 @@ import { useEffect } from 'react';
 import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import { Zap, BarChart2, Bell, ClipboardList, FileText, Users, MessageSquare } from 'lucide-react';
 import HubLayout, { NavItem } from '../shared/HubLayout';
-import CredentialsLoginGuard from '../shared/CredentialsLoginGuard';
 import MessagesSection from '../shared/MessagesSection';
 import { ProjectProvider, useProject } from '../../context/ProjectContext';
 import { useProjects } from '../../hooks/useProjects';
@@ -65,10 +64,8 @@ function ClientHubInner() {
 
 export default function ClientHubView() {
   return (
-    <CredentialsLoginGuard role="client">
-      <ProjectProvider>
-        <ClientHubInner />
-      </ProjectProvider>
-    </CredentialsLoginGuard>
+    <ProjectProvider>
+      <ClientHubInner />
+    </ProjectProvider>
   );
 }

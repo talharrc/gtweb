@@ -2,7 +2,6 @@ import { useEffect } from 'react';
 import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import { FolderOpen, CreditCard, Edit3, Send, BookOpen, FileText, BarChart2, MessageSquare } from 'lucide-react';
 import HubLayout, { NavItem } from '../shared/HubLayout';
-import CredentialsLoginGuard from '../shared/CredentialsLoginGuard';
 import MessagesSection from '../shared/MessagesSection';
 import { ProjectProvider, useProject } from '../../context/ProjectContext';
 import { useProjects } from '../../hooks/useProjects';
@@ -68,10 +67,8 @@ function BuilderHubInner() {
 
 export default function BuilderHubView() {
   return (
-    <CredentialsLoginGuard role="builder">
-      <ProjectProvider>
-        <BuilderHubInner />
-      </ProjectProvider>
-    </CredentialsLoginGuard>
+    <ProjectProvider>
+      <BuilderHubInner />
+    </ProjectProvider>
   );
 }

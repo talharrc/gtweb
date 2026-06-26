@@ -1,5 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, ReactNode } from 'react';
 import { Routes, Route, useLocation, useNavigate, Navigate } from 'react-router-dom';
+import { Loader2 } from 'lucide-react';
 import Navbar from './components/Navbar';
 import HomeView from './components/HomeView';
 import ServicesView from './components/ServicesView';
@@ -18,8 +19,10 @@ import VisitorHubView from './components/visitor-hub/VisitorHubView';
 import ClientHubView from './components/client-hub/ClientHubView';
 import BuilderHubView from './components/builder-hub/BuilderHubView';
 import AdminPanelView from './components/admin/AdminPanelView';
+import AuthModal from './components/auth/AuthModal';
+import PendingScreen from './components/auth/PendingScreen';
 import { AuthProvider, useAuth } from './context/AuthContext';
-import { PageType } from './types';
+import { PageType, UserRole } from './types';
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -42,10 +45,60 @@ const PAGE_ROUTES: Record<PageType, string> = {
   'builders-program': '/gbp',
 };
 
+// Route guard: checks auth, role, and status before rendering children
+function RequireRole({ requiredRole, children }: { requiredRole: UserRole | 'admin'; children: ReactNode }) {
+  const { isLoading, isSignedIn, role, userProfile, openAuthModal } = useAuth();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (isLoading) return;
+
+    if (!isSignedIn) {
+      openAuthModal();
+      navigate('/', { replace: true });
+      return;
+    }
+
+    if (requiredRole === 'admin' && role !== 'admin') {
+      navigate('/', { replace: true });
+      return;
+    }
+
+    if (requiredRole !== 'admin' && role !== requiredRole && role !== 'admin') {
+      navigate('/', { replace: true });
+    }
+  }, [isLoading, isSignedIn, role, requiredRole]);
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <Loader2 className="w-8 h-8 text-primary animate-spin" />
+      </div>
+    );
+  }
+
+  if (!isSignedIn) return null;
+
+  // Admin bypasses all hub guards
+  if (role === 'admin' && requiredRole !== 'admin') return <>{children}</>;
+
+  if (requiredRole !== 'admin' && role !== requiredRole) return null;
+
+  // Pending approval screen for client/builder
+  if (
+    (requiredRole === 'client' || requiredRole === 'builder') &&
+    userProfile?.status === 'pending'
+  ) {
+    return <PendingScreen />;
+  }
+
+  return <>{children}</>;
+}
+
 function AppInner() {
   const location = useLocation();
   const navigate = useNavigate();
-  const { firebaseUser } = useAuth();
+  const { firebaseUser, userProfile } = useAuth();
   const isHubRoute = location.pathname.startsWith('/hub') || location.pathname.startsWith('/admin');
 
   const [dhakaTime, setDhakaTime] = useState<string>('Dhaka HQ');
@@ -80,11 +133,28 @@ function AppInner() {
         <div className="bg-mesh" />
         <ScrollToTop />
         <Routes>
-          <Route path="/hub/visitor/*" element={<VisitorHubView />} />
-          <Route path="/hub/client/*"  element={<ClientHubView />} />
-          <Route path="/hub/builder/*" element={<BuilderHubView />} />
-          <Route path="/admin/*"       element={<AdminPanelView />} />
+          <Route path="/hub/visitor/*" element={
+            <RequireRole requiredRole="visitor">
+              <VisitorHubView />
+            </RequireRole>
+          } />
+          <Route path="/hub/client/*" element={
+            <RequireRole requiredRole="client">
+              <ClientHubView />
+            </RequireRole>
+          } />
+          <Route path="/hub/builder/*" element={
+            <RequireRole requiredRole="builder">
+              <BuilderHubView />
+            </RequireRole>
+          } />
+          <Route path="/admin/*" element={
+            <RequireRole requiredRole="admin">
+              <AdminPanelView />
+            </RequireRole>
+          } />
         </Routes>
+        <AuthModal />
       </div>
     );
   }
@@ -97,7 +167,11 @@ function AppInner() {
         onPageChange={handlePageSelect}
         dhakaTime={dhakaTime}
         isDhakaOpen={isDhakaOpen}
-        currentUser={firebaseUser ? { displayName: firebaseUser.displayName ?? '', photoURL: firebaseUser.photoURL ?? '' } : null}
+        currentUser={
+          firebaseUser && userProfile
+            ? { displayName: userProfile.displayName, photoURL: userProfile.photoURL, email: userProfile.email }
+            : null
+        }
       />
       <main className="flex-grow">
         <Routes>
@@ -108,8 +182,8 @@ function AppInner() {
           <Route path="/about"             element={<AboutView />} />
           <Route path="/contact"           element={<ContactView />} />
           <Route path="/audit"             element={<AuditView />} />
-          <Route path="/gbp"              element={<GBPView />} />
-          <Route path="/builders-program" element={<Navigate to="/gbp" replace />} />
+          <Route path="/gbp"               element={<GBPView />} />
+          <Route path="/builders-program"  element={<Navigate to="/gbp" replace />} />
           <Route path="/privacy"           element={<PrivacyView />} />
           <Route path="/terms"             element={<TermsView />} />
           <Route path="*"                  element={<NotFoundView />} />
@@ -117,6 +191,7 @@ function AppInner() {
       </main>
       <Footer onPageChange={handlePageSelect} dhakaTime={dhakaTime} />
       <CookieBanner />
+      <AuthModal />
     </div>
   );
 }

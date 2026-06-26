@@ -1,8 +1,6 @@
 ﻿import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Compass, Sparkles, BookOpen, Globe, Lock, LogOut, Copy, Check, ArrowLeft, Loader2, Chrome } from 'lucide-react';
-import { signInWithPopup } from 'firebase/auth';
-import { auth, googleProvider } from '../../lib/firebase';
+import { Sparkles, BookOpen, Globe, Lock, LogOut, Copy, Check, ArrowLeft, Loader2 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useContent } from '../../hooks/useContent';
 import EmptyState from '../shared/EmptyState';
@@ -147,64 +145,12 @@ function MembersVault() {
   );
 }
 
-function GoogleSignInGate() {
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-
-  const handleSignIn = async () => {
-    setLoading(true);
-    setError('');
-    try {
-      await signInWithPopup(auth, googleProvider);
-    } catch (err: any) {
-      if (err?.code !== 'auth/popup-closed-by-user') {
-        setError('Sign-in failed. Please try again.');
-      }
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  return (
-    <div className="min-h-screen flex items-center justify-center px-6">
-      <div className="glass-card max-w-sm w-full p-8 rounded-2xl text-center">
-        <img src={brandmarkLogo} alt="GalaxaTech" className="w-12 h-12 rounded-xl object-contain mx-auto mb-5" />
-        <h2 className="text-white font-bold text-xl mb-2">Visitor Hub</h2>
-        <p className="text-white/40 text-sm mb-6">
-          Join GalaxaTech's community. Get access to our prompt collection, downloadable templates, newsletter archive, and more.
-          <span className="block mt-2 text-primary/80">It's free.</span>
-        </p>
-        {error && <p className="text-red-400 text-xs mb-3">{error}</p>}
-        <button
-          onClick={handleSignIn}
-          disabled={loading}
-          className="w-full py-2.5 rounded-xl bg-white text-[#05030F] text-sm font-bold transition-all flex items-center justify-center gap-2 hover:bg-white/90 disabled:opacity-60"
-        >
-          {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Chrome className="w-4 h-4" />}
-          Continue with Google
-        </button>
-        <p className="text-white/20 text-xs mt-4">No password required. Secure Google sign-in.</p>
-      </div>
-    </div>
-  );
-}
-
 export default function VisitorHubView() {
   const navigate = useNavigate();
-  const { isSignedIn, isLoading, firebaseUser, signOut } = useAuth();
+  const { firebaseUser, signOut } = useAuth();
   const [activeTab, setActiveTab] = useState<Tab>('insights');
   const [expandedInsight, setExpandedInsight] = useState<string | null>(null);
   const [expandedPrompt, setExpandedPrompt] = useState<string | null>(null);
-
-  if (isLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <Loader2 className="w-8 h-8 text-primary animate-spin" />
-      </div>
-    );
-  }
-
-  if (!isSignedIn) return <GoogleSignInGate />;
 
   const tabs = [
     { id: 'insights' as Tab, label: 'Insights & Guides', icon: <Globe className="w-3.5 h-3.5" /> },

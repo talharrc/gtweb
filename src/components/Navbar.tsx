@@ -28,7 +28,7 @@ import {
   Phone
 } from 'lucide-react';
 import { PageType } from '../types';
-import { clearLocalSession } from '../lib/localAuth';
+import { useAuth } from '../context/AuthContext';
 
 interface NavbarProps {
   onPageChange: (page: PageType) => void;
@@ -58,6 +58,7 @@ const COLOR_MAP: Record<string, string> = {
 export default function Navbar({ onPageChange, dhakaTime, isDhakaOpen, currentUser }: NavbarProps) {
   const navigate = useNavigate();
   const location = useLocation();
+  const { signOut, openAuthModal, isSignedIn } = useAuth();
   const [scrolled, setScrolled] = useState(false);
   const [visible, setVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
@@ -275,15 +276,23 @@ export default function Navbar({ onPageChange, dhakaTime, isDhakaOpen, currentUs
                             <p className="text-[10px] text-white/50 truncate">{currentUser.email}</p>
                           </div>
                         </div>
-                        <button onClick={() => clearLocalSession()} className="w-full flex items-center justify-center gap-1.5 py-1.5 px-3 bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20 rounded-lg text-[10px] font-mono font-bold transition-all cursor-pointer focus:outline-none">
+                        <button onClick={signOut} className="w-full flex items-center justify-center gap-1.5 py-1.5 px-3 bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20 rounded-lg text-[10px] font-mono font-bold transition-all cursor-pointer focus:outline-none">
                           <LogOut className="w-3.5 h-3.5" /> Sign Out
                         </button>
                       </div>
                     )}
 
-                    {/* Desktop-only: Profile, Settings, social links */}
+                    {/* Desktop-only: Login/signup + Profile + social links */}
                     <div className="hidden md:block">
                       <div className="px-5 py-3 border-b border-[rgba(181,141,255,0.15)]">
+                        {!isSignedIn && (
+                          <button
+                            onClick={() => { openAuthModal(); setMoreMenuOpen(false); }}
+                            className="w-full flex items-center gap-3 py-2 text-white/80 hover:text-primary text-xs font-semibold transition-colors focus:outline-none"
+                          >
+                            <Lock className="w-3.5 h-3.5" /> Login / Sign Up
+                          </button>
+                        )}
                         <button disabled className="w-full flex items-center gap-3 py-2 text-white/35 text-xs font-semibold cursor-not-allowed">
                           <User className="w-3.5 h-3.5" /> My Profile
                           <span className="ml-auto text-[9px] bg-white/10 rounded px-1.5 py-0.5 font-mono">Soon</span>
@@ -340,8 +349,23 @@ export default function Navbar({ onPageChange, dhakaTime, isDhakaOpen, currentUs
                           ))}
                         </div>
                       </div>
-                      {/* Book Audit + WhatsApp + Social */}
+                      {/* Login/Sign Up + Book Audit + WhatsApp + Social */}
                       <div className="px-5 py-3">
+                        {!isSignedIn ? (
+                          <button
+                            onClick={() => { openAuthModal(); setMoreMenuOpen(false); }}
+                            className="w-full py-3 bg-white/8 border border-white/15 text-white rounded-xl text-sm font-bold mb-3 flex items-center justify-center gap-2 hover:bg-white/12 transition-all"
+                          >
+                            <Lock className="w-4 h-4 text-primary" /> Login / Sign Up
+                          </button>
+                        ) : (
+                          <button
+                            onClick={() => { signOut(); setMoreMenuOpen(false); }}
+                            className="w-full py-3 bg-red-500/10 border border-red-500/20 text-red-400 rounded-xl text-sm font-bold mb-3 flex items-center justify-center gap-2 hover:bg-red-500/20 transition-all"
+                          >
+                            <LogOut className="w-4 h-4" /> Sign Out
+                          </button>
+                        )}
                         <button onClick={() => navTo('/audit')} className="w-full py-3 bg-gradient-to-r from-primary to-secondary text-white rounded-xl text-sm font-bold mb-3">Book a Free Audit</button>
                         <a href="https://wa.me/8801959209103" target="_blank" rel="noopener noreferrer" className="w-full flex items-center justify-center gap-2 py-2.5 border border-white/10 rounded-xl text-white/70 text-sm font-semibold mb-3">
                           <Phone className="w-4 h-4 text-green-400" /> WhatsApp Us

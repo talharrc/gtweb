@@ -1,10 +1,10 @@
-import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
+import { createContext, useContext, useEffect, useState, useCallback, ReactNode } from 'react';
 import { User, onAuthStateChanged, signOut as firebaseSignOut } from 'firebase/auth';
-import { doc, getDoc, setDoc, serverTimestamp } from 'firebase/firestore';
+import { doc, getDoc } from 'firebase/firestore';
 import { auth, db } from '../lib/firebase';
 import { UserProfile, UserRole } from '../types';
 
-const ADMIN_EMAIL = 'mail.galaxatech@gmail.com';
+const ADMIN_EMAIL = import.meta.env.VITE_ADMIN_EMAIL ?? 'mail.galaxatech@gmail.com';
 
 interface AuthContextValue {
   firebaseUser: User | null;
@@ -17,6 +17,9 @@ interface AuthContextValue {
   isBuilder: boolean;
   isVisitor: boolean;
   isSignedIn: boolean;
+  authModalOpen: boolean;
+  openAuthModal: () => void;
+  closeAuthModal: () => void;
   signOut: () => Promise<void>;
 }
 
@@ -31,6 +34,9 @@ const AuthContext = createContext<AuthContextValue>({
   isBuilder: false,
   isVisitor: false,
   isSignedIn: false,
+  authModalOpen: false,
+  openAuthModal: () => {},
+  closeAuthModal: () => {},
   signOut: async () => {},
 });
 
@@ -38,6 +44,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [firebaseUser, setFirebaseUser] = useState<User | null>(null);
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [authModalOpen, setAuthModalOpen] = useState(false);
+
+  const openAuthModal = useCallback(() => setAuthModalOpen(true), []);
+  const closeAuthModal = useCallback(() => setAuthModalOpen(false), []);
 
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, async (user) => {
@@ -49,12 +59,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         return;
       }
 
-      // Check if admin by email
+      // Admin is purely email-based — no Firestore doc required
       if (user.email === ADMIN_EMAIL) {
         setUserProfile({
           uid: user.uid,
           email: user.email ?? '',
           role: 'admin',
+          status: 'approved',
           displayName: user.displayName ?? 'Rihad Hamid',
           photoURL: user.photoURL ?? '',
           createdAt: null as any,
@@ -63,36 +74,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         return;
       }
 
-      // Look up Firestore user doc for role + projectIds
+      // All other users must have a Firestore doc (created at signup)
       try {
-        const profileRef = doc(db, 'users', user.uid);
-        const profileSnap = await getDoc(profileRef);
-
-        if (profileSnap.exists()) {
-          setUserProfile({ uid: user.uid, ...profileSnap.data() } as UserProfile);
+        const snap = await getDoc(doc(db, 'users', user.uid));
+        if (snap.exists()) {
+          setUserProfile({ uid: user.uid, ...snap.data() } as UserProfile);
         } else {
-          // New visitor via Google Sign-In — create profile
-          const newProfile: Omit<UserProfile, 'createdAt'> & { createdAt: any } = {
-            uid: user.uid,
-            email: user.email ?? '',
-            role: 'visitor',
-            displayName: user.displayName ?? '',
-            photoURL: user.photoURL ?? '',
-            createdAt: serverTimestamp(),
-          };
-          await setDoc(profileRef, newProfile);
-          setUserProfile({ ...newProfile, createdAt: null as any });
+          // Signed in via Firebase Auth but no Firestore doc — treat as unauthenticated
+          await firebaseSignOut(auth);
+          setFirebaseUser(null);
+          setUserProfile(null);
         }
       } catch {
-        // Fall back to visitor if Firestore read fails
-        setUserProfile({
-          uid: user.uid,
-          email: user.email ?? '',
-          role: 'visitor',
-          displayName: user.displayName ?? '',
-          photoURL: user.photoURL ?? '',
-          createdAt: null as any,
-        });
+        setUserProfile(null);
       }
 
       setIsLoading(false);
@@ -121,7 +115,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       isClient: role === 'client',
       isBuilder: role === 'builder',
       isVisitor: role === 'visitor',
-      isSignedIn: firebaseUser !== null,
+      isSignedIn: firebaseUser !== null && userProfile !== null,
+      authModalOpen,
+      openAuthModal,
+      closeAuthModal,
       signOut,
     }}>
       {children}

@@ -51,6 +51,7 @@ export interface UserProfile {
   uid: string;
   email: string;
   role: UserRole;
+  status: 'approved' | 'pending';
   displayName: string;
   photoURL: string;
   createdAt: Timestamp;

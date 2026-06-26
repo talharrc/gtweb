@@ -220,15 +220,6 @@ export default function Footer({ onPageChange }: FooterProps) {
           </div>
           <div className="flex justify-between items-center">
             <p className="text-[10px] font-mono" style={{ color: 'rgba(255,255,255,0.15)' }}>Built with systems-first thinking · Dhaka → World</p>
-            <button
-              onClick={() => navigate('/admin')}
-              className="text-[10px] font-mono tracking-widest transition-colors cursor-pointer focus:outline-none"
-              style={{ color: 'rgba(255,255,255,0.12)' }}
-              onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.color = 'rgba(255,255,255,0.35)'; }}
-              onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.color = 'rgba(255,255,255,0.12)'; }}
-            >
-              Admin Panel
-            </button>
           </div>
         </div>
       </div>
