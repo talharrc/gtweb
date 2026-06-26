@@ -1,7 +1,7 @@
 ﻿import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
-import brandmarkLogo from '../assets/images/gt-logo-new.svg';
+import brandmarkLogo from '../assets/images/gt-logo.jpeg';
 import {
   ChevronDown,
   ArrowUpRight,
@@ -114,19 +114,19 @@ export default function Navbar({ onPageChange, dhakaTime, isDhakaOpen, currentUs
           visible ? 'translate-y-0' : '-translate-y-32'
         }`}
       >
-        <div className={`relative border rounded-full max-w-fit px-6 py-2.5 flex items-center gap-8 text-white transition-all duration-300 [backdrop-filter:blur(22px)_saturate(140%)] [-webkit-backdrop-filter:blur(22px)_saturate(140%)] ${
+        <div className={`relative border rounded-full max-w-fit px-4 sm:px-6 py-2 sm:py-2.5 flex items-center gap-4 sm:gap-8 text-white transition-all duration-300 [backdrop-filter:blur(22px)_saturate(140%)] [-webkit-backdrop-filter:blur(22px)_saturate(140%)] ${
           scrolled
             ? 'bg-white/[0.07] border-[rgba(181,141,255,0.32)] shadow-[inset_0_1px_0_rgba(255,255,255,0.12),inset_0_0_28px_rgba(124,42,235,0.08),0_20px_60px_rgba(0,0,0,0.60)]'
             : 'bg-white/[0.042] border-[rgba(181,141,255,0.20)] shadow-[inset_0_1px_0_rgba(255,255,255,0.09),inset_0_0_28px_rgba(124,42,235,0.05),0_20px_60px_rgba(0,0,0,0.50)]'
         }`}>
 
           {/* Logo */}
-          <button onClick={() => navTo('/')} className="flex items-center gap-2.5 group cursor-pointer focus:outline-none">
+          <button onClick={() => navTo('/')} className="flex items-center gap-2 sm:gap-2.5 group cursor-pointer focus:outline-none">
             <div className="relative">
-              <img alt="GalaxaTech" className="w-10 h-10 rounded-xl object-contain transition-transform duration-500 group-hover:scale-105" src={brandmarkLogo} referrerPolicy="no-referrer" />
+              <img alt="GalaxaTech" className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl object-cover transition-transform duration-500 group-hover:scale-105" src={brandmarkLogo} referrerPolicy="no-referrer" />
               <span className="absolute -inset-1 rounded-xl bg-primary/20 blur opacity-0 group-hover:opacity-100 transition-opacity" />
             </div>
-            <span className="font-display text-xl font-bold tracking-tight text-white group-hover:text-primary transition-colors">GalaxaTech</span>
+            <span className="font-display text-base sm:text-xl font-bold tracking-tight text-white group-hover:text-primary transition-colors">GalaxaTech</span>
           </button>
 
           {/* Desktop Nav */}
@@ -231,10 +231,10 @@ export default function Navbar({ onPageChange, dhakaTime, isDhakaOpen, currentUs
             {/* Book an Audit pill */}
             <button
               onClick={() => navTo('/audit')}
-              className="relative flex items-center w-10 hover:w-[160px] h-10 bg-gradient-to-tr from-secondary to-primary text-white rounded-full transition-all duration-500 overflow-hidden group focus:outline-none cursor-pointer shadow-[0_8px_20px_-6px_rgba(124,42,235,0.4)]"
+              className="relative flex items-center w-8 sm:w-10 hover:w-[140px] sm:hover:w-[160px] h-8 sm:h-10 bg-gradient-to-tr from-secondary to-primary text-white rounded-full transition-all duration-500 overflow-hidden group focus:outline-none cursor-pointer shadow-[0_8px_20px_-6px_rgba(124,42,235,0.4)]"
             >
-              <div className="w-10 h-10 flex items-center justify-center flex-shrink-0 group-hover:rotate-45 transition-transform duration-500">
-                <ArrowUpRight className="w-4 h-4 text-white" />
+              <div className="w-8 sm:w-10 h-8 sm:h-10 flex items-center justify-center flex-shrink-0 group-hover:rotate-45 transition-transform duration-500">
+                <ArrowUpRight className="w-3.5 sm:w-4 h-3.5 sm:h-4 text-white" />
               </div>
               <span className="text-[10px] font-bold text-white uppercase tracking-widest opacity-0 w-0 group-hover:opacity-100 group-hover:w-auto ml-0 group-hover:ml-2.5 transition-all duration-500 whitespace-nowrap">
                 book an audit
@@ -245,9 +245,9 @@ export default function Navbar({ onPageChange, dhakaTime, isDhakaOpen, currentUs
             <div className="relative" onMouseEnter={() => setMoreMenuOpen(true)} onMouseLeave={() => setMoreMenuOpen(false)}>
               <button
                 onClick={() => setMoreMenuOpen(!moreMenuOpen)}
-                className="w-10 h-10 flex items-center justify-center bg-white/5 hover:bg-white/10 rounded-full transition-all cursor-pointer focus:outline-none group/btn"
+                className="w-8 sm:w-10 h-8 sm:h-10 flex items-center justify-center bg-white/5 hover:bg-white/10 rounded-full transition-all cursor-pointer focus:outline-none group/btn"
               >
-                <MoreHorizontal className="w-5 h-5 text-white/70 group-hover/btn:text-white transition-colors" />
+                <MoreHorizontal className="w-4 sm:w-5 h-4 sm:h-5 text-white/70 group-hover/btn:text-white transition-colors" />
               </button>
 
               <AnimatePresence>

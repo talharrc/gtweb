@@ -12,7 +12,7 @@ import {
 } from 'lucide-react';
 import { doc, getDoc, collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '../lib/firebase';
-import heroLaptopDashboard from '../assets/images/hero_laptop_dashboard_1780081071809.png';
+import heroLaptopDashboard from '../assets/images/hero.jpeg';
 
 interface HomeViewProps {
   isDhakaOpen: boolean;
@@ -101,6 +101,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
   const [toggled, setToggled] = useState(false);
   const [circleModalOpen, setCircleModalOpen] = useState(false);
   const [subEmail, setSubEmail] = useState('');
+  const [isMobile, setIsMobile] = useState(() => typeof window !== 'undefined' && window.innerWidth < 640);
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
@@ -128,6 +129,12 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
       observers.push(obs);
     });
     return () => observers.forEach(o => o.disconnect());
+  }, []);
+
+  useEffect(() => {
+    const handler = () => setIsMobile(window.innerWidth < 640);
+    window.addEventListener('resize', handler);
+    return () => window.removeEventListener('resize', handler);
   }, []);
 
   const carouselPrev = () => setActiveIndex(p => (p - 1 + SERVICES.length) % SERVICES.length);
@@ -199,33 +206,36 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
       `}</style>
 
       {/* ── Hero ─────────────────────────────────────────────────────────────── */}
-      <section className="relative min-h-[92vh] flex flex-col items-center justify-center pt-28 pb-8 overflow-hidden">
+      <section className="relative min-h-screen sm:min-h-[92vh] flex flex-col items-center justify-center pt-28 pb-12 overflow-hidden">
         <div className="absolute inset-0 z-0 select-none overflow-hidden bg-[#05030F]">
           <img
-            alt="Hero MacBook Dashboard"
-            className="w-full h-full object-cover opacity-55 contrast-105 pointer-events-none"
+            alt="GalaxaTech Hero"
+            className="w-full h-full object-cover object-center opacity-70 pointer-events-none"
             style={{
-              maskImage: 'radial-gradient(ellipse at 50% 55%, rgba(0,0,0,1) 40%, rgba(0,0,0,0.15) 85%, rgba(0,0,0,0) 100%)',
-              WebkitMaskImage: 'radial-gradient(ellipse at 50% 55%, rgba(0,0,0,1) 40%, rgba(0,0,0,0.15) 85%, rgba(0,0,0,0) 100%)',
-              filter: 'drop-shadow(0 0 60px rgba(120,50,235,0.45))',
+              maskImage: 'radial-gradient(ellipse at 50% 40%, rgba(0,0,0,1) 30%, rgba(0,0,0,0.6) 65%, rgba(0,0,0,0) 100%)',
+              WebkitMaskImage: 'radial-gradient(ellipse at 50% 40%, rgba(0,0,0,1) 30%, rgba(0,0,0,0.6) 65%, rgba(0,0,0,0) 100%)',
             }}
             src={heroLaptopDashboard}
             referrerPolicy="no-referrer"
           />
-          {/* Purple/violet tint overlay */}
-          <div className="absolute inset-0 bg-violet-950/50 pointer-events-none" />
-          <div className="absolute inset-0 bg-gradient-to-tr from-[#05030F]/80 via-[#7C2AEB]/8 to-[#7C2AEB]/8 pointer-events-none" />
-          <div className="absolute inset-x-0 top-0 h-[60%] bg-gradient-to-b from-[#05030F]/50 via-[#05030F]/10 to-transparent pointer-events-none" />
-          <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-[#05030F] to-transparent pointer-events-none" />
-          <div className="absolute top-1/2 left-1/4 -translate-y-1/2 -translate-x-1/2 w-[400px] h-[400px] bg-[#7C2AEB]/15 blur-[90px] rounded-full pointer-events-none" />
-          <div className="absolute top-1/2 right-1/4 -translate-y-1/2 translate-x-1/2 w-[350px] h-[350px] bg-[#7C2AEB]/12 blur-[90px] rounded-full pointer-events-none" />
+          {/* Subtle dark-to-purple tint */}
+          <div className="absolute inset-0 bg-[#05030F]/40 pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-to-b from-[#05030F]/70 via-transparent to-transparent pointer-events-none" />
+          <div className="absolute inset-x-0 bottom-0 h-2/5 bg-gradient-to-t from-[#05030F] via-[#05030F]/60 to-transparent pointer-events-none" />
+          {/* Ambient purple glows */}
+          <div className="absolute top-1/3 left-1/4 -translate-y-1/2 -translate-x-1/2 w-[500px] h-[500px] bg-[#7C2AEB]/10 blur-[120px] rounded-full pointer-events-none" />
+          <div className="absolute top-1/3 right-1/4 -translate-y-1/2 translate-x-1/2 w-[400px] h-[400px] bg-[#7C2AEB]/8 blur-[100px] rounded-full pointer-events-none" />
         </div>
 
-        <div className="max-w-5xl mx-auto px-6 text-center relative z-10 pt-12">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 text-center relative z-10 pt-8 sm:pt-12">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, ease: [0.16,1,0.3,1] }}>
-            <div className="inline-flex items-center gap-2.5 bg-white/[0.08] backdrop-blur-md rounded-full px-5 py-2.5 mb-8 border border-red-500/20 shadow-[0_0_15px_rgba(239,68,68,0.1)]">
-              <span className="w-2 h-2 rounded-full bg-red-500 dot-pulse-glow" />
-              <span className="text-[10px] sm:text-[11px] font-mono font-bold tracking-widest text-white uppercase">AUTONOMOUS OPTIMIZATION • AGENTS ACTIVE • LAST BUILD: {buildMins}M AGO</span>
+            <div className="inline-flex items-center gap-2 sm:gap-2.5 bg-white/[0.08] backdrop-blur-md rounded-full px-4 sm:px-5 py-2 sm:py-2.5 mb-8 border border-red-500/20 shadow-[0_0_15px_rgba(239,68,68,0.1)] max-w-[92vw]">
+              <span className="w-2 h-2 rounded-full bg-red-500 dot-pulse-glow flex-shrink-0" />
+              <span className="text-[9px] sm:text-[11px] font-mono font-bold tracking-wide sm:tracking-widest text-white uppercase leading-tight">
+                <span className="hidden sm:inline">AUTONOMOUS OPTIMIZATION • AGENTS ACTIVE • </span>
+                <span className="sm:hidden">AGENTS ACTIVE • </span>
+                LAST BUILD: {buildMins}M AGO
+              </span>
             </div>
           </motion.div>
           <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.1, ease: [0.16,1,0.3,1] }} className="font-display text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight text-white mb-6 leading-[1.08] drop-shadow-[0_4px_24px_rgba(0,0,0,0.8)]">
@@ -360,7 +370,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
           {/* 3D Carousel */}
           <div
             className="relative select-none"
-            style={{ perspective: '1200px', height: '340px' }}
+            style={{ perspective: isMobile ? '800px' : '1200px', height: isMobile ? '300px' : '340px' }}
             onPointerDown={handlePointerDown}
             onPointerUp={handlePointerUp}
             onPointerLeave={() => setDragStartX(null)}
@@ -371,12 +381,14 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
               const offset = getCarouselOffset(i, activeIndex, SERVICES.length);
               const absOff = Math.abs(offset);
               const visible = absOff <= 2;
-              const x = offset * 200;
-              const rotY = offset * 28;
-              const z = -absOff * 120;
+              const xStep = isMobile ? 160 : 200;
+              const x = offset * xStep;
+              const rotY = isMobile ? offset * 18 : offset * 28;
+              const z = -absOff * (isMobile ? 80 : 120);
               const scale = 1 - absOff * 0.12;
               const opacity = visible ? Math.max(0.45, 1 - absOff * 0.2) : 0;
               const isActive = offset === 0;
+              const cardWidth = isMobile ? '200px' : '240px';
               return (
                 <div
                   key={svc.anchor}
@@ -384,7 +396,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
                   onMouseEnter={() => setHoveredCarouselIndex(i)}
                   onMouseLeave={() => setHoveredCarouselIndex(null)}
                   style={{
-                    position: 'absolute', left: '50%', top: '50%', width: '240px',
+                    position: 'absolute', left: '50%', top: '50%', width: cardWidth,
                     transform: `translateX(calc(-50% + ${x}px)) translateY(-50%) rotateY(${rotY}deg) translateZ(${z}px) scale(${scale * (hoveredCarouselIndex === i ? 1.02 : 1)})`,
                     opacity, transition: 'all 0.35s cubic-bezier(.2,.7,.2,1)',
                     pointerEvents: visible ? 'auto' : 'none', cursor: 'pointer',
@@ -551,7 +563,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
               onMouseEnter={() => setFolderHovered(true)}
               onMouseLeave={() => setFolderHovered(false)}
               onClick={() => navigate('/portfolio')}
-              style={{ height: '480px' }}
+              style={{ height: isMobile ? '380px' : '480px' }}
             >
               {/* Folder body — rendered FIRST so it's behind cards in DOM, then z-index controls visibility */}
               <div
@@ -598,16 +610,14 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
 
               {/* Fan-out project cards — layered above folder on hover */}
               {PROJECTS.map((proj, i) => {
-                const fan = [
-                  'translateX(-220px) translateY(0px) rotate(-16deg)',
-                  'translateX(0px) translateY(-40px) rotate(0deg)',
-                  'translateX(220px) translateY(0px) rotate(16deg)',
-                ];
-                const stack = [
-                  'translateX(-60px) translateY(120px) rotate(-6deg)',
-                  'translateX(0px) translateY(100px) rotate(0deg)',
-                  'translateX(60px) translateY(120px) rotate(6deg)',
-                ];
+                const fan = isMobile
+                  ? ['translateX(-120px) translateY(0px) rotate(-12deg)', 'translateX(0px) translateY(-30px) rotate(0deg)', 'translateX(120px) translateY(0px) rotate(12deg)']
+                  : ['translateX(-220px) translateY(0px) rotate(-16deg)', 'translateX(0px) translateY(-40px) rotate(0deg)', 'translateX(220px) translateY(0px) rotate(16deg)'];
+                const stack = isMobile
+                  ? ['translateX(-40px) translateY(90px) rotate(-5deg)', 'translateX(0px) translateY(75px) rotate(0deg)', 'translateX(40px) translateY(90px) rotate(5deg)']
+                  : ['translateX(-60px) translateY(120px) rotate(-6deg)', 'translateX(0px) translateY(100px) rotate(0deg)', 'translateX(60px) translateY(120px) rotate(6deg)'];
+                const cardW = isMobile ? '150px' : '190px';
+                const cardH = isMobile ? '190px' : '240px';
                 const cardZ = folderHovered ? [10, 12, 11][i] : [3, 5, 4][i];
                 return (
                   <div
@@ -616,9 +626,9 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
                       position: 'absolute',
                       left: '50%',
                       top: '20px',
-                      width: '190px',
-                      height: '240px',
-                      marginLeft: '-95px',
+                      width: cardW,
+                      height: cardH,
+                      marginLeft: isMobile ? '-75px' : '-95px',
                       transform: folderHovered ? fan[i] : stack[i],
                       transition: `0.5s cubic-bezier(.2,.7,.2,1) ${i * 0.04}s`,
                       zIndex: cardZ,

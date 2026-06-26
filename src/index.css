@@ -110,6 +110,12 @@ body {
 .animate-marquee { animation: marquee 35s linear infinite; }
 .animate-marquee:hover { animation-play-state: paused; }
 
+/* Mobile touch improvements */
+@media (max-width: 639px) {
+  .font-display { letter-spacing: -0.02em; }
+  button, a { -webkit-tap-highlight-color: transparent; }
+}
+
 /* Admin / Hub form inputs */
 .admin-input {
   width: 100%;
