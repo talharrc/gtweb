@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { motion, AnimatePresence } from 'motion/react';
@@ -276,8 +276,8 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
           {/* Marquee pills */}
           <div
             className="max-w-5xl mx-auto mb-10 overflow-hidden"
-            onMouseEnter={e => { const t = e.currentTarget.querySelector<HTMLDivElement>('.mq-track'); if (t) t.style.animationPlayState = 'paused'; }}
-            onMouseLeave={e => { const t = e.currentTarget.querySelector<HTMLDivElement>('.mq-track'); if (t) t.style.animationPlayState = 'running'; }}
+            onMouseEnter={e => { const t = e.currentTarget.querySelector('.mq-track') as HTMLDivElement | null; if (t) t.style.animationPlayState = 'paused'; }}
+            onMouseLeave={e => { const t = e.currentTarget.querySelector('.mq-track') as HTMLDivElement | null; if (t) t.style.animationPlayState = 'running'; }}
           >
             <div
               className="mq-track"
@@ -703,7 +703,14 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
                     style={{ ...GLASS_STYLE, borderColor: 'rgba(124,42,235,0.3)', boxShadow: '0 0 60px rgba(124,42,235,0.12), inset 0 1px 0 rgba(255,255,255,0.1)', minHeight: '200px' }}
                   >
                     <div className="flex items-center gap-3 mb-5">
-                      {(() => { const Icon = FAQS[activeFAQ].icon; return <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: 'rgba(124,42,235,0.2)', border: '1px solid rgba(181,141,255,0.3)' }}><Icon className="w-5 h-5" style={{ color: '#B58DFF' }} /></div>; })()}
+                      {activeFAQ !== null && (() => {
+                        const ActiveIcon = FAQS[activeFAQ].icon;
+                        return (
+                          <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: 'rgba(124,42,235,0.2)', border: '1px solid rgba(181,141,255,0.3)' }}>
+                            <ActiveIcon className="w-5 h-5" style={{ color: '#B58DFF' }} />
+                          </div>
+                        );
+                      })()}
                       <h3 className="text-white font-bold text-base leading-snug" style={{ fontFamily: 'Satoshi, sans-serif' }}>{FAQS[activeFAQ].q}</h3>
                     </div>
                     <p className="text-white/60 text-sm leading-relaxed">{FAQS[activeFAQ].a}</p>
