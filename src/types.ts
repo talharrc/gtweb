@@ -75,12 +75,15 @@ export interface GTProject {
   id: string;
   name: string;
   description: string;
-  status: 'active' | 'completed' | 'paused' | 'archived';
+  status: 'Discovery' | 'In Progress' | 'Review' | 'Completed' | 'active' | 'completed' | 'paused' | 'archived';
   progressPercent: number;
   deadline: Timestamp;
   milestones: Milestone[];
   clientUid: string;
   builderUids: string[];
+  clientEmail?: string;
+  builderEmails?: string[];
+  inPortfolio?: boolean;
   whatsappGroupUrl?: string;
   category?: string;
   projectValue?: number;

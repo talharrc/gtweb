@@ -7,94 +7,101 @@ service cloud.firestore {
              request.auth.token.email == 'mail.galaxatech@gmail.com';
     }
 
-    function isClient(projectId) {
+    // Email-based project membership (works for list queries using resource.data)
+    function isProjectClient() {
       return request.auth != null &&
-             get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'client' &&
-             projectId in get(/databases/$(database)/documents/users/$(request.auth.uid)).data.projectIds;
+             resource.data.clientEmail == request.auth.token.email;
     }
 
-    function isBuilder(projectId) {
+    function isProjectBuilder() {
       return request.auth != null &&
-             get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'builder' &&
-             projectId in get(/databases/$(database)/documents/users/$(request.auth.uid)).data.projectIds;
+             resource.data.builderEmails is list &&
+             request.auth.token.email in resource.data.builderEmails;
     }
 
-    function isAnyHubUser() {
-      return request.auth != null;
+    // For subcollection access — fetch parent project via get()
+    function clientOnProject(projectId) {
+      return request.auth != null &&
+             get(/databases/$(database)/documents/projects/$(projectId)).data.clientEmail == request.auth.token.email;
     }
 
-    // Users — self-read, admin write; visitors can create their own doc on first sign-in
+    function builderOnProject(projectId) {
+      let p = get(/databases/$(database)/documents/projects/$(projectId)).data;
+      return request.auth != null &&
+             p.builderEmails is list &&
+             request.auth.token.email in p.builderEmails;
+    }
+
+    // Users — self-read/create, admin full control, self can update own doc
     match /users/{uid} {
       allow read: if request.auth.uid == uid || isAdmin();
       allow create: if request.auth.uid == uid;
-      allow update, delete: if isAdmin();
+      allow update: if request.auth.uid == uid || isAdmin();
+      allow delete: if isAdmin();
     }
 
-    // Projects
+    // Projects — email-based read, admin write
     match /projects/{projectId} {
-      allow read: if isAdmin() || isClient(projectId) || isBuilder(projectId);
+      allow read: if isAdmin() || isProjectClient() || isProjectBuilder();
       allow write: if isAdmin();
+
+      // Updates subcollection — client and builder read; builder writes
+      match /updates/{updateId} {
+        allow read: if isAdmin() || clientOnProject(projectId) || builderOnProject(projectId);
+        allow create: if isAdmin() || builderOnProject(projectId);
+        allow update, delete: if isAdmin();
+      }
     }
 
-    // Updates — builders post, clients/admin read; admin full control
+    // Top-level updates (legacy + admin activity feed)
     match /updates/{updateId} {
-      allow read: if isAdmin() ||
-                     isClient(resource.data.projectId) ||
-                     isBuilder(resource.data.projectId);
-      allow create: if isAdmin() || isBuilder(resource.data.projectId);
+      allow read: if isAdmin() || request.auth != null;
+      allow create: if request.auth != null;
       allow update, delete: if isAdmin();
     }
 
     // Documents
     match /documents/{docId} {
-      allow read: if isAdmin() ||
-                     isClient(resource.data.projectId) ||
-                     isBuilder(resource.data.projectId);
+      allow read: if isAdmin() || (request.auth != null &&
+        (get(/databases/$(database)/documents/projects/$(resource.data.projectId)).data.clientEmail == request.auth.token.email ||
+         (get(/databases/$(database)/documents/projects/$(resource.data.projectId)).data.builderEmails is list &&
+          request.auth.token.email in get(/databases/$(database)/documents/projects/$(resource.data.projectId)).data.builderEmails)));
       allow write: if isAdmin();
     }
 
-    // Forms — builder creates, client updates (submits)
+    // Forms
     match /forms/{formId} {
-      allow read: if isAdmin() ||
-                     isClient(resource.data.projectId) ||
-                     isBuilder(resource.data.projectId);
-      allow create: if isAdmin() || isBuilder(resource.data.projectId);
-      allow update: if isAdmin() || isClient(resource.data.projectId);
+      allow read: if isAdmin() || request.auth != null;
+      allow create: if isAdmin();
+      allow update: if isAdmin();
     }
 
-    // Payments — builder reads their own, admin full control
+    // Payments — admin only
     match /payments/{paymentId} {
-      allow read: if isAdmin() || isBuilder(resource.data.projectId);
-      allow write: if isAdmin();
+      allow read, write: if isAdmin();
     }
 
-    // Messages — project participants can send and read
+    // Messages
     match /messages/{messageId} {
-      allow read: if isAdmin() ||
-                     isClient(resource.data.projectId) ||
-                     isBuilder(resource.data.projectId);
-      allow create: if isAdmin() ||
-                       isClient(resource.data.projectId) ||
-                       isBuilder(resource.data.projectId);
+      allow read: if isAdmin() || request.auth != null;
+      allow create: if request.auth != null;
       allow update, delete: if isAdmin();
     }
 
     // Notifications
     match /notifications/{notifId} {
-      allow read, update: if request.auth.uid == resource.data.recipientUid || isAdmin();
+      allow read, update: if request.auth != null && request.auth.uid == resource.data.recipientUid || isAdmin();
       allow create, delete: if isAdmin();
     }
 
     // Deliverable reviews
     match /deliverable_reviews/{reviewId} {
-      allow read: if isAdmin() ||
-                     isClient(resource.data.projectId) ||
-                     isBuilder(resource.data.projectId);
-      allow create: if isAdmin() || isBuilder(resource.data.projectId);
-      allow update: if isAdmin() || isClient(resource.data.projectId);
+      allow read: if isAdmin() || request.auth != null;
+      allow create: if isAdmin();
+      allow update: if isAdmin();
     }
 
-    // Public write collections (no auth required for form submissions)
+    // Public write collections
     match /audit_submissions/{id} {
       allow create: if true;
       allow read, update, delete: if isAdmin();
@@ -110,14 +117,14 @@ service cloud.firestore {
       allow read, update, delete: if isAdmin();
     }
 
-    // Credentials collection (legacy plaintext store — admin only)
+    // Credentials collection (legacy — admin only)
     match /credentials/{id} {
       allow read, write: if isAdmin();
     }
 
     // Content — public items readable by all, members-only require auth
     match /content/{contentId} {
-      allow read: if resource.data.isPublic == true || isAnyHubUser() || isAdmin();
+      allow read: if resource.data.isPublic == true || request.auth != null;
       allow write: if isAdmin();
     }
 

@@ -5,8 +5,9 @@ import { GTProject } from '../types';
 import { useAuth } from '../context/AuthContext';
 
 export function useProjects() {
-  const { firebaseUser, role } = useAuth();
+  const { firebaseUser, role, userProfile } = useAuth();
   const uid = firebaseUser?.uid ?? null;
+  const email = userProfile?.email ?? null;
   const [projects, setProjects] = useState<GTProject[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -18,10 +19,10 @@ export function useProjects() {
 
     if (role === 'admin') {
       q = query(col, orderBy('createdAt', 'desc'));
-    } else if (role === 'client') {
-      q = query(col, where('clientUid', '==', uid), orderBy('createdAt', 'desc'));
-    } else if (role === 'builder') {
-      q = query(col, where('builderUids', 'array-contains', uid), orderBy('createdAt', 'desc'));
+    } else if (role === 'client' && email) {
+      q = query(col, where('clientEmail', '==', email));
+    } else if (role === 'builder' && email) {
+      q = query(col, where('builderEmails', 'array-contains', email));
     } else {
       setProjects([]); setLoading(false); return;
     }
@@ -32,7 +33,7 @@ export function useProjects() {
     }, () => { setLoading(false); });
 
     return () => unsub();
-  }, [uid, role]);
+  }, [uid, role, email]);
 
   return { projects, loading };
 }

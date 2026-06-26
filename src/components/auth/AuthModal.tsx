@@ -112,6 +112,8 @@ export default function AuthModal() {
       });
       closeAuthModal();
       if (selectedRole === 'visitor') navigate('/hub/visitor');
+      else if (selectedRole === 'client') navigate('/hub/client');
+      else if (selectedRole === 'builder') navigate('/hub/builder');
     } catch (err: any) {
       setError(firebaseErrorMessage(err?.code ?? ''));
     } finally {
