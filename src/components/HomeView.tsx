@@ -93,9 +93,9 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
   const [buildMins, setBuildMins] = useState(42);
   const [activeFAQ, setActiveFAQ] = useState<number | null>(null);
   const [activeIndex, setActiveIndex] = useState(0);
-  const [dragStartX, setDragStartX] = useState<number | null>(null);
   const [hoveredCarouselIndex, setHoveredCarouselIndex] = useState<number | null>(null);
   const stepRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const dragRef = useRef<{ startX: number; moved: boolean } | null>(null);
   const [illuminatedSteps, setIlluminatedSteps] = useState<Set<number>>(new Set());
   const [folderHovered, setFolderHovered] = useState(false);
   const [toggled, setToggled] = useState(false);
@@ -140,25 +140,19 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
   const carouselPrev = () => setActiveIndex(p => (p - 1 + SERVICES.length) % SERVICES.length);
   const carouselNext = () => setActiveIndex(p => (p + 1) % SERVICES.length);
 
-  const handlePointerDown = (e: React.PointerEvent) => setDragStartX(e.clientX);
-  const handlePointerUp = (e: React.PointerEvent) => {
-    if (dragStartX === null) return;
-    const d = e.clientX - dragStartX;
-    if (Math.abs(d) > 40) {
-      if (d < 0) carouselNext();
-      else carouselPrev();
-    }
-    setDragStartX(null);
+  const handleCarouselPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    dragRef.current = { startX: e.clientX, moved: false };
+    e.currentTarget.setPointerCapture(e.pointerId);
   };
-  const handleTouchStart = (e: React.TouchEvent) => setDragStartX(e.touches[0].clientX);
-  const handleTouchEnd = (e: React.TouchEvent) => {
-    if (dragStartX === null) return;
-    const d = e.changedTouches[0].clientX - dragStartX;
-    if (Math.abs(d) > 40) {
-      if (d < 0) carouselNext();
-      else carouselPrev();
-    }
-    setDragStartX(null);
+  const handleCarouselPointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (!dragRef.current) return;
+    if (Math.abs(e.clientX - dragRef.current.startX) > 6) dragRef.current.moved = true;
+  };
+  const handleCarouselPointerUp = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (!dragRef.current) return;
+    const d = e.clientX - dragRef.current.startX;
+    if (Math.abs(d) > 40) { d < 0 ? carouselNext() : carouselPrev(); }
+    dragRef.current = null;
   };
 
   const handleToggle = () => {
@@ -206,7 +200,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
       `}</style>
 
       {/* ── Hero ─────────────────────────────────────────────────────────────── */}
-      <section className="relative min-h-screen sm:min-h-[92vh] flex flex-col items-center justify-center pt-28 pb-12 overflow-hidden">
+      <section className="relative min-h-[82vh] sm:min-h-[92vh] flex flex-col items-center justify-center pt-28 pb-4 sm:pb-12 overflow-hidden">
         <div className="absolute inset-0 z-0 select-none overflow-hidden bg-[#05030F]">
           <img
             alt="GalaxaTech Hero"
@@ -251,10 +245,10 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
           <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.2, ease: [0.16,1,0.3,1] }} className="text-base sm:text-lg text-white/70 max-w-2xl mx-auto mb-10 leading-relaxed font-sans">
             By investing only FIVE minutes, giving us some information about your business.
           </motion.p>
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.3, ease: [0.16,1,0.3,1] }} className="flex justify-center">
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.3, ease: [0.16,1,0.3,1] }} className="flex justify-center px-4 sm:px-0">
             <button
               onClick={() => navigate('/audit')}
-              className="group flex items-center gap-4 text-white hover:text-primary font-bold py-4 px-8 rounded-full transition-all duration-300 shadow-2xl cursor-pointer hover:scale-[1.05] active:scale-[0.98]"
+              className="group flex items-center gap-4 text-white hover:text-primary font-bold py-4 px-8 rounded-full transition-all duration-300 shadow-2xl cursor-pointer hover:scale-[1.05] active:scale-[0.98] max-w-[280px] w-full sm:w-auto"
               style={{ background: 'rgba(255,255,255,0.08)', backdropFilter: 'blur(12px)', border: '1px solid rgba(255,255,255,0.15)' }}
             >
               <span className="w-10 h-10 primary-gradient text-white rounded-full flex items-center justify-center group-hover:rotate-45 transition-transform duration-500">
@@ -267,8 +261,10 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
       </section>
 
       {/* ── Global Presence ──────────────────────────────────────────────────── */}
-      <section className="pt-10 pb-20 px-6 overflow-hidden" style={{ background: 'linear-gradient(to bottom, #05030F 0%, #080620 60%, #05030F 100%)' }}>
-        <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.6 }}>
+      <section className="relative py-16 px-6 overflow-hidden" style={{ background: '#080620' }}>
+        <div className="absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-[#05030F] to-transparent pointer-events-none z-10" />
+        <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-[#05030F] to-transparent pointer-events-none z-10" />
+        <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.6 }} className="relative z-20">
           <div className="flex justify-center mb-6">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-primary/25" style={{ background: 'rgba(124,42,235,0.08)' }}>
               <Globe className="w-3.5 h-3.5 text-primary/70" />
@@ -295,7 +291,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
             >
               {[...COUNTRIES, ...COUNTRIES].map((c, i) => (
                 <div key={i} className="flex items-center gap-2.5 mx-3 select-none px-5 py-2.5 rounded-full" style={{ border: '1px solid rgba(255,255,255,0.12)', background: 'rgba(255,255,255,0.06)', minWidth: 'max-content' }}>
-                  <span style={{ fontSize: '1.5rem', lineHeight: 1, fontFamily: '"Segoe UI Emoji","Noto Color Emoji",sans-serif' }}>{c.flag}</span>
+                  <span style={{ fontSize: '1.5rem', lineHeight: 1, display: 'inline-block', fontFamily: '"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif' }}>{c.flag}</span>
                   <span className="text-white/75 font-semibold text-sm" style={{ fontFamily: 'Satoshi, sans-serif' }}>{c.name}</span>
                 </div>
               ))}
@@ -311,9 +307,9 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
       </section>
 
       {/* ── Why Choose Us ────────────────────────────────────────────────────── */}
-      <section className="py-24 px-6" style={{ background: 'linear-gradient(to bottom, #05030F 0%, #0A0825 50%, #05030F 100%)' }}>
+      <section className="py-16 px-6" style={{ background: 'linear-gradient(to bottom, #05030F 0%, #0A0825 50%, #05030F 100%)' }}>
         <div className="max-w-7xl mx-auto">
-          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.6 }} className="text-center mb-16">
+          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.6 }} className="text-center mb-10">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-primary/20 mb-6" style={{ background: 'rgba(94,41,232,0.08)' }}>
               <CheckCircle className="w-3.5 h-3.5 text-primary/70" />
               <span className="text-[10px] font-mono text-primary/70 tracking-widest uppercase">Why GalaxaTech</span>
@@ -354,9 +350,9 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
       </section>
 
       {/* ── What We Build — 3D Service Carousel ──────────────────────────────── */}
-      <section className="py-24 px-6 overflow-hidden" style={{ background: 'linear-gradient(to bottom, #05030F 0%, #080620 50%, #05030F 100%)' }}>
+      <section className="py-16 px-6" style={{ background: 'linear-gradient(to bottom, #05030F 0%, #080620 50%, #05030F 100%)' }}>
         <div className="max-w-7xl mx-auto">
-          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.6 }} className="text-center mb-16">
+          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.6 }} className="text-center mb-10">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-primary/25 mb-5" style={{ background: 'rgba(124,42,235,0.08)' }}>
               <Workflow className="w-3.5 h-3.5 text-primary/70" />
               <span className="text-[10px] font-mono tracking-[0.25em] text-primary/70 uppercase">Service Carousel</span>
@@ -369,30 +365,29 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
 
           {/* 3D Carousel */}
           <div
-            className="relative select-none"
-            style={{ perspective: isMobile ? '800px' : '1200px', height: isMobile ? '300px' : '340px' }}
-            onPointerDown={handlePointerDown}
-            onPointerUp={handlePointerUp}
-            onPointerLeave={() => setDragStartX(null)}
-            onTouchStart={handleTouchStart}
-            onTouchEnd={handleTouchEnd}
+            className="relative select-none overflow-hidden"
+            style={{ perspective: isMobile ? '800px' : '1400px', height: isMobile ? '300px' : '360px' }}
+            onPointerDown={handleCarouselPointerDown}
+            onPointerMove={handleCarouselPointerMove}
+            onPointerUp={handleCarouselPointerUp}
+            onPointerCancel={() => { dragRef.current = null; }}
           >
             {SERVICES.map((svc, i) => {
               const offset = getCarouselOffset(i, activeIndex, SERVICES.length);
               const absOff = Math.abs(offset);
-              const visible = absOff <= 2;
-              const xStep = isMobile ? 160 : 200;
+              const visible = isMobile ? absOff <= 1 : absOff <= 2;
+              const xStep = isMobile ? 155 : 245;
               const x = offset * xStep;
-              const rotY = isMobile ? offset * 18 : offset * 28;
-              const z = -absOff * (isMobile ? 80 : 120);
-              const scale = 1 - absOff * 0.12;
-              const opacity = visible ? Math.max(0.45, 1 - absOff * 0.2) : 0;
+              const rotY = isMobile ? offset * 14 : offset * 22;
+              const z = -absOff * (isMobile ? 70 : 100);
+              const scale = 1 - absOff * 0.13;
+              const opacity = visible ? (absOff === 0 ? 1 : absOff === 1 ? 0.72 : 0.48) : 0;
               const isActive = offset === 0;
-              const cardWidth = isMobile ? '200px' : '240px';
+              const cardWidth = isMobile ? '175px' : '240px';
               return (
                 <div
                   key={svc.anchor}
-                  onClick={() => { if (!isActive) setActiveIndex(i); else navigate(`/services#${svc.anchor}`); }}
+                  onClick={() => { if (dragRef.current?.moved) return; if (!isActive) setActiveIndex(i); else navigate(`/services#${svc.anchor}`); }}
                   onMouseEnter={() => setHoveredCarouselIndex(i)}
                   onMouseLeave={() => setHoveredCarouselIndex(null)}
                   style={{
@@ -457,9 +452,9 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
       </section>
 
       {/* ── How We Work — vertical timeline ──────────────────────────────────── */}
-      <section className="py-24 px-6" style={{ background: 'linear-gradient(to bottom, #05030F 0%, #0A0825 50%, #05030F 100%)' }}>
+      <section className="py-16 px-6" style={{ background: 'linear-gradient(to bottom, #05030F 0%, #0A0825 50%, #05030F 100%)' }}>
         <div className="max-w-2xl mx-auto">
-          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.6 }} className="text-center mb-16">
+          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.6 }} className="text-center mb-10">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-primary/25 mb-5" style={{ background: 'rgba(124,42,235,0.08)' }}>
               <Sparkles className="w-3.5 h-3.5 text-primary/70" />
               <span className="text-[10px] font-mono tracking-[0.25em] text-primary/70 uppercase">Process</span>
@@ -543,7 +538,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
       </section>
 
       {/* ── Selected Work — glassmorphic folder ───────────────────────────────── */}
-      <section className="py-24 px-6" style={{ background: 'linear-gradient(to bottom, #05030F 0%, #080618 50%, #05030F 100%)' }}>
+      <section className="py-16 px-6 overflow-x-hidden" style={{ background: 'linear-gradient(to bottom, #05030F 0%, #080618 50%, #05030F 100%)' }}>
         <div className="max-w-5xl mx-auto">
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.6 }} className="text-center mb-16">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-primary/25 mb-5" style={{ background: 'rgba(124,42,235,0.08)' }}>
@@ -656,9 +651,9 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
       </section>
 
       {/* ── FAQ — two-column with icons ───────────────────────────────────────── */}
-      <section className="py-24 px-6" style={{ background: 'linear-gradient(to bottom, #05030F 0%, #0A0825 60%, #05030F 100%)' }}>
+      <section className="py-16 px-6" style={{ background: 'linear-gradient(to bottom, #05030F 0%, #0A0825 60%, #05030F 100%)' }}>
         <div className="max-w-5xl mx-auto">
-          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.6 }} className="text-center mb-14">
+          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.6 }} className="text-center mb-10">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-primary/25 mb-5" style={{ background: 'rgba(124,42,235,0.08)' }}>
               <HelpCircle className="w-3.5 h-3.5 text-primary/70" />
               <span className="text-[10px] font-mono tracking-[0.25em] text-primary/70 uppercase">FAQ</span>
@@ -748,7 +743,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
       </section>
 
       {/* ── Closing CTA — toggle + modal ─────────────────────────────────────── */}
-      <section className="py-24 px-6 relative overflow-hidden" style={{ background: 'linear-gradient(to bottom, #05030F 0%, #080620 50%, #05030F 100%)' }}>
+      <section className="py-16 px-6 relative overflow-hidden" style={{ background: 'linear-gradient(to bottom, #05030F 0%, #080620 50%, #05030F 100%)' }}>
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[500px] bg-primary/5 blur-[140px] rounded-full pointer-events-none" />
         <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.6 }} className="max-w-2xl mx-auto relative z-10 text-center">
           <div className="flex justify-center mb-10">
