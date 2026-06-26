@@ -1,7 +1,7 @@
-﻿import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { PageType } from '../types';
 import brandmarkLogo from '../assets/images/gt-logo-new.svg';
-import { Facebook, Twitter, Mail, Phone } from 'lucide-react';
+import { Facebook, Twitter, Mail, Phone, ArrowUpRight, Sparkles } from 'lucide-react';
 
 interface FooterProps {
   onPageChange: (page: PageType) => void;
@@ -26,42 +26,92 @@ export default function Footer({ onPageChange }: FooterProps) {
   };
 
   return (
-    <footer className="bg-[#0A0825] border-t border-white/5 relative overflow-hidden">
-      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-primary/4 blur-[120px] rounded-full pointer-events-none" />
+    <footer className="relative overflow-hidden" style={{ background: '#05030F' }}>
+      {/* Glow accent line at top */}
+      <div className="absolute top-0 left-0 right-0 h-px" style={{ background: 'linear-gradient(to right, transparent, rgba(124,42,235,0.6) 30%, rgba(181,141,255,0.8) 50%, rgba(124,42,235,0.6) 70%, transparent)', boxShadow: '0 0 20px rgba(124,42,235,0.4)' }} />
 
-      <div className="max-w-7xl mx-auto px-6 py-16">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12 mb-14">
+      {/* Ambient glow blobs */}
+      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[700px] h-[350px] rounded-full pointer-events-none" style={{ background: 'radial-gradient(ellipse at center, rgba(124,42,235,0.06) 0%, transparent 70%)' }} />
+      <div className="absolute top-1/2 left-0 w-[300px] h-[300px] rounded-full pointer-events-none" style={{ background: 'radial-gradient(ellipse at center, rgba(94,41,232,0.04) 0%, transparent 70%)' }} />
 
-          {/* Column 1 — Brand */}
-          <div>
-            <div className="flex items-center gap-3 mb-4">
-              <img alt="GalaxaTech" className="w-9 h-9 rounded-xl object-contain" src={brandmarkLogo} referrerPolicy="no-referrer" />
-              <span className="font-display text-xl font-bold tracking-tight text-white">GalaxaTech</span>
+      <div className="max-w-7xl mx-auto px-6 pt-16 pb-10 relative z-10">
+
+        {/* Top: brand hero row */}
+        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-8 mb-14 pb-12 border-b" style={{ borderColor: 'rgba(255,255,255,0.06)' }}>
+          {/* Logo + tagline */}
+          <div className="flex items-center gap-4">
+            <div className="relative">
+              <div className="absolute inset-0 rounded-2xl blur-md" style={{ background: 'rgba(124,42,235,0.3)', transform: 'scale(1.2)' }} />
+              <div className="relative w-14 h-14 rounded-2xl flex items-center justify-center" style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(181,141,255,0.2)', backdropFilter: 'blur(12px)' }}>
+                <img alt="GalaxaTech" className="w-9 h-9 object-contain" src={brandmarkLogo} referrerPolicy="no-referrer" />
+              </div>
             </div>
-            <p className="text-sm text-white/40 mb-3 leading-relaxed">Ecosystems, Optimized.</p>
-            <p className="text-xs text-white/30 mb-6 leading-relaxed">Dhaka, Bangladesh — serving clients in 6 countries.</p>
+            <div>
+              <p className="font-display text-2xl font-bold tracking-tight text-white leading-none mb-1">GalaxaTech</p>
+              <p className="text-sm font-mono" style={{ color: '#B58DFF' }}>Ecosystems, Optimized.</p>
+            </div>
+          </div>
+
+          {/* CTA */}
+          <button
+            onClick={() => go('/audit')}
+            className="group flex items-center gap-3 text-white font-bold py-3 px-6 rounded-full transition-all duration-300 hover:scale-[1.04] active:scale-[0.98]"
+            style={{ background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.15)', backdropFilter: 'blur(12px)' }}
+          >
+            <span className="w-8 h-8 rounded-full flex items-center justify-center group-hover:rotate-45 transition-transform duration-500" style={{ background: 'linear-gradient(135deg,#5E29E8,#7C2AEB)' }}>
+              <ArrowUpRight className="w-4 h-4 text-white" />
+            </span>
+            <span className="text-sm">Book a Free Audit</span>
+          </button>
+        </div>
+
+        {/* Main columns */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 mb-14">
+
+          {/* Column 1 — About */}
+          <div>
+            <h5 className="text-[10px] font-mono font-bold tracking-[0.2em] uppercase mb-5" style={{ color: '#7C2AEB' }}>About</h5>
+            <p className="text-sm leading-relaxed mb-4" style={{ color: 'rgba(255,255,255,0.45)' }}>
+              A systems-driven creative tech agency from Dhaka, building digital ecosystems for brands worldwide.
+            </p>
+            <div className="flex items-center gap-2 mb-6">
+              <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
+              <span className="text-[11px] font-mono" style={{ color: 'rgba(255,255,255,0.35)' }}>Studio active · Dhaka, BD</span>
+            </div>
             <div className="flex gap-3">
               <a href="https://www.facebook.com/share/1GJq598Yfm/" target="_blank" rel="noopener noreferrer"
-                className="w-9 h-9 rounded-full bg-white/5 hover:bg-blue-500/20 border border-white/10 flex items-center justify-center text-white/50 hover:text-blue-400 transition-all">
-                <Facebook className="w-4 h-4" />
+                className="w-9 h-9 rounded-full flex items-center justify-center transition-all hover:scale-110"
+                style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }}
+                onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.background = 'rgba(59,130,246,0.15)'; (e.currentTarget as HTMLAnchorElement).style.borderColor = 'rgba(59,130,246,0.3)'; }}
+                onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.background = 'rgba(255,255,255,0.05)'; (e.currentTarget as HTMLAnchorElement).style.borderColor = 'rgba(255,255,255,0.1)'; }}
+              >
+                <Facebook className="w-4 h-4 text-blue-400" />
               </a>
               <a href="https://x.com/galaxatech" target="_blank" rel="noopener noreferrer"
-                className="w-9 h-9 rounded-full bg-white/5 hover:bg-sky-500/20 border border-white/10 flex items-center justify-center text-white/50 hover:text-sky-400 transition-all">
-                <Twitter className="w-4 h-4" />
+                className="w-9 h-9 rounded-full flex items-center justify-center transition-all hover:scale-110"
+                style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }}
+                onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.background = 'rgba(14,165,233,0.15)'; (e.currentTarget as HTMLAnchorElement).style.borderColor = 'rgba(14,165,233,0.3)'; }}
+                onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.background = 'rgba(255,255,255,0.05)'; (e.currentTarget as HTMLAnchorElement).style.borderColor = 'rgba(255,255,255,0.1)'; }}
+              >
+                <Twitter className="w-4 h-4 text-sky-400" />
               </a>
             </div>
           </div>
 
           {/* Column 2 — Services */}
           <div>
-            <h5 className="text-xs font-mono font-semibold text-primary uppercase tracking-widest mb-6">Services</h5>
+            <h5 className="text-[10px] font-mono font-bold tracking-[0.2em] uppercase mb-5" style={{ color: '#B58DFF' }}>Services</h5>
             <ul className="space-y-3">
               {SERVICE_LINKS.map(({ label, anchor }) => (
                 <li key={anchor}>
                   <button
                     onClick={() => go(`/services#${anchor}`)}
-                    className="text-sm text-white/50 hover:text-white transition-colors text-left cursor-pointer"
+                    className="group text-sm text-left flex items-center gap-2 transition-all duration-200"
+                    style={{ color: 'rgba(255,255,255,0.45)' }}
+                    onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.color = '#fff'; }}
+                    onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.color = 'rgba(255,255,255,0.45)'; }}
                   >
+                    <span className="w-1 h-1 rounded-full flex-shrink-0 transition-all group-hover:w-2" style={{ background: '#7C2AEB' }} />
                     {label}
                   </button>
                 </li>
@@ -71,7 +121,7 @@ export default function Footer({ onPageChange }: FooterProps) {
 
           {/* Column 3 — Company */}
           <div>
-            <h5 className="text-xs font-mono font-semibold text-secondary uppercase tracking-widest mb-6">Company</h5>
+            <h5 className="text-[10px] font-mono font-bold tracking-[0.2em] uppercase mb-5" style={{ color: '#78D5FF' }}>Company</h5>
             <ul className="space-y-3">
               {[
                 { label: 'About', path: '/about' },
@@ -83,8 +133,12 @@ export default function Footer({ onPageChange }: FooterProps) {
                 <li key={path}>
                   <button
                     onClick={() => go(path)}
-                    className="text-sm text-white/50 hover:text-white transition-colors text-left cursor-pointer"
+                    className="group text-sm text-left flex items-center gap-2 transition-all duration-200"
+                    style={{ color: 'rgba(255,255,255,0.45)' }}
+                    onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.color = '#fff'; }}
+                    onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.color = 'rgba(255,255,255,0.45)'; }}
                   >
+                    <span className="w-1 h-1 rounded-full flex-shrink-0 transition-all group-hover:w-2" style={{ background: '#78D5FF' }} />
                     {label}
                   </button>
                 </li>
@@ -94,33 +148,57 @@ export default function Footer({ onPageChange }: FooterProps) {
 
           {/* Column 4 — Contact */}
           <div>
-            <h5 className="text-xs font-mono font-semibold text-white/40 uppercase tracking-widest mb-6">Contact</h5>
+            <h5 className="text-[10px] font-mono font-bold tracking-[0.2em] uppercase mb-5" style={{ color: 'rgba(255,255,255,0.4)' }}>Contact</h5>
             <ul className="space-y-4">
               <li>
                 <a href="https://wa.me/8801959209103" target="_blank" rel="noopener noreferrer"
-                  className="flex items-center gap-2.5 text-sm text-white/50 hover:text-white transition-colors">
-                  <Phone className="w-4 h-4 text-green-400 flex-shrink-0" />
+                  className="flex items-center gap-3 text-sm transition-colors duration-200 group"
+                  style={{ color: 'rgba(255,255,255,0.45)' }}
+                  onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.color = '#fff'; }}
+                  onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.color = 'rgba(255,255,255,0.45)'; }}
+                >
+                  <div className="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: 'rgba(34,197,94,0.1)', border: '1px solid rgba(34,197,94,0.2)' }}>
+                    <Phone className="w-3.5 h-3.5 text-green-400" />
+                  </div>
                   +880 1959 209103
                 </a>
               </li>
               <li>
                 <a href="mailto:mail.galaxatech@gmail.com"
-                  className="flex items-center gap-2.5 text-sm text-white/50 hover:text-white transition-colors">
-                  <Mail className="w-4 h-4 text-primary flex-shrink-0" />
+                  className="flex items-center gap-3 text-sm transition-colors duration-200 group"
+                  style={{ color: 'rgba(255,255,255,0.45)' }}
+                  onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.color = '#fff'; }}
+                  onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.color = 'rgba(255,255,255,0.45)'; }}
+                >
+                  <div className="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: 'rgba(124,42,235,0.1)', border: '1px solid rgba(124,42,235,0.2)' }}>
+                    <Mail className="w-3.5 h-3.5" style={{ color: '#7C2AEB' }} />
+                  </div>
                   mail.galaxatech@gmail.com
                 </a>
               </li>
               <li>
                 <a href="https://www.facebook.com/share/1GJq598Yfm/" target="_blank" rel="noopener noreferrer"
-                  className="flex items-center gap-2.5 text-sm text-white/50 hover:text-white transition-colors">
-                  <Facebook className="w-4 h-4 text-blue-400 flex-shrink-0" />
+                  className="flex items-center gap-3 text-sm transition-colors duration-200"
+                  style={{ color: 'rgba(255,255,255,0.45)' }}
+                  onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.color = '#fff'; }}
+                  onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.color = 'rgba(255,255,255,0.45)'; }}
+                >
+                  <div className="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: 'rgba(59,130,246,0.1)', border: '1px solid rgba(59,130,246,0.2)' }}>
+                    <Facebook className="w-3.5 h-3.5 text-blue-400" />
+                  </div>
                   Facebook
                 </a>
               </li>
               <li>
                 <a href="https://x.com/galaxatech" target="_blank" rel="noopener noreferrer"
-                  className="flex items-center gap-2.5 text-sm text-white/50 hover:text-white transition-colors">
-                  <Twitter className="w-4 h-4 text-sky-400 flex-shrink-0" />
+                  className="flex items-center gap-3 text-sm transition-colors duration-200"
+                  style={{ color: 'rgba(255,255,255,0.45)' }}
+                  onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.color = '#fff'; }}
+                  onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.color = 'rgba(255,255,255,0.45)'; }}
+                >
+                  <div className="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: 'rgba(14,165,233,0.1)', border: '1px solid rgba(14,165,233,0.2)' }}>
+                    <Twitter className="w-3.5 h-3.5 text-sky-400" />
+                  </div>
                   @galaxatech
                 </a>
               </li>
@@ -129,18 +207,25 @@ export default function Footer({ onPageChange }: FooterProps) {
         </div>
 
         {/* Bottom bar */}
-        <div className="pt-8 border-t border-white/5">
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-white/35 tracking-wide mb-2">
-            <span>© 2023–2026 GalaxaTech. All rights reserved.</span>
-            <div className="flex items-center gap-5">
-              <button onClick={() => go('/privacy')} className="hover:text-white/70 transition-colors cursor-pointer">Privacy Policy</button>
-              <button onClick={() => go('/terms')} className="hover:text-white/70 transition-colors cursor-pointer">Terms of Service</button>
+        <div className="pt-8 border-t" style={{ borderColor: 'rgba(255,255,255,0.06)' }}>
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-4">
+            <div className="flex items-center gap-2">
+              <Sparkles className="w-3.5 h-3.5" style={{ color: '#7C2AEB' }} />
+              <span className="text-xs font-mono" style={{ color: 'rgba(255,255,255,0.3)' }}>© 2023–2026 GalaxaTech. All rights reserved.</span>
+            </div>
+            <div className="flex items-center gap-5 text-xs" style={{ color: 'rgba(255,255,255,0.3)' }}>
+              <button onClick={() => go('/privacy')} className="hover:text-white transition-colors cursor-pointer font-mono">Privacy Policy</button>
+              <button onClick={() => go('/terms')} className="hover:text-white transition-colors cursor-pointer font-mono">Terms of Service</button>
             </div>
           </div>
-          <div className="text-center sm:text-right">
+          <div className="flex justify-between items-center">
+            <p className="text-[10px] font-mono" style={{ color: 'rgba(255,255,255,0.15)' }}>Built with systems-first thinking · Dhaka → World</p>
             <button
               onClick={() => navigate('/admin')}
-              className="text-white/15 hover:text-white/35 text-[10px] font-mono tracking-widest transition-colors cursor-pointer focus:outline-none"
+              className="text-[10px] font-mono tracking-widest transition-colors cursor-pointer focus:outline-none"
+              style={{ color: 'rgba(255,255,255,0.12)' }}
+              onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.color = 'rgba(255,255,255,0.35)'; }}
+              onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.color = 'rgba(255,255,255,0.12)'; }}
             >
               Admin Panel
             </button>
