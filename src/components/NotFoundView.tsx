@@ -17,9 +17,9 @@ export default function NotFoundView() {
       </div>
 
       <div className="text-center relative z-10">
-        <p className="text-[120px] md:text-[180px] font-black text-white/5 leading-none select-none mb-0" style={{ fontFamily: 'Satoshi, sans-serif' }}>404</p>
+        <p className="text-[120px] md:text-[180px] font-black text-white/5 leading-none select-none mb-0" style={{ fontFamily: 'var(--font-display)' }}>404</p>
         <div className="-mt-8 md:-mt-12 mb-8">
-          <h1 className="text-4xl md:text-5xl font-bold text-white mb-4" style={{ fontFamily: 'Satoshi, sans-serif' }}>Lost in space.</h1>
+          <h1 className="text-4xl md:text-5xl font-bold text-white mb-4" style={{ fontFamily: 'var(--font-display)' }}>Lost in space.</h1>
           <p className="text-white/50 text-lg max-w-sm mx-auto">This page doesn't exist. Let's get you back to something real.</p>
         </div>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">

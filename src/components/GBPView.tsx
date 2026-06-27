@@ -1,4 +1,4 @@
-import { useState, FormEvent } from 'react';
+﻿import { useState, FormEvent } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '../lib/firebase';
@@ -77,7 +77,7 @@ export default function GBPView() {
           <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
           <span className="text-xs font-mono font-bold text-emerald-400 uppercase tracking-widest">Applications Open</span>
         </div>
-        <h1 className="text-3xl sm:text-5xl md:text-7xl font-bold text-white mb-4 sm:mb-5" style={{ fontFamily: 'Satoshi, sans-serif' }}>Real Work. Real Proof.</h1>
+        <h1 className="text-3xl sm:text-5xl md:text-7xl font-bold text-white mb-4 sm:mb-5" style={{ fontFamily: 'var(--font-display)' }}>Real Work. Real Proof.</h1>
         <p className="text-white/60 text-base sm:text-xl max-w-2xl mx-auto leading-relaxed mb-7 sm:mb-10">
           GalaxaTech's execution ecosystem for students ready to stop practicing and start doing.
         </p>
@@ -99,19 +99,19 @@ export default function GBPView() {
             <p className="text-white/70 text-lg leading-relaxed mb-4">
               GBP is a project participation system. You join a live project. You take on real tasks. You're evaluated on real output. What you learn â€” you learn because the work demanded it.
             </p>
-            <p className="text-xl sm:text-2xl font-bold text-secondary" style={{ fontFamily: 'Satoshi, sans-serif' }}>"We don't teach. We expose."</p>
+            <p className="text-xl sm:text-2xl font-bold text-secondary" style={{ fontFamily: 'var(--font-display)' }}>"We don't teach. We expose."</p>
           </div>
         </div>
       </section>
 
       {/* â”€â”€ How It Works â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
       <section id="how-it-works" className="max-w-4xl mx-auto px-5 sm:px-6 mb-12 sm:mb-20 scroll-mt-32">
-        <h2 className="text-2xl sm:text-4xl font-bold text-white mb-7 sm:mb-10 text-center" style={{ fontFamily: 'Satoshi, sans-serif' }}>How It Works</h2>
+        <h2 className="text-2xl sm:text-4xl font-bold text-white mb-7 sm:mb-10 text-center" style={{ fontFamily: 'var(--font-display)' }}>How It Works</h2>
         <div className="flex flex-col gap-4">
           {HOW_IT_WORKS.map((step, i) => (
             <div key={i} className="glass-card rounded-2xl p-6 flex items-start gap-5">
               <div className="w-10 h-10 rounded-xl bg-primary/15 border border-primary/30 flex items-center justify-center flex-shrink-0">
-                <span className="text-primary font-bold text-sm" style={{ fontFamily: 'Satoshi, sans-serif' }}>0{i + 1}</span>
+                <span className="text-primary font-bold text-sm" style={{ fontFamily: 'var(--font-display)' }}>0{i + 1}</span>
               </div>
               <p className="text-white/75 text-base leading-relaxed pt-2">{step}</p>
             </div>
@@ -126,7 +126,7 @@ export default function GBPView() {
 
       {/* â”€â”€ What You Get â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
       <section className="max-w-4xl mx-auto px-5 sm:px-6 mb-12 sm:mb-20">
-        <h2 className="text-2xl sm:text-4xl font-bold text-white mb-7 sm:mb-10 text-center" style={{ fontFamily: 'Satoshi, sans-serif' }}>What You Get</h2>
+        <h2 className="text-2xl sm:text-4xl font-bold text-white mb-7 sm:mb-10 text-center" style={{ fontFamily: 'var(--font-display)' }}>What You Get</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
           {WHAT_YOU_GET.map((item) => (
             <div key={item.title} className="glass-card rounded-2xl p-7">
@@ -145,19 +145,19 @@ export default function GBPView() {
         <div className="glass-card rounded-3xl p-10 md:p-14 text-center relative overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-br from-primary/6 via-transparent to-secondary/6 pointer-events-none" />
           <div className="relative z-10">
-            <h2 className="text-3xl font-bold text-white mb-6" style={{ fontFamily: 'Satoshi, sans-serif' }}>We don't promise jobs. We create proof.</h2>
+            <h2 className="text-3xl font-bold text-white mb-6" style={{ fontFamily: 'var(--font-display)' }}>We don't promise jobs. We create proof.</h2>
             <div className="max-w-2xl mx-auto mb-6 text-left space-y-3">
               <p className="text-white/60 leading-relaxed">GBP is not a professional certification body. Our certificate represents: real project participation, assigned task completion, contribution tracked and verified by our team.</p>
               <p className="text-white/60 leading-relaxed">It won't guarantee you a job. It will give you portfolio credibility, real experience proof, and the confidence that comes from having actually built something.</p>
             </div>
-            <blockquote className="text-2xl font-bold text-primary" style={{ fontFamily: 'Satoshi, sans-serif' }}>"Real contribution. Real proof."</blockquote>
+            <blockquote className="text-2xl font-bold text-primary" style={{ fontFamily: 'var(--font-display)' }}>"Real contribution. Real proof."</blockquote>
           </div>
         </div>
       </section>
 
       {/* â”€â”€ Why We Built This â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
       <section className="max-w-4xl mx-auto px-5 sm:px-6 mb-12 sm:mb-20">
-        <h2 className="text-3xl font-bold text-white mb-2 text-center" style={{ fontFamily: 'Satoshi, sans-serif' }}>This is a win-win by design, not charity.</h2>
+        <h2 className="text-3xl font-bold text-white mb-2 text-center" style={{ fontFamily: 'var(--font-display)' }}>This is a win-win by design, not charity.</h2>
         <p className="text-white/50 text-center mb-10 text-sm">Why we built GBP â€” from both sides of the table.</p>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="glass-card rounded-2xl p-8">
@@ -203,7 +203,7 @@ export default function GBPView() {
 
       {/* â”€â”€ FAQ â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
       <section className="max-w-4xl mx-auto px-5 sm:px-6 mb-12 sm:mb-20">
-        <h2 className="text-2xl sm:text-4xl font-bold text-white mb-7 sm:mb-10 text-center" style={{ fontFamily: 'Satoshi, sans-serif' }}>Frequently Asked</h2>
+        <h2 className="text-2xl sm:text-4xl font-bold text-white mb-7 sm:mb-10 text-center" style={{ fontFamily: 'var(--font-display)' }}>Frequently Asked</h2>
         <div className="flex flex-col gap-3">
           {FAQS.map((faq, i) => (
             <div key={i} className="glass-card rounded-xl overflow-hidden">
@@ -222,7 +222,7 @@ export default function GBPView() {
       {/* â”€â”€ Application Form â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
       <section id="apply" className="max-w-4xl mx-auto px-6 scroll-mt-32">
         <div className="text-center mb-10">
-          <h2 className="text-4xl font-bold text-white mb-4" style={{ fontFamily: 'Satoshi, sans-serif' }}>Apply to GBP</h2>
+          <h2 className="text-4xl font-bold text-white mb-4" style={{ fontFamily: 'var(--font-display)' }}>Apply to GBP</h2>
           <p className="text-white/55 max-w-xl mx-auto">Rihad reviews every application personally. Be honest â€” that's what gets you in.</p>
         </div>
 
@@ -230,7 +230,7 @@ export default function GBPView() {
           {done ? (
             <div className="flex flex-col items-center text-center py-10">
               <CheckCircle className="w-14 h-14 text-green-400 mb-5" />
-              <h3 className="text-white font-bold text-2xl mb-3" style={{ fontFamily: 'Satoshi, sans-serif' }}>Application received!</h3>
+              <h3 className="text-white font-bold text-2xl mb-3" style={{ fontFamily: 'var(--font-display)' }}>Application received!</h3>
               <p className="text-white/60 max-w-md leading-relaxed">
                 Your application has been received. Rihad will review it and reach out if you're a fit for the current batch.
               </p>

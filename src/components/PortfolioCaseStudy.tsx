@@ -79,7 +79,7 @@ export default function PortfolioCaseStudy() {
             <span className="text-3xl">{study.country}</span>
             <p className="text-xs font-mono text-white/35 uppercase tracking-widest">{study.clientType}</p>
           </div>
-          <h1 className="text-5xl md:text-6xl font-bold text-white mb-6" style={{ fontFamily: 'Satoshi, sans-serif' }}>{study.name}</h1>
+          <h1 className="text-5xl md:text-6xl font-bold text-white mb-6" style={{ fontFamily: 'var(--font-display)' }}>{study.name}</h1>
           <div className="flex flex-wrap gap-2">
             {study.services.map((s) => (
               <span key={s} className="text-xs bg-primary/10 text-primary/80 border border-primary/20 rounded-full px-3 py-1 font-medium">{s}</span>
@@ -104,7 +104,7 @@ export default function PortfolioCaseStudy() {
               <div className="w-9 h-9 rounded-xl bg-secondary/10 border border-secondary/20 flex items-center justify-center">
                 <Target className="w-4 h-4 text-secondary" />
               </div>
-              <h2 className="text-xl font-bold text-white" style={{ fontFamily: 'Satoshi, sans-serif' }}>The Challenge</h2>
+              <h2 className="text-xl font-bold text-white" style={{ fontFamily: 'var(--font-display)' }}>The Challenge</h2>
             </div>
             <p className="text-white/60 leading-relaxed">{study.challenge}</p>
           </div>
@@ -114,7 +114,7 @@ export default function PortfolioCaseStudy() {
               <div className="w-9 h-9 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center">
                 <Layers className="w-4 h-4 text-primary" />
               </div>
-              <h2 className="text-xl font-bold text-white" style={{ fontFamily: 'Satoshi, sans-serif' }}>The Solution</h2>
+              <h2 className="text-xl font-bold text-white" style={{ fontFamily: 'var(--font-display)' }}>The Solution</h2>
             </div>
             <p className="text-white/60 leading-relaxed">{study.solution}</p>
           </div>
@@ -124,7 +124,7 @@ export default function PortfolioCaseStudy() {
               <div className="w-9 h-9 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center">
                 <Code className="w-4 h-4 text-emerald-400" />
               </div>
-              <h2 className="text-xl font-bold text-white" style={{ fontFamily: 'Satoshi, sans-serif' }}>Stack & Tools</h2>
+              <h2 className="text-xl font-bold text-white" style={{ fontFamily: 'var(--font-display)' }}>Stack & Tools</h2>
             </div>
             <div className="flex flex-wrap gap-2">
               {study.stack.map((tech) => (
@@ -134,14 +134,14 @@ export default function PortfolioCaseStudy() {
           </div>
 
           <div className="glass-card rounded-2xl p-8 border-primary/20">
-            <h2 className="text-xl font-bold text-white mb-4" style={{ fontFamily: 'Satoshi, sans-serif' }}>The Result</h2>
+            <h2 className="text-xl font-bold text-white mb-4" style={{ fontFamily: 'var(--font-display)' }}>The Result</h2>
             <p className="text-white/70 leading-relaxed text-base">{study.result}</p>
           </div>
         </div>
 
         {/* CTA */}
         <div className="mt-16 text-center glass-card rounded-3xl p-12">
-          <h2 className="text-3xl font-bold text-white mb-4" style={{ fontFamily: 'Satoshi, sans-serif' }}>Work with us</h2>
+          <h2 className="text-3xl font-bold text-white mb-4" style={{ fontFamily: 'var(--font-display)' }}>Work with us</h2>
           <p className="text-white/60 mb-8 max-w-md mx-auto">Ready to build your own case study? Start with a free audit.</p>
           <button
             onClick={() => navigate('/audit')}

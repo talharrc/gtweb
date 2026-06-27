@@ -111,6 +111,7 @@ export default function Navbar({ onPageChange, dhakaTime, isDhakaOpen, currentUs
       </AnimatePresence>
 
       <nav
+        aria-label="Main navigation"
         className={`fixed top-6 left-0 right-0 z-50 flex justify-center items-center px-4 transition-all duration-500 ease-in-out ${
           visible ? 'translate-y-0' : '-translate-y-32'
         }`}
@@ -141,7 +142,7 @@ export default function Navbar({ onPageChange, dhakaTime, isDhakaOpen, currentUs
 
             {/* Hubs Dropdown */}
             <div className="relative" onMouseEnter={() => setActiveDropdown('hubs')} onMouseLeave={() => setActiveDropdown(null)}>
-              <button className={`text-sm font-medium transition-colors hover:text-primary flex items-center gap-2 py-3 focus:outline-none ${activeDropdown === 'hubs' ? 'text-primary animate-pulse' : 'text-white/80'}`}>
+              <button aria-expanded={activeDropdown === 'hubs'} aria-haspopup="true" className={`text-sm font-medium transition-colors hover:text-primary flex items-center gap-2 py-3 focus:outline-none ${activeDropdown === 'hubs' ? 'text-primary' : 'text-white/80'}`}>
                 Hubs
                 <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-300 ${activeDropdown === 'hubs' ? 'rotate-180' : ''}`} />
               </button>
@@ -190,7 +191,7 @@ export default function Navbar({ onPageChange, dhakaTime, isDhakaOpen, currentUs
 
             {/* Expertise Dropdown */}
             <div className="relative" onMouseEnter={() => setActiveDropdown('expertise')} onMouseLeave={() => setActiveDropdown(null)}>
-              <button className={`text-sm font-medium transition-colors hover:text-primary flex items-center gap-2 py-3 focus:outline-none ${activeDropdown === 'expertise' ? 'text-primary' : 'text-white/80'}`}>
+              <button aria-expanded={activeDropdown === 'expertise'} aria-haspopup="true" className={`text-sm font-medium transition-colors hover:text-primary flex items-center gap-2 py-3 focus:outline-none ${activeDropdown === 'expertise' ? 'text-primary' : 'text-white/80'}`}>
                 Expertise
                 <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-300 ${activeDropdown === 'expertise' ? 'rotate-180' : ''}`} />
               </button>
@@ -232,6 +233,7 @@ export default function Navbar({ onPageChange, dhakaTime, isDhakaOpen, currentUs
             {/* Book an Audit pill */}
             <button
               onClick={() => navTo('/audit')}
+              aria-label="Book a free audit"
               className="relative flex items-center w-10 hover:w-[160px] h-10 bg-gradient-to-tr from-secondary to-primary text-white rounded-full transition-all duration-500 overflow-hidden group focus:outline-none cursor-pointer shadow-[0_8px_20px_-6px_rgba(124,42,235,0.4)]"
             >
               <div className="w-10 h-10 flex items-center justify-center flex-shrink-0 group-hover:rotate-45 transition-transform duration-500">
@@ -246,6 +248,9 @@ export default function Navbar({ onPageChange, dhakaTime, isDhakaOpen, currentUs
             <div className="relative" onMouseEnter={() => setMoreMenuOpen(true)} onMouseLeave={() => setMoreMenuOpen(false)}>
               <button
                 onClick={() => setMoreMenuOpen(!moreMenuOpen)}
+                aria-label="More navigation options"
+                aria-expanded={moreMenuOpen}
+                aria-haspopup="true"
                 className="w-10 h-10 flex items-center justify-center bg-white/5 hover:bg-white/10 rounded-full transition-all cursor-pointer focus:outline-none group/btn"
               >
                 <MoreHorizontal className="w-5 h-5 text-white/70 group-hover/btn:text-white transition-colors" />

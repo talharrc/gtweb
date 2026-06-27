@@ -41,7 +41,7 @@ export default function ContactView() {
 
       <div className="max-w-7xl mx-auto px-5 sm:px-6">
         <div className="text-center mb-10 sm:mb-16">
-          <h1 className="text-3xl sm:text-5xl md:text-6xl font-bold text-white mb-3 sm:mb-4" style={{ fontFamily: 'Satoshi, sans-serif' }}>Let's Talk.</h1>
+          <h1 className="text-3xl sm:text-5xl md:text-6xl font-bold text-white mb-3 sm:mb-4" style={{ fontFamily: 'var(--font-display)' }}>Let's Talk.</h1>
           <p className="text-white/60 text-sm sm:text-lg">We're based in Dhaka and available via WhatsApp, email, or the form below.</p>
         </div>
 
@@ -124,14 +124,14 @@ export default function ContactView() {
             {done ? (
               <div className="flex flex-col items-center justify-center text-center h-full py-12">
                 <CheckCircle className="w-14 h-14 text-green-400 mb-5" />
-                <h3 className="text-white font-bold text-2xl mb-3" style={{ fontFamily: 'Satoshi, sans-serif' }}>Message received!</h3>
+                <h3 className="text-white font-bold text-2xl mb-3" style={{ fontFamily: 'var(--font-display)' }}>Message received!</h3>
                 <p className="text-white/60 leading-relaxed max-w-sm">
                   We've received your message. We'll get back to you within 24 hours on WhatsApp or email.
                 </p>
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="flex flex-col gap-5">
-                <h2 className="text-xl font-bold text-white mb-1" style={{ fontFamily: 'Satoshi, sans-serif' }}>Send us a message</h2>
+                <h2 className="text-xl font-bold text-white mb-1" style={{ fontFamily: 'var(--font-display)' }}>Send us a message</h2>
 
                 <div>
                   <label className="text-xs font-mono text-white/40 uppercase tracking-widest block mb-1.5">Name *</label>

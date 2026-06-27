@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+﻿import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { motion, AnimatePresence } from 'motion/react';
@@ -9,6 +9,7 @@ import {
   Search, Code2, Rocket, Shield, Package, FileText, Mail,
   Zap, Users, CheckCircle, X,
   HelpCircle, Clock, DollarSign, BookOpen, Monitor, PhoneCall,
+  FolderOpen, Lock,
 } from 'lucide-react';
 import { doc, getDoc, collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '../lib/firebase';
@@ -258,7 +259,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
             </span>
           </motion.h1>
           <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.2, ease: [0.16,1,0.3,1] }} className="text-[15px] sm:text-lg text-white/55 max-w-xl mx-auto mb-8 leading-relaxed font-sans tracking-wide">
-            By investing only FIVE minutes, giving us some information about your business.
+            Give us 5 minutes. We'll show you exactly what your brand is missing online — for free.
           </motion.p>
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.3, ease: [0.16,1,0.3,1] }} className="flex justify-center px-4 sm:px-0">
             <button
@@ -273,20 +274,20 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
           </motion.div>
 
           {/* Stat proof bar */}
-          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.45, ease: [0.16,1,0.3,1] }} className="flex items-center justify-center gap-6 sm:gap-10 mt-10">
+          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.45, ease: [0.16,1,0.3,1] }} className="flex items-center justify-center gap-6 sm:gap-12 mt-10">
             <div className="text-center">
-              <span className="block text-xl sm:text-2xl font-bold text-white font-display tracking-tight">50+</span>
-              <span className="block text-[10px] font-mono tracking-[0.2em] text-white/35 uppercase mt-0.5">Projects</span>
+              <span className="block text-2xl sm:text-3xl font-bold text-white font-display tracking-tight">50+</span>
+              <span className="block text-[10px] font-mono tracking-[0.2em] text-white/40 uppercase mt-1">Projects</span>
             </div>
-            <div className="w-px h-7 bg-white/10 flex-shrink-0" />
+            <div className="w-px h-8 bg-white/10 flex-shrink-0" />
             <div className="text-center">
-              <span className="block text-xl sm:text-2xl font-bold text-white font-display tracking-tight">6</span>
-              <span className="block text-[10px] font-mono tracking-[0.2em] text-white/35 uppercase mt-0.5">Countries</span>
+              <span className="block text-2xl sm:text-3xl font-bold text-white font-display tracking-tight">6</span>
+              <span className="block text-[10px] font-mono tracking-[0.2em] text-white/40 uppercase mt-1">Countries</span>
             </div>
-            <div className="w-px h-7 bg-white/10 flex-shrink-0" />
+            <div className="w-px h-8 bg-white/10 flex-shrink-0" />
             <div className="text-center">
-              <span className="block text-xl sm:text-2xl font-bold text-white font-display tracking-tight">6</span>
-              <span className="block text-[10px] font-mono tracking-[0.2em] text-white/35 uppercase mt-0.5">Services</span>
+              <span className="block text-2xl sm:text-3xl font-bold text-white font-display tracking-tight">6</span>
+              <span className="block text-[10px] font-mono tracking-[0.2em] text-white/40 uppercase mt-1">Services</span>
             </div>
           </motion.div>
         </div>
@@ -312,7 +313,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
             </div>
           </div>
           <div className="text-center mb-12">
-            <h2 className="text-4xl md:text-5xl font-bold text-white mb-3" style={{ fontFamily: 'Satoshi, sans-serif' }}>
+            <h2 className="text-4xl md:text-5xl font-bold text-white mb-3" style={{ fontFamily: 'var(--font-display)' }}>
               Serving clients
               <br />
               <span className="font-serif italic" style={{ color: '#B58DFF' }}>worldwide</span>
@@ -332,7 +333,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
               {[...COUNTRIES, ...COUNTRIES].map((c, i) => (
                 <div key={i} className="flex items-center gap-2.5 mx-3 select-none px-5 py-2.5 rounded-full" style={{ border: '1px solid rgba(255,255,255,0.12)', background: 'rgba(255,255,255,0.06)', minWidth: 'max-content' }}>
                   <span style={{ fontSize: '1.5rem', lineHeight: 1, display: 'inline-block', fontFamily: '"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif' }}>{c.flag}</span>
-                  <span className="text-white/75 font-semibold text-sm" style={{ fontFamily: 'Satoshi, sans-serif' }}>{c.name}</span>
+                  <span className="text-white/75 font-semibold text-sm" style={{ fontFamily: 'var(--font-display)' }}>{c.name}</span>
                 </div>
               ))}
             </div>
@@ -354,7 +355,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
               <CheckCircle className="w-3.5 h-3.5 text-primary/70" />
               <span className="text-[10px] font-mono text-primary/70 tracking-widest uppercase">Why GalaxaTech</span>
             </div>
-            <h2 className="text-4xl md:text-5xl font-bold text-white mb-4" style={{ fontFamily: 'Satoshi, sans-serif' }}>
+            <h2 className="text-4xl md:text-5xl font-bold text-white mb-4" style={{ fontFamily: 'var(--font-display)' }}>
               Why <span style={{ color: '#B58DFF' }}>Choose Us</span>
             </h2>
             <p className="text-white/50 text-lg">Five reasons clients trust GalaxaTech to build their digital future.</p>
@@ -488,7 +489,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
               <Workflow className="w-3.5 h-3.5 text-primary/70" />
               <span className="text-[10px] font-mono tracking-[0.25em] text-primary/70 uppercase">Service Carousel</span>
             </div>
-            <h2 className="text-4xl md:text-5xl font-bold text-white mb-4" style={{ fontFamily: 'Satoshi, sans-serif' }}>
+            <h2 className="text-4xl md:text-5xl font-bold text-white mb-4" style={{ fontFamily: 'var(--font-display)' }}>
               What <span style={{ color: '#B58DFF' }}>We Build</span>
             </h2>
             <p className="text-white/50 text-lg max-w-xl mx-auto">Interactive digital systems and growth solutions crafted for modern businesses.</p>
@@ -587,18 +588,18 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
 
           {/* Nav */}
           <div className="flex items-center justify-center gap-5 mt-8">
-            <button onClick={carouselPrev} className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-white/60 hover:text-white hover:border-primary/40 transition-all duration-200 hover:scale-[1.05] active:scale-[0.98]">
+            <button onClick={carouselPrev} aria-label="Previous service" className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-white/60 hover:text-white hover:border-primary/40 transition-all duration-200 hover:scale-[1.05] active:scale-[0.98]">
               <ChevronLeft className="w-5 h-5" />
             </button>
             <div className="px-4 py-2 rounded-full border border-white/10 text-[11px] font-mono text-white/40">
               {String(activeIndex + 1).padStart(2, '0')} / {String(SERVICES.length).padStart(2, '0')}
             </div>
-            <div className="flex gap-2">
-              {SERVICES.map((_, i) => (
-                <button key={i} onClick={() => setActiveIndex(i)} className="rounded-full transition-all duration-300" style={{ width: i === activeIndex ? '24px' : '8px', height: '8px', background: i === activeIndex ? '#7C2AEB' : 'rgba(255,255,255,0.2)' }} />
+            <div className="flex gap-2" role="tablist" aria-label="Service slides">
+              {SERVICES.map((svc, i) => (
+                <button key={i} onClick={() => setActiveIndex(i)} role="tab" aria-selected={i === activeIndex} aria-label={svc.label} className="rounded-full transition-all duration-300" style={{ width: i === activeIndex ? '24px' : '8px', height: '8px', background: i === activeIndex ? '#7C2AEB' : 'rgba(255,255,255,0.2)' }} />
               ))}
             </div>
-            <button onClick={carouselNext} className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-white/60 hover:text-white hover:border-primary/40 transition-all duration-200 hover:scale-[1.05] active:scale-[0.98]">
+            <button onClick={carouselNext} aria-label="Next service" className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-white/60 hover:text-white hover:border-primary/40 transition-all duration-200 hover:scale-[1.05] active:scale-[0.98]">
               <ChevronRight className="w-5 h-5" />
             </button>
           </div>
@@ -613,7 +614,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
               <Sparkles className="w-3.5 h-3.5 text-primary/70" />
               <span className="text-[10px] font-mono tracking-[0.25em] text-primary/70 uppercase">Process</span>
             </div>
-            <h2 className="text-4xl md:text-5xl font-bold text-white mb-3" style={{ fontFamily: 'Satoshi, sans-serif' }}>
+            <h2 className="text-4xl md:text-5xl font-bold text-white mb-3" style={{ fontFamily: 'var(--font-display)' }}>
               How <span style={{ color: '#B58DFF' }}>We Work</span>
             </h2>
             <p className="text-white/50">A clear, collaborative journey from idea to deployed digital systems.</p>
@@ -943,7 +944,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
                         <div>
                           <div className="flex items-center gap-3 mb-1">
                             <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl border border-primary/20 flex items-center justify-center bg-primary/10">
-                              <span className="text-lg sm:text-xl">📁</span>
+                              <FolderOpen className="w-4 h-4 sm:w-5 sm:h-5 text-lavender" />
                             </div>
                             <div>
                               <p className="text-white font-bold text-sm sm:text-base font-display">Open Portfolio</p>
@@ -981,7 +982,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
               <HelpCircle className="w-3.5 h-3.5 text-primary/70" />
               <span className="text-[10px] font-mono tracking-[0.25em] text-primary/70 uppercase">FAQ</span>
             </div>
-            <h2 className="text-4xl md:text-5xl font-bold text-white mb-3" style={{ fontFamily: 'Satoshi, sans-serif' }}>Common <span style={{ color: '#B58DFF' }}>Questions</span></h2>
+            <h2 className="text-4xl md:text-5xl font-bold text-white mb-3" style={{ fontFamily: 'var(--font-display)' }}>Common <span style={{ color: '#B58DFF' }}>Questions</span></h2>
             <p className="text-white/40 text-base">Everything you need to know before working with us.</p>
           </motion.div>
 
@@ -1039,7 +1040,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
                           </div>
                         );
                       })()}
-                      <h3 className="text-white font-bold text-base leading-snug" style={{ fontFamily: 'Satoshi, sans-serif' }}>{FAQS[activeFAQ].q}</h3>
+                      <h3 className="text-white font-bold text-base leading-snug" style={{ fontFamily: 'var(--font-display)' }}>{FAQS[activeFAQ].q}</h3>
                     </div>
                     <p className="text-white/60 text-sm leading-relaxed">{FAQS[activeFAQ].a}</p>
                     <div className="mt-6 pt-5 border-t border-white/8">
@@ -1076,7 +1077,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
             </div>
           </div>
 
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-4" style={{ fontFamily: 'Satoshi, sans-serif' }}>
+          <h2 className="text-4xl md:text-5xl font-bold text-white mb-4" style={{ fontFamily: 'var(--font-display)' }}>
             Wanna join the<br /><span style={{ color: '#B58DFF' }}>Galaxa team?</span>
           </h2>
           <p className="text-white/50 text-base mb-10 leading-relaxed max-w-md mx-auto">
@@ -1086,6 +1087,9 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
           {/* Tactile 3D-effect toggle button */}
           <div className="flex flex-col items-center gap-4">
             <div
+              role="switch"
+              aria-checked={toggled}
+              aria-label="Join Galaxa community"
               className="relative flex items-center rounded-full p-1 cursor-pointer select-none hover:scale-[1.02] active:scale-[0.98] transition-transform duration-200"
               style={{
                 width: '280px',
@@ -1141,6 +1145,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
               >
                 <button
                   onClick={() => setCircleModalOpen(false)}
+                  aria-label="Close"
                   className="absolute top-4 right-4 w-8 h-8 rounded-full flex items-center justify-center transition-all hover:scale-110"
                   style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)' }}
                 >
@@ -1150,7 +1155,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
                 {submitted ? (
                   <div className="flex flex-col items-center gap-3 py-6 text-center">
                     <Sparkles className="w-8 h-8" style={{ color: '#B58DFF' }} />
-                    <p className="text-white font-bold text-lg" style={{ fontFamily: 'Satoshi, sans-serif' }}>You're in the circle. ✦</p>
+                    <p className="text-white font-bold text-lg" style={{ fontFamily: 'var(--font-display)' }}>You're in the circle.</p>
                     <p className="text-white/40 text-sm">We'll reach out with opportunities first.</p>
                   </div>
                 ) : (
@@ -1158,17 +1163,20 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
                     <div className="w-11 h-11 rounded-full border border-primary/20 flex items-center justify-center mb-5" style={{ background: 'rgba(124,42,235,0.1)' }}>
                       <Mail className="w-5 h-5 text-primary/70" />
                     </div>
-                    <h3 className="text-white font-bold text-xl mb-1" style={{ fontFamily: 'Satoshi, sans-serif' }}>
+                    <h3 className="text-white font-bold text-xl mb-1" style={{ fontFamily: 'var(--font-display)' }}>
                       Join the <span style={{ color: '#B58DFF' }}>Galaxa</span> circle
                     </h3>
                     <p className="text-white/45 text-sm mb-5 leading-relaxed">Get early access, opportunities, and builder-only updates.</p>
                     <form onSubmit={handleNewsletterSubmit} className="flex flex-col gap-3">
+                      <label htmlFor="circle-email" className="sr-only">Email address</label>
                       <input
+                        id="circle-email"
                         type="email"
                         placeholder="you@example.com"
                         value={subEmail}
                         onChange={e => setSubEmail(e.target.value)}
                         required
+                        autoComplete="email"
                         className="w-full px-4 py-3 rounded-xl text-sm text-white placeholder-white/30 outline-none"
                         style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.15)' }}
                       />
@@ -1181,7 +1189,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
                         {submitting ? 'Sending…' : <>Join the circle <ArrowUpRight className="w-4 h-4" /></>}
                       </button>
                       <p className="text-white/25 text-[11px] text-center flex items-center justify-center gap-1">
-                        <span>🔒</span> No spam. Unsubscribe anytime.
+                        <Lock className="w-3 h-3" /> No spam. Unsubscribe anytime.
                       </p>
                     </form>
                   </>

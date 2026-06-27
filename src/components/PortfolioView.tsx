@@ -45,7 +45,7 @@ export default function PortfolioView() {
 
       {/* Header */}
       <div className="max-w-7xl mx-auto px-5 sm:px-6 mb-12 sm:mb-20 text-center">
-        <h1 className="text-3xl sm:text-5xl md:text-6xl font-bold text-white mb-4 sm:mb-5" style={{ fontFamily: 'Satoshi, sans-serif' }}>Selected Work</h1>
+        <h1 className="text-3xl sm:text-5xl md:text-6xl font-bold text-white mb-4 sm:mb-5" style={{ fontFamily: 'var(--font-display)' }}>Selected Work</h1>
         <p className="text-white/60 text-base sm:text-lg max-w-xl mx-auto">Real projects. Real clients. Real results.</p>
       </div>
 
