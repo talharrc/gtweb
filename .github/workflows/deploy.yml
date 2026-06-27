@@ -1,4 +1,4 @@
-name: Deploy to Vercel
+name: CI
 
 on:
   push:
@@ -6,12 +6,8 @@ on:
   pull_request:
     branches: [main]
 
-env:
-  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
-
 jobs:
-  deploy:
+  typecheck:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -27,11 +23,3 @@ jobs:
 
       - name: Type check
         run: npm run lint
-
-      - name: Deploy (production on main, preview on PRs)
-        run: |
-          if [ "${{ github.event_name }}" = "push" ] && [ "${{ github.ref }}" = "refs/heads/main" ]; then
-            npx vercel --prod --token=${{ secrets.VERCEL_TOKEN }} --yes
-          else
-            npx vercel --token=${{ secrets.VERCEL_TOKEN }} --yes
-          fi
