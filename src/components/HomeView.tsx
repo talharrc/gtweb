@@ -694,218 +694,256 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
           </motion.div>
 
           {/* 3D Glass Folder Reveal Scene */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.2 }}
-            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-            className="flex flex-col items-center"
-          >
-            <div
-              className="relative cursor-pointer w-full max-w-[700px] flex items-center justify-center"
-              onMouseEnter={() => setFolderHovered(true)}
-              onMouseLeave={() => setFolderHovered(false)}
-              onClick={() => navigate('/portfolio')}
-              style={{
-                height: isMobile ? '380px' : '480px',
-                perspective: '1600px',
-                touchAction: 'none',
-              }}
-            >
-              {/* Core 3D Scene Wrapper - Tilts isometrically */}
-              <div
-                style={{
-                  width: '100%',
-                  height: '100%',
-                  position: 'relative',
-                  transformStyle: 'preserve-3d',
-                  transform: folderHovered
-                    ? 'rotateX(52deg) rotateY(-2deg) rotateZ(-28deg) scale(1.05)'
-                    : 'rotateX(56deg) rotateY(0deg) rotateZ(-32deg) scale(1)',
-                  transition: 'transform 0.8s cubic-bezier(0.16, 1, 0.3, 1)',
-                }}
-              >
-                {/* Soft ambient neon background glow behind folder */}
-                <div
-                  className="absolute inset-0 rounded-3xl opacity-30 pointer-events-none transition-all duration-700"
-                  style={{
-                    background: 'radial-gradient(circle at 50% 50%, #7C2AEB 0%, transparent 70%)',
-                    transform: folderHovered ? 'translateZ(-80px) scale(1.2)' : 'translateZ(-80px) scale(0.9)',
-                    filter: 'blur(40px)',
-                  }}
-                />
+          {(() => {
+            const folderMaskSvg = `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 400'%3E%3Cpath d='M 0 380 L 0 80 A 20 20 0 0 1 20 60 L 160 60 A 20 20 0 0 1 180 80 A 20 20 0 0 0 200 100 L 580 100 A 20 20 0 0 1 600 120 L 600 380 A 20 20 0 0 1 580 400 L 20 400 A 20 20 0 0 1 0 380 Z' fill='black'/%3E%3C/svg%3E")`;
+            
+            const glassStyle: React.CSSProperties = {
+              maskImage: folderMaskSvg,
+              WebkitMaskImage: folderMaskSvg,
+              maskSize: '100% 100%',
+              WebkitMaskSize: '100% 100%',
+              maskRepeat: 'no-repeat',
+              WebkitMaskRepeat: 'no-repeat',
+              backdropFilter: 'blur(16px) saturate(140%)',
+              WebkitBackdropFilter: 'blur(16px) saturate(140%)',
+              background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.015))',
+            };
 
-                {/* FOLDER BACK COVER PLATE (Z = -40px) */}
+            const backGlassStyle: React.CSSProperties = {
+              maskImage: folderMaskSvg,
+              WebkitMaskImage: folderMaskSvg,
+              maskSize: '100% 100%',
+              WebkitMaskSize: '100% 100%',
+              maskRepeat: 'no-repeat',
+              WebkitMaskRepeat: 'no-repeat',
+              backdropFilter: 'blur(8px)',
+              WebkitBackdropFilter: 'blur(8px)',
+              background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.005))',
+            };
+
+            return (
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.2 }}
+                transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                className="flex flex-col items-center w-full"
+              >
                 <div
-                  className="absolute left-6 right-6 rounded-3xl border border-white/10"
+                  className="relative cursor-pointer w-full max-w-[700px] flex items-center justify-center"
+                  onMouseEnter={() => setFolderHovered(true)}
+                  onMouseLeave={() => setFolderHovered(false)}
+                  onClick={() => navigate('/portfolio')}
                   style={{
-                    bottom: '30px',
-                    height: isMobile ? '200px' : '260px',
-                    background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.01))',
-                    backdropFilter: 'blur(10px)',
-                    WebkitBackdropFilter: 'blur(10px)',
-                    boxShadow: '0 30px 80px rgba(0,0,0,0.8)',
-                    transform: folderHovered ? 'translateZ(-40px) rotateX(5deg)' : 'translateZ(-40px) rotateX(0deg)',
-                    transformStyle: 'preserve-3d',
-                    transition: 'transform 0.8s cubic-bezier(0.16, 1, 0.3, 1)',
-                    zIndex: 1,
+                    height: isMobile ? '380px' : '480px',
+                    perspective: '1600px',
+                    touchAction: 'none',
                   }}
                 >
-                  {/* Folder Tab on Back Plate */}
+                  {/* Core 3D Scene Wrapper - Facing forward, tilts slightly on hover */}
                   <div
-                    className="absolute top-[-20px] left-8 h-5 w-24 border-t border-l border-r border-white/10"
                     style={{
-                      background: 'rgba(255,255,255,0.04)',
-                      borderRadius: '8px 8px 0 0',
-                      clipPath: 'polygon(0% 100%, 15% 0%, 85% 0%, 100% 100%)',
+                      width: '100%',
+                      height: '100%',
+                      position: 'relative',
+                      transformStyle: 'preserve-3d',
+                      transform: folderHovered
+                        ? 'rotateX(6deg) rotateY(-2deg) scale(1.03)'
+                        : 'rotateX(0deg) rotateY(0deg) scale(1)',
+                      transition: 'transform 0.8s cubic-bezier(0.16, 1, 0.3, 1)',
                     }}
-                  />
-                  {/* Internal neon line connector representing blueprint style inside folder */}
-                  <div className="absolute top-4 left-6 right-6 h-px bg-gradient-to-r from-transparent via-[#7C2AEB]/30 to-transparent" />
-                </div>
-
-                {/* REVEALED PROJECT CARDS (They float up and pop out in 3D) */}
-                {PROJECTS.map((proj, i) => {
-                  // Coordinate physics for cinematic pop out
-                  // Closed state: Stacked inside folder
-                  // Open state: Fly outwards with rotation, scale, and offset
-                  let x = 0;
-                  let y = isMobile ? 30 : 20;
-                  let z = (i + 1) * -8; // Slightly staggered depth when closed
-                  let rotX = 0;
-                  let rotY = 0;
-                  let rotZ = 0;
-                  let scale = 0.9 - i * 0.03;
-                  let opacity = 0.45 - i * 0.1;
-                  let cardBlur = '4px';
-
-                  if (folderHovered) {
-                    cardBlur = '0px';
-                    opacity = 1;
-                    if (isMobile) {
-                      // Compact mobile coordinates
-                      const coords = [
-                        { x: -75, y: -70, z: 60, rotX: -5, rotY: -10, rotZ: -6, scale: 0.95 },
-                        { x: 0,   y: -110, z: 100, rotX: -5, rotY: 0,   rotZ: 0,  scale: 1.0 },
-                        { x: 75,  y: -60, z: 60, rotX: -5, rotY: 10,  rotZ: 6,  scale: 0.95 }
-                      ];
-                      ({ x, y, z, rotX, rotY, rotZ, scale } = coords[i]);
-                    } else {
-                      // Cinematic desktop coordinates
-                      const coords = [
-                        { x: -180, y: -160, z: 120, rotX: -8, rotY: -14, rotZ: -8, scale: 1.0 },
-                        { x: 10,   y: -210, z: 190, rotX: -8, rotY: 5,   rotZ: 2,  scale: 1.06 },
-                        { x: 195,  y: -130, z: 120, rotX: -8, rotY: 18,  rotZ: 10, scale: 1.0 }
-                      ];
-                      ({ x, y, z, rotX, rotY, rotZ, scale } = coords[i]);
-                    }
-                  }
-
-                  const cardW = isMobile ? '150px' : '190px';
-                  const cardH = isMobile ? '195px' : '240px';
-
-                  return (
+                  >
+                    {/* Soft ambient neon background glow behind folder */}
                     <div
-                      key={proj.slug}
+                      className="absolute inset-0 rounded-3xl opacity-35 pointer-events-none transition-all duration-700"
                       style={{
-                        position: 'absolute',
-                        left: '50%',
-                        bottom: isMobile ? '40px' : '60px',
-                        width: cardW,
-                        height: cardH,
-                        marginLeft: isMobile ? '-75px' : '-95px',
-                        transform: `translate3d(${x}px, ${y}px, ${z}px) rotateX(${rotX}deg) rotateY(${rotY}deg) rotateZ(${rotZ}deg) scale(${scale})`,
+                        background: 'radial-gradient(circle at 50% 50%, #7C2AEB 0%, transparent 70%)',
+                        transform: folderHovered ? 'translateZ(-90px) scale(1.3)' : 'translateZ(-90px) scale(0.9)',
+                        filter: 'blur(40px)',
+                      }}
+                    />
+
+                    {/* FOLDER BACK COVER PLATE */}
+                    <div
+                      className="absolute left-1/2 -translate-x-1/2"
+                      style={{
+                        bottom: isMobile ? '20px' : '30px',
+                        width: isMobile ? '320px' : '480px',
+                        height: isMobile ? '213px' : '320px', // exact 1.5 ratio
+                        transform: folderHovered ? 'translateZ(-40px)' : 'translateZ(-40px)',
                         transformStyle: 'preserve-3d',
-                        opacity,
-                        filter: `blur(${cardBlur})`,
-                        transition: `transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s ease, filter 0.6s ease`,
-                        zIndex: 10 + i,
-                        borderRadius: '20px',
-                        overflow: 'hidden',
-                        border: '1px solid rgba(255, 255, 255, 0.08)',
-                        borderTop: `1px solid ${proj.color}40`,
-                        boxShadow: folderHovered
-                          ? `0 15px 35px ${proj.color}33, 0 0 15px rgba(0,0,0,0.6)`
-                          : '0 6px 15px rgba(0,0,0,0.5)',
+                        transition: 'transform 0.8s cubic-bezier(0.16, 1, 0.3, 1)',
+                        zIndex: 1,
                       }}
                     >
-                      {/* Card visual contents */}
-                      <div className="h-[55%] relative flex items-center justify-center overflow-hidden" style={{ background: proj.bg }}>
-                        {/* Glow backing inside card */}
-                        <div
-                          className="absolute inset-0 opacity-20"
-                          style={{
-                            background: `radial-gradient(circle at center, ${proj.color} 0%, transparent 70%)`
-                          }}
+                      <div style={backGlassStyle} className="absolute inset-0 w-full h-full" />
+                      <svg viewBox="0 0 600 400" className="absolute inset-0 w-full h-full pointer-events-none">
+                        <path
+                          d="M 0 380 L 0 80 A 20 20 0 0 1 20 60 L 160 60 A 20 20 0 0 1 180 80 A 20 20 0 0 0 200 100 L 580 100 A 20 20 0 0 1 600 120 L 600 380 A 20 20 0 0 1 580 400 L 20 400 A 20 20 0 0 1 0 380 Z"
+                          fill="none"
+                          stroke="rgba(255, 255, 255, 0.08)"
+                          strokeWidth="1.5"
                         />
-                        <Globe className="w-9 h-9 opacity-25" style={{ color: proj.color }} />
-                        <span className="absolute top-3 left-3 text-[9px] font-mono text-white/50">{proj.num}</span>
-                      </div>
-                      <div className="p-3.5 h-[45%] flex flex-col justify-between" style={{ background: 'rgba(10,8,37,0.92)', backdropFilter: 'blur(5px)' }}>
-                        <div>
-                          <p className="text-white font-bold text-xs sm:text-sm leading-tight font-display">{proj.name}</p>
-                          <p className="text-white/40 text-[9px] mt-0.5 font-sans">{proj.type}</p>
-                        </div>
-                        <span className="text-[9px] font-mono font-bold uppercase tracking-wider text-secondary flex items-center gap-1">
-                          Explore <ArrowUpRight className="w-3 h-3" />
-                        </span>
-                      </div>
+                      </svg>
                     </div>
-                  );
-                })}
 
-                {/* FOLDER FRONT GLASS COVER (Z = 40px, flaps down when opened) */}
-                <div
-                  className="absolute left-6 right-6 rounded-3xl"
-                  style={{
-                    bottom: '30px',
-                    height: isMobile ? '200px' : '260px',
-                    background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02))',
-                    backdropFilter: 'blur(16px) saturate(140%)',
-                    WebkitBackdropFilter: 'blur(16px) saturate(140%)',
-                    border: '1px solid rgba(255,255,255,0.12)',
-                    borderTop: '1px solid rgba(255,255,255,0.22)',
-                    borderLeft: '1px solid rgba(255,255,255,0.18)',
-                    boxShadow: folderHovered
-                      ? 'inset 0 1px 0 rgba(255,255,255,0.2), 0 20px 50px rgba(0,0,0,0.9)'
-                      : 'inset 0 1px 0 rgba(255,255,255,0.1), 0 10px 30px rgba(0,0,0,0.8)',
-                    transformOrigin: 'bottom center',
-                    transform: folderHovered
-                      ? 'translateZ(40px) rotateX(-102deg) translateY(10px)'
-                      : 'translateZ(40px) rotateX(0deg) translateY(0px)',
-                    transition: 'transform 0.8s cubic-bezier(0.16, 1, 0.3, 1)',
-                    zIndex: 20,
-                  }}
-                >
-                  <div className="flex flex-col justify-between h-full p-6 sm:p-8">
-                    <div>
-                      <div className="flex items-center gap-3.5 mb-2">
-                        <div className="w-10 h-10 rounded-xl border border-primary/20 flex items-center justify-center bg-primary/10">
-                          <span className="text-xl">📁</span>
+                    {/* REVEALED PROJECT CARDS (They float up and pop out in 3D) */}
+                    {PROJECTS.map((proj, i) => {
+                      // Coordinate physics for cinematic pop out
+                      // Closed state: Stacked inside folder
+                      // Open state: Fly outwards with rotation, scale, and offset
+                      let x = 0;
+                      let y = isMobile ? 30 : 20;
+                      let z = (i + 1) * -8; // Slightly staggered depth when closed
+                      let rotX = 0;
+                      let rotY = 0;
+                      let rotZ = 0;
+                      let scale = 0.9 - i * 0.03;
+                      let opacity = 0.45 - i * 0.1;
+                      let cardBlur = '4px';
+
+                      if (folderHovered) {
+                        cardBlur = '0px';
+                        opacity = 1;
+                        if (isMobile) {
+                          // Compact mobile coordinates
+                          const coords = [
+                            { x: -75, y: -75, z: 40, rotX: -5, rotY: -8, rotZ: -18, scale: 0.92 },
+                            { x: 0,   y: -105, z: 70, rotX: -5, rotY: 0,   rotZ: 0,  scale: 0.98 },
+                            { x: 75,  y: -75, z: 40, rotX: -5, rotY: 8,   rotZ: 18,  scale: 0.92 }
+                          ];
+                          ({ x, y, z, rotX, rotY, rotZ, scale } = coords[i]);
+                        } else {
+                          // Cinematic desktop coordinates
+                          const coords = [
+                            { x: -170, y: -140, z: 80, rotX: -5, rotY: -10, rotZ: -22, scale: 0.98 },
+                            { x: 0,    y: -190, z: 120, rotX: -5, rotY: 0,   rotZ: 0,   scale: 1.05 },
+                            { x: 170,  y: -140, z: 80, rotX: -5, rotY: 10,  rotZ: 22,  scale: 0.98 }
+                          ];
+                          ({ x, y, z, rotX, rotY, rotZ, scale } = coords[i]);
+                        }
+                      }
+
+                      const cardW = isMobile ? '150px' : '190px';
+                      const cardH = isMobile ? '195px' : '240px';
+
+                      return (
+                        <div
+                          key={proj.slug}
+                          style={{
+                            position: 'absolute',
+                            left: '50%',
+                            bottom: isMobile ? '30px' : '50px',
+                            width: cardW,
+                            height: cardH,
+                            marginLeft: isMobile ? '-75px' : '-95px',
+                            transform: `translate3d(${x}px, ${y}px, ${z}px) rotateX(${rotX}deg) rotateY(${rotY}deg) rotateZ(${rotZ}deg) scale(${scale})`,
+                            transformStyle: 'preserve-3d',
+                            opacity,
+                            filter: `blur(${cardBlur})`,
+                            transition: `transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s ease, filter 0.6s ease`,
+                            zIndex: 10 + i,
+                            borderRadius: '20px',
+                            overflow: 'hidden',
+                            border: '1px solid rgba(255, 255, 255, 0.08)',
+                            borderTop: `1px solid ${proj.color}40`,
+                            boxShadow: folderHovered
+                              ? `0 15px 35px ${proj.color}33, 0 0 15px rgba(0,0,0,0.6)`
+                              : '0 6px 15px rgba(0,0,0,0.5)',
+                          }}
+                        >
+                          {/* Card visual contents */}
+                          <div className="h-[55%] relative flex items-center justify-center overflow-hidden" style={{ background: proj.bg }}>
+                            {/* Glow backing inside card */}
+                            <div
+                              className="absolute inset-0 opacity-20"
+                              style={{
+                                background: `radial-gradient(circle at center, ${proj.color} 0%, transparent 70%)`
+                              }}
+                            />
+                            <Globe className="w-9 h-9 opacity-25" style={{ color: proj.color }} />
+                            <span className="absolute top-3 left-3 text-[9px] font-mono text-white/50">{proj.num}</span>
+                          </div>
+                          <div className="p-3.5 h-[45%] flex flex-col justify-between" style={{ background: 'rgba(10,8,37,0.92)', backdropFilter: 'blur(5px)' }}>
+                            <div>
+                              <p className="text-white font-bold text-xs sm:text-sm leading-tight font-display">{proj.name}</p>
+                              <p className="text-white/40 text-[9px] mt-0.5 font-sans">{proj.type}</p>
+                            </div>
+                            <span className="text-[9px] font-mono font-bold uppercase tracking-wider text-secondary flex items-center gap-1">
+                              Explore <ArrowUpRight className="w-3 h-3" />
+                            </span>
+                          </div>
                         </div>
+                      );
+                    })}
+
+                    {/* FOLDER FRONT GLASS COVER */}
+                    <div
+                      className="absolute left-1/2 -translate-x-1/2"
+                      style={{
+                        bottom: isMobile ? '20px' : '30px',
+                        width: isMobile ? '320px' : '480px',
+                        height: isMobile ? '213px' : '320px', // exact 1.5 ratio
+                        transformOrigin: 'bottom center',
+                        transform: folderHovered
+                          ? 'translateZ(40px) rotateX(-12deg)'
+                          : 'translateZ(40px) rotateX(0deg)',
+                        transition: 'transform 0.8s cubic-bezier(0.16, 1, 0.3, 1)',
+                        zIndex: 20,
+                      }}
+                    >
+                      {/* Glass base */}
+                      <div style={glassStyle} className="absolute inset-0 w-full h-full" />
+                      
+                      {/* Stroke overlay */}
+                      <svg viewBox="0 0 600 400" className="absolute inset-0 w-full h-full pointer-events-none">
+                        <defs>
+                          <linearGradient id="neonBorderGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stopColor="#B58DFF" stopOpacity="0.5" />
+                            <stop offset="50%" stopColor="#78D5FF" stopOpacity="0.3" />
+                            <stop offset="100%" stopColor="#7C2AEB" stopOpacity="0.5" />
+                          </linearGradient>
+                        </defs>
+                        <path
+                          d="M 0 380 L 0 80 A 20 20 0 0 1 20 60 L 160 60 A 20 20 0 0 1 180 80 A 20 20 0 0 0 200 100 L 580 100 A 20 20 0 0 1 600 120 L 600 380 A 20 20 0 0 1 580 400 L 20 400 A 20 20 0 0 1 0 380 Z"
+                          fill="none"
+                          stroke="url(#neonBorderGrad)"
+                          strokeWidth="1.5"
+                        />
+                      </svg>
+
+                      {/* Content */}
+                      <div className="flex flex-col justify-between h-full p-6 sm:p-8 relative z-30">
                         <div>
-                          <p className="text-white font-bold text-base sm:text-lg font-display">Open Portfolio</p>
-                          <p className="text-white/40 text-xs font-sans">Hover to reveal selected projects</p>
+                          <div className="flex items-center gap-3 mb-1">
+                            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl border border-primary/20 flex items-center justify-center bg-primary/10">
+                              <span className="text-lg sm:text-xl">📁</span>
+                            </div>
+                            <div>
+                              <p className="text-white font-bold text-sm sm:text-base font-display">Open Portfolio</p>
+                              <p className="text-white/40 text-[10px] sm:text-xs font-sans">Hover to reveal selected projects</p>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="flex items-center justify-between mt-auto">
+                          <span className="text-white/35 text-[9px] sm:text-xs font-semibold tracking-wider font-mono">GALAXATECH © 2026</span>
+                          <button
+                            onClick={e => { e.stopPropagation(); navigate('/portfolio'); }}
+                            className="w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-[1.1] primary-gradient cursor-pointer"
+                            style={{ boxShadow: '0 8px 30px rgba(124,42,235,0.4)' }}
+                          >
+                            <ArrowUpRight className="w-4 h-4 text-white" />
+                          </button>
                         </div>
                       </div>
                     </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-white/35 text-[9px] sm:text-xs font-semibold tracking-wider font-mono">GALAXATECH © 2026</span>
-                      <button
-                        onClick={e => { e.stopPropagation(); navigate('/portfolio'); }}
-                        className="w-10 h-10 sm:w-11 sm:h-11 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-[1.1] primary-gradient cursor-pointer"
-                        style={{ boxShadow: '0 8px 30px rgba(124,42,235,0.4)' }}
-                      >
-                        <ArrowUpRight className="w-4 sm:w-5 h-4 sm:h-5 text-white" />
-                      </button>
-                    </div>
+
                   </div>
                 </div>
-
-              </div>
-            </div>
-            <p className="text-white/25 text-[11px] font-mono mt-6">Hover or tap to reveal</p>
-          </motion.div>
+                <p className="text-white/25 text-[11px] font-mono mt-6">Hover or tap to reveal</p>
+              </motion.div>
+            );
+          })()}
         </div>
       </section>
 
