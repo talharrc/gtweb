@@ -1,6 +1,6 @@
 import { useEffect, useState, ReactNode } from 'react';
 import { Routes, Route, useLocation, useNavigate, Navigate } from 'react-router-dom';
-import { Loader2, ChevronUp, MessageCircle } from 'lucide-react';
+import { Loader2, ChevronUp, MessageCircle, Link } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import Navbar from './components/Navbar';
 import HomeView from './components/HomeView';
@@ -20,13 +20,10 @@ import VisitorHubView from './components/visitor-hub/VisitorHubView';
 import ClientHubView from './components/client-hub/ClientHubView';
 import BuilderHubView from './components/builder-hub/BuilderHubView';
 import AdminPanelView from './components/admin/AdminPanelView';
-import AuthModal from './components/auth/AuthModal';
-import PendingScreen from './components/auth/PendingScreen';
+import AdminLoginForm from './components/admin/AdminLoginForm';
+import InviteLandingPage from './components/auth/InviteLandingPage';
 import { AuthProvider, useAuth } from './context/AuthContext';
-import { DevRoleProvider } from './context/DevRoleContext';
-import DevRoleSwitcher from './components/dev/DevRoleSwitcher';
 import { PageType, UserRole } from './types';
-import { AUTH_DISABLED } from './config';
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -49,32 +46,34 @@ const PAGE_ROUTES: Record<PageType, string> = {
   'builders-program': '/gbp',
 };
 
-// Route guard: checks auth, role, and status before rendering children
+// Shown when a hub route is accessed without a valid JWT session
+function HubAccessDenied({ hubRole }: { hubRole: 'client' | 'builder' }) {
+  const isClient = hubRole === 'client';
+  const accentColor = isClient ? 'text-cyan-400' : 'text-emerald-400';
+  const accentBg = isClient ? 'bg-cyan-500/15' : 'bg-emerald-500/15';
+  const accentBorder = isClient ? 'border-cyan-500/30' : 'border-emerald-500/30';
+
+  return (
+    <div className="min-h-screen flex items-center justify-center px-6">
+      <div className="glass-card max-w-sm w-full p-8 rounded-2xl text-center">
+        <div className={`w-11 h-11 rounded-xl ${accentBg} border ${accentBorder} flex items-center justify-center mx-auto mb-4`}>
+          <Link className={`w-5 h-5 ${accentColor}`} />
+        </div>
+        <h2 className="text-white font-bold text-xl mb-2">Enter your invite link</h2>
+        <p className="text-white/50 text-sm mb-2">
+          Access to the {isClient ? 'Client' : 'Builder'} Hub is by invite only.
+        </p>
+        <p className="text-white/30 text-xs">
+          Check your email for the invite link sent by GalaxaTech, or contact us to get one.
+        </p>
+      </div>
+    </div>
+  );
+}
+
+// Route guard for hub and admin routes
 function RequireRole({ requiredRole, children }: { requiredRole: UserRole | 'admin'; children: ReactNode }) {
-  const { isLoading, isSignedIn, role, userProfile, openAuthModal } = useAuth();
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    if (AUTH_DISABLED) return;
-    if (isLoading) return;
-
-    if (!isSignedIn) {
-      openAuthModal();
-      navigate('/', { replace: true });
-      return;
-    }
-
-    if (requiredRole === 'admin' && role !== 'admin') {
-      navigate('/', { replace: true });
-      return;
-    }
-
-    if (requiredRole !== 'admin' && role !== requiredRole && role !== 'admin') {
-      navigate('/', { replace: true });
-    }
-  }, [isLoading, isSignedIn, role, requiredRole]);
-
-  if (AUTH_DISABLED) return <>{children}</>;
+  const { isLoading, isSignedIn, role } = useAuth();
 
   if (isLoading) {
     return (
@@ -84,19 +83,18 @@ function RequireRole({ requiredRole, children }: { requiredRole: UserRole | 'adm
     );
   }
 
-  if (!isSignedIn) return null;
+  // Admin gate: show login form instead of redirecting
+  if (requiredRole === 'admin') {
+    if (!isSignedIn || role !== 'admin') return <AdminLoginForm />;
+    return <>{children}</>;
+  }
 
-  // Admin bypasses all hub guards
-  if (role === 'admin' && requiredRole !== 'admin') return <>{children}</>;
+  // Admin can access any hub
+  if (isSignedIn && role === 'admin') return <>{children}</>;
 
-  if (requiredRole !== 'admin' && role !== requiredRole) return null;
-
-  // Pending approval screen for client/builder
-  if (
-    (requiredRole === 'client' || requiredRole === 'builder') &&
-    userProfile?.status === 'pending'
-  ) {
-    return <PendingScreen />;
+  if (!isSignedIn || role !== requiredRole) {
+    const hubRole = (requiredRole === 'client' || requiredRole === 'builder') ? requiredRole : 'client';
+    return <HubAccessDenied hubRole={hubRole} />;
   }
 
   return <>{children}</>;
@@ -156,7 +154,7 @@ function WhatsAppButton() {
 function AppInner() {
   const location = useLocation();
   const navigate = useNavigate();
-  const { firebaseUser, userProfile } = useAuth();
+  const { email, userProfile } = useAuth();
   const isHubRoute = location.pathname.startsWith('/hub') || location.pathname.startsWith('/admin');
 
   const [dhakaTime, setDhakaTime] = useState<string>('Dhaka HQ');
@@ -192,6 +190,7 @@ function AppInner() {
         <div className="bg-grid-overlay" />
         <ScrollToTop />
         <Routes>
+          <Route path="/hub/invite/:token" element={<InviteLandingPage />} />
           <Route path="/hub/visitor/*" element={
             <RequireRole requiredRole="visitor">
               <VisitorHubView />
@@ -213,8 +212,6 @@ function AppInner() {
             </RequireRole>
           } />
         </Routes>
-        <AuthModal />
-        <DevRoleSwitcher />
       </div>
     );
   }
@@ -229,8 +226,8 @@ function AppInner() {
         dhakaTime={dhakaTime}
         isDhakaOpen={isDhakaOpen}
         currentUser={
-          firebaseUser && userProfile
-            ? { displayName: userProfile.displayName, photoURL: userProfile.photoURL, email: userProfile.email }
+          email && userProfile
+            ? { displayName: userProfile.displayName, photoURL: '', email }
             : null
         }
       />
@@ -252,20 +249,21 @@ function AppInner() {
       </main>
       <Footer onPageChange={handlePageSelect} dhakaTime={dhakaTime} />
       <CookieBanner />
+<<<<<<< HEAD
       <AuthModal />
       <DevRoleSwitcher />
       <ScrollToTopButton />
       <WhatsAppButton />
+=======
+>>>>>>> 5e444eb (feat: replace Firebase Auth with invite-link based custom auth system)
     </div>
   );
 }
 
 export default function App() {
   return (
-    <DevRoleProvider>
-      <AuthProvider>
-        <AppInner />
-      </AuthProvider>
-    </DevRoleProvider>
+    <AuthProvider>
+      <AppInner />
+    </AuthProvider>
   );
 }

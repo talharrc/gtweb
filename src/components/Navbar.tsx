@@ -58,7 +58,7 @@ const COLOR_MAP: Record<string, string> = {
 export default function Navbar({ onPageChange, dhakaTime, isDhakaOpen, currentUser }: NavbarProps) {
   const navigate = useNavigate();
   const location = useLocation();
-  const { signOut, openAuthModal, isSignedIn } = useAuth();
+  const { signOut, isSignedIn } = useAuth();
   const [scrolled, setScrolled] = useState(false);
   const [visible, setVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
@@ -311,12 +311,9 @@ export default function Navbar({ onPageChange, dhakaTime, isDhakaOpen, currentUs
                     {/* Desktop-only: Login/signup + Profile + social links */}
                     <div className="hidden md:block">
                       <div className="px-5 py-3 border-b border-[rgba(181,141,255,0.15)]">
-                        {!isSignedIn && (
-                          <button
-                            onClick={() => { openAuthModal(); setMoreMenuOpen(false); }}
-                            className="w-full flex items-center gap-3 py-2 text-white/80 hover:text-primary text-xs font-semibold transition-colors focus:outline-none"
-                          >
-                            <Lock className="w-3.5 h-3.5" /> Login / Sign Up
+                        {isSignedIn && (
+                          <button onClick={() => { signOut(); setMoreMenuOpen(false); }} className="w-full flex items-center gap-3 py-2 text-red-400 hover:text-red-300 text-xs font-semibold transition-colors focus:outline-none">
+                            <LogOut className="w-3.5 h-3.5" /> Sign Out
                           </button>
                         )}
                         <button disabled className="w-full flex items-center gap-3 py-2 text-white/35 text-xs font-semibold cursor-not-allowed">
@@ -377,14 +374,7 @@ export default function Navbar({ onPageChange, dhakaTime, isDhakaOpen, currentUs
                       </div>
                       {/* Login/Sign Up + Book Audit + WhatsApp + Social */}
                       <div className="px-5 py-3">
-                        {!isSignedIn ? (
-                          <button
-                            onClick={() => { openAuthModal(); setMoreMenuOpen(false); }}
-                            className="w-full py-3 bg-white/8 border border-white/15 text-white rounded-xl text-sm font-bold mb-3 flex items-center justify-center gap-2 hover:bg-white/12 transition-all"
-                          >
-                            <Lock className="w-4 h-4 text-primary" /> Login / Sign Up
-                          </button>
-                        ) : (
+                        {isSignedIn && (
                           <button
                             onClick={() => { signOut(); setMoreMenuOpen(false); }}
                             className="w-full py-3 bg-red-500/10 border border-red-500/20 text-red-400 rounded-xl text-sm font-bold mb-3 flex items-center justify-center gap-2 hover:bg-red-500/20 transition-all"

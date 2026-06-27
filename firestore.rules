@@ -2,50 +2,60 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
+    // Auth now uses Firebase Custom Tokens with custom claims set by our API.
+    // request.auth.token.role is set to 'admin' | 'client' | 'builder'
+    // request.auth.token.email matches the user's real email
+    // request.auth.token.projectId is the linked project
+
     function isAdmin() {
-      return request.auth != null &&
-             request.auth.token.email == 'mail.galaxatech@gmail.com';
+      return request.auth != null && request.auth.token.role == 'admin';
     }
 
-    // Email-based project membership (works for list queries using resource.data)
+    function isClient() {
+      return request.auth != null && request.auth.token.role == 'client';
+    }
+
+    function isBuilder() {
+      return request.auth != null && request.auth.token.role == 'builder';
+    }
+
+    function authEmail() {
+      return request.auth != null ? request.auth.token.email : '';
+    }
+
     function isProjectClient() {
       return request.auth != null &&
-             resource.data.clientEmail == request.auth.token.email;
+             resource.data.clientEmail == authEmail();
     }
 
     function isProjectBuilder() {
       return request.auth != null &&
              resource.data.builderEmails is list &&
-             request.auth.token.email in resource.data.builderEmails;
+             authEmail() in resource.data.builderEmails;
     }
 
-    // For subcollection access — fetch parent project via get()
     function clientOnProject(projectId) {
       return request.auth != null &&
-             get(/databases/$(database)/documents/projects/$(projectId)).data.clientEmail == request.auth.token.email;
+             get(/databases/$(database)/documents/projects/$(projectId)).data.clientEmail == authEmail();
     }
 
     function builderOnProject(projectId) {
       let p = get(/databases/$(database)/documents/projects/$(projectId)).data;
       return request.auth != null &&
              p.builderEmails is list &&
-             request.auth.token.email in p.builderEmails;
+             authEmail() in p.builderEmails;
     }
 
-    // Users — self-read/create, admin full control, self can update own doc
+    // Users collection — legacy, may be empty now (credentials moved to 'credentials' collection)
     match /users/{uid} {
-      allow read: if request.auth.uid == uid || isAdmin();
-      allow create: if request.auth.uid == uid;
-      allow update: if request.auth.uid == uid || isAdmin();
-      allow delete: if isAdmin();
+      allow read, write: if isAdmin();
     }
 
-    // Projects — email-based read, admin write
+    // Projects
     match /projects/{projectId} {
       allow read: if isAdmin() || isProjectClient() || isProjectBuilder();
       allow write: if isAdmin();
 
-      // Updates subcollection — client and builder read; builder writes
       match /updates/{updateId} {
         allow read: if isAdmin() || clientOnProject(projectId) || builderOnProject(projectId);
         allow create: if isAdmin() || builderOnProject(projectId);
@@ -63,9 +73,9 @@ service cloud.firestore {
     // Documents
     match /documents/{docId} {
       allow read: if isAdmin() || (request.auth != null &&
-        (get(/databases/$(database)/documents/projects/$(resource.data.projectId)).data.clientEmail == request.auth.token.email ||
+        (get(/databases/$(database)/documents/projects/$(resource.data.projectId)).data.clientEmail == authEmail() ||
          (get(/databases/$(database)/documents/projects/$(resource.data.projectId)).data.builderEmails is list &&
-          request.auth.token.email in get(/databases/$(database)/documents/projects/$(resource.data.projectId)).data.builderEmails)));
+          authEmail() in get(/databases/$(database)/documents/projects/$(resource.data.projectId)).data.builderEmails)));
       allow write: if isAdmin();
     }
 
@@ -117,12 +127,12 @@ service cloud.firestore {
       allow read, update, delete: if isAdmin();
     }
 
-    // Credentials collection (legacy — admin only)
+    // Credentials — written only by Firebase Admin SDK (server-side), never by client
     match /credentials/{id} {
-      allow read, write: if isAdmin();
+      allow read, write: if false;
     }
 
-    // Content — public items readable by all, members-only require auth
+    // Content
     match /content/{contentId} {
       allow read: if resource.data.isPublic == true || request.auth != null;
       allow write: if isAdmin();

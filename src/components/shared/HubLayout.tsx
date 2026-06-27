@@ -21,12 +21,12 @@ interface HubLayoutProps {
 
 export default function HubLayout({ title, navItems, activeSection, onSectionChange, children }: HubLayoutProps) {
   const navigate = useNavigate();
-  const { firebaseUser, userProfile, signOut } = useAuth();
+  const { email, userProfile, signOut } = useAuth();
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  const displayName = firebaseUser?.displayName ?? userProfile?.displayName ?? null;
-  const photoURL = firebaseUser?.photoURL ?? null;
-  const hasUser = firebaseUser !== null || userProfile !== null;
+  const displayName = userProfile?.displayName ?? email?.split('@')[0] ?? null;
+  const photoURL: string | null = null;
+  const hasUser = email !== null;
 
   const handleLogout = async () => {
     await signOut();

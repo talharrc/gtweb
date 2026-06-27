@@ -2,7 +2,7 @@ import { useState, useEffect, FormEvent } from 'react';
 import { collection, onSnapshot, Timestamp } from 'firebase/firestore';
 import {
   Plus, Edit2, Trash2, X, Loader2, Calendar, ChevronDown, ChevronUp,
-  Mail, ToggleLeft, ToggleRight,
+  Mail, ToggleLeft, ToggleRight, Link, Copy, CheckCheck,
 } from 'lucide-react';
 import { db } from '../../lib/firebase';
 import { GTProject, Milestone } from '../../types';
@@ -32,10 +32,30 @@ const EMPTY_FORM = {
   whatsappGroupUrl: '',
   projectValue: 0,
   clientEmail: '',
-  builderEmailsRaw: '', // comma-separated
+  builderEmailsRaw: '',
   inPortfolio: false,
   milestones: [] as Milestone[],
 };
+
+interface InviteResult {
+  email: string;
+  role: string;
+  inviteUrl: string;
+}
+
+function CopyButton({ text }: { text: string }) {
+  const [copied, setCopied] = useState(false);
+  return (
+    <button
+      type="button"
+      onClick={() => { navigator.clipboard.writeText(text); setCopied(true); setTimeout(() => setCopied(false), 2000); }}
+      className="p-1 rounded text-white/30 hover:text-white/70 transition-colors flex-shrink-0"
+      title="Copy"
+    >
+      {copied ? <CheckCheck className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+    </button>
+  );
+}
 
 export default function AdminProjectsSection() {
   const [projects, setProjects] = useState<GTProject[]>([]);
@@ -48,6 +68,7 @@ export default function AdminProjectsSection() {
   const [newMilestone, setNewMilestone] = useState('');
   const [expandedProject, setExpandedProject] = useState<string | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [inviteResults, setInviteResults] = useState<InviteResult[] | null>(null);
 
   useEffect(() => {
     const unsub = onSnapshot(
@@ -66,6 +87,7 @@ export default function AdminProjectsSection() {
     setEditingId(null);
     setShowForm(true);
     setSaveError('');
+    setInviteResults(null);
   };
 
   const openEdit = (p: GTProject) => {
@@ -86,6 +108,7 @@ export default function AdminProjectsSection() {
     setEditingId(p.id);
     setShowForm(true);
     setSaveError('');
+    setInviteResults(null);
   };
 
   const addMilestone = () => {
@@ -124,17 +147,42 @@ export default function AdminProjectsSection() {
         builderEmails,
         inPortfolio: form.inPortfolio,
         milestones: form.milestones,
-        // Keep legacy fields empty/compat
         clientUid: '',
         builderUids: [],
         clientInfo: { name: '', email: form.clientEmail.trim().toLowerCase() },
       };
 
+      let projectId = editingId;
       if (editingId) {
         await updateProject(editingId, data);
       } else {
-        await createProject(data as any);
+        projectId = await createProject(data as any);
       }
+
+      // Generate invite links for new projects with client/builder emails
+      if (!editingId && projectId) {
+        try {
+          const res = await fetch('/api/admin/generate-invites', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+            body: JSON.stringify({
+              projectId,
+              projectName: form.name,
+              clientEmail: form.clientEmail.trim().toLowerCase() || undefined,
+              builderEmails: builderEmails.length > 0 ? builderEmails : undefined,
+            }),
+          });
+          const invData = await res.json();
+          if (invData.ok && invData.invites?.length > 0) {
+            setInviteResults(invData.invites);
+            return; // keep modal open to show links
+          }
+        } catch {
+          // Non-fatal — project was created, invites failed
+        }
+      }
+
       setShowForm(false);
     } catch (err: any) {
       setSaveError(err?.code === 'permission-denied'
@@ -150,6 +198,8 @@ export default function AdminProjectsSection() {
     setDeletingId(id);
     try { await deleteProject(id); } finally { setDeletingId(null); }
   };
+
+  const origin = window.location.origin;
 
   if (loading) return <div className="flex justify-center py-16"><Loader2 className="w-6 h-6 text-primary animate-spin" /></div>;
 
@@ -255,165 +305,199 @@ export default function AdminProjectsSection() {
           <div className="glass-card w-full max-w-2xl rounded-2xl p-6 max-h-[92vh] overflow-y-auto">
             <div className="flex items-center justify-between mb-5">
               <h3 className="text-white font-bold text-lg">{editingId ? 'Edit Project' : 'New Project'}</h3>
-              <button onClick={() => setShowForm(false)}><X className="w-4 h-4 text-white/50" /></button>
+              <button onClick={() => { setShowForm(false); setInviteResults(null); }}><X className="w-4 h-4 text-white/50" /></button>
             </div>
 
-            <form onSubmit={handleSubmit} className="flex flex-col gap-5">
-
-              {/* Project Info */}
-              <section>
-                <p className="text-white/30 text-[10px] font-mono uppercase tracking-wider mb-3">Project Info</p>
-                <div className="flex flex-col gap-3">
-                  <input
-                    required
-                    value={form.name}
-                    onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
-                    placeholder="Project name *"
-                    className="admin-input"
-                  />
-                  <textarea
-                    value={form.description}
-                    onChange={e => setForm(f => ({ ...f, description: e.target.value }))}
-                    placeholder="Description"
-                    rows={2}
-                    className="admin-input resize-none"
-                  />
-                  <div className="grid grid-cols-2 gap-3">
-                    <select
-                      value={form.category}
-                      onChange={e => setForm(f => ({ ...f, category: e.target.value }))}
-                      className="admin-input"
-                    >
-                      {CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
-                    </select>
-                    <select
-                      value={form.status}
-                      onChange={e => setForm(f => ({ ...f, status: e.target.value as ProjectStatus }))}
-                      className="admin-input"
-                    >
-                      {STATUSES.map(s => <option key={s} value={s}>{s}</option>)}
-                    </select>
-                  </div>
-                  <div className="grid grid-cols-3 gap-3">
-                    <div>
-                      <label className="text-white/40 text-xs mb-1 block">Progress %</label>
-                      <input
-                        type="number" min={0} max={100}
-                        value={form.progressPercent}
-                        onChange={e => setForm(f => ({ ...f, progressPercent: Number(e.target.value) }))}
-                        className="admin-input w-full"
-                      />
-                    </div>
-                    <div>
-                      <label className="text-white/40 text-xs mb-1 block">Deadline</label>
-                      <input
-                        type="date" value={form.deadline}
-                        onChange={e => setForm(f => ({ ...f, deadline: e.target.value }))}
-                        className="admin-input w-full"
-                      />
-                    </div>
-                    <div>
-                      <label className="text-white/40 text-xs mb-1 block">Value (৳)</label>
-                      <input
-                        type="number" min={0}
-                        value={form.projectValue}
-                        onChange={e => setForm(f => ({ ...f, projectValue: Number(e.target.value) }))}
-                        className="admin-input w-full"
-                        placeholder="0"
-                      />
-                    </div>
-                  </div>
-                  <input
-                    value={form.whatsappGroupUrl}
-                    onChange={e => setForm(f => ({ ...f, whatsappGroupUrl: e.target.value }))}
-                    placeholder="WhatsApp group URL (optional)"
-                    className="admin-input"
-                  />
-
-                  {/* Portfolio toggle */}
-                  <button
-                    type="button"
-                    onClick={() => setForm(f => ({ ...f, inPortfolio: !f.inPortfolio }))}
-                    className="flex items-center gap-3 py-2.5 px-3 rounded-xl bg-white/[0.03] border border-white/[0.08] text-sm text-left"
-                  >
-                    {form.inPortfolio
-                      ? <ToggleRight className="w-5 h-5 text-secondary flex-shrink-0" />
-                      : <ToggleLeft className="w-5 h-5 text-white/30 flex-shrink-0" />}
-                    <span className={form.inPortfolio ? 'text-white' : 'text-white/50'}>
-                      Add to Portfolio
-                    </span>
-                    {form.inPortfolio && (
-                      <span className="ml-auto text-[10px] text-secondary font-mono border border-secondary/30 rounded-full px-2 py-0.5">On</span>
-                    )}
-                  </button>
+            {/* Invite links panel — shown after successful project creation */}
+            {inviteResults ? (
+              <div className="flex flex-col gap-4">
+                <div className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20">
+                  <p className="text-emerald-400 font-semibold text-sm mb-1">Project created!</p>
+                  <p className="text-white/50 text-xs">Send these invite links to the respective people. Each link can only be used to set one password.</p>
                 </div>
-              </section>
+                {inviteResults.map(inv => (
+                  <div key={inv.email} className="rounded-xl bg-white/[0.03] border border-white/[0.08] p-4">
+                    <div className="flex items-center gap-2 mb-2">
+                      <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${inv.role === 'client' ? 'text-cyan-400 bg-cyan-500/10 border-cyan-500/20' : 'text-emerald-400 bg-emerald-500/10 border-emerald-500/20'}`}>
+                        {inv.role}
+                      </span>
+                      <span className="text-white/60 text-xs font-mono">{inv.email}</span>
+                    </div>
+                    <div className="flex items-center gap-2 bg-white/5 rounded-lg px-3 py-2">
+                      <Link className="w-3.5 h-3.5 text-white/30 flex-shrink-0" />
+                      <span className="text-white/70 text-xs font-mono flex-1 truncate">{origin}{inv.inviteUrl}</span>
+                      <CopyButton text={`${origin}${inv.inviteUrl}`} />
+                    </div>
+                  </div>
+                ))}
+                <button
+                  onClick={() => { setShowForm(false); setInviteResults(null); }}
+                  className="py-2.5 rounded-xl bg-primary/80 hover:bg-primary text-white text-sm font-semibold transition-all"
+                >
+                  Done
+                </button>
+              </div>
+            ) : (
+              <form onSubmit={handleSubmit} className="flex flex-col gap-5">
 
-              {/* Client & Builder emails */}
-              <section>
-                <p className="text-white/30 text-[10px] font-mono uppercase tracking-wider mb-3">Access</p>
-                <div className="flex flex-col gap-3">
-                  <div>
-                    <label className="text-white/40 text-xs mb-1 block">Client Email</label>
+                {/* Project Info */}
+                <section>
+                  <p className="text-white/30 text-[10px] font-mono uppercase tracking-wider mb-3">Project Info</p>
+                  <div className="flex flex-col gap-3">
                     <input
-                      type="email"
-                      value={form.clientEmail}
-                      onChange={e => setForm(f => ({ ...f, clientEmail: e.target.value }))}
-                      placeholder="client@example.com"
+                      required
+                      value={form.name}
+                      onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
+                      placeholder="Project name *"
                       className="admin-input"
                     />
-                    <p className="text-white/25 text-[10px] mt-1 font-mono">When they sign up with this email and get approved, their hub will link automatically.</p>
-                  </div>
-                  <div>
-                    <label className="text-white/40 text-xs mb-1 block">Builder Email(s)</label>
                     <textarea
-                      value={form.builderEmailsRaw}
-                      onChange={e => setForm(f => ({ ...f, builderEmailsRaw: e.target.value }))}
-                      placeholder="builder1@example.com, builder2@example.com"
+                      value={form.description}
+                      onChange={e => setForm(f => ({ ...f, description: e.target.value }))}
+                      placeholder="Description"
                       rows={2}
                       className="admin-input resize-none"
                     />
-                    <p className="text-white/25 text-[10px] mt-1 font-mono">Comma-separated. Each builder signs up with their own email.</p>
-                  </div>
-                </div>
-              </section>
+                    <div className="grid grid-cols-2 gap-3">
+                      <select
+                        value={form.category}
+                        onChange={e => setForm(f => ({ ...f, category: e.target.value }))}
+                        className="admin-input"
+                      >
+                        {CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
+                      </select>
+                      <select
+                        value={form.status}
+                        onChange={e => setForm(f => ({ ...f, status: e.target.value as ProjectStatus }))}
+                        className="admin-input"
+                      >
+                        {STATUSES.map(s => <option key={s} value={s}>{s}</option>)}
+                      </select>
+                    </div>
+                    <div className="grid grid-cols-3 gap-3">
+                      <div>
+                        <label className="text-white/40 text-xs mb-1 block">Progress %</label>
+                        <input
+                          type="number" min={0} max={100}
+                          value={form.progressPercent}
+                          onChange={e => setForm(f => ({ ...f, progressPercent: Number(e.target.value) }))}
+                          className="admin-input w-full"
+                        />
+                      </div>
+                      <div>
+                        <label className="text-white/40 text-xs mb-1 block">Deadline</label>
+                        <input
+                          type="date" value={form.deadline}
+                          onChange={e => setForm(f => ({ ...f, deadline: e.target.value }))}
+                          className="admin-input w-full"
+                        />
+                      </div>
+                      <div>
+                        <label className="text-white/40 text-xs mb-1 block">Value (৳)</label>
+                        <input
+                          type="number" min={0}
+                          value={form.projectValue}
+                          onChange={e => setForm(f => ({ ...f, projectValue: Number(e.target.value) }))}
+                          className="admin-input w-full"
+                          placeholder="0"
+                        />
+                      </div>
+                    </div>
+                    <input
+                      value={form.whatsappGroupUrl}
+                      onChange={e => setForm(f => ({ ...f, whatsappGroupUrl: e.target.value }))}
+                      placeholder="WhatsApp group URL (optional)"
+                      className="admin-input"
+                    />
 
-              {/* Milestones */}
-              <section>
-                <p className="text-white/30 text-[10px] font-mono uppercase tracking-wider mb-3">Milestones</p>
-                <div className="flex gap-2 mb-2">
-                  <input
-                    value={newMilestone}
-                    onChange={e => setNewMilestone(e.target.value)}
-                    onKeyDown={e => e.key === 'Enter' && (e.preventDefault(), addMilestone())}
-                    placeholder="Add milestone…"
-                    className="admin-input flex-1"
-                  />
-                  <button type="button" onClick={addMilestone} className="px-3 py-2 rounded-lg bg-primary/20 text-primary text-xs">Add</button>
-                </div>
-                {form.milestones.map((m, i) => (
-                  <div key={m.id} className="flex items-center justify-between py-1.5 px-3 rounded-lg bg-white/5 mb-1 text-xs text-white/70">
-                    {m.title}
-                    <button type="button" onClick={() => setForm(f => ({ ...f, milestones: f.milestones.filter((_, j) => j !== i) }))}>
-                      <X className="w-3 h-3 text-white/30 hover:text-red-400" />
+                    <button
+                      type="button"
+                      onClick={() => setForm(f => ({ ...f, inPortfolio: !f.inPortfolio }))}
+                      className="flex items-center gap-3 py-2.5 px-3 rounded-xl bg-white/[0.03] border border-white/[0.08] text-sm text-left"
+                    >
+                      {form.inPortfolio
+                        ? <ToggleRight className="w-5 h-5 text-secondary flex-shrink-0" />
+                        : <ToggleLeft className="w-5 h-5 text-white/30 flex-shrink-0" />}
+                      <span className={form.inPortfolio ? 'text-white' : 'text-white/50'}>
+                        Add to Portfolio
+                      </span>
+                      {form.inPortfolio && (
+                        <span className="ml-auto text-[10px] text-secondary font-mono border border-secondary/30 rounded-full px-2 py-0.5">On</span>
+                      )}
                     </button>
                   </div>
-                ))}
-              </section>
+                </section>
 
-              {saveError && (
-                <p className="text-red-400 text-xs bg-red-500/10 border border-red-500/20 rounded-xl px-4 py-2.5">{saveError}</p>
-              )}
+                {/* Client & Builder emails */}
+                <section>
+                  <p className="text-white/30 text-[10px] font-mono uppercase tracking-wider mb-3">Access</p>
+                  <div className="flex flex-col gap-3">
+                    <div>
+                      <label className="text-white/40 text-xs mb-1 block">Client Email</label>
+                      <input
+                        type="email"
+                        value={form.clientEmail}
+                        onChange={e => setForm(f => ({ ...f, clientEmail: e.target.value }))}
+                        placeholder="client@example.com"
+                        className="admin-input"
+                      />
+                      {!editingId && (
+                        <p className="text-white/25 text-[10px] mt-1 font-mono">An invite link will be generated and shown after saving.</p>
+                      )}
+                    </div>
+                    <div>
+                      <label className="text-white/40 text-xs mb-1 block">Builder Email(s)</label>
+                      <textarea
+                        value={form.builderEmailsRaw}
+                        onChange={e => setForm(f => ({ ...f, builderEmailsRaw: e.target.value }))}
+                        placeholder="builder1@example.com, builder2@example.com"
+                        rows={2}
+                        className="admin-input resize-none"
+                      />
+                      {!editingId && (
+                        <p className="text-white/25 text-[10px] mt-1 font-mono">Comma-separated. Invite links generated for each.</p>
+                      )}
+                    </div>
+                  </div>
+                </section>
 
-              <button
-                type="submit"
-                disabled={saving}
-                className="py-2.5 rounded-xl bg-primary/80 hover:bg-primary text-white text-sm font-semibold transition-all disabled:opacity-60 flex items-center justify-center gap-2"
-              >
-                {saving && <Loader2 className="w-4 h-4 animate-spin" />}
-                {editingId ? 'Save Changes' : 'Create Project'}
-              </button>
-            </form>
+                {/* Milestones */}
+                <section>
+                  <p className="text-white/30 text-[10px] font-mono uppercase tracking-wider mb-3">Milestones</p>
+                  <div className="flex gap-2 mb-2">
+                    <input
+                      value={newMilestone}
+                      onChange={e => setNewMilestone(e.target.value)}
+                      onKeyDown={e => e.key === 'Enter' && (e.preventDefault(), addMilestone())}
+                      placeholder="Add milestone…"
+                      className="admin-input flex-1"
+                    />
+                    <button type="button" onClick={addMilestone} className="px-3 py-2 rounded-lg bg-primary/20 text-primary text-xs">Add</button>
+                  </div>
+                  {form.milestones.map((m, i) => (
+                    <div key={m.id} className="flex items-center justify-between py-1.5 px-3 rounded-lg bg-white/5 mb-1 text-xs text-white/70">
+                      {m.title}
+                      <button type="button" onClick={() => setForm(f => ({ ...f, milestones: f.milestones.filter((_, j) => j !== i) }))}>
+                        <X className="w-3 h-3 text-white/30 hover:text-red-400" />
+                      </button>
+                    </div>
+                  ))}
+                </section>
+
+                {saveError && (
+                  <p className="text-red-400 text-xs bg-red-500/10 border border-red-500/20 rounded-xl px-4 py-2.5">{saveError}</p>
+                )}
+
+                <button
+                  type="submit"
+                  disabled={saving}
+                  className="py-2.5 rounded-xl bg-primary/80 hover:bg-primary text-white text-sm font-semibold transition-all disabled:opacity-60 flex items-center justify-center gap-2"
+                >
+                  {saving && <Loader2 className="w-4 h-4 animate-spin" />}
+                  {editingId ? 'Save Changes' : 'Create Project & Generate Invites'}
+                </button>
+              </form>
+            )}
           </div>
         </div>
       )}

@@ -1,17 +1,17 @@
-import { createContext, useContext, useEffect, useState, useCallback, ReactNode } from 'react';
-import { User, onAuthStateChanged, signOut as firebaseSignOut } from 'firebase/auth';
-import { doc, getDoc } from 'firebase/firestore';
-import { auth, db } from '../lib/firebase';
-import { UserProfile, UserRole } from '../types';
-import { AUTH_DISABLED, MOCK_USER_ROLE } from '../config';
-import { useDevRole } from './DevRoleContext';
+import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
+import { signInWithCustomToken, signOut as firebaseSignOut } from 'firebase/auth';
+import { auth } from '../lib/firebase';
+import { UserRole } from '../types';
 
-const ADMIN_EMAIL = import.meta.env.VITE_ADMIN_EMAIL ?? 'mail.galaxatech@gmail.com';
+interface AuthSession {
+  role: UserRole;
+  email: string;
+  projectId: string | null;
+}
 
 interface AuthContextValue {
-  firebaseUser: User | null;
-  userProfile: UserProfile | null;
   role: UserRole;
+  email: string | null;
   projectId: string | null;
   isLoading: boolean;
   isAdmin: boolean;
@@ -19,125 +19,91 @@ interface AuthContextValue {
   isBuilder: boolean;
   isVisitor: boolean;
   isSignedIn: boolean;
-  authModalOpen: boolean;
-  openAuthModal: () => void;
-  closeAuthModal: () => void;
   signOut: () => Promise<void>;
+  applySession: (session: AuthSession, firebaseToken: string | null) => Promise<void>;
+  // Kept for legacy compatibility (HubLayout, Navbar)
+  userProfile: { role: UserRole; displayName: string; email: string } | null;
+  firebaseUser: null;
 }
 
 const AuthContext = createContext<AuthContextValue>({
-  firebaseUser: null,
-  userProfile: null,
   role: 'visitor',
+  email: null,
   projectId: null,
   isLoading: true,
   isAdmin: false,
   isClient: false,
   isBuilder: false,
-  isVisitor: false,
+  isVisitor: true,
   isSignedIn: false,
-  authModalOpen: false,
-  openAuthModal: () => {},
-  closeAuthModal: () => {},
   signOut: async () => {},
+  applySession: async () => {},
+  userProfile: null,
+  firebaseUser: null,
 });
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const { devRole } = useDevRole();
-  const [firebaseUser, setFirebaseUser] = useState<User | null>(null);
-  const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
+  const [role, setRole] = useState<UserRole>('visitor');
+  const [email, setEmail] = useState<string | null>(null);
+  const [projectId, setProjectId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [authModalOpen, setAuthModalOpen] = useState(false);
-
-  const openAuthModal = useCallback(() => setAuthModalOpen(true), []);
-  const closeAuthModal = useCallback(() => setAuthModalOpen(false), []);
 
   useEffect(() => {
-    if (AUTH_DISABLED) {
-      setFirebaseUser({ uid: 'dev-mock', email: 'dev@mock.local' } as any as User);
-      setUserProfile({
-        uid: 'dev-mock',
-        email: 'dev@mock.local',
-        role: MOCK_USER_ROLE,
-        status: 'approved',
-        displayName: 'Dev (Auth Disabled)',
-        photoURL: '',
-        createdAt: null as any,
-      });
-      setIsLoading(false);
-      return;
-    }
-
-    const unsub = onAuthStateChanged(auth, async (user) => {
-      setFirebaseUser(user);
-
-      if (!user) {
-        setUserProfile(null);
-        setIsLoading(false);
-        return;
-      }
-
-      // Admin is purely email-based — no Firestore doc required
-      if (user.email === ADMIN_EMAIL) {
-        setUserProfile({
-          uid: user.uid,
-          email: user.email ?? '',
-          role: 'admin',
-          status: 'approved',
-          displayName: user.displayName ?? 'Rihad Hamid',
-          photoURL: user.photoURL ?? '',
-          createdAt: null as any,
-        });
-        setIsLoading(false);
-        return;
-      }
-
-      // All other users must have a Firestore doc (created at signup)
-      try {
-        const snap = await getDoc(doc(db, 'users', user.uid));
-        if (snap.exists()) {
-          setUserProfile({ uid: user.uid, ...snap.data() } as UserProfile);
-        } else {
-          // Signed in via Firebase Auth but no Firestore doc — treat as unauthenticated
-          await firebaseSignOut(auth);
-          setFirebaseUser(null);
-          setUserProfile(null);
+    fetch('/api/auth/me', { credentials: 'include' })
+      .then(r => r.ok ? r.json() : null)
+      .then(async (data) => {
+        if (data?.role) {
+          setRole(data.role as UserRole);
+          setEmail(data.email ?? null);
+          setProjectId(data.projectId ?? null);
+          // Refresh Firebase custom token so Firestore rules work
+          if (data.firebaseToken) {
+            try { await signInWithCustomToken(auth, data.firebaseToken); } catch {}
+          }
         }
-      } catch {
-        setUserProfile(null);
-      }
-
-      setIsLoading(false);
-    });
-
-    return () => unsub();
+      })
+      .catch(() => {})
+      .finally(() => setIsLoading(false));
   }, []);
 
-  const signOut = async () => {
-    await firebaseSignOut(auth);
-    setFirebaseUser(null);
-    setUserProfile(null);
+  const applySession = async (session: AuthSession, firebaseToken: string | null) => {
+    setRole(session.role as UserRole);
+    setEmail(session.email);
+    setProjectId(session.projectId);
+    if (firebaseToken) {
+      try { await signInWithCustomToken(auth, firebaseToken); } catch {}
+    }
   };
 
-  const role: UserRole = AUTH_DISABLED ? devRole : (userProfile?.role ?? 'visitor');
-  const projectId: string | null = (userProfile as any)?.projectId ?? null;
+  const signOut = async () => {
+    try { await fetch('/api/auth/logout', { method: 'POST', credentials: 'include' }); } catch {}
+    try { await firebaseSignOut(auth); } catch {}
+    setRole('visitor');
+    setEmail(null);
+    setProjectId(null);
+  };
+
+  const isSignedIn = email !== null;
+
+  const userProfile = isSignedIn
+    ? { role, displayName: email?.split('@')[0] ?? '', email: email ?? '' }
+    : null;
 
   return (
     <AuthContext.Provider value={{
-      firebaseUser,
-      userProfile,
       role,
+      email,
       projectId,
       isLoading,
       isAdmin: role === 'admin',
       isClient: role === 'client',
       isBuilder: role === 'builder',
-      isVisitor: role === 'visitor',
-      isSignedIn: firebaseUser !== null && userProfile !== null,
-      authModalOpen,
-      openAuthModal,
-      closeAuthModal,
+      isVisitor: !isSignedIn || role === 'visitor',
+      isSignedIn,
       signOut,
+      applySession,
+      userProfile,
+      firebaseUser: null,
     }}>
       {children}
     </AuthContext.Provider>
