@@ -249,13 +249,8 @@ function AppInner() {
       </main>
       <Footer onPageChange={handlePageSelect} dhakaTime={dhakaTime} />
       <CookieBanner />
-<<<<<<< HEAD
-      <AuthModal />
-      <DevRoleSwitcher />
       <ScrollToTopButton />
       <WhatsAppButton />
-=======
->>>>>>> 5e444eb (feat: replace Firebase Auth with invite-link based custom auth system)
     </div>
   );
 }
