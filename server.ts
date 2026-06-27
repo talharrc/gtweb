@@ -4,6 +4,8 @@ import fs from "fs";
 import { createServer as createViteServer } from "vite";
 import { GoogleGenAI, Type } from "@google/genai";
 import dotenv from "dotenv";
+import cookieParser from "cookie-parser";
+import apiRouter from "./api/index";
 
 dotenv.config();
 
@@ -11,6 +13,8 @@ const app = express();
 const PORT = 3000;
 
 app.use(express.json());
+app.use(cookieParser());
+app.use(apiRouter);
 
 // Initialize Gemini Client
 let ai: GoogleGenAI | null = null;

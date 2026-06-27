@@ -4,6 +4,8 @@ import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
+import { initializeApp } from "firebase/app";
+import { getFirestore, collection, query, where, getDocs, addDoc } from "firebase/firestore";
 
 dotenv.config();
 
@@ -13,6 +15,26 @@ const SESSION_MAX_AGE = 7 * 24 * 60 * 60 * 1000;
 const CRED_MAX_AGE = 365 * 24 * 60 * 60 * 1000;
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL ?? process.env.VITE_ADMIN_EMAIL ?? "mail.galaxatech@gmail.com";
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD ?? "";
+
+// Initialize Firebase for backend Firestore usage
+const firebaseConfig = {
+  apiKey: process.env.VITE_FIREBASE_API_KEY,
+  authDomain: process.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.VITE_FIREBASE_APP_ID,
+};
+
+let db: any = null;
+try {
+  if (firebaseConfig.projectId) {
+    const firebaseApp = initializeApp(firebaseConfig);
+    db = getFirestore(firebaseApp);
+  }
+} catch (e) {
+  console.error("Firebase init failed in api/index.ts:", e);
+}
 
 // ── Express app ────────────────────────────────────────────────────────────────
 const app = express();
@@ -59,14 +81,78 @@ function requireAdmin(req: express.Request, res: express.Response, next: express
 }
 
 // ── Admin Auth ────────────────────────────────────────────────────────────────
-app.post("/api/auth/admin", (req, res) => {
+app.post("/api/auth/admin", async (req, res) => {
   const { password } = req.body ?? {};
-  if (!ADMIN_PASSWORD) return res.status(503).json({ error: "ADMIN_PASSWORD not configured." });
-  if (!password || password !== ADMIN_PASSWORD) return res.status(401).json({ error: "Incorrect password." });
+  if (!password) return res.status(400).json({ error: "Password is required." });
 
-  const token = jwt.sign({ role: "admin", email: ADMIN_EMAIL }, JWT_SECRET, { expiresIn: "7d" });
-  setSessionCookie(res, token);
-  res.json({ ok: true });
+  try {
+    let existingHash: string | null = null;
+    let docId: string | null = null;
+
+    // 1. Try to read from Firestore credentials collection
+    if (db) {
+      try {
+        const q = query(
+          collection(db, "credentials"),
+          where("username", "==", ADMIN_EMAIL.toLowerCase().trim())
+        );
+        const snap = await getDocs(q);
+        if (!snap.empty) {
+          const d = snap.docs[0].data();
+          existingHash = d.passwordHash ?? d.password ?? null;
+          docId = snap.docs[0].id;
+        }
+      } catch (err) {
+        console.error("Error reading credentials from Firestore:", err);
+      }
+    }
+
+    // 2. Fallback to cookie credentials
+    if (!existingHash) {
+      existingHash = getCredCookie(req, ADMIN_EMAIL);
+    }
+
+    // 3. Dev Bootstrap: If no password hash exists yet, store this as the password!
+    if (!existingHash) {
+      const hash = await bcrypt.hash(password, 10);
+      
+      // Save to Firestore
+      if (db) {
+        try {
+          await addDoc(collection(db, "credentials"), {
+            username: ADMIN_EMAIL.toLowerCase().trim(),
+            passwordHash: hash,
+            role: "admin",
+            createdAt: new Date(),
+          });
+          console.log("Admin credential bootstrapped in Firestore.");
+        } catch (err) {
+          console.error("Failed to save admin credential in Firestore:", err);
+        }
+      }
+
+      // Save to Cookie
+      setCredCookie(res, ADMIN_EMAIL, hash);
+      existingHash = hash;
+    }
+
+    // 4. Verify password
+    const match = await bcrypt.compare(password, existingHash);
+    if (!match) {
+      // Fallback: if it matches ADMIN_PASSWORD environment variable
+      if (ADMIN_PASSWORD && password === ADMIN_PASSWORD) {
+        // Correct
+      } else {
+        return res.status(401).json({ error: "Incorrect password." });
+      }
+    }
+
+    const token = jwt.sign({ role: "admin", email: ADMIN_EMAIL }, JWT_SECRET, { expiresIn: "7d" });
+    setSessionCookie(res, token);
+    res.json({ ok: true });
+  } catch (e: any) {
+    res.status(500).json({ error: e?.message ?? "Server authentication error." });
+  }
 });
 
 // ── Invite Auth ────────────────────────────────────────────────────────────────
