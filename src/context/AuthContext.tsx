@@ -4,6 +4,7 @@ import { doc, getDoc } from 'firebase/firestore';
 import { auth, db } from '../lib/firebase';
 import { UserProfile, UserRole } from '../types';
 import { AUTH_DISABLED, MOCK_USER_ROLE } from '../config';
+import { useDevRole } from './DevRoleContext';
 
 const ADMIN_EMAIL = import.meta.env.VITE_ADMIN_EMAIL ?? 'mail.galaxatech@gmail.com';
 
@@ -42,6 +43,7 @@ const AuthContext = createContext<AuthContextValue>({
 });
 
 export function AuthProvider({ children }: { children: ReactNode }) {
+  const { devRole } = useDevRole();
   const [firebaseUser, setFirebaseUser] = useState<User | null>(null);
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -117,7 +119,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUserProfile(null);
   };
 
-  const role: UserRole = userProfile?.role ?? 'visitor';
+  const role: UserRole = AUTH_DISABLED ? devRole : (userProfile?.role ?? 'visitor');
   const projectId: string | null = (userProfile as any)?.projectId ?? null;
 
   return (

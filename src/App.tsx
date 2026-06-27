@@ -22,6 +22,8 @@ import AdminPanelView from './components/admin/AdminPanelView';
 import AuthModal from './components/auth/AuthModal';
 import PendingScreen from './components/auth/PendingScreen';
 import { AuthProvider, useAuth } from './context/AuthContext';
+import { DevRoleProvider } from './context/DevRoleContext';
+import DevRoleSwitcher from './components/dev/DevRoleSwitcher';
 import { PageType, UserRole } from './types';
 
 function ScrollToTop() {
@@ -156,6 +158,7 @@ function AppInner() {
           } />
         </Routes>
         <AuthModal />
+        <DevRoleSwitcher />
       </div>
     );
   }
@@ -194,14 +197,17 @@ function AppInner() {
       <Footer onPageChange={handlePageSelect} dhakaTime={dhakaTime} />
       <CookieBanner />
       <AuthModal />
+      <DevRoleSwitcher />
     </div>
   );
 }
 
 export default function App() {
   return (
-    <AuthProvider>
-      <AppInner />
-    </AuthProvider>
+    <DevRoleProvider>
+      <AuthProvider>
+        <AppInner />
+      </AuthProvider>
+    </DevRoleProvider>
   );
 }

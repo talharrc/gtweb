@@ -687,25 +687,32 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
               <Sparkles className="w-3.5 h-3.5 text-primary/70" />
               <span className="text-[10px] font-mono tracking-[0.25em] text-primary/70 uppercase">Portfolio</span>
             </div>
-            <h2 className="text-4xl md:text-5xl font-bold text-white mb-4" style={{ fontFamily: 'Satoshi, sans-serif' }}>
-              Selected <span style={{ color: '#B58DFF' }}>Work</span>
+            <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
+              Selected <span className="text-grad">Work</span>
             </h2>
-            <p className="text-white/50 text-lg">A few projects, systems, and brands we've helped shape.</p>
+            <p className="text-white/50 text-lg font-sans">A few projects, systems, and brands we've helped shape.</p>
           </motion.div>
 
-          {/* Folder widget */}
-          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.6 }} className="flex flex-col items-center">
+          {/* 3D Glass Folder Reveal Scene */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.2 }}
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+            className="flex flex-col items-center"
+          >
             <div
-              className="relative cursor-pointer w-full max-w-[600px] flex items-center justify-center"
+              className="relative cursor-pointer w-full max-w-[700px] flex items-center justify-center"
               onMouseEnter={() => setFolderHovered(true)}
               onMouseLeave={() => setFolderHovered(false)}
               onClick={() => navigate('/portfolio')}
               style={{
-                height: isMobile ? '360px' : '440px',
-                perspective: '1200px',
+                height: isMobile ? '380px' : '480px',
+                perspective: '1600px',
+                touchAction: 'none',
               }}
             >
-              {/* Tilted Container Wrapper */}
+              {/* Core 3D Scene Wrapper - Tilts isometrically */}
               <div
                 style={{
                   width: '100%',
@@ -713,106 +720,191 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
                   position: 'relative',
                   transformStyle: 'preserve-3d',
                   transform: folderHovered
-                    ? 'rotateX(50deg) rotateY(0deg) rotateZ(-30deg) translateZ(10px) scale(1.05)'
-                    : 'rotateX(55deg) rotateY(0deg) rotateZ(-35deg) scale(1)',
-                  transition: 'all 0.6s cubic-bezier(0.16, 1, 0.3, 1)',
+                    ? 'rotateX(52deg) rotateY(-2deg) rotateZ(-28deg) scale(1.05)'
+                    : 'rotateX(56deg) rotateY(0deg) rotateZ(-32deg) scale(1)',
+                  transition: 'transform 0.8s cubic-bezier(0.16, 1, 0.3, 1)',
                 }}
               >
-                {/* Bottom Folder Plate */}
+                {/* Soft ambient neon background glow behind folder */}
                 <div
-                  className="absolute bottom-4 left-4 right-4 rounded-3xl"
+                  className="absolute inset-0 rounded-3xl opacity-30 pointer-events-none transition-all duration-700"
                   style={{
-                    height: '240px',
-                    background: 'rgba(10, 8, 37, 0.65)',
-                    backdropFilter: 'blur(20px) saturate(140%)',
-                    WebkitBackdropFilter: 'blur(20px) saturate(140%)',
-                    border: '1px solid rgba(255,255,255,0.08)',
-                    borderTop: '1px solid rgba(255,255,255,0.18)',
-                    borderLeft: '1px solid rgba(255,255,255,0.15)',
-                    borderRadius: '24px 24px 24px 24px',
-                    boxShadow: folderHovered
-                      ? '0 30px 90px rgba(124,42,235,0.45), inset 0 1px 0 rgba(255,255,255,0.15)'
-                      : '0 15px 45px rgba(0,0,0,0.65), inset 0 1px 0 rgba(255,255,255,0.08)',
-                    transform: 'translateZ(0px)',
-                    transition: 'all 0.6s cubic-bezier(0.16, 1, 0.3, 1)',
-                    zIndex: 2,
+                    background: 'radial-gradient(circle at 50% 50%, #7C2AEB 0%, transparent 70%)',
+                    transform: folderHovered ? 'translateZ(-80px) scale(1.2)' : 'translateZ(-80px) scale(0.9)',
+                    filter: 'blur(40px)',
+                  }}
+                />
+
+                {/* FOLDER BACK COVER PLATE (Z = -40px) */}
+                <div
+                  className="absolute left-6 right-6 rounded-3xl border border-white/10"
+                  style={{
+                    bottom: '30px',
+                    height: isMobile ? '200px' : '260px',
+                    background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.01))',
+                    backdropFilter: 'blur(10px)',
+                    WebkitBackdropFilter: 'blur(10px)',
+                    boxShadow: '0 30px 80px rgba(0,0,0,0.8)',
+                    transform: folderHovered ? 'translateZ(-40px) rotateX(5deg)' : 'translateZ(-40px) rotateX(0deg)',
+                    transformStyle: 'preserve-3d',
+                    transition: 'transform 0.8s cubic-bezier(0.16, 1, 0.3, 1)',
+                    zIndex: 1,
                   }}
                 >
-                  <div className="flex flex-col justify-between h-full p-8">
-                    <div>
-                      <div className="flex items-center gap-3.5 mb-2">
-                        <div className="w-10 h-10 rounded-xl border border-primary/20 flex items-center justify-center bg-primary/10">
-                          <span className="text-xl">📁</span>
-                        </div>
-                        <div>
-                          <p className="text-white font-bold text-lg font-display">Open Portfolio</p>
-                          <p className="text-white/40 text-xs">Hover to reveal selected projects</p>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-white/35 text-xs font-semibold tracking-wider font-mono">GALAXATECH © 2026</span>
-                      <button
-                        onClick={e => { e.stopPropagation(); navigate('/portfolio'); }}
-                        className="w-11 h-11 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-[1.1] primary-gradient cursor-pointer animate-pulse"
-                        style={{ boxShadow: '0 8px 30px rgba(124,42,235,0.4)' }}
-                      >
-                        <ArrowUpRight className="w-5 h-5 text-white" />
-                      </button>
-                    </div>
-                  </div>
+                  {/* Folder Tab on Back Plate */}
+                  <div
+                    className="absolute top-[-20px] left-8 h-5 w-24 border-t border-l border-r border-white/10"
+                    style={{
+                      background: 'rgba(255,255,255,0.04)',
+                      borderRadius: '8px 8px 0 0',
+                      clipPath: 'polygon(0% 100%, 15% 0%, 85% 0%, 100% 100%)',
+                    }}
+                  />
+                  {/* Internal neon line connector representing blueprint style inside folder */}
+                  <div className="absolute top-4 left-6 right-6 h-px bg-gradient-to-r from-transparent via-[#7C2AEB]/30 to-transparent" />
                 </div>
 
-                {/* Overlapping Project Cards - stacked and lifting up in 3D */}
+                {/* REVEALED PROJECT CARDS (They float up and pop out in 3D) */}
                 {PROJECTS.map((proj, i) => {
-                  const cardZ = folderHovered ? (i + 1) * 60 : (i + 1) * 20;
-                  const cardY = folderHovered ? -i * 30 : -i * 10;
-                  const cardX = folderHovered ? i * 40 : i * 15;
-                  
-                  const cardW = isMobile ? '160px' : '200px';
-                  const cardH = isMobile ? '200px' : '250px';
-                  
+                  // Coordinate physics for cinematic pop out
+                  // Closed state: Stacked inside folder
+                  // Open state: Fly outwards with rotation, scale, and offset
+                  let x = 0;
+                  let y = isMobile ? 30 : 20;
+                  let z = (i + 1) * -8; // Slightly staggered depth when closed
+                  let rotX = 0;
+                  let rotY = 0;
+                  let rotZ = 0;
+                  let scale = 0.9 - i * 0.03;
+                  let opacity = 0.45 - i * 0.1;
+                  let cardBlur = '4px';
+
+                  if (folderHovered) {
+                    cardBlur = '0px';
+                    opacity = 1;
+                    if (isMobile) {
+                      // Compact mobile coordinates
+                      const coords = [
+                        { x: -75, y: -70, z: 60, rotX: -5, rotY: -10, rotZ: -6, scale: 0.95 },
+                        { x: 0,   y: -110, z: 100, rotX: -5, rotY: 0,   rotZ: 0,  scale: 1.0 },
+                        { x: 75,  y: -60, z: 60, rotX: -5, rotY: 10,  rotZ: 6,  scale: 0.95 }
+                      ];
+                      ({ x, y, z, rotX, rotY, rotZ, scale } = coords[i]);
+                    } else {
+                      // Cinematic desktop coordinates
+                      const coords = [
+                        { x: -180, y: -160, z: 120, rotX: -8, rotY: -14, rotZ: -8, scale: 1.0 },
+                        { x: 10,   y: -210, z: 190, rotX: -8, rotY: 5,   rotZ: 2,  scale: 1.06 },
+                        { x: 195,  y: -130, z: 120, rotX: -8, rotY: 18,  rotZ: 10, scale: 1.0 }
+                      ];
+                      ({ x, y, z, rotX, rotY, rotZ, scale } = coords[i]);
+                    }
+                  }
+
+                  const cardW = isMobile ? '150px' : '190px';
+                  const cardH = isMobile ? '195px' : '240px';
+
                   return (
                     <div
                       key={proj.slug}
                       style={{
                         position: 'absolute',
                         left: '50%',
-                        top: '10px',
+                        bottom: isMobile ? '40px' : '60px',
                         width: cardW,
                         height: cardH,
-                        marginLeft: isMobile ? '-80px' : '-100px',
-                        transform: `translate3d(${cardX}px, ${cardY}px, ${cardZ}px) rotateZ(${folderHovered ? i * 10 - 10 : 0}deg)`,
+                        marginLeft: isMobile ? '-75px' : '-95px',
+                        transform: `translate3d(${x}px, ${y}px, ${z}px) rotateX(${rotX}deg) rotateY(${rotY}deg) rotateZ(${rotZ}deg) scale(${scale})`,
                         transformStyle: 'preserve-3d',
-                        transition: `all 0.6s cubic-bezier(0.16, 1, 0.3, 1)`,
+                        opacity,
+                        filter: `blur(${cardBlur})`,
+                        transition: `transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s ease, filter 0.6s ease`,
                         zIndex: 10 + i,
                         borderRadius: '20px',
                         overflow: 'hidden',
                         border: '1px solid rgba(255, 255, 255, 0.08)',
-                        borderTop: '1px solid rgba(255, 255, 255, 0.15)',
-                        borderLeft: '1px solid rgba(255, 255, 255, 0.12)',
-                        boxShadow: folderHovered 
-                          ? '0 20px 45px rgba(124,42,235,0.35)' 
-                          : '0 8px 25px rgba(0,0,0,0.5)',
+                        borderTop: `1px solid ${proj.color}40`,
+                        boxShadow: folderHovered
+                          ? `0 15px 35px ${proj.color}33, 0 0 15px rgba(0,0,0,0.6)`
+                          : '0 6px 15px rgba(0,0,0,0.5)',
                       }}
                     >
-                      <div className="h-3/5 relative flex items-center justify-center" style={{ background: proj.bg }}>
-                        <Globe className="w-10 h-10 opacity-20" style={{ color: proj.color }} />
-                        <span className="absolute top-3.5 left-3.5 text-[10px] font-mono text-white/50">{proj.num}</span>
+                      {/* Card visual contents */}
+                      <div className="h-[55%] relative flex items-center justify-center overflow-hidden" style={{ background: proj.bg }}>
+                        {/* Glow backing inside card */}
+                        <div
+                          className="absolute inset-0 opacity-20"
+                          style={{
+                            background: `radial-gradient(circle at center, ${proj.color} 0%, transparent 70%)`
+                          }}
+                        />
+                        <Globe className="w-9 h-9 opacity-25" style={{ color: proj.color }} />
+                        <span className="absolute top-3 left-3 text-[9px] font-mono text-white/50">{proj.num}</span>
                       </div>
-                      <div className="p-4 h-2/5 flex flex-col justify-between" style={{ background: 'rgba(10,8,37,0.95)' }}>
+                      <div className="p-3.5 h-[45%] flex flex-col justify-between" style={{ background: 'rgba(10,8,37,0.92)', backdropFilter: 'blur(5px)' }}>
                         <div>
-                          <p className="text-white font-bold text-sm leading-tight font-display">{proj.name}</p>
-                          <p className="text-white/40 text-[10px] mt-0.5">{proj.type}</p>
+                          <p className="text-white font-bold text-xs sm:text-sm leading-tight font-display">{proj.name}</p>
+                          <p className="text-white/40 text-[9px] mt-0.5 font-sans">{proj.type}</p>
                         </div>
-                        <span className="text-[9px] font-mono text-primary/70">Explore ↗</span>
+                        <span className="text-[9px] font-mono font-bold uppercase tracking-wider text-secondary flex items-center gap-1">
+                          Explore <ArrowUpRight className="w-3 h-3" />
+                        </span>
                       </div>
                     </div>
                   );
                 })}
+
+                {/* FOLDER FRONT GLASS COVER (Z = 40px, flaps down when opened) */}
+                <div
+                  className="absolute left-6 right-6 rounded-3xl"
+                  style={{
+                    bottom: '30px',
+                    height: isMobile ? '200px' : '260px',
+                    background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02))',
+                    backdropFilter: 'blur(16px) saturate(140%)',
+                    WebkitBackdropFilter: 'blur(16px) saturate(140%)',
+                    border: '1px solid rgba(255,255,255,0.12)',
+                    borderTop: '1px solid rgba(255,255,255,0.22)',
+                    borderLeft: '1px solid rgba(255,255,255,0.18)',
+                    boxShadow: folderHovered
+                      ? 'inset 0 1px 0 rgba(255,255,255,0.2), 0 20px 50px rgba(0,0,0,0.9)'
+                      : 'inset 0 1px 0 rgba(255,255,255,0.1), 0 10px 30px rgba(0,0,0,0.8)',
+                    transformOrigin: 'bottom center',
+                    transform: folderHovered
+                      ? 'translateZ(40px) rotateX(-102deg) translateY(10px)'
+                      : 'translateZ(40px) rotateX(0deg) translateY(0px)',
+                    transition: 'transform 0.8s cubic-bezier(0.16, 1, 0.3, 1)',
+                    zIndex: 20,
+                  }}
+                >
+                  <div className="flex flex-col justify-between h-full p-6 sm:p-8">
+                    <div>
+                      <div className="flex items-center gap-3.5 mb-2">
+                        <div className="w-10 h-10 rounded-xl border border-primary/20 flex items-center justify-center bg-primary/10">
+                          <span className="text-xl">📁</span>
+                        </div>
+                        <div>
+                          <p className="text-white font-bold text-base sm:text-lg font-display">Open Portfolio</p>
+                          <p className="text-white/40 text-xs font-sans">Hover to reveal selected projects</p>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-white/35 text-[9px] sm:text-xs font-semibold tracking-wider font-mono">GALAXATECH © 2026</span>
+                      <button
+                        onClick={e => { e.stopPropagation(); navigate('/portfolio'); }}
+                        className="w-10 h-10 sm:w-11 sm:h-11 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-[1.1] primary-gradient cursor-pointer"
+                        style={{ boxShadow: '0 8px 30px rgba(124,42,235,0.4)' }}
+                      >
+                        <ArrowUpRight className="w-4 sm:w-5 h-4 sm:h-5 text-white" />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
               </div>
             </div>
-            <p className="text-white/25 text-[11px] font-mono mt-6">Hover to reveal</p>
+            <p className="text-white/25 text-[11px] font-mono mt-6">Hover or tap to reveal</p>
           </motion.div>
         </div>
       </section>
