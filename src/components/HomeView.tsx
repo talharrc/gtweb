@@ -63,12 +63,12 @@ const WHY_CHOOSE_US = [
 ];
 
 const COUNTRIES = [
-  { flag: '🇺🇸', name: 'USA' },
-  { flag: '🇬🇧', name: 'UK' },
-  { flag: '🇵🇰', name: 'Pakistan' },
-  { flag: '🇸🇦', name: 'Saudi Arabia' },
-  { flag: '🇮🇳', name: 'India' },
-  { flag: '🇧🇩', name: 'Bangladesh' },
+  { flag: '🇺🇸', name: 'USA',          code: 'us' },
+  { flag: '🇬🇧', name: 'UK',           code: 'gb' },
+  { flag: '🇵🇰', name: 'Pakistan',     code: 'pk' },
+  { flag: '🇸🇦', name: 'Saudi Arabia', code: 'sa' },
+  { flag: '🇮🇳', name: 'India',        code: 'in' },
+  { flag: '🇧🇩', name: 'Bangladesh',   code: 'bd' },
 ];
 
 const GLASS_STYLE: React.CSSProperties = {
@@ -106,6 +106,9 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
   const [isMobile, setIsMobile] = useState(() => typeof window !== 'undefined' && window.innerWidth < 640);
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [carouselAutoScrollDir, setCarouselAutoScrollDir] = useState<'left' | 'right' | null>(null);
+  const autoScrollTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const carouselContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const m = new Date().getMinutes();
@@ -139,8 +142,18 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
     return () => window.removeEventListener('resize', handler);
   }, []);
 
-  const carouselPrev = () => setActiveIndex(p => (p - 1 + SERVICES.length) % SERVICES.length);
-  const carouselNext = () => setActiveIndex(p => (p + 1) % SERVICES.length);
+  useEffect(() => {
+    if (autoScrollTimerRef.current) clearInterval(autoScrollTimerRef.current);
+    if (!carouselAutoScrollDir) { autoScrollTimerRef.current = null; return; }
+    autoScrollTimerRef.current = setInterval(() => {
+      if (carouselAutoScrollDir === 'right') setActiveIndex((p: number) => (p + 1) % SERVICES.length);
+      else setActiveIndex((p: number) => (p - 1 + SERVICES.length) % SERVICES.length);
+    }, 1400);
+    return () => { if (autoScrollTimerRef.current) clearInterval(autoScrollTimerRef.current); };
+  }, [carouselAutoScrollDir]);
+
+  const carouselPrev = () => setActiveIndex((p: number) => (p - 1 + SERVICES.length) % SERVICES.length);
+  const carouselNext = () => setActiveIndex((p: number) => (p + 1) % SERVICES.length);
 
   const handleCarouselPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
     dragRef.current = { startX: e.clientX, moved: false };
@@ -250,8 +263,8 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
             </div>
           </motion.div>
           <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.1, ease: [0.16,1,0.3,1] }} className="font-display text-[2rem] sm:text-[3.25rem] md:text-[5.5rem] font-extrabold tracking-[-0.03em] text-white mb-4 leading-[1.06] drop-shadow-[0_4px_24px_rgba(0,0,0,0.8)]">
-            Assure your <span className="pill-word">brand's</span> <br className="hidden md:block" />
-            <span className="font-serif italic font-normal typewriter-container block min-h-[1.2em] mt-3 pb-1 overflow-hidden">
+            Assure your brand's <br className="hidden md:block" />
+            <span className="font-serif italic font-normal typewriter-container block min-h-[1.2em] mt-3 pb-1 overflow-hidden" style={{ filter: 'drop-shadow(0 0 18px rgba(236,30,142,0.55))' }}>
               <AnimatePresence mode="wait">
                 <motion.span key={wordIndex} initial={{ y: 35, opacity: 0, filter: 'blur(5px)' }} animate={{ y: 0, opacity: 1, filter: 'blur(0px)' }} exit={{ y: -35, opacity: 0, filter: 'blur(5px)' }} transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }} className="inline-block text-gradient">
                   {TYPEWRITER_WORDS[wordIndex]}
@@ -320,22 +333,26 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
           <div className="max-w-5xl mx-auto mb-12">
             <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6">
               <motion.div initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, amount: 0.3 }} transition={{ duration: 0.7 }}>
-                <span className="text-[10px] font-mono text-primary/40 tracking-[0.3em] uppercase block mb-3">00 — Global Reach</span>
+                <span className="text-[10px] font-mono text-primary/70 tracking-[0.3em] uppercase block mb-3">00 — Global Reach</span>
                 <h2 className="text-4xl sm:text-5xl font-black text-white leading-[0.9]" style={{ fontFamily: 'var(--font-display)' }}>
                   Clients<br />
-                  <span style={{ WebkitTextStroke: '1.5px rgba(236,30,142,0.5)', color: 'transparent' }}>Across</span><br />
-                  <span className="pill-word-coral">6 Nations.</span>
+                  <span style={{ WebkitTextStroke: '1.5px rgba(236,30,142,0.88)', color: 'transparent' }}>Across</span><br />
+                  <span className="pill-word-coral">Nations.</span>
                 </h2>
               </motion.div>
               <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ duration: 0.7, delay: 0.2 }} className="flex items-end gap-5 sm:pb-1">
-                <div className="text-[80px] sm:text-[110px] font-black leading-none select-none" style={{ color: 'rgba(255,255,255,0.04)', fontFamily: 'var(--font-display)' }}>6+</div>
-                <p className="text-white/35 text-sm max-w-[150px] leading-relaxed pb-2 border-l border-white/10 pl-4">Delivering real digital systems across global markets.</p>
+                <div className="text-[80px] sm:text-[110px] font-black leading-none select-none" style={{ color: 'rgba(255,255,255,0.14)', fontFamily: 'var(--font-display)' }}>6+</div>
+                <p className="text-white/55 text-sm max-w-[150px] leading-relaxed pb-2 border-l border-white/15 pl-4">Delivering real digital systems across global markets.</p>
               </motion.div>
             </div>
           </div>
           {/* Marquee pills */}
           <div
             className="max-w-5xl mx-auto mb-10 overflow-hidden"
+            style={{
+              maskImage: 'linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%)',
+              WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%)',
+            }}
             onMouseEnter={e => { const t = e.currentTarget.querySelector('.mq-track') as HTMLDivElement | null; if (t) t.style.animationPlayState = 'paused'; }}
             onMouseLeave={e => { const t = e.currentTarget.querySelector('.mq-track') as HTMLDivElement | null; if (t) t.style.animationPlayState = 'running'; }}
           >
@@ -345,8 +362,8 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
             >
               {[...COUNTRIES, ...COUNTRIES].map((c, i) => (
                 <div key={i} className="flex items-center gap-2.5 mx-3 select-none px-5 py-2.5 rounded-full" style={{ border: '1px solid rgba(255,255,255,0.12)', background: 'rgba(255,255,255,0.06)', minWidth: 'max-content' }}>
-                  <span style={{ fontSize: '1.5rem', lineHeight: 1, display: 'inline-block', fontFamily: '"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif' }}>{c.flag}</span>
-                  <span className="text-white/75 font-semibold text-sm" style={{ fontFamily: 'var(--font-display)' }}>{c.name}</span>
+                  <img src={`https://flagcdn.com/20x15/${c.code}.png`} alt={c.name} width="20" height="15" className="flex-shrink-0 rounded-[2px]" />
+                  <span className="text-white/80 font-semibold text-sm" style={{ fontFamily: 'var(--font-display)' }}>{c.name}</span>
                 </div>
               ))}
             </div>
@@ -370,14 +387,14 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
             <motion.div initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, amount: 0.3 }} transition={{ duration: 0.7 }} className="relative">
               {/* Dotted grid accent */}
               <div className="absolute -right-8 -top-4 w-20 h-20 dotted-grid opacity-35 rounded-lg" />
-              <span className="text-[10px] font-mono text-primary/40 tracking-[0.3em] uppercase block mb-3">01 — Why GalaxaTech</span>
+              <span className="text-[10px] font-mono text-primary/70 tracking-[0.3em] uppercase block mb-3">01 — Why GalaxaTech</span>
               <h2 className="text-4xl sm:text-5xl font-black text-white leading-[0.9]" style={{ fontFamily: 'var(--font-display)' }}>
                 Why<br />
-                <span style={{ WebkitTextStroke: '1.5px rgba(236,30,142,0.5)', color: 'transparent' }}>Choose</span><br />
+                <span style={{ WebkitTextStroke: '1.5px rgba(236,30,142,0.85)', color: 'transparent' }}>Choose</span><br />
                 <span className="pill-word">Us.</span>
               </h2>
             </motion.div>
-            <motion.p initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ duration: 0.7, delay: 0.2 }} className="text-white/35 text-sm leading-relaxed max-w-[200px] sm:text-right border-t border-white/10 pt-4 sm:border-t-0 sm:pt-0 sm:border-l sm:border-white/[0.08] sm:pl-6">
+            <motion.p initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ duration: 0.7, delay: 0.2 }} className="text-white/55 text-sm leading-relaxed max-w-[200px] sm:text-right border-t border-white/10 pt-4 sm:border-t-0 sm:pt-0 sm:border-l sm:border-white/[0.08] sm:pl-6">
               Five reasons clients trust GalaxaTech to build their digital future.
             </motion.p>
           </div>
@@ -389,6 +406,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5 }}
+              whileHover={{ y: -5, transition: { duration: 0.2 } }}
               className="md:col-span-4 flex flex-col justify-between p-7 rounded-3xl glass-card-premium spotlight-sweep border border-white/10 group min-h-[220px]"
             >
               <div className="flex items-start justify-between">
@@ -412,7 +430,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
               <div className="mt-6 flex flex-col sm:flex-row gap-6 items-end justify-between">
                 <div className="max-w-md">
                   <h3 className="text-white font-bold text-base mb-2 font-display">Systems-First Approach</h3>
-                  <p className="text-white/50 text-xs leading-relaxed">We architect before we build — mapping workflows, infrastructure, and dependencies so strategy is never an afterthought.</p>
+                  <p className="text-white/65 text-xs leading-relaxed">We architect before we build — mapping workflows, infrastructure, and dependencies so strategy is never an afterthought.</p>
                 </div>
                 <div className="flex flex-col gap-1 w-full sm:w-auto font-mono text-[9px] text-primary/70 bg-primary/5 rounded-lg p-2.5 border border-primary/10">
                   <div className="flex justify-between gap-4"><span>Sys.Map:</span><span className="text-white font-semibold">Active</span></div>
@@ -427,6 +445,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: 0.1 }}
+              whileHover={{ y: -5, transition: { duration: 0.2 } }}
               className="md:col-span-2 flex flex-col justify-between p-7 rounded-3xl glass-card-premium spotlight-sweep border border-white/10 group min-h-[220px]"
             >
               <div className="flex items-center gap-2.5">
@@ -452,6 +471,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: 0.2 }}
+              whileHover={{ y: -5, transition: { duration: 0.2 } }}
               className="md:col-span-2 flex flex-col justify-between p-7 rounded-3xl glass-card-premium spotlight-sweep border border-white/10 group min-h-[220px]"
             >
               <div className="flex items-start justify-between">
@@ -484,6 +504,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: 0.3 }}
+              whileHover={{ y: -5, transition: { duration: 0.2 } }}
               className="md:col-span-2 flex flex-col justify-between p-7 rounded-3xl glass-card-premium spotlight-sweep border border-white/10 group min-h-[220px]"
             >
               <div className="flex items-center gap-2.5">
@@ -514,6 +535,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: 0.4 }}
+              whileHover={{ y: -5, transition: { duration: 0.2 } }}
               className="md:col-span-2 flex flex-col justify-between p-7 rounded-3xl glass-card-premium spotlight-sweep border border-white/10 group min-h-[220px]"
             >
               <div className="flex items-center gap-2.5">
@@ -551,26 +573,33 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
         <div className="max-w-7xl mx-auto relative z-10">
           <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-12 gap-6">
             <motion.div initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, amount: 0.3 }} transition={{ duration: 0.7 }}>
-              <span className="text-[10px] font-mono text-primary/40 tracking-[0.3em] uppercase block mb-3">02 — Services</span>
+              <span className="text-[10px] font-mono text-primary/70 tracking-[0.3em] uppercase block mb-3">02 — Services</span>
               <h2 className="text-4xl sm:text-5xl font-black text-white leading-[0.9]" style={{ fontFamily: 'var(--font-display)' }}>
                 What<br />
-                <span style={{ WebkitTextStroke: '1.5px rgba(236,30,142,0.5)', color: 'transparent' }}>We</span><br />
+                <span style={{ WebkitTextStroke: '1.5px rgba(236,30,142,0.85)', color: 'transparent' }}>We</span><br />
                 <span className="pill-word-coral">Build.</span>
               </h2>
             </motion.div>
-            <motion.p initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ duration: 0.7, delay: 0.2 }} className="text-white/35 text-sm leading-relaxed max-w-[200px] sm:text-right border-t border-white/10 pt-4 sm:border-t-0 sm:pt-0 sm:border-l sm:border-white/[0.08] sm:pl-6">
+            <motion.p initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ duration: 0.7, delay: 0.2 }} className="text-white/55 text-sm leading-relaxed max-w-[200px] sm:text-right border-t border-white/10 pt-4 sm:border-t-0 sm:pt-0 sm:border-l sm:border-white/[0.08] sm:pl-6">
               Drag or tap the carousel to explore all six service verticals.
             </motion.p>
           </div>
 
           {/* 3D Carousel */}
           <div
-            className="relative select-none overflow-hidden"
+            className="relative select-none"
+            ref={carouselContainerRef}
             style={{ perspective: isMobile ? '800px' : '1400px', height: isMobile ? '300px' : '360px', touchAction: 'pan-y' }}
             onPointerDown={handleCarouselPointerDown}
             onPointerMove={handleCarouselPointerMove}
             onPointerUp={handleCarouselPointerUp}
             onPointerCancel={() => { dragRef.current = null; setDragOffset(0); }}
+            onMouseMove={e => {
+              if (!carouselContainerRef.current || dragRef.current) return;
+              const rect = carouselContainerRef.current.getBoundingClientRect();
+              setCarouselAutoScrollDir(e.clientX - rect.left > rect.width / 2 ? 'right' : 'left');
+            }}
+            onMouseLeave={() => setCarouselAutoScrollDir(null)}
           >
             {SERVICES.map((svc, i) => {
               const offset = getCarouselOffset(i, activeIndex, SERVICES.length);
@@ -580,17 +609,17 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
               const apparentOffset = offset + (dragOffset / xStep);
               const absOff = Math.abs(apparentOffset);
               
-              // We make a slightly wider visible threshold because cards are moving dynamically
-              const visible = isMobile ? absOff <= 1.5 : absOff <= 2.5;
-              
+              // Show peek on both sides
+              const visible = isMobile ? absOff <= 1.8 : absOff <= 2.8;
+
               // Calculate real-time visual positioning
               const x = offset * xStep + dragOffset;
               const rotY = isMobile ? apparentOffset * 14 : apparentOffset * 22;
               const z = -absOff * (isMobile ? 70 : 100);
               const scale = 1 - absOff * 0.13;
-              
-              // Smoothly fade out as card moves away from center
-              const opacity = visible ? Math.max(0, 1 - absOff * 0.4) : 0;
+
+              // Smoothly fade — keeps side cards visible as peek
+              const opacity = visible ? Math.max(0, 1 - absOff * 0.32) : 0;
               const isActive = absOff < 0.5;
               const cardWidth = isMobile ? '175px' : '240px';
               return (
@@ -638,7 +667,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
                     <span className="text-[11px] font-mono text-white/20 font-semibold">{svc.num}</span>
                   </div>
                   <h3 className="text-white font-bold text-base mb-2 font-display relative z-10">{svc.label}</h3>
-                  <p className="text-white/45 text-sm leading-relaxed relative z-10">{svc.desc}</p>
+                  <p className="text-white/70 text-sm leading-relaxed relative z-10">{svc.desc}</p>
                   {isActive && (
                     <div className="flex items-center gap-1.5 mt-5 text-xs font-semibold relative z-10" style={{ color: '#FF7A45' }}>
                       Explore Service <ArrowUpRight className="w-3.5 h-3.5" />
@@ -646,7 +675,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
                   )}
                   {!isActive && (
                     <div className="mt-5 relative z-10">
-                      <ArrowUpRight className="w-4 h-4 text-white/20" />
+                      <ArrowUpRight className="w-4 h-4 text-white/35" />
                     </div>
                   )}
                 </div>
@@ -674,109 +703,58 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
         </div>
       </section>
 
-      {/* ── How We Work — vertical timeline (light section) ───────────────────── */}
-      <section className="py-24 px-6 relative overflow-hidden" style={{ background: '#FAF8FF' }}>
-        {/* Smooth transitions into dark sections above/below */}
-        <div className="absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-[#0B0710] to-transparent pointer-events-none z-10" />
-        <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-[#0B0710] to-transparent pointer-events-none z-10" />
-        {/* Very subtle blob warmth on light bg */}
-        <div className="absolute top-0 right-0 w-[380px] h-[380px] bg-[#EC1E8E]/5 blur-[100px] rounded-full pointer-events-none" />
-        <div className="absolute bottom-0 left-0 w-[300px] h-[300px] bg-[#FF7A45]/5 blur-[90px] rounded-full pointer-events-none" />
-        <div className="max-w-4xl mx-auto relative z-20">
+      {/* ── How We Work ─────────────────────────────────────────────────────────── */}
+      <section className="py-16 px-6 relative overflow-hidden" style={{ background: 'linear-gradient(to bottom, #0B0710 0%, #100918 50%, #0B0710 100%)' }}>
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] bg-[#5B23A8]/10 blur-[150px] rounded-full pointer-events-none" />
+        <div className="absolute top-0 left-0 w-[300px] h-[300px] bg-[#EC1E8E]/8 blur-[120px] rounded-full pointer-events-none" />
+        <div className="absolute bottom-0 right-0 w-[280px] h-[280px] bg-[#FF7A45]/7 blur-[110px] rounded-full pointer-events-none" />
+        <div className="max-w-5xl mx-auto relative z-10">
           <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-12 gap-6">
             <motion.div initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, amount: 0.3 }} transition={{ duration: 0.7 }}>
-              <span className="text-[10px] font-mono tracking-[0.3em] uppercase block mb-3" style={{ color: 'rgba(236,30,142,0.65)' }}>03 — Process</span>
-              <h2 className="text-4xl sm:text-5xl font-black leading-[0.9]" style={{ fontFamily: 'var(--font-display)', color: '#1A0730' }}>
+              <span className="text-[10px] font-mono text-primary/70 tracking-[0.3em] uppercase block mb-3">03 — Process</span>
+              <h2 className="text-4xl sm:text-5xl font-black text-white leading-[0.9]" style={{ fontFamily: 'var(--font-display)' }}>
                 How<br />
-                <span className="text-gradient">We Work.</span>
+                <span style={{ WebkitTextStroke: '1.5px rgba(236,30,142,0.85)', color: 'transparent' }}>We</span><br />
+                <span className="text-gradient">Work.</span>
               </h2>
             </motion.div>
-            <motion.p initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ duration: 0.7, delay: 0.2 }} className="text-sm leading-relaxed max-w-[200px] sm:text-right border-t pt-4 sm:border-t-0 sm:pt-0 sm:border-l sm:pl-6" style={{ color: 'rgba(74,59,92,0.7)', borderColor: 'rgba(26,7,48,0.12)' }}>
+            <motion.p initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ duration: 0.7, delay: 0.2 }} className="text-white/55 text-sm leading-relaxed max-w-[200px] sm:text-right border-t border-white/10 pt-4 sm:border-t-0 sm:pt-0 sm:border-l sm:border-white/[0.08] sm:pl-6">
               A clear, collaborative journey from idea to deployed digital systems.
             </motion.p>
           </div>
 
-          {/* Timeline */}
-          <div className="relative">
-            {/* SVG curved connector line */}
-            <svg
-              className="absolute pointer-events-none"
-              style={{ left: '14px', top: '29px', width: '32px', height: 'calc(100% - 58px)', overflow: 'visible' }}
-              viewBox="0 0 32 400"
-              preserveAspectRatio="none"
-            >
-              {/* Background wave */}
-              <path
-                d="M16,0 C4,50 28,100 16,150 C4,200 28,250 16,300 C4,350 16,400 16,400"
-                fill="none"
-                stroke="rgba(236,30,142,0.15)"
-                strokeWidth="2"
-                vectorEffect="non-scaling-stroke"
-              />
-              {/* Animated fill wave */}
-              <path
-                d="M16,0 C4,50 28,100 16,150 C4,200 28,250 16,300 C4,350 16,400 16,400"
-                fill="none"
-                stroke="url(#waveGrad)"
-                strokeWidth="2.5"
-                vectorEffect="non-scaling-stroke"
-                strokeDasharray="1000"
-                strokeDashoffset={1000 - (lineProgress / 100) * 1000}
-                style={{ transition: 'stroke-dashoffset 0.8s cubic-bezier(.2,.7,.2,1)', filter: 'drop-shadow(0 0 8px rgba(236,30,142,0.65))' }}
-              />
-              <defs>
-                <linearGradient id="waveGrad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#EC1E8E" />
-                  <stop offset="100%" stopColor="#FF7A45" />
-                </linearGradient>
-              </defs>
-            </svg>
- 
-            <div className="flex flex-col gap-5">
-              {PROCESS_STEPS.map((step, i) => {
-                const lit = illuminatedSteps.has(i);
-                const StepIcon = step.Icon;
-                return (
-                  <div key={step.num} ref={el => { stepRefs.current[i] = el; }} className="flex items-center gap-5 relative z-10">
-                    {/* Numbered circle badge */}
-                    <div className="w-[58px] h-[58px] rounded-full flex items-center justify-center flex-shrink-0 relative" style={{ transition: '0.6s cubic-bezier(.2,.7,.2,1)' }}>
-                      <div className="absolute inset-0 rounded-full border" style={{ borderColor: lit ? '#EC1E8E' : 'rgba(236,30,142,0.2)', transition: '0.6s' }} />
-                      <div className="absolute inset-1 rounded-full blur-[4px]" style={{ background: lit ? 'rgba(236,30,142,0.32)' : 'rgba(236,30,142,0.04)', transition: '0.6s' }} />
-                      <div className="absolute inset-[3px] rounded-full bg-white/95 flex items-center justify-center border border-[rgba(26,7,48,0.06)]" style={{ boxShadow: lit ? '0 0 20px rgba(236,30,142,0.3)' : 'none', transition: '0.6s' }}>
-                        <StepIcon className="w-5 h-5" style={{ color: lit ? '#EC1E8E' : 'rgba(236,30,142,0.3)', transition: '0.6s' }} />
-                      </div>
+          {/* 2×2 Process card grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+            {PROCESS_STEPS.map((step, i) => {
+              const StepIcon = step.Icon;
+              return (
+                <motion.div
+                  key={step.num}
+                  initial={{ opacity: 0, y: 24 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: i * 0.1 }}
+                  whileHover={{ y: -4 }}
+                  className="relative flex flex-col p-7 rounded-3xl glass-card-premium spotlight-sweep border border-white/10 group overflow-hidden hover:border-primary/30 transition-colors duration-300"
+                >
+                  <div className="absolute right-5 bottom-4 font-black select-none pointer-events-none leading-none" style={{ fontSize: '100px', color: 'rgba(236,30,142,0.06)', fontFamily: 'var(--font-display)' }}>{step.num}</div>
+                  <div className="flex items-start justify-between mb-6">
+                    <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-primary/10 border border-primary/20 group-hover:bg-primary/15 group-hover:border-primary/35 transition-colors duration-300">
+                      <StepIcon className="w-5 h-5 text-lavender" />
                     </div>
-                    <div className="flex-1 flex items-center justify-between p-5 rounded-3xl relative overflow-hidden" style={{
-                      background: 'rgba(255,255,255,0.95)',
-                      backdropFilter: 'blur(20px) saturate(140%)',
-                      border: '1px solid rgba(26,7,48,0.08)',
-                      borderTop: lit ? '1px solid rgba(236,30,142,0.45)' : '1px solid rgba(26,7,48,0.1)',
-                      boxShadow: lit ? '0 0 35px rgba(236,30,142,0.09), 0 10px 30px rgba(0,0,0,0.06)' : '0 8px 25px rgba(0,0,0,0.06)',
-                      transition: '0.6s cubic-bezier(.2,.7,.2,1)'
-                    }}>
-                      {/* Ghost step number */}
-                      <div className="absolute right-4 top-1/2 -translate-y-1/2 font-black select-none pointer-events-none leading-none" style={{ fontSize: '80px', color: lit ? 'rgba(236,30,142,0.08)' : 'rgba(236,30,142,0.03)', fontFamily: 'var(--font-display)', transition: '0.6s' }}>{step.num}</div>
-                      <div className="relative z-10">
-                        <div className="flex items-center gap-2.5 mb-1">
-                          <span className="text-[10px] font-mono" style={{ color: lit ? '#EC1E8E' : 'rgba(236,30,142,0.3)' }}>{step.num}</span>
-                          <h3 className="font-bold text-base font-display" style={{ color: lit ? '#1A0730' : 'rgba(26,7,48,0.3)' }}>{step.title}</h3>
-                        </div>
-                        <p className="text-sm" style={{ color: lit ? '#4A3B5C' : 'rgba(74,59,92,0.25)' }}>{step.desc}</p>
-                      </div>
-                      <button className="w-8 h-8 rounded-full border flex items-center justify-center flex-shrink-0 ml-4 cursor-pointer relative z-10" style={{ borderColor: lit ? 'rgba(236,30,142,0.5)' : 'rgba(26,7,48,0.12)', background: lit ? 'rgba(236,30,142,0.10)' : 'transparent' }}>
-                        <ChevronRight className="w-4 h-4" style={{ color: lit ? '#EC1E8E' : 'rgba(26,7,48,0.2)' }} />
-                      </button>
-                    </div>
+                    <span className="text-[11px] font-mono text-primary/70 font-semibold bg-primary/8 px-2.5 py-1 rounded-full border border-primary/15">{step.num}</span>
                   </div>
-                );
-              })}
-            </div>
+                  <h3 className="text-white font-bold text-lg mb-2 font-display relative z-10">{step.title}</h3>
+                  <p className="text-white/60 text-sm leading-relaxed relative z-10">{step.desc}</p>
+                </motion.div>
+              );
+            })}
           </div>
 
-          <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: 0.3 }} className="flex justify-center mt-12">
+          <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: 0.3 }} className="flex justify-center mt-10">
             <div className="flex items-center gap-2.5">
-              <Sparkles className="w-4 h-4" style={{ color: 'rgba(236,30,142,0.55)' }} />
-              <span className="text-sm" style={{ color: 'rgba(26,7,48,0.45)' }}>Powered by the <span style={{ color: '#EC1E8E' }}>GalaxaTech</span> intelligence layer</span>
+              <Sparkles className="w-4 h-4 text-primary/55" />
+              <span className="text-white/45 text-sm">Powered by the <span className="text-primary/80">GalaxaTech</span> intelligence layer</span>
             </div>
           </motion.div>
         </div>
@@ -788,13 +766,13 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
         <div className="max-w-5xl mx-auto relative z-10">
           <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-16 gap-6">
             <motion.div initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, amount: 0.3 }} transition={{ duration: 0.7 }}>
-              <span className="text-[10px] font-mono text-primary/40 tracking-[0.3em] uppercase block mb-3">05 — Portfolio</span>
+              <span className="text-[10px] font-mono text-primary/70 tracking-[0.3em] uppercase block mb-3">05 — Portfolio</span>
               <h2 className="text-4xl sm:text-5xl font-black text-white leading-[0.9]" style={{ fontFamily: 'var(--font-display)' }}>
                 Selected<br />
                 <span className="text-grad">Work.</span>
               </h2>
             </motion.div>
-            <motion.p initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ duration: 0.7, delay: 0.2 }} className="text-white/35 text-sm leading-relaxed max-w-[200px] sm:text-right border-t border-white/10 pt-4 sm:border-t-0 sm:pt-0 sm:border-l sm:border-white/[0.08] sm:pl-6">
+            <motion.p initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ duration: 0.7, delay: 0.2 }} className="text-white/55 text-sm leading-relaxed max-w-[200px] sm:text-right border-t border-white/10 pt-4 sm:border-t-0 sm:pt-0 sm:border-l sm:border-white/[0.08] sm:pl-6">
               A few projects, systems, and brands we've helped shape.
             </motion.p>
           </div>
@@ -898,15 +876,23 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
                       // Coordinate physics for cinematic pop out
                       // Closed state: Stacked inside folder
                       // Open state: Fly outwards with rotation, scale, and offset
-                      let x = 0;
-                      let y = isMobile ? 30 : 20;
-                      let z = (i + 1) * -8; // Slightly staggered depth when closed
-                      let rotX = 0;
-                      let rotY = 0;
-                      let rotZ = 0;
-                      let scale = 0.9 - i * 0.03;
-                      let opacity = 0.45 - i * 0.1;
-                      let cardBlur = '4px';
+                      // Subtle fan peek — cards visible and fanned by default
+                      const peekDesktop = [
+                        { x: -30, y: 14, z: -22, rotX: 0, rotY: 0, rotZ: -13, scale: 0.86 },
+                        { x: 0,   y: -8, z: -5,  rotX: 0, rotY: 0, rotZ: 0,   scale: 0.92 },
+                        { x: 30,  y: 14, z: -22, rotX: 0, rotY: 0, rotZ: 13,  scale: 0.86 },
+                      ];
+                      const peekMobile = [
+                        { x: -18, y: 10, z: -16, rotX: 0, rotY: 0, rotZ: -10, scale: 0.84 },
+                        { x: 0,   y: -6, z: -4,  rotX: 0, rotY: 0, rotZ: 0,   scale: 0.90 },
+                        { x: 18,  y: 10, z: -16, rotX: 0, rotY: 0, rotZ: 10,  scale: 0.84 },
+                      ];
+                      const peek = isMobile ? peekMobile[i] : peekDesktop[i];
+                      let x = peek.x, y = peek.y, z = peek.z;
+                      let rotX = peek.rotX, rotY = peek.rotY, rotZ = peek.rotZ;
+                      let scale = peek.scale;
+                      let opacity = i === 1 ? 0.82 : 0.72;
+                      let cardBlur = '0px';
 
                       if (folderHovered) {
                         cardBlur = '0px';
@@ -1020,19 +1006,16 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
 
                       {/* Content */}
                       <div className="flex flex-col justify-between h-full p-6 sm:p-8 relative z-30">
-                        <div>
-                          <div className="flex items-center gap-3 mb-1">
-                            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl border border-primary/20 flex items-center justify-center bg-primary/10">
-                              <FolderOpen className="w-4 h-4 sm:w-5 sm:h-5 text-lavender" />
-                            </div>
-                            <div>
-                              <p className="text-white font-bold text-sm sm:text-base font-display">Open Portfolio</p>
-                              <p className="text-white/40 text-[10px] sm:text-xs font-sans">Hover to reveal selected projects</p>
-                            </div>
+                        <div className="flex items-center">
+                          <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl border border-primary/20 flex items-center justify-center bg-primary/10">
+                            <FolderOpen className="w-4 h-4 sm:w-5 sm:h-5 text-lavender" />
                           </div>
                         </div>
                         <div className="flex items-center justify-between mt-auto">
-                          <span className="text-white/35 text-[9px] sm:text-xs font-semibold tracking-wider font-mono">GALAXATECH © 2026</span>
+                          <div>
+                            <p className="text-white font-bold text-sm sm:text-base font-display leading-tight">Open Portfolio</p>
+                            <span className="text-white/45 text-[9px] sm:text-[10px] font-mono tracking-wider">GALAXATECH © 2026</span>
+                          </div>
                           <button
                             onClick={e => { e.stopPropagation(); navigate('/portfolio'); }}
                             className="w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-[1.1] primary-gradient cursor-pointer"
@@ -1046,106 +1029,74 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
 
                   </div>
                 </div>
-                <p className="text-white/25 text-[11px] font-mono mt-6">Hover or tap to reveal</p>
+                <p className="text-white/45 text-[11px] font-mono mt-6">Hover or tap to reveal</p>
               </motion.div>
             );
           })()}
         </div>
       </section>
 
-      {/* ── FAQ — two-column with icons ───────────────────────────────────────── */}
-      <section className="py-16 px-6 relative overflow-hidden" style={{ background: 'linear-gradient(to bottom, #0B0710 0%, #100918 60%, #0B0710 100%)' }}>
+      {/* ── Common Questions ─────────────────────────────────────────────────────── */}
+      <section className="py-10 px-6 relative overflow-hidden" style={{ background: 'linear-gradient(to bottom, #0B0710 0%, #100918 60%, #0B0710 100%)' }}>
         <div className="absolute top-0 right-1/4 w-[350px] h-[350px] bg-[#EC1E8E]/7 blur-[120px] rounded-full pointer-events-none" />
-        <div className="max-w-5xl mx-auto relative z-10">
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-12 gap-6">
+        <div className="max-w-3xl mx-auto relative z-10">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-8 gap-6">
             <motion.div initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, amount: 0.3 }} transition={{ duration: 0.7 }}>
-              <span className="text-[10px] font-mono text-primary/40 tracking-[0.3em] uppercase block mb-3">04 — FAQ</span>
+              <span className="text-[10px] font-mono text-primary/70 tracking-[0.3em] uppercase block mb-3">04 — FAQ</span>
               <h2 className="text-4xl sm:text-5xl font-black text-white leading-[0.9]" style={{ fontFamily: 'var(--font-display)' }}>
                 Common<br />
                 <span className="pill-word">Questions.</span>
               </h2>
             </motion.div>
-            <motion.p initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ duration: 0.7, delay: 0.2 }} className="text-white/35 text-sm leading-relaxed max-w-[200px] sm:text-right border-t border-white/10 pt-4 sm:border-t-0 sm:pt-0 sm:border-l sm:border-white/[0.08] sm:pl-6">
+            <motion.p initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ duration: 0.7, delay: 0.2 }} className="text-white/55 text-sm leading-relaxed max-w-[200px] sm:text-right border-t border-white/10 pt-4 sm:border-t-0 sm:pt-0 sm:border-l sm:border-white/[0.08] sm:pl-6">
               Everything you need to know before working with us.
             </motion.p>
           </div>
 
-          <div className="flex flex-col lg:flex-row gap-6 items-start">
-            {/* Left: question list */}
-            <div className="flex flex-col gap-3 w-full lg:w-[45%]">
-              {FAQS.map((faq, i) => {
-                const FaqIcon = faq.icon;
-                const isActive = activeFAQ === i;
-                return (
-                  <motion.button
-                    key={i}
-                    initial={{ opacity: 0, x: -16 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true, amount: 0.1 }}
-                    transition={{ duration: 0.4, delay: i * 0.06 }}
+          <div className="flex flex-col gap-2">
+            {FAQS.map((faq, i) => {
+              const FaqIcon = faq.icon;
+              const isActive = activeFAQ === i;
+              return (
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, x: -16 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true, amount: 0.1 }}
+                  transition={{ duration: 0.35, delay: i * 0.05 }}
+                  className="rounded-2xl overflow-hidden"
+                  style={{
+                    background: 'rgba(255,255,255,0.06)',
+                    backdropFilter: 'blur(20px) saturate(140%)',
+                    WebkitBackdropFilter: 'blur(20px) saturate(140%)',
+                    border: `1px solid ${isActive ? 'rgba(236,30,142,0.45)' : 'rgba(255,255,255,0.10)'}`,
+                    transition: 'border-color 0.25s',
+                  }}
+                >
+                  <button
                     onClick={() => setActiveFAQ(isActive ? null : i)}
-                    className="faq-item w-full flex items-center gap-3 p-4 rounded-2xl text-left transition-all duration-300"
-                    style={{
-                      ...GLASS_STYLE,
-                      borderColor: isActive ? 'rgba(236,30,142,0.5)' : 'rgba(255,255,255,0.12)',
-                      boxShadow: isActive ? '0 0 30px rgba(236,30,142,0.22), inset 0 1px 0 rgba(255,255,255,0.1)' : GLASS_STYLE.boxShadow,
-                      borderRadius: '16px',
-                    }}
+                    className="w-full flex items-center gap-3 px-4 py-3.5 text-left cursor-pointer"
                   >
-                    <div className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 transition-all duration-300" style={{ background: isActive ? 'rgba(236,30,142,0.22)' : 'rgba(236,30,142,0.08)', border: `1px solid ${isActive ? 'rgba(236,30,142,0.45)' : 'rgba(236,30,142,0.15)'}` }}>
-                      <FaqIcon className="w-4 h-4" style={{ color: isActive ? '#EC1E8E' : 'rgba(236,30,142,0.45)' }} />
-                    </div>
-                    <span className="text-sm font-semibold flex-1 text-left leading-snug" style={{ color: isActive ? '#fff' : 'rgba(255,255,255,0.65)' }}>{faq.q}</span>
-                    <ChevronRight className="w-4 h-4 flex-shrink-0 transition-transform duration-300" style={{ color: isActive ? '#EC1E8E' : 'rgba(255,255,255,0.2)', transform: isActive ? 'rotate(90deg)' : 'rotate(0deg)' }} />
-                  </motion.button>
-                );
-              })}
-            </div>
-
-            {/* Right: answer panel */}
-            <div className="w-full lg:w-[55%] lg:sticky lg:top-28">
-              <AnimatePresence mode="wait">
-                {activeFAQ !== null ? (
-                  <motion.div
-                    key={activeFAQ}
-                    initial={{ opacity: 0, y: 12 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -12 }}
-                    transition={{ duration: 0.3 }}
-                    className="p-8 rounded-2xl"
-                    style={{ ...GLASS_STYLE, borderColor: 'rgba(236,30,142,0.3)', boxShadow: '0 0 60px rgba(236,30,142,0.10), inset 0 1px 0 rgba(255,255,255,0.1)', minHeight: '200px' }}
-                  >
-                    <div className="flex items-center gap-3 mb-5">
-                      {activeFAQ !== null && (() => {
-                        const ActiveIcon = FAQS[activeFAQ].icon;
-                        return (
-                          <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: 'rgba(236,30,142,0.15)', border: '1px solid rgba(236,30,142,0.35)' }}>
-                            <ActiveIcon className="w-5 h-5" style={{ color: '#EC1E8E' }} />
-                          </div>
-                        );
-                      })()}
-                      <h3 className="text-white font-bold text-base leading-snug" style={{ fontFamily: 'var(--font-display)' }}>{FAQS[activeFAQ].q}</h3>
-                    </div>
-                    <p className="text-white/60 text-sm leading-relaxed">{FAQS[activeFAQ].a}</p>
-                    <div className="mt-6 pt-5 border-t border-white/8">
-                      <span className="text-[10px] font-mono text-white/25 tracking-widest uppercase">GalaxaTech · Common Questions</span>
-                    </div>
-                  </motion.div>
-                ) : (
-                  <motion.div
-                    key="placeholder"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    className="flex flex-col items-center justify-center rounded-2xl"
-                    style={{ ...GLASS_STYLE, minHeight: '200px', borderColor: 'rgba(255,255,255,0.08)', opacity: 0.5 }}
-                  >
-                    <HelpCircle className="w-8 h-8 text-white/20 mb-3" />
-                    <p className="text-white/25 text-sm">Select a question to see the answer</p>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
+                    <FaqIcon className="w-4 h-4 flex-shrink-0" style={{ color: isActive ? '#EC1E8E' : 'rgba(236,30,142,0.55)' }} />
+                    <span className="text-sm font-semibold flex-1 leading-snug" style={{ color: isActive ? '#fff' : 'rgba(255,255,255,0.75)' }}>{faq.q}</span>
+                    <ChevronRight className="w-4 h-4 flex-shrink-0 transition-transform duration-200" style={{ color: isActive ? '#EC1E8E' : 'rgba(255,255,255,0.25)', transform: isActive ? 'rotate(90deg)' : 'none' }} />
+                  </button>
+                  <AnimatePresence>
+                    {isActive && (
+                      <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: 'auto', opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+                        className="overflow-hidden"
+                      >
+                        <p className="text-white/65 text-sm leading-relaxed px-4 pb-4 pl-11">{faq.a}</p>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </motion.div>
+              );
+            })}
           </div>
         </div>
       </section>
@@ -1185,11 +1136,11 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
 
           <h2 className="font-black text-white mb-5 leading-[0.9]" style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(2.5rem, 7vw, 4.5rem)' }}>
             Wanna join the<br />
-            <span style={{ WebkitTextStroke: '2px rgba(236,30,142,0.55)', color: 'transparent' }}>Galaxa</span>{' '}
+            <span style={{ WebkitTextStroke: '2px rgba(236,30,142,0.88)', color: 'transparent' }}>Galaxa</span>{' '}
             <span className="pill-word">team?</span>
           </h2>
           <p className="text-white/45 text-base mb-10 leading-relaxed max-w-md mx-auto">
-            Toggle in to join our builders / newsletter community and hear about opportunities first.
+            Flip the switch to join our builders community and be the first to hear about every opportunity.
           </p>
 
           {/* Tactile 3D-effect toggle button */}
