@@ -238,7 +238,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
 
         <div className="max-w-5xl mx-auto px-4 sm:px-6 text-center relative z-10 pt-8 sm:pt-12">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, ease: [0.16,1,0.3,1] }}>
-            <div className="eyebrow-badge rounded-full px-4 sm:px-5 py-2 sm:py-2.5 mb-8 border border-red-500/20 shadow-[0_0_15px_rgba(239,68,68,0.1)] max-w-[92vw]">
+            <div className="eyebrow-badge rounded-full px-4 sm:px-5 py-2 sm:py-2.5 mb-12 border border-red-500/20 shadow-[0_0_15px_rgba(239,68,68,0.1)] max-w-[92vw]">
               <span className="w-2 h-2 rounded-full bg-red-500 dot-pulse-glow flex-shrink-0" />
               <span className="text-[9px] sm:text-[11px] font-mono font-bold tracking-wide sm:tracking-widest text-white uppercase leading-tight">
                 <span className="hidden sm:inline">AUTONOMOUS OPTIMIZATION • AGENTS ACTIVE • </span>
@@ -247,9 +247,9 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
               </span>
             </div>
           </motion.div>
-          <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.1, ease: [0.16,1,0.3,1] }} className="font-display text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight text-white mb-6 leading-[1.08] drop-shadow-[0_4px_24px_rgba(0,0,0,0.8)]">
+          <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.1, ease: [0.16,1,0.3,1] }} className="font-display text-[2.75rem] sm:text-[4.5rem] md:text-[5.5rem] font-extrabold tracking-[-0.03em] text-white mb-4 leading-[1.06] drop-shadow-[0_4px_24px_rgba(0,0,0,0.8)]">
             Assure your brand's <br className="hidden md:block" />
-            <span className="font-serif italic font-normal typewriter-container block min-h-[1.15em] mt-2 pb-1 overflow-hidden">
+            <span className="font-serif italic font-normal typewriter-container block min-h-[1.2em] mt-3 pb-1 overflow-hidden">
               <AnimatePresence mode="wait">
                 <motion.span key={wordIndex} initial={{ y: 35, opacity: 0, filter: 'blur(5px)' }} animate={{ y: 0, opacity: 1, filter: 'blur(0px)' }} exit={{ y: -35, opacity: 0, filter: 'blur(5px)' }} transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }} className="inline-block text-gradient">
                   {TYPEWRITER_WORDS[wordIndex]}
@@ -257,7 +257,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
               </AnimatePresence>
             </span>
           </motion.h1>
-          <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.2, ease: [0.16,1,0.3,1] }} className="text-base sm:text-lg text-white/70 max-w-2xl mx-auto mb-10 leading-relaxed font-sans">
+          <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.2, ease: [0.16,1,0.3,1] }} className="text-[15px] sm:text-lg text-white/55 max-w-xl mx-auto mb-8 leading-relaxed font-sans tracking-wide">
             By investing only FIVE minutes, giving us some information about your business.
           </motion.p>
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.3, ease: [0.16,1,0.3,1] }} className="flex justify-center px-4 sm:px-0">
@@ -271,7 +271,33 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
               <span className="text-sm font-semibold tracking-wider uppercase font-mono">Book an Audit</span>
             </button>
           </motion.div>
+
+          {/* Stat proof bar */}
+          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.45, ease: [0.16,1,0.3,1] }} className="flex items-center justify-center gap-6 sm:gap-10 mt-10">
+            <div className="text-center">
+              <span className="block text-xl sm:text-2xl font-bold text-white font-display tracking-tight">50+</span>
+              <span className="block text-[10px] font-mono tracking-[0.2em] text-white/35 uppercase mt-0.5">Projects</span>
+            </div>
+            <div className="w-px h-7 bg-white/10 flex-shrink-0" />
+            <div className="text-center">
+              <span className="block text-xl sm:text-2xl font-bold text-white font-display tracking-tight">6</span>
+              <span className="block text-[10px] font-mono tracking-[0.2em] text-white/35 uppercase mt-0.5">Countries</span>
+            </div>
+            <div className="w-px h-7 bg-white/10 flex-shrink-0" />
+            <div className="text-center">
+              <span className="block text-xl sm:text-2xl font-bold text-white font-display tracking-tight">6</span>
+              <span className="block text-[10px] font-mono tracking-[0.2em] text-white/35 uppercase mt-0.5">Services</span>
+            </div>
+          </motion.div>
         </div>
+
+        {/* Scroll indicator */}
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1, delay: 0.9 }} className="absolute bottom-6 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-1.5 pointer-events-none">
+          <span className="text-[9px] font-mono tracking-[0.22em] text-white/20 uppercase">Scroll</span>
+          <motion.div animate={{ y: [0, 5, 0] }} transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}>
+            <ChevronDown className="w-3.5 h-3.5 text-white/20" />
+          </motion.div>
+        </motion.div>
       </section>
 
       {/* ── Global Presence ──────────────────────────────────────────────────── */}
