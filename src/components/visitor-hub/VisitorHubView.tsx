@@ -1,250 +1,388 @@
-﻿import { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Sparkles, BookOpen, Globe, Lock, LogOut, Copy, Check, ArrowLeft, Loader2 } from 'lucide-react';
-import { useAuth } from '../../context/AuthContext';
-import { useContent } from '../../hooks/useContent';
-import EmptyState from '../shared/EmptyState';
-import brandmarkLogo from '../../assets/images/galaxatech_revised_logo_1780005309031.png';
+import { Sparkles, BookOpen, Globe, Copy, Check, ArrowLeft, Loader2, Cpu, Download, Heart, MessageSquare } from 'lucide-react';
 
-type Tab = 'insights' | 'prompts' | 'members';
+type Tab = 'utilities' | 'resources' | 'community' | 'guides';
 
-const STATIC_INSIGHTS = [
-  {
-    id: '1',
-    title: 'How to Set Up a No-Code AI Assistant in 15 Minutes',
-    excerpt: 'A step-by-step guide to deploying your first automation with zero code.',
-    readTime: '5 min read',
-    tag: 'Automation',
-    content: 'Modern no-code tools like Zapier, Make, and native AI assistants make automation accessible to anyone. Start by identifying one repetitive task—email sorting, meeting summaries, or lead follow-ups. Connect your email to an AI-powered workflow, define triggers (e.g., "new email from client"), and set actions (e.g., "summarize and label"). Most platforms have visual drag-and-drop builders. Within 15 minutes you can have your first automation running.',
-  },
-  {
-    id: '2',
-    title: 'The Best AI Image Generators of 2025 Compared',
-    excerpt: "Midjourney, DALL·E, Ideogram, and Flux — we tested them so you don't have to.",
-    readTime: '8 min read',
-    tag: 'AI Tools',
-    content: 'Midjourney v6 leads for artistic quality and photorealism. DALL·E 3 (via ChatGPT) wins on prompt adherence and ease of use. Ideogram excels at text-in-image tasks—logos, posters, social banners. Flux (by Black Forest Labs) is the best open-source option with exceptional detail. For business use: Ideogram for branding, Midjourney for creative campaigns, DALL·E for day-to-day content.',
-  },
-  {
-    id: '3',
-    title: '3 Easy Ways to Automate Your Busywork Today',
-    excerpt: 'Calendar scheduling, email triage, and lead follow-ups — all running on autopilot.',
-    readTime: '4 min read',
-    tag: 'Productivity',
-    content: '1. Calendly + AI: Let clients book meetings without back-and-forth. Add an AI confirmation email that auto-prepares a brief before each call. 2. Email Triage: Use Gmail filters + AI labels to auto-sort newsletters, client emails, and invoices. 3. Lead Follow-Ups: Connect your contact form to a CRM (Notion, Airtable) and trigger a personalized follow-up sequence via Make or Zapier. Each takes under 30 minutes to set up.',
-  },
-];
-
-const STATIC_PROMPTS = [
-  { id: 'p1', title: 'Ultimate Teach-Me-Anything Tutor', body: 'You are an expert tutor. When I give you a topic, break it into digestible steps, explain each using real-world analogies, give me a mini quiz at the end, and suggest the best next steps for deeper learning. Topic: [YOUR TOPIC]' },
-  { id: 'p2', title: 'Professional Email Polisher', body: 'Rewrite the following email to be professional, concise, and action-oriented. Keep the core message, remove filler phrases, and end with a clear call to action. Email: [PASTE EMAIL HERE]' },
-  { id: 'p3', title: 'Ideas Creator & Brainstormer', body: 'I need creative ideas for [TOPIC/PROJECT]. Generate 10 diverse ideas ranging from conventional to bold. For each, give a one-line pitch and the biggest risk. Then pick the top 3 and explain why.' },
-];
-
-function CopyButton({ text }: { text: string }) {
-  const [copied, setCopied] = useState(false);
-  const copy = () => { navigator.clipboard.writeText(text); setCopied(true); setTimeout(() => setCopied(false), 2000); };
-  return (
-    <button onClick={copy} className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-white/50 hover:text-white text-xs transition-all">
-      {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
-      {copied ? 'Copied!' : 'Copy'}
-    </button>
-  );
-}
-
-function MembersVault() {
-  const { items: prompts, loading: l1 } = useContent('prompt', true);
-  const { items: resources, loading: l2 } = useContent('resource', true);
-  const { items: newsletters, loading: l3 } = useContent('newsletter', true);
-  const [expanded, setExpanded] = useState<string | null>(null);
-
-  if (l1 || l2 || l3) return <div className="text-white/40 text-sm text-center py-8"><Loader2 className="w-5 h-5 animate-spin mx-auto" /></div>;
-
-  const all = [...prompts, ...resources, ...newsletters];
-
-  if (all.length === 0) {
-    return (
-      <EmptyState
-        title="Members content coming soon"
-        description="Premium prompts, templates, and newsletter archives will appear here."
-        icon={<Lock className="w-5 h-5" />}
-      />
-    );
-  }
-
-  return (
-    <div>
-      {prompts.length > 0 && (
-        <div className="mb-6">
-          <h3 className="text-white font-semibold text-sm mb-3 flex items-center gap-2">
-            <Sparkles className="w-4 h-4 text-primary" /> Premium Prompts
-          </h3>
-          <div className="flex flex-col gap-2">
-            {prompts.map(item => (
-              <div key={item.id} className="glass-card rounded-2xl overflow-hidden">
-                <button onClick={() => setExpanded(expanded === item.id ? null : item.id)} className="w-full flex items-center justify-between px-5 py-3.5 hover:bg-white/[0.02] text-left">
-                  <p className="text-white font-semibold text-sm">{item.title}</p>
-                  <span className="text-white/30 text-xs">{expanded === item.id ? 'Hide' : 'View →'}</span>
-                </button>
-                {expanded === item.id && (
-                  <div className="px-5 pb-4 border-t border-white/5">
-                    <p className="text-white/70 text-sm leading-relaxed whitespace-pre-wrap pt-3 mb-3">{item.body}</p>
-                    <CopyButton text={item.body} />
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-      {resources.length > 0 && (
-        <div className="mb-6">
-          <h3 className="text-white font-semibold text-sm mb-3 flex items-center gap-2">
-            <BookOpen className="w-4 h-4 text-cyan-400" /> Resource Templates
-          </h3>
-          <div className="flex flex-col gap-2">
-            {resources.map(item => (
-              <div key={item.id} className="glass-card rounded-2xl overflow-hidden">
-                <button onClick={() => setExpanded(expanded === item.id ? null : item.id)} className="w-full flex items-center justify-between px-5 py-3.5 hover:bg-white/[0.02] text-left">
-                  <p className="text-white font-semibold text-sm">{item.title}</p>
-                  <span className="text-white/30 text-xs">{expanded === item.id ? 'Hide' : 'View →'}</span>
-                </button>
-                {expanded === item.id && (
-                  <div className="px-5 pb-4 border-t border-white/5">
-                    <p className="text-white/70 text-sm leading-relaxed whitespace-pre-wrap pt-3">{item.body}</p>
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-      {newsletters.length > 0 && (
-        <div>
-          <h3 className="text-white font-semibold text-sm mb-3">Newsletter Archive</h3>
-          <div className="flex flex-col gap-2">
-            {newsletters.map(item => (
-              <div key={item.id} className="glass-card rounded-2xl overflow-hidden">
-                <button onClick={() => setExpanded(expanded === item.id ? null : item.id)} className="w-full flex items-center justify-between px-5 py-3.5 hover:bg-white/[0.02] text-left">
-                  <p className="text-white font-semibold text-sm">{item.title}</p>
-                  <span className="text-white/30 text-xs">
-                    {item.createdAt ? new Date(item.createdAt.seconds * 1000).toLocaleDateString() : ''} {expanded === item.id ? '↑' : '→'}
-                  </span>
-                </button>
-                {expanded === item.id && (
-                  <div className="px-5 pb-4 border-t border-white/5">
-                    <p className="text-white/70 text-sm leading-relaxed whitespace-pre-wrap pt-3">{item.body}</p>
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-    </div>
-  );
-}
+const MOCK_WALLPAPERS: Record<string, string> = {
+  cosmic: 'https://images.unsplash.com/photo-1462331940025-496dfbfc7564?auto=format&fit=crop&w=600&q=80',
+  cyber: 'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?auto=format&fit=crop&w=600&q=80',
+  minimal: 'https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&w=600&q=80',
+};
 
 export default function VisitorHubView() {
   const navigate = useNavigate();
-  const { firebaseUser, signOut } = useAuth();
-  const [activeTab, setActiveTab] = useState<Tab>('insights');
-  const [expandedInsight, setExpandedInsight] = useState<string | null>(null);
-  const [expandedPrompt, setExpandedPrompt] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState<Tab>('utilities');
 
-  const tabs = [
-    { id: 'insights' as Tab, label: 'Insights & Guides', icon: <Globe className="w-3.5 h-3.5" /> },
-    { id: 'prompts' as Tab, label: 'Prompt Vault', icon: <Sparkles className="w-3.5 h-3.5" /> },
-    { id: 'members' as Tab, label: 'Members Vault', icon: <Lock className="w-3.5 h-3.5" /> },
-  ];
+  // Prompt Architect State
+  const [promptRole, setPromptRole] = useState('Senior Copywriter');
+  const [promptTask, setPromptTask] = useState('Write an email sequences for a SaaS launch');
+  const [copiedPrompt, setCopiedPrompt] = useState(false);
+
+  const generatedPrompt = `[Role]: You are an elite, highly systems-driven ${promptRole}.
+[Context]: We are launching a new digital ecosystem prioritizing micro-animations and frosted glass aesthetics.
+[Task]: Carefully execute: "${promptTask}".
+[Constraint]: Keep the output clean, structured, and split into clear sections. Avoid fluff.`;
+
+  // Wallpaper Generator State
+  const [wallpaperTheme, setWallpaperTheme] = useState('cosmic');
+  const [wallpaperRatio, setWallpaperRatio] = useState('16:9');
+  const [generating, setGenerating] = useState(false);
+  const [generatedImg, setGeneratedImg] = useState<string | null>(null);
+
+  // Region Utility State
+  const [region, setRegion] = useState<'BD' | 'US' | 'EU'>('BD');
+
+  // Community State
+  const [posts, setPosts] = useState([
+    { id: 1, author: 'Siam Rahman', text: 'The 3D folder hover on the landing page is absolute fire!', likes: 12 },
+    { id: 2, author: 'Taskin Ahmed', text: 'Used the Prompt Architect for my client pitch today. Saves so much framing time.', likes: 8 },
+  ]);
+  const [newPostAuthor, setNewPostAuthor] = useState('');
+  const [newPostText, setNewPostText] = useState('');
+
+  const handleCreatePost = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newPostAuthor.trim() || !newPostText.trim()) return;
+    setPosts([
+      { id: Date.now(), author: newPostAuthor, text: newPostText, likes: 0 },
+      ...posts
+    ]);
+    setNewPostAuthor('');
+    setNewPostText('');
+  };
+
+  const handleGenerateWallpaper = () => {
+    setGenerating(true);
+    setGeneratedImg(null);
+    setTimeout(() => {
+      setGeneratedImg(MOCK_WALLPAPERS[wallpaperTheme] || MOCK_WALLPAPERS.cosmic);
+      setGenerating(false);
+    }, 2000);
+  };
+
+  const handleCopyPrompt = () => {
+    navigator.clipboard.writeText(generatedPrompt);
+    setCopiedPrompt(true);
+    setTimeout(() => setCopiedPrompt(false), 2000);
+  };
 
   return (
-    <div className="min-h-screen relative">
-      <div className="max-w-3xl mx-auto px-4 py-8">
+    <div className="min-h-screen relative pt-24 pb-16 sm:pb-24">
+      <div className="max-w-4xl mx-auto px-6 relative z-10">
+        
         {/* Header */}
-        <div className="flex items-center justify-between mb-8">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 mb-12">
           <div className="flex items-center gap-3">
-            <button onClick={() => navigate('/')} className="p-2 rounded-xl bg-white/5 hover:bg-white/10 text-white/50 hover:text-white transition-all">
+            <button
+              onClick={() => navigate('/')}
+              className="p-2.5 rounded-xl bg-white/5 hover:bg-white/10 text-white/50 hover:text-white border border-white/10 transition-all cursor-pointer"
+            >
               <ArrowLeft className="w-4 h-4" />
             </button>
-            <img src={brandmarkLogo} alt="GalaxaTech" className="w-8 h-8 rounded-lg object-contain" />
             <div>
-              <p className="text-white font-bold text-sm leading-none">Visitor Hub</p>
-              <p className="text-white/30 text-xs">GalaxaTech Resource Center</p>
+              <h1 className="text-3xl font-black text-white font-display">Galaxa Space</h1>
+              <p className="text-white/40 text-xs">Public AI generation space and Bangladesh developer utilities</p>
             </div>
           </div>
-          <div className="flex items-center gap-2">
-            {firebaseUser?.photoURL && (
-              <img src={firebaseUser.photoURL} alt="" className="w-7 h-7 rounded-full object-cover" />
-            )}
-            <button onClick={signOut} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-white/50 hover:text-white text-xs transition-all">
-              <LogOut className="w-3.5 h-3.5" /> Sign out
-            </button>
-          </div>
+          <span className="text-[10px] font-mono font-bold text-primary uppercase tracking-widest bg-primary/10 border border-primary/20 rounded-full px-3.5 py-1.5 self-start sm:self-auto">
+            Open Sandbox
+          </span>
         </div>
 
-        {/* Tabs */}
-        <div className="flex gap-2 mb-6 overflow-x-auto no-scrollbar pb-1">
-          {tabs.map(tab => (
+        {/* Navigation Tabs */}
+        <div className="flex gap-2.5 mb-10 overflow-x-auto no-scrollbar pb-1">
+          {([
+            { id: 'utilities', label: 'AI Utilities', icon: Cpu },
+            { id: 'resources', label: 'Resource Vault', icon: BookOpen },
+            { id: 'community', label: 'Community Board', icon: MessageSquare },
+            { id: 'guides', label: 'Agency Insights', icon: Globe },
+          ] as const).map(tab => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all ${activeTab === tab.id ? 'bg-primary/20 text-primary border border-primary/30' : 'bg-white/5 text-white/50 border border-white/10 hover:border-white/20'}`}
+              className={`px-4.5 py-2.5 rounded-xl text-xs font-bold transition-all border flex items-center gap-2 whitespace-nowrap ${
+                activeTab === tab.id
+                  ? 'bg-primary/20 border-primary/50 text-white shadow-[0_4px_20px_rgba(236,30,142,0.15)]'
+                  : 'bg-white/5 border-white/10 text-white/50 hover:border-white/20'
+              }`}
             >
-              {tab.icon} {tab.label}
+              <tab.icon className="w-4 h-4" />
+              {tab.label}
             </button>
           ))}
         </div>
 
-        {/* Insights Tab */}
-        {activeTab === 'insights' && (
-          <div className="flex flex-col gap-3">
-            {STATIC_INSIGHTS.map(item => (
-              <div key={item.id} className="glass-card rounded-2xl overflow-hidden">
-                <button onClick={() => setExpandedInsight(expandedInsight === item.id ? null : item.id)} className="w-full text-left px-5 py-4 hover:bg-white/[0.02]">
-                  <div className="flex items-start justify-between gap-3">
-                    <div>
-                      <div className="flex items-center gap-2 mb-1">
-                        <span className="text-[10px] text-primary bg-primary/10 px-2 py-0.5 rounded-full">{item.tag}</span>
-                        <span className="text-white/30 text-xs">{item.readTime}</span>
-                      </div>
-                      <p className="text-white font-semibold text-sm">{item.title}</p>
-                      <p className="text-white/50 text-xs mt-1">{item.excerpt}</p>
+        {/* Content Blocks */}
+
+        {/* Tab 1: AI Utilities */}
+        {activeTab === 'utilities' && (
+          <div className="flex flex-col gap-8">
+            {/* Prompt Architect */}
+            <div className="glass-card-premium border border-white/10 p-7 rounded-3xl">
+              <h3 className="text-white font-bold text-lg mb-2 font-display flex items-center gap-2">
+                <Sparkles className="w-5 h-5 text-pink-400" /> AI Prompt Architect
+              </h3>
+              <p className="text-white/50 text-xs mb-6">Enter details below to compile an optimized prompt based on our system template.</p>
+              
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-5">
+                <div>
+                  <label className="text-[10px] font-mono text-white/40 uppercase tracking-wider block mb-1.5">AI Persona / Role</label>
+                  <input
+                    type="text"
+                    value={promptRole}
+                    onChange={e => setPromptRole(e.target.value)}
+                    className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-xs placeholder-white/25 focus:outline-none focus:border-primary/50 transition-colors"
+                  />
+                </div>
+                <div>
+                  <label className="text-[10px] font-mono text-white/40 uppercase tracking-wider block mb-1.5">Specific Task</label>
+                  <input
+                    type="text"
+                    value={promptTask}
+                    onChange={e => setPromptTask(e.target.value)}
+                    className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-xs placeholder-white/25 focus:outline-none focus:border-primary/50 transition-colors"
+                  />
+                </div>
+              </div>
+
+              <div className="relative bg-black/40 rounded-2xl border border-white/5 p-5 mb-4">
+                <pre className="text-white/80 text-xs font-mono whitespace-pre-wrap leading-relaxed">
+                  {generatedPrompt}
+                </pre>
+              </div>
+
+              <button
+                onClick={handleCopyPrompt}
+                className="py-3 px-6 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-primary/40 text-white rounded-xl text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-2 cursor-pointer"
+              >
+                {copiedPrompt ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
+                {copiedPrompt ? 'Copied Prompt!' : 'Copy to Clipboard'}
+              </button>
+            </div>
+
+            {/* AI Wallpaper Generator Mock */}
+            <div className="glass-card-premium border border-white/10 p-7 rounded-3xl">
+              <h3 className="text-white font-bold text-lg mb-2 font-display flex items-center gap-2">
+                <Cpu className="w-5 h-5 text-secondary" /> AI Wallpaper Generator
+              </h3>
+              <p className="text-white/50 text-xs mb-6">Select parameters to synthesize custom, ultra-premium galactic wallpaper mockups.</p>
+
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+                <div>
+                  <label className="text-[10px] font-mono text-white/40 uppercase tracking-wider block mb-1.5">Aesthetic Theme</label>
+                  <select
+                    value={wallpaperTheme}
+                    onChange={e => setWallpaperTheme(e.target.value)}
+                    className="w-full bg-[#120E22] border border-white/10 rounded-xl px-4 py-3 text-white text-xs focus:outline-none focus:border-primary/50 cursor-pointer"
+                  >
+                    <option value="cosmic">Cosmic Nebulae</option>
+                    <option value="cyber">Cyberpunk Dhaka Grid</option>
+                    <option value="minimal">Obsidian Minimal</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="text-[10px] font-mono text-white/40 uppercase tracking-wider block mb-1.5">Aspect Ratio</label>
+                  <select
+                    value={wallpaperRatio}
+                    onChange={e => setWallpaperRatio(e.target.value)}
+                    className="w-full bg-[#120E22] border border-white/10 rounded-xl px-4 py-3 text-white text-xs focus:outline-none focus:border-primary/50 cursor-pointer"
+                  >
+                    <option value="16:9">Landscape (16:9)</option>
+                    <option value="9:16">Portrait mobile (9:16)</option>
+                    <option value="1:1">Square (1:1)</option>
+                  </select>
+                </div>
+                <div className="flex items-end">
+                  <button
+                    onClick={handleGenerateWallpaper}
+                    disabled={generating}
+                    className="w-full py-3 bg-gradient-to-r from-primary to-secondary text-white text-xs font-bold uppercase tracking-wider rounded-xl transition-all shadow-[0_4px_15px_rgba(236,30,142,0.2)] hover:scale-[1.02] cursor-pointer min-h-[42px]"
+                  >
+                    {generating ? 'Synthesizing...' : 'Synthesize Wallpaper'}
+                  </button>
+                </div>
+              </div>
+
+              {generating && (
+                <div className="h-60 rounded-2xl border border-white/5 bg-black/30 flex flex-col items-center justify-center gap-3">
+                  <Loader2 className="w-8 h-8 text-primary animate-spin" />
+                  <p className="text-white/40 text-xs font-mono">Synthesizing image layers...</p>
+                </div>
+              )}
+
+              {generatedImg && (
+                <div className="relative rounded-2xl overflow-hidden border border-white/10 max-h-80 group">
+                  <img src={generatedImg} alt="Generated Space Wallpaper" className="w-full h-full object-cover" />
+                  <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-3">
+                    <a
+                      href={generatedImg}
+                      download="galaxa_wallpaper.jpg"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="px-4 py-2 bg-primary text-white text-xs font-bold rounded-lg uppercase flex items-center gap-1.5 shadow-lg"
+                    >
+                      <Download className="w-4 h-4" /> Download Asset
+                    </a>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Regional Bangladesh & International utilities */}
+            <div className="glass-card-premium border border-white/10 p-7 rounded-3xl">
+              <div className="flex items-center justify-between mb-5">
+                <h3 className="text-white font-bold text-lg font-display flex items-center gap-2">
+                  <Globe className="w-5 h-5 text-emerald-400" /> Regional Utilities
+                </h3>
+                <div className="flex bg-white/5 p-1 rounded-xl border border-white/5 text-[10px] font-mono">
+                  {(['BD', 'US', 'EU'] as const).map(reg => (
+                    <button
+                      key={reg}
+                      onClick={() => setRegion(reg)}
+                      className={`px-3 py-1.5 rounded-lg font-bold transition-all ${region === reg ? 'bg-emerald-500/20 text-emerald-300' : 'text-white/40'}`}
+                    >
+                      {reg === 'BD' ? 'Bangladesh' : reg === 'US' ? 'US East' : 'EU Central'}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {region === 'BD' && (
+                <div className="flex flex-col gap-4 border-t border-white/5 pt-5 text-left">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="bg-white/[0.02] border border-white/5 rounded-2xl p-4.5">
+                      <p className="text-white/30 text-[9px] font-mono uppercase tracking-wider mb-1">HQ Office Hours (Dhaka)</p>
+                      <p className="text-white font-bold text-sm">10:00 AM - 6:00 PM</p>
+                      <span className="text-[10px] text-green-400 mt-2 inline-block font-mono">Status: Sunday to Thursday</span>
+                    </div>
+                    <div className="bg-white/[0.02] border border-white/5 rounded-2xl p-4.5">
+                      <p className="text-white/30 text-[9px] font-mono uppercase tracking-wider mb-1">Freelance Tax VAT Guidelines</p>
+                      <p className="text-white font-bold text-sm">BD Freelancer Tax Guide 2026</p>
+                      <a href="https://nbr.gov.bd/" target="_blank" rel="noopener noreferrer" className="text-[10px] text-emerald-400 mt-2 inline-block underline font-mono">Open NBR Portal →</a>
                     </div>
                   </div>
-                </button>
-                {expandedInsight === item.id && (
-                  <div className="px-5 pb-4 border-t border-white/5 pt-3">
-                    <p className="text-white/60 text-sm leading-relaxed">{item.content}</p>
+                </div>
+              )}
+
+              {(region === 'US' || region === 'EU') && (
+                <div className="flex flex-col gap-4 border-t border-white/5 pt-5 text-left">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="bg-white/[0.02] border border-white/5 rounded-2xl p-4.5">
+                      <p className="text-white/30 text-[9px] font-mono uppercase tracking-wider mb-1">HQ Latency Sync</p>
+                      <p className="text-white font-bold text-sm">Dhaka node: <span className="text-emerald-400">42ms</span></p>
+                      <span className="text-[10px] text-white/40 mt-2 inline-block font-mono">Uptime consistency: 99.98%</span>
+                    </div>
+                    <div className="bg-white/[0.02] border border-white/5 rounded-2xl p-4.5">
+                      <p className="text-white/30 text-[9px] font-mono uppercase tracking-wider mb-1">Time Sync difference</p>
+                      <p className="text-white font-bold text-sm">{region === 'US' ? 'Dhaka is 10h ahead' : 'Dhaka is 4h ahead'}</p>
+                      <span className="text-[10px] text-white/40 mt-2 inline-block font-mono">HQ timezone: GMT+6</span>
+                    </div>
                   </div>
-                )}
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* Tab 2: Resource Vault */}
+        {activeTab === 'resources' && (
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {[
+              { title: 'Free Figma Device Mockups', desc: 'Premium Figma files containing responsive device containers.', category: 'Design', size: '12 MB' },
+              { title: 'AI Automation Playbook', desc: 'A step-by-step operational setup guide for no-code tools.', category: 'Playbook', size: '4.5 MB' },
+              { title: 'Dhaka Tech Latency Sheet', desc: 'Dhaka broadband/mobile internet latency logs.', category: 'Systems', size: '1.2 MB' },
+              { title: 'Premium Notion SOP templates', desc: 'Structure your internal operating workflow templates.', category: 'Notion', size: '800 KB' },
+            ].map((res, i) => (
+              <div key={i} className="glass-card-premium border border-white/10 p-6 rounded-2xl flex flex-col justify-between hover:border-primary/20 transition-all group">
+                <div>
+                  <span className="text-[9px] font-mono tracking-wider bg-white/5 px-2.5 py-1 border border-white/5 rounded-full text-white/50">{res.category}</span>
+                  <h4 className="text-white font-bold text-base mt-4 mb-2 font-display">{res.title}</h4>
+                  <p className="text-white/45 text-xs leading-relaxed mb-6">{res.desc}</p>
+                </div>
+                <div className="flex items-center justify-between border-t border-white/5 pt-4">
+                  <span className="text-[10px] font-mono text-white/30">{res.size}</span>
+                  <button className="flex items-center gap-1 text-[11px] font-bold text-primary group-hover:translate-x-0.5 transition-transform">
+                    Simulate Download <Download className="w-3.5 h-3.5" />
+                  </button>
+                </div>
               </div>
             ))}
           </div>
         )}
 
-        {/* Prompts Tab */}
-        {activeTab === 'prompts' && (
-          <div className="flex flex-col gap-3">
-            {STATIC_PROMPTS.map(p => (
-              <div key={p.id} className="glass-card rounded-2xl overflow-hidden">
-                <button onClick={() => setExpandedPrompt(expandedPrompt === p.id ? null : p.id)} className="w-full flex items-center justify-between px-5 py-4 hover:bg-white/[0.02] text-left">
-                  <p className="text-white font-semibold text-sm">{p.title}</p>
-                  <span className="text-white/30 text-xs">{expandedPrompt === p.id ? 'Hide' : 'View →'}</span>
-                </button>
-                {expandedPrompt === p.id && (
-                  <div className="px-5 pb-4 border-t border-white/5">
-                    <p className="text-white/70 text-sm leading-relaxed whitespace-pre-wrap pt-3 mb-3">{p.body}</p>
-                    <CopyButton text={p.body} />
+        {/* Tab 3: Community Board */}
+        {activeTab === 'community' && (
+          <div className="flex flex-col gap-6">
+            {/* New Post Form */}
+            <form onSubmit={handleCreatePost} className="glass-card-premium border border-white/10 p-6 rounded-3xl flex flex-col gap-4">
+              <h4 className="text-white font-bold text-sm font-display">Add to bulletin board</h4>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <input
+                  type="text"
+                  value={newPostAuthor}
+                  onChange={e => setNewPostAuthor(e.target.value)}
+                  placeholder="Your Name"
+                  className="sm:col-span-1 bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white text-xs placeholder-white/20 focus:outline-none"
+                  required
+                />
+                <input
+                  type="text"
+                  value={newPostText}
+                  onChange={e => setNewPostText(e.target.value)}
+                  placeholder="Feedback, thoughts, or ideas..."
+                  className="sm:col-span-2 bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white text-xs placeholder-white/20 focus:outline-none"
+                  required
+                />
+              </div>
+              <button
+                type="submit"
+                className="py-2.5 px-6 bg-gradient-to-r from-primary to-secondary text-white font-bold text-xs uppercase tracking-wider rounded-xl hover:scale-[1.02] self-start transition-all cursor-pointer"
+              >
+                Post Comment
+              </button>
+            </form>
+
+            {/* Posts Feed */}
+            <div className="flex flex-col gap-3">
+              {posts.map(p => (
+                <div key={p.id} className="bg-white/[0.02] border border-white/5 rounded-2xl p-5 flex items-start justify-between gap-4">
+                  <div>
+                    <p className="text-white font-bold text-xs leading-none mb-1.5">{p.author}</p>
+                    <p className="text-white/60 text-xs leading-relaxed">{p.text}</p>
                   </div>
-                )}
+                  <button className="flex items-center gap-1 text-[10px] font-mono text-white/30 hover:text-pink-400 transition-colors">
+                    <Heart className="w-3.5 h-3.5" /> {p.likes}
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Tab 4: Insights & Guides */}
+        {activeTab === 'guides' && (
+          <div className="flex flex-col gap-4">
+            {[
+              { title: 'How to deploy a frosted-glass web platform in 15 minutes', desc: 'Discover layout tokens, backdrop filter calculations, and responsive configurations used across our projects.', tag: 'Development', read: '5 min read' },
+              { title: 'The state of AI Image Generators in 2026', desc: 'Comparing Flux, Midjourney v6, DALL-E 3, and Stable Diffusion workflows for agency campaigns.', tag: 'AI Tools', read: '8 min read' },
+              { title: 'SOPs optimization guide for high-growth tech teams', desc: 'How to structure Notion databases, sync operations checklists, and reduce task management overhead.', tag: 'Systems', read: '6 min read' },
+            ].map((guide, i) => (
+              <div key={i} className="glass-card-premium border border-white/10 p-6 rounded-2xl flex flex-col justify-between hover:border-primary/20 transition-all">
+                <div className="flex items-center justify-between mb-3">
+                  <span className="text-[9px] font-mono text-primary uppercase font-bold tracking-wider">{guide.tag}</span>
+                  <span className="text-white/30 text-xs">{guide.read}</span>
+                </div>
+                <h3 className="text-white font-bold text-base mb-2 font-display">{guide.title}</h3>
+                <p className="text-white/50 text-xs leading-relaxed mb-4">{guide.desc}</p>
+                <button className="text-left text-xs font-semibold text-secondary hover:underline self-start">
+                  Read teardown guide →
+                </button>
               </div>
             ))}
           </div>
         )}
 
-        {/* Members Vault */}
-        {activeTab === 'members' && <MembersVault />}
       </div>
     </div>
   );

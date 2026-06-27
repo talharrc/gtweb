@@ -1,50 +1,25 @@
-﻿import { useState, FormEvent } from 'react';
+import { useState, FormEvent } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '../lib/firebase';
-import { Globe, TrendingUp, Search, ArrowLeft, CheckCircle, ChevronDown } from 'lucide-react';
+import { Globe, TrendingUp, Search, ArrowLeft, CheckCircle, Sparkles, Check, ArrowUpRight } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
-type AuditType = 'website' | 'social' | 'brand';
+type AuditTier = 'free' | 'paid';
+type AuditFocus = 'website' | 'social' | 'funnel';
 
-const AUDIT_TYPES = [
-  {
-    id: 'website' as AuditType,
-    icon: Globe,
-    emoji: '🌐',
-    title: 'Website Audit',
-    desc: 'Performance, SEO, UX, and conversion readiness.',
-    color: 'border-blue-500/30 hover:border-blue-500/60',
-    iconColor: 'bg-blue-500/10 text-blue-400 border-blue-500/20',
-  },
-  {
-    id: 'social' as AuditType,
-    icon: TrendingUp,
-    emoji: '📱',
-    title: 'Social Media Audit',
-    desc: 'Content quality, consistency, engagement, and profile optimization.',
-    color: 'border-pink-500/30 hover:border-pink-500/60',
-    iconColor: 'bg-pink-500/10 text-pink-400 border-pink-500/20',
-  },
-  {
-    id: 'brand' as AuditType,
-    icon: Search,
-    emoji: '🔍',
-    title: 'Brand & Digital Presence Audit',
-    desc: 'Your full digital footprint — visibility, consistency, and reputation.',
-    color: 'border-purple-500/30 hover:border-purple-500/60',
-    iconColor: 'bg-purple-500/10 text-purple-400 border-purple-500/20',
-  },
-];
+interface CommonFields {
+  name: string;
+  businessName: string;
+  industry: string;
+  email: string;
+  phone: string;
+  city: string;
+}
 
-const SOCIAL_PLATFORMS = ['Facebook', 'Instagram', 'LinkedIn', 'YouTube', 'TikTok', 'X / Twitter', 'Pinterest'];
-
-const WEBSITE_ISSUES = ['Slow loading', 'Poor mobile experience', 'Low traffic', 'No inquiries from the site', 'Looks unprofessional', 'Not sure'];
-
-const CUSTOMER_SOURCES = ['Referrals', 'Social media', 'Google search', 'Paid ads', 'Not sure'];
-
-const BIZ_AGE_OPTIONS = ['Under 1 year', '1–3 years', '3+ years'];
-const MARKETING_SPEND_OPTIONS = ['0–5,000 BDT', '5,000–20,000 BDT', '20,000–50,000 BDT', '50,000+ BDT'];
-const TEAM_SIZE_OPTIONS = ['Just me', '2–5 people', '6–20 people', '20+'];
+const defaultCommon: CommonFields = {
+  name: '', businessName: '', industry: '', email: '', phone: '', city: '',
+};
 
 function inputClass() {
   return 'w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-white/25 text-sm focus:outline-none focus:border-primary/50 transition-colors';
@@ -54,372 +29,349 @@ function labelClass() {
   return 'text-xs font-mono text-white/40 uppercase tracking-widest block mb-1.5';
 }
 
-function selectClass() {
-  return 'w-full bg-[#0A0717] border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-primary/50 transition-colors appearance-none cursor-pointer';
-}
-
-interface CommonFields {
-  name: string;
-  businessName: string;
-  industry: string;
-  email: string;
-  phone: string;
-  city: string;
-  bizAge: string;
-  marketingSpend: string;
-}
-
-const defaultCommon: CommonFields = {
-  name: '', businessName: '', industry: '', email: '', phone: '', city: '',
-  bizAge: BIZ_AGE_OPTIONS[0], marketingSpend: MARKETING_SPEND_OPTIONS[0],
-};
-
-function CommonFields({ data, onChange }: { data: CommonFields; onChange: (k: keyof CommonFields, v: string) => void }) {
-  return (
-    <>
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div>
-          <label className={labelClass()}>Full Name *</label>
-          <input type="text" value={data.name} onChange={e => onChange('name', e.target.value)} placeholder="Your full name" className={inputClass()} required />
-        </div>
-        <div>
-          <label className={labelClass()}>Business Name *</label>
-          <input type="text" value={data.businessName} onChange={e => onChange('businessName', e.target.value)} placeholder="Your business name" className={inputClass()} required />
-        </div>
-      </div>
-      <div>
-        <label className={labelClass()}>Industry / Niche *</label>
-        <input type="text" value={data.industry} onChange={e => onChange('industry', e.target.value)} placeholder="e.g. E-commerce, Healthcare, Education..." className={inputClass()} required />
-      </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div>
-          <label className={labelClass()}>Business Email *</label>
-          <input type="email" value={data.email} onChange={e => onChange('email', e.target.value)} placeholder="you@example.com" className={inputClass()} required />
-        </div>
-        <div>
-          <label className={labelClass()}>WhatsApp / Phone *</label>
-          <input type="tel" value={data.phone} onChange={e => onChange('phone', e.target.value)} placeholder="+880..." className={inputClass()} required />
-        </div>
-      </div>
-      <div>
-        <label className={labelClass()}>City *</label>
-        <input type="text" value={data.city} onChange={e => onChange('city', e.target.value)} placeholder="Your city" className={inputClass()} required />
-      </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div>
-          <label className={labelClass()}>Business Age</label>
-          <select value={data.bizAge} onChange={e => onChange('bizAge', e.target.value)} className={selectClass()}>
-            {BIZ_AGE_OPTIONS.map(o => <option key={o} value={o}>{o}</option>)}
-          </select>
-        </div>
-        <div>
-          <label className={labelClass()}>Monthly Marketing Spend</label>
-          <select value={data.marketingSpend} onChange={e => onChange('marketingSpend', e.target.value)} className={selectClass()}>
-            {MARKETING_SPEND_OPTIONS.map(o => <option key={o} value={o}>{o}</option>)}
-          </select>
-        </div>
-      </div>
-    </>
-  );
-}
-
-function CheckboxGroup({ label, options, selected, onToggle }: { label: string; options: string[]; selected: string[]; onToggle: (v: string) => void }) {
-  return (
-    <div>
-      <label className={labelClass()}>{label}</label>
-      <div className="flex flex-wrap gap-2.5 mt-2">
-        {options.map(opt => (
-          <button
-            key={opt}
-            type="button"
-            onClick={() => onToggle(opt)}
-            className={`px-3.5 py-2 rounded-xl text-xs font-semibold border transition-all ${
-              selected.includes(opt)
-                ? 'bg-primary/20 border-primary/50 text-primary'
-                : 'bg-white/5 border-white/10 text-white/60 hover:border-white/20'
-            }`}
-          >
-            {opt}
-          </button>
-        ))}
-      </div>
-    </div>
-  );
-}
-
 export default function AuditView() {
-  const [step, setStep] = useState<0 | 1 | 2>(0);
-  const [auditType, setAuditType] = useState<AuditType>('website');
+  const navigate = useNavigate();
+  const [step, setStep] = useState<0 | 1 | 2>(0); // 0: Tier select, 1: Form, 2: Success
+  const [tier, setTier] = useState<AuditTier>('free');
+  const [focus, setFocus] = useState<AuditFocus>('website');
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
 
-  // Common fields
+  // Form Fields
   const [common, setCommon] = useState<CommonFields>(defaultCommon);
   const updateCommon = (k: keyof CommonFields, v: string) => setCommon(c => ({ ...c, [k]: v }));
 
-  // Website-specific
+  // Website details
   const [websiteUrl, setWebsiteUrl] = useState('');
-  const [websitePurpose, setWebsitePurpose] = useState('Generate leads');
-  const [websiteManager, setWebsiteManager] = useState('I manage it myself');
-  const [websiteIssues, setWebsiteIssues] = useState<string[]>([]);
-  const [websiteGoal, setWebsiteGoal] = useState('');
-  const toggleIssue = (v: string) => setWebsiteIssues(prev => prev.includes(v) ? prev.filter(x => x !== v) : [...prev, v]);
+  const [websiteIssues, setWebsiteIssues] = useState('');
 
-  // Social-specific
-  const [socialPlatforms, setSocialPlatforms] = useState<string[]>([]);
-  const [platformUrls, setPlatformUrls] = useState<Record<string, string>>({});
-  const [postFreq, setPostFreq] = useState('3–5 times/week');
-  const [contentCreator, setContentCreator] = useState('We do it internally');
-  const [socialFrustration, setSocialFrustration] = useState('');
-  const [socialGoal, setSocialGoal] = useState('Brand awareness');
-  const togglePlatform = (p: string) => setSocialPlatforms(prev => prev.includes(p) ? prev.filter(x => x !== p) : [...prev, p]);
-  const updatePlatformUrl = (p: string, url: string) => setPlatformUrls(prev => ({ ...prev, [p]: url }));
+  // Social details
+  const [socialUrls, setSocialUrls] = useState('');
+  const [socialPlatforms, setSocialPlatforms] = useState('');
 
-  // Brand-specific
-  const [brandWebsite, setBrandWebsite] = useState('');
-  const [hasGBP, setHasGBP] = useState('Not sure');
-  const [directories, setDirectories] = useState('Not sure');
-  const [directoriesDetail, setDirectoriesDetail] = useState('');
-  const [customerSources, setCustomerSources] = useState<string[]>([]);
-  const [competitors, setCompetitors] = useState('');
-  const [bizChallenge, setBizChallenge] = useState('');
-  const [teamSize, setTeamSize] = useState(TEAM_SIZE_OPTIONS[0]);
-  const toggleCustomerSource = (v: string) => setCustomerSources(prev => prev.includes(v) ? prev.filter(x => x !== v) : [...prev, v]);
+  // Funnel details
+  const [funnelDescription, setFunnelDescription] = useState('');
+  const [conversionRate, setConversionRate] = useState('');
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    if (!common.name || !common.businessName || !common.email || !common.phone || !common.city || !common.industry) {
+    if (!common.name || !common.businessName || !common.email || !common.phone || !common.city) {
       setError('Please fill in all required fields.');
       return;
     }
     setError('');
     setSubmitting(true);
 
-    const formData: Record<string, unknown> = { ...common };
-    if (auditType === 'website') {
-      Object.assign(formData, { websiteUrl, websitePurpose, websiteManager, websiteIssues, websiteGoal });
-    } else if (auditType === 'social') {
-      Object.assign(formData, { socialPlatforms, platformUrls, postFreq, contentCreator, socialFrustration, socialGoal });
+    const formData: Record<string, any> = {
+      ...common,
+      tier,
+      focus: tier === 'free' ? focus : 'all',
+    };
+
+    if (tier === 'free') {
+      if (focus === 'website') {
+        formData.websiteUrl = websiteUrl;
+        formData.websiteIssues = websiteIssues;
+      } else if (focus === 'social') {
+        formData.socialUrls = socialUrls;
+        formData.socialPlatforms = socialPlatforms;
+      } else {
+        formData.funnelDescription = funnelDescription;
+        formData.conversionRate = conversionRate;
+      }
     } else {
-      Object.assign(formData, { brandWebsite, hasGBP, directories, directoriesDetail, customerSources, competitors, bizChallenge, teamSize });
+      // Paid audit collects everything
+      formData.websiteUrl = websiteUrl;
+      formData.socialUrls = socialUrls;
+      formData.funnelDescription = funnelDescription;
+      formData.conversionRate = conversionRate;
+      formData.websiteIssues = websiteIssues;
     }
 
     try {
       await addDoc(collection(db, 'audit_submissions'), {
-        type: auditType,
+        type: tier,
         formData,
         submittedAt: serverTimestamp(),
         status: 'new',
       });
       setStep(2);
     } catch {
-      setError('Something went wrong. Please try again or reach out via WhatsApp.');
+      setError('Something went wrong. Please try again or contact us via WhatsApp.');
     } finally {
       setSubmitting(false);
     }
   };
 
-  const auditLabel = auditType === 'website' ? 'Website' : auditType === 'social' ? 'Social Media' : 'Brand & Digital Presence';
-
   return (
     <div className="relative pt-24 sm:pt-32 pb-16 sm:pb-24">
       <Helmet>
-        <title>Free Brand Audit — GalaxaTech</title>
-        <meta name="description" content="Book a free audit with GalaxaTech. We'll audit your website, social media, or full digital presence and send you a personalized report within 24 hours." />
-        <meta property="og:title" content="Free Brand Audit — GalaxaTech" />
+        <title>Get an Audit — GalaxaTech</title>
+        <meta name="description" content="Get your website, social assets, or sales funnel audited by GalaxaTech. Choose between a free baseline audit or a paid deep-dive system blueprint." />
       </Helmet>
 
-      <div className="max-w-3xl mx-auto px-6">
-
-        {/* Step 0 — Type picker */}
+      <div className="max-w-4xl mx-auto px-6">
+        {/* Step 0 - Tier Selection */}
         {step === 0 && (
           <>
             <div className="text-center mb-14">
-              <h1 className="text-3xl sm:text-5xl md:text-6xl font-bold text-white mb-5" style={{ fontFamily: 'var(--font-display)' }}>Free Brand Audit</h1>
-              <p className="text-white/60 text-lg max-w-xl mx-auto leading-relaxed">
-                Choose what you'd like us to audit. We'll prepare a personalized report within 24 hours.
+              <h1 className="text-4xl sm:text-6xl font-black text-white mb-4 font-display">
+                Digital Ecosystem <span className="text-gradient">Audit</span>
+              </h1>
+              <p className="text-white/60 text-base max-w-xl mx-auto leading-relaxed">
+                Choose a baseline check or secure a full-funnel consulting blueprint to scale your operations.
               </p>
             </div>
-            <div className="grid grid-cols-1 gap-4">
-              {AUDIT_TYPES.map(at => (
-                <button
-                  key={at.id}
-                  onClick={() => { setAuditType(at.id); setStep(1); }}
-                  className={`glass-card rounded-2xl p-7 text-left border transition-all duration-300 group ${at.color}`}
-                >
-                  <div className="flex items-start gap-5">
-                    <div className={`w-14 h-14 rounded-2xl flex items-center justify-center border flex-shrink-0 text-2xl ${at.iconColor}`}>
-                      {at.emoji}
-                    </div>
-                    <div className="flex-1">
-                      <h2 className="text-white font-bold text-xl mb-2 group-hover:text-primary transition-colors">{at.title}</h2>
-                      <p className="text-white/55 leading-relaxed">{at.desc}</p>
-                    </div>
-                    <div className="w-8 h-8 rounded-full border border-white/10 flex items-center justify-center text-white/40 group-hover:border-primary/50 group-hover:text-primary transition-all flex-shrink-0 mt-1">
-                      →
-                    </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch mb-10">
+              {/* Free Tier */}
+              <div className="glass-card-premium p-8 rounded-3xl border border-white/10 flex flex-col justify-between hover:border-primary/20 transition-all duration-300">
+                <div>
+                  <div className="flex items-center justify-between mb-6">
+                    <span className="text-[10px] font-mono text-primary font-bold uppercase tracking-wider bg-primary/10 px-3 py-1 rounded-full border border-primary/20">
+                      Standard Check
+                    </span>
+                    <span className="text-2xl font-black text-white">$0</span>
                   </div>
+                  <h3 className="text-white font-bold text-xl mb-3 font-display">Free Audit</h3>
+                  <p className="text-white/50 text-xs leading-relaxed mb-6">
+                    A laser-focused review of a single digital channel. Perfect for identifying immediate friction points.
+                  </p>
+                  
+                  <ul className="flex flex-col gap-3.5 mb-8 border-t border-white/5 pt-6">
+                    <li className="flex items-start gap-2.5 text-xs text-white/70">
+                      <Check className="w-4 h-4 text-emerald-400 mt-0.5 flex-shrink-0" />
+                      <span>Audit of 1 focus area (Web, Social, or Funnel)</span>
+                    </li>
+                    <li className="flex items-start gap-2.5 text-xs text-white/70">
+                      <Check className="w-4 h-4 text-emerald-400 mt-0.5 flex-shrink-0" />
+                      <span>Standard PDF delivery by email</span>
+                    </li>
+                    <li className="flex items-start gap-2.5 text-xs text-white/70">
+                      <Check className="w-4 h-4 text-emerald-400 mt-0.5 flex-shrink-0" />
+                      <span>Completed within 24-48 business hours</span>
+                    </li>
+                  </ul>
+                </div>
+
+                <button
+                  onClick={() => { setTier('free'); setStep(1); }}
+                  className="w-full py-3 bg-white/5 border border-white/10 hover:border-primary/40 hover:bg-primary/10 text-white rounded-xl text-xs font-bold uppercase tracking-widest transition-all cursor-pointer"
+                >
+                  Configure Free Audit
                 </button>
-              ))}
+              </div>
+
+              {/* Paid Tier */}
+              <div className="glass-card-premium p-8 rounded-3xl border border-primary/30 flex flex-col justify-between hover:border-primary/50 transition-all duration-300 relative overflow-hidden bg-gradient-to-b from-[#120E22]/90 to-[#0A0717]/95">
+                <div className="absolute top-0 right-0 w-24 h-24 bg-primary/10 blur-xl rounded-full pointer-events-none" />
+                <div>
+                  <div className="flex items-center justify-between mb-6">
+                    <span className="text-[10px] font-mono text-secondary font-bold uppercase tracking-wider bg-secondary/15 px-3 py-1 rounded-full border border-secondary/30">
+                      Deep-Dive Ecosystem
+                    </span>
+                    <span className="text-2xl font-black text-white">$499</span>
+                  </div>
+                  <h3 className="text-white font-bold text-xl mb-3 font-display flex items-center gap-2">
+                    Paid Audit <Sparkles className="w-4.5 h-4.5 text-secondary" />
+                  </h3>
+                  <p className="text-white/50 text-xs leading-relaxed mb-6">
+                    An exhaustive, multi-faceted analysis mapping out your entire digital footprint and technical architecture.
+                  </p>
+
+                  <ul className="flex flex-col gap-3.5 mb-8 border-t border-white/5 pt-6">
+                    <li className="flex items-start gap-2.5 text-xs text-white/70">
+                      <Check className="w-4 h-4 text-secondary mt-0.5 flex-shrink-0" />
+                      <span>Full audit of Website, Social, & Funnels combined</span>
+                    </li>
+                    <li className="flex items-start gap-2.5 text-xs text-white/70">
+                      <Check className="w-4 h-4 text-secondary mt-0.5 flex-shrink-0" />
+                      <span>Personalized 20-minute video screen-share walkthrough</span>
+                    </li>
+                    <li className="flex items-start gap-2.5 text-xs text-white/70">
+                      <Check className="w-4 h-4 text-secondary mt-0.5 flex-shrink-0" />
+                      <span>Complete technical systems architecture blueprint</span>
+                    </li>
+                    <li className="flex items-start gap-2.5 text-xs text-white/70">
+                      <Check className="w-4 h-4 text-secondary mt-0.5 flex-shrink-0" />
+                      <span>1-on-1 strategy call with a Lead Consultant</span>
+                    </li>
+                  </ul>
+                </div>
+
+                <button
+                  onClick={() => { setTier('paid'); setStep(1); }}
+                  className="w-full py-3 bg-gradient-to-r from-primary to-secondary text-white rounded-xl text-xs font-bold uppercase tracking-widest transition-all cursor-pointer shadow-[0_8px_30px_rgba(236,30,142,0.25)] hover:scale-[1.02]"
+                >
+                  Book Paid Deep-Dive
+                </button>
+              </div>
             </div>
           </>
         )}
 
-        {/* Step 1 — Form */}
+        {/* Step 1 - Form Configuration */}
         {step === 1 && (
           <>
-            <div className="mb-10">
+            <div className="mb-8">
               <button
                 onClick={() => setStep(0)}
-                className="flex items-center gap-2 text-white/50 hover:text-white text-sm font-medium mb-6 transition-colors"
+                className="flex items-center gap-2 text-white/50 hover:text-white text-sm font-medium mb-4 transition-colors"
               >
-                <ArrowLeft className="w-4 h-4" /> Change audit type
+                <ArrowLeft className="w-4 h-4" /> Back to choices
               </button>
-              <h1 className="text-4xl font-bold text-white mb-3" style={{ fontFamily: 'var(--font-display)' }}>{auditLabel} Audit</h1>
-              <p className="text-white/50">Fill in the details below. We'll prepare your personalized audit report within 24 hours.</p>
+              <h2 className="text-3xl font-bold text-white font-display">
+                {tier === 'free' ? 'Configure Free Audit' : 'Book Deep-Dive Audit'}
+              </h2>
+              <p className="text-white/50 text-xs mt-1">Provide your business coordinates to initialize the audit pipeline.</p>
             </div>
 
-            <form onSubmit={handleSubmit} className="glass-card rounded-2xl p-8 flex flex-col gap-6">
-              <CommonFields data={common} onChange={updateCommon} />
+            <form onSubmit={handleSubmit} className="glass-card-premium rounded-3xl p-8 flex flex-col gap-6 border border-white/10">
+              {/* Common Fields */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className={labelClass()}>Full Name *</label>
+                  <input type="text" value={common.name} onChange={e => updateCommon('name', e.target.value)} placeholder="Full name" className={inputClass()} required />
+                </div>
+                <div>
+                  <label className={labelClass()}>Business Name *</label>
+                  <input type="text" value={common.businessName} onChange={e => updateCommon('businessName', e.target.value)} placeholder="Business name" className={inputClass()} required />
+                </div>
+              </div>
 
-              {/* Website-specific fields */}
-              {auditType === 'website' && (
-                <>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className={labelClass()}>Email Address *</label>
+                  <input type="email" value={common.email} onChange={e => updateCommon('email', e.target.value)} placeholder="you@domain.com" className={inputClass()} required />
+                </div>
+                <div>
+                  <label className={labelClass()}>WhatsApp / Phone *</label>
+                  <input type="tel" value={common.phone} onChange={e => updateCommon('phone', e.target.value)} placeholder="+880..." className={inputClass()} required />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className={labelClass()}>Niche / Industry *</label>
+                  <input type="text" value={common.industry} onChange={e => updateCommon('industry', e.target.value)} placeholder="e.g. E-Commerce, Real Estate" className={inputClass()} required />
+                </div>
+                <div>
+                  <label className={labelClass()}>City / Location *</label>
+                  <input type="text" value={common.city} onChange={e => updateCommon('city', e.target.value)} placeholder="e.g. Dhaka, London" className={inputClass()} required />
+                </div>
+              </div>
+
+              {/* Free Audit Choice Picker */}
+              {tier === 'free' && (
+                <div className="border-t border-white/5 pt-6">
+                  <label className={labelClass()}>Select Your Audit Focus Area</label>
+                  <div className="grid grid-cols-3 gap-3 mt-3">
+                    {([
+                      { id: 'website', label: 'Website', icon: Globe },
+                      { id: 'social', label: 'Social Assets', icon: TrendingUp },
+                      { id: 'funnel', label: 'Sales Funnel', icon: Search },
+                    ] as const).map(f => (
+                      <button
+                        key={f.id}
+                        type="button"
+                        onClick={() => setFocus(f.id)}
+                        className={`py-3 px-3 rounded-xl border text-xs font-semibold flex flex-col items-center gap-2 transition-all ${
+                          focus === f.id
+                            ? 'bg-primary/20 border-primary/50 text-white'
+                            : 'bg-white/5 border-white/10 text-white/50 hover:border-white/20'
+                        }`}
+                      >
+                        <f.icon className="w-5 h-5" />
+                        {f.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Conditional Fields based on choice */}
+              {(tier === 'paid' || (tier === 'free' && focus === 'website')) && (
+                <div className="border-t border-white/5 pt-6 flex flex-col gap-4">
+                  <h4 className="text-[11px] font-mono text-primary uppercase font-bold tracking-wider">Website Audit Details</h4>
                   <div>
                     <label className={labelClass()}>Website URL *</label>
-                    <input type="url" value={websiteUrl} onChange={e => setWebsiteUrl(e.target.value)} placeholder="https://yourbusiness.com" className={inputClass()} required />
+                    <input type="url" value={websiteUrl} onChange={e => setWebsiteUrl(e.target.value)} placeholder="https://mybusiness.com" className={inputClass()} required={tier === 'free' || focus === 'website'} />
                   </div>
                   <div>
-                    <label className={labelClass()}>Primary website purpose</label>
-                    <select value={websitePurpose} onChange={e => setWebsitePurpose(e.target.value)} className={selectClass()}>
-                      {['Sell products', 'Generate leads', 'Showcase work', 'Inform customers'].map(o => <option key={o} value={o}>{o}</option>)}
-                    </select>
+                    <label className={labelClass()}>Biggest website headaches or goals?</label>
+                    <textarea value={websiteIssues} onChange={e => setWebsiteIssues(e.target.value)} rows={3} placeholder="Slow loading speeds, poor conversion rates, outdated designs..." className={inputClass() + ' resize-none'} />
                   </div>
-                  <div>
-                    <label className={labelClass()}>Who manages your website?</label>
-                    <select value={websiteManager} onChange={e => setWebsiteManager(e.target.value)} className={selectClass()}>
-                      {['I manage it myself', 'A developer or agency', "Nobody — it's outdated"].map(o => <option key={o} value={o}>{o}</option>)}
-                    </select>
-                  </div>
-                  <CheckboxGroup label="Current issues (select all that apply)" options={WEBSITE_ISSUES} selected={websiteIssues} onToggle={toggleIssue} />
-                  <div>
-                    <label className={labelClass()}>What do you want your website to achieve in the next 6 months?</label>
-                    <textarea value={websiteGoal} onChange={e => setWebsiteGoal(e.target.value)} rows={3} placeholder="Tell us your goals..." className={inputClass() + ' resize-none'} />
-                  </div>
-                </>
+                </div>
               )}
 
-              {/* Social-specific fields */}
-              {auditType === 'social' && (
-                <>
-                  <CheckboxGroup label="Which platforms are you active on?" options={SOCIAL_PLATFORMS} selected={socialPlatforms} onToggle={togglePlatform} />
-                  {socialPlatforms.length > 0 && (
-                    <div className="flex flex-col gap-3">
-                      {socialPlatforms.map(p => (
-                        <div key={p}>
-                          <label className={labelClass()}>{p} profile / page URL</label>
-                          <input type="url" value={platformUrls[p] || ''} onChange={e => updatePlatformUrl(p, e.target.value)} placeholder={`https://...`} className={inputClass()} />
-                        </div>
-                      ))}
-                    </div>
-                  )}
+              {(tier === 'paid' || (tier === 'free' && focus === 'social')) && (
+                <div className="border-t border-white/5 pt-6 flex flex-col gap-4">
+                  <h4 className="text-[11px] font-mono text-secondary uppercase font-bold tracking-wider">Social Assets Audit Details</h4>
                   <div>
-                    <label className={labelClass()}>Posting frequency</label>
-                    <select value={postFreq} onChange={e => setPostFreq(e.target.value)} className={selectClass()}>
-                      {['Daily', '3–5 times/week', '1–2 times/week', 'Rarely', 'Never'].map(o => <option key={o} value={o}>{o}</option>)}
-                    </select>
+                    <label className={labelClass()}>Social Page Links (Facebook, Instagram, LinkedIn) *</label>
+                    <textarea value={socialUrls} onChange={e => setSocialUrls(e.target.value)} rows={2} placeholder="https://facebook.com/yourbrand, https://instagram.com/yourbrand" className={inputClass() + ' resize-none'} required={tier === 'free' || focus === 'social'} />
                   </div>
                   <div>
-                    <label className={labelClass()}>Who creates your content?</label>
-                    <select value={contentCreator} onChange={e => setContentCreator(e.target.value)} className={selectClass()}>
-                      {['We do it internally', 'A freelancer', 'An agency', "Nobody — we don't post consistently"].map(o => <option key={o} value={o}>{o}</option>)}
-                    </select>
+                    <label className={labelClass()}>Which platforms do you want us to focus on?</label>
+                    <input type="text" value={socialPlatforms} onChange={e => setSocialPlatforms(e.target.value)} placeholder="e.g. Facebook & Instagram profiles" className={inputClass()} />
                   </div>
-                  <div>
-                    <label className={labelClass()}>Biggest social media frustration right now?</label>
-                    <textarea value={socialFrustration} onChange={e => setSocialFrustration(e.target.value)} rows={3} placeholder="Be honest — we've heard it all." className={inputClass() + ' resize-none'} />
-                  </div>
-                  <div>
-                    <label className={labelClass()}>Primary goal from social media</label>
-                    <select value={socialGoal} onChange={e => setSocialGoal(e.target.value)} className={selectClass()}>
-                      {['Brand awareness', 'Generate leads & inquiries', 'Drive website traffic', 'Build community', 'All of the above'].map(o => <option key={o} value={o}>{o}</option>)}
-                    </select>
-                  </div>
-                </>
+                </div>
               )}
 
-              {/* Brand-specific fields */}
-              {auditType === 'brand' && (
-                <>
+              {(tier === 'paid' || (tier === 'free' && focus === 'funnel')) && (
+                <div className="border-t border-white/5 pt-6 flex flex-col gap-4">
+                  <h4 className="text-[11px] font-mono text-purple-400 uppercase font-bold tracking-wider">Sales Funnel Audit Details</h4>
                   <div>
-                    <label className={labelClass()}>Website URL (optional)</label>
-                    <input type="url" value={brandWebsite} onChange={e => setBrandWebsite(e.target.value)} placeholder="https://yourbusiness.com" className={inputClass()} />
+                    <label className={labelClass()}>Briefly describe your client acquisition funnel *</label>
+                    <textarea value={funnelDescription} onChange={e => setFunnelDescription(e.target.value)} rows={3} placeholder="How do clients find you and buy? (e.g. Facebook Ads to Landing Page to WhatsApp chat)" className={inputClass() + ' resize-none'} required={tier === 'free' || focus === 'funnel'} />
                   </div>
                   <div>
-                    <label className={labelClass()}>Do you have a Google Business Profile?</label>
-                    <select value={hasGBP} onChange={e => setHasGBP(e.target.value)} className={selectClass()}>
-                      {['Yes', 'No', 'Not sure'].map(o => <option key={o} value={o}>{o}</option>)}
-                    </select>
+                    <label className={labelClass()}>Current estimated conversion rate (if known)</label>
+                    <input type="text" value={conversionRate} onChange={e => setConversionRate(e.target.value)} placeholder="e.g. 2% of page visitors contact us" className={inputClass()} />
                   </div>
-                  <div>
-                    <label className={labelClass()}>Are you listed on any online directories?</label>
-                    <select value={directories} onChange={e => setDirectories(e.target.value)} className={selectClass()}>
-                      {['Yes', 'No', 'Not sure'].map(o => <option key={o} value={o}>{o}</option>)}
-                    </select>
-                    {directories === 'Yes' && (
-                      <input type="text" value={directoriesDetail} onChange={e => setDirectoriesDetail(e.target.value)} placeholder="Which ones?" className={inputClass() + ' mt-2'} />
-                    )}
-                  </div>
-                  <CheckboxGroup label="Where do most of your current customers come from?" options={CUSTOMER_SOURCES} selected={customerSources} onToggle={toggleCustomerSource} />
-                  <div>
-                    <label className={labelClass()}>Name 1–2 competitors you're aware of (optional)</label>
-                    <input type="text" value={competitors} onChange={e => setCompetitors(e.target.value)} placeholder="Competitor names or websites" className={inputClass()} />
-                  </div>
-                  <div>
-                    <label className={labelClass()}>Biggest business challenge right now?</label>
-                    <textarea value={bizChallenge} onChange={e => setBizChallenge(e.target.value)} rows={3} placeholder="What's the main thing holding you back?" className={inputClass() + ' resize-none'} />
-                  </div>
-                  <div>
-                    <label className={labelClass()}>Team size</label>
-                    <select value={teamSize} onChange={e => setTeamSize(e.target.value)} className={selectClass()}>
-                      {TEAM_SIZE_OPTIONS.map(o => <option key={o} value={o}>{o}</option>)}
-                    </select>
-                  </div>
-                </>
+                </div>
               )}
 
-              {error && <p className="text-red-400 text-sm">{error}</p>}
+              {error && <p className="text-red-400 text-xs">{error}</p>}
 
               <button
                 type="submit"
                 disabled={submitting}
-                className="w-full py-4 bg-primary hover:bg-primary/90 disabled:opacity-50 text-white font-bold rounded-xl transition-all duration-300 shadow-[0_8px_30px_rgba(124,42,235,0.25)] min-h-[52px] text-base"
+                className="w-full py-4 bg-gradient-to-r from-primary to-secondary text-white font-bold rounded-xl transition-all duration-300 shadow-[0_8px_30px_rgba(236,30,142,0.25)] min-h-[52px] text-sm uppercase tracking-wider cursor-pointer"
               >
-                {submitting ? 'Submitting...' : 'Submit Audit Request'}
+                {submitting ? 'Submitting Coordinate Logs...' : 'Launch Audit Request'}
               </button>
-              <p className="text-center text-xs text-white/30">No commitment. We'll email your audit report within 24 hours.</p>
             </form>
           </>
         )}
 
-        {/* Step 2 — Thank you */}
+        {/* Step 2 - Success Screen */}
         {step === 2 && (
           <div className="text-center">
-            <div className="glass-card rounded-3xl p-14">
+            <div className="glass-card-premium rounded-3xl p-14 border border-white/10">
               <CheckCircle className="w-16 h-16 text-green-400 mx-auto mb-6" />
-              <h1 className="text-4xl font-bold text-white mb-4" style={{ fontFamily: 'var(--font-display)' }}>Thank you, {common.name}!</h1>
-              <p className="text-white/65 leading-relaxed mb-3 max-w-lg mx-auto">
-                Your {auditLabel.toLowerCase()} audit request has been received. Our team will prepare your personalized audit report and send it to <span className="text-white font-medium">{common.email}</span> within 24 hours.
+              <h1 className="text-4xl font-bold text-white mb-4 font-display">Audit Configured!</h1>
+              <p className="text-white/65 leading-relaxed mb-4 max-w-lg mx-auto">
+                Thank you, {common.name}. Your {tier === 'free' ? 'free baseline' : 'deep-dive'} audit request has been logged successfully. 
               </p>
-              <p className="text-white/45 text-sm mb-10">We look forward to sharing what we find.</p>
+              <p className="text-white/45 text-sm mb-10">
+                Our lead architect will coordinate the teardown report and send it to <span className="text-white font-bold">{common.email}</span> within 24 hours.
+              </p>
+              
               <div className="flex flex-col sm:flex-row gap-3 justify-center">
-                <a href="https://www.facebook.com/share/1GJq598Yfm/" target="_blank" rel="noopener noreferrer"
-                  className="px-6 py-3 border border-white/10 hover:border-blue-500/40 text-white/70 hover:text-white text-sm font-semibold rounded-full transition-all">
-                  Follow on Facebook
-                </a>
-                <a href="https://x.com/galaxatech" target="_blank" rel="noopener noreferrer"
-                  className="px-6 py-3 border border-white/10 hover:border-sky-500/40 text-white/70 hover:text-white text-sm font-semibold rounded-full transition-all">
-                  Follow on X
+                <button
+                  onClick={() => navigate('/')}
+                  className="px-6 py-3 bg-white/5 border border-white/10 hover:border-primary/40 text-white text-xs font-bold rounded-full uppercase tracking-wider transition-all"
+                >
+                  Return to Home
+                </button>
+                <a
+                  href="https://wa.me/8801959209103"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-6 py-3 bg-gradient-to-r from-primary to-secondary text-white text-xs font-bold rounded-full uppercase tracking-wider transition-all flex items-center gap-1.5 justify-center"
+                >
+                  Chat on WhatsApp <ArrowUpRight className="w-4 h-4" />
                 </a>
               </div>
             </div>

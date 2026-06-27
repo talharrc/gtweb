@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { motion, AnimatePresence } from 'motion/react';
@@ -13,7 +13,10 @@ import {
 } from 'lucide-react';
 import { doc, getDoc, collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '../lib/firebase';
-import heroLaptopDashboard from '../assets/images/hero.jpeg';
+import GalaxyBackground from './shared/GalaxyBackground';
+import Counter from './shared/Counter';
+import SpotlightCard from './shared/SpotlightCard';
+import InteractiveGlobe from './shared/InteractiveGlobe';
 
 interface HomeViewProps {
   isDhakaOpen: boolean;
@@ -148,7 +151,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
     autoScrollTimerRef.current = setInterval(() => {
       if (carouselAutoScrollDir === 'right') setActiveIndex((p: number) => (p + 1) % SERVICES.length);
       else setActiveIndex((p: number) => (p - 1 + SERVICES.length) % SERVICES.length);
-    }, 1400);
+    }, 900);
     return () => { if (autoScrollTimerRef.current) clearInterval(autoScrollTimerRef.current); };
   }, [carouselAutoScrollDir]);
 
@@ -224,25 +227,32 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         @keyframes slideUp { from { opacity: 0; transform: translateY(24px) scale(0.97); } to { opacity: 1; transform: translateY(0) scale(1); } }
         .modal-panel { animation: slideUp 0.3s cubic-bezier(0.2,0.7,0.2,1); }
+        
+        @keyframes flow-right {
+          0% { left: 0; opacity: 0; }
+          15% { opacity: 1; }
+          85% { opacity: 1; }
+          100% { left: 100%; opacity: 0; }
+        }
+        .animate-flow-right { animation: flow-right 1.5s linear infinite; }
       `}</style>
 
       {/* ── Hero ─────────────────────────────────────────────────────────────── */}
       <section className="relative min-h-[82vh] sm:min-h-[92vh] flex flex-col items-center justify-center pt-28 pb-4 sm:pb-12 overflow-hidden">
         <div className="absolute inset-0 z-0 select-none overflow-hidden bg-[#0B0710]">
-          <img
-            alt="GalaxaTech Hero"
-            className="w-full h-full object-cover object-center opacity-60 pointer-events-none"
+          <div
+            className="w-full h-full opacity-90 pointer-events-none"
             style={{
-              maskImage: 'radial-gradient(ellipse at 50% 40%, rgba(0,0,0,1) 30%, rgba(0,0,0,0.6) 65%, rgba(0,0,0,0) 100%)',
-              WebkitMaskImage: 'radial-gradient(ellipse at 50% 40%, rgba(0,0,0,1) 30%, rgba(0,0,0,0.6) 65%, rgba(0,0,0,0) 100%)',
+              maskImage: 'radial-gradient(ellipse at 50% 40%, rgba(0,0,0,1) 40%, rgba(0,0,0,0.7) 75%, rgba(0,0,0,0) 100%)',
+              WebkitMaskImage: 'radial-gradient(ellipse at 50% 40%, rgba(0,0,0,1) 40%, rgba(0,0,0,0.7) 75%, rgba(0,0,0,0) 100%)',
             }}
-            src={heroLaptopDashboard}
-            referrerPolicy="no-referrer"
-          />
+          >
+            <GalaxyBackground />
+          </div>
           {/* Dark base tint */}
-          <div className="absolute inset-0 bg-[#0B0710]/45 pointer-events-none" />
-          <div className="absolute inset-0 bg-gradient-to-b from-[#0B0710]/70 via-transparent to-transparent pointer-events-none" />
-          <div className="absolute inset-x-0 bottom-0 h-2/5 bg-gradient-to-t from-[#0B0710] via-[#0B0710]/60 to-transparent pointer-events-none" />
+          <div className="absolute inset-0 bg-[#0B0710]/20 pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-to-b from-[#0B0710]/50 via-transparent to-transparent pointer-events-none" />
+          <div className="absolute inset-x-0 bottom-0 h-2/5 bg-gradient-to-t from-[#0B0710] via-[#0B0710]/40 to-transparent pointer-events-none" />
           {/* Atmospheric pink/coral blob glows */}
           <div className="absolute top-1/3 left-1/4 -translate-y-1/2 -translate-x-1/2 w-[560px] h-[560px] bg-[#EC1E8E]/12 blur-[130px] rounded-full pointer-events-none" />
           <div className="absolute top-1/2 right-1/4 -translate-y-1/2 translate-x-1/2 w-[420px] h-[420px] bg-[#FF7A45]/10 blur-[110px] rounded-full pointer-events-none" />
@@ -264,7 +274,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
           </motion.div>
           <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.1, ease: [0.16,1,0.3,1] }} className="font-display text-[2rem] sm:text-[3.25rem] md:text-[5.5rem] font-extrabold tracking-[-0.03em] text-white mb-4 leading-[1.06] drop-shadow-[0_4px_24px_rgba(0,0,0,0.8)]">
             Assure your brand's <br className="hidden md:block" />
-            <span className="font-serif italic font-normal typewriter-container block min-h-[1.2em] mt-3 pb-1 overflow-hidden" style={{ filter: 'drop-shadow(0 0 18px rgba(236,30,142,0.55))' }}>
+            <span className="font-serif italic font-semibold typewriter-container block min-h-[1.2em] mt-3 pb-1 overflow-hidden" style={{ filter: 'drop-shadow(0 0 18px rgba(236,30,142,0.55))' }}>
               <AnimatePresence mode="wait">
                 <motion.span key={wordIndex} initial={{ y: 35, opacity: 0, filter: 'blur(5px)' }} animate={{ y: 0, opacity: 1, filter: 'blur(0px)' }} exit={{ y: -35, opacity: 0, filter: 'blur(5px)' }} transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }} className="inline-block text-gradient">
                   {TYPEWRITER_WORDS[wordIndex]}
@@ -297,18 +307,24 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
           {/* Stat proof bar */}
           <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.45, ease: [0.16,1,0.3,1] }} className="flex items-center justify-center gap-4 sm:gap-8 md:gap-12 mt-8 sm:mt-10">
             <div className="text-center">
-              <span className="block text-xl sm:text-2xl md:text-3xl font-bold text-white font-display tracking-tight">50+</span>
+              <span className="block text-xl sm:text-2xl md:text-3xl font-bold text-white font-display tracking-tight">
+                <Counter value={50} suffix="+" />
+              </span>
               <span className="block text-[10px] font-mono tracking-[0.2em] text-white/40 uppercase mt-1">Projects</span>
             </div>
             <div className="w-px h-8 bg-white/10 flex-shrink-0" />
             <div className="text-center">
-              <span className="block text-xl sm:text-2xl md:text-3xl font-bold text-white font-display tracking-tight">6</span>
-              <span className="block text-[10px] font-mono tracking-[0.2em] text-white/40 uppercase mt-1">Countries</span>
+              <span className="block text-xl sm:text-2xl md:text-3xl font-bold text-white font-display tracking-tight">
+                <Counter value={12} suffix="M+" />
+              </span>
+              <span className="block text-[10px] font-mono tracking-[0.2em] text-white/40 uppercase mt-1">Client Revenue</span>
             </div>
             <div className="w-px h-8 bg-white/10 flex-shrink-0" />
             <div className="text-center">
-              <span className="block text-xl sm:text-2xl md:text-3xl font-bold text-white font-display tracking-tight">6</span>
-              <span className="block text-[10px] font-mono tracking-[0.2em] text-white/40 uppercase mt-1">Services</span>
+              <span className="block text-xl sm:text-2xl md:text-3xl font-bold text-white font-display tracking-tight">
+                <Counter value={99.9} decimals={1} suffix="%" />
+              </span>
+              <span className="block text-[10px] font-mono tracking-[0.2em] text-white/40 uppercase mt-1">System Uptime</span>
             </div>
           </motion.div>
         </div>
@@ -329,52 +345,70 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
         {/* Atmospheric blobs */}
         <div className="absolute top-1/2 right-0 translate-x-1/3 -translate-y-1/2 w-[450px] h-[450px] bg-[#FF7A45]/8 blur-[120px] rounded-full pointer-events-none" />
         <div className="absolute top-0 left-1/4 -translate-y-1/2 w-[300px] h-[300px] bg-[#EC1E8E]/7 blur-[100px] rounded-full pointer-events-none" />
-        <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.6 }} className="relative z-20">
-          <div className="max-w-5xl mx-auto mb-12">
-            <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6">
-              <motion.div initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, amount: 0.3 }} transition={{ duration: 0.7 }}>
+        <div className="max-w-5xl mx-auto relative z-20">
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
+            {/* Left Content Column */}
+            <div className="md:col-span-7 flex flex-col justify-center">
+              <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.6 }}>
                 <span className="text-[10px] font-mono text-primary/70 tracking-[0.3em] uppercase block mb-3">00 — Global Reach</span>
-                <h2 className="text-4xl sm:text-5xl font-black text-white leading-[0.9]" style={{ fontFamily: 'var(--font-display)' }}>
-                  Clients<br />
-                  <span style={{ WebkitTextStroke: '1.5px rgba(236,30,142,0.88)', color: 'transparent' }}>Across</span><br />
-                  <span className="pill-word-coral">Nations.</span>
-                </h2>
-              </motion.div>
-              <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ duration: 0.7, delay: 0.2 }} className="flex items-end gap-5 sm:pb-1">
-                <div className="text-[80px] sm:text-[110px] font-black leading-none select-none" style={{ color: 'rgba(255,255,255,0.14)', fontFamily: 'var(--font-display)' }}>6+</div>
-                <p className="text-white/55 text-sm max-w-[150px] leading-relaxed pb-2 border-l border-white/15 pl-4">Delivering real digital systems across global markets.</p>
-              </motion.div>
-            </div>
-          </div>
-          {/* Marquee pills */}
-          <div
-            className="max-w-5xl mx-auto mb-10 overflow-hidden"
-            style={{
-              maskImage: 'linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%)',
-              WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%)',
-            }}
-            onMouseEnter={e => { const t = e.currentTarget.querySelector('.mq-track') as HTMLDivElement | null; if (t) t.style.animationPlayState = 'paused'; }}
-            onMouseLeave={e => { const t = e.currentTarget.querySelector('.mq-track') as HTMLDivElement | null; if (t) t.style.animationPlayState = 'running'; }}
-          >
-            <div
-              className="mq-track"
-              style={{ display: 'flex', width: 'max-content', animation: 'marquee-scroll 28s linear infinite', willChange: 'transform' }}
-            >
-              {[...COUNTRIES, ...COUNTRIES].map((c, i) => (
-                <div key={i} className="flex items-center gap-2.5 mx-3 select-none px-5 py-2.5 rounded-full" style={{ border: '1px solid rgba(255,255,255,0.12)', background: 'rgba(255,255,255,0.06)', minWidth: 'max-content' }}>
-                  <img src={`https://flagcdn.com/20x15/${c.code}.png`} alt={c.name} width="20" height="15" className="flex-shrink-0 rounded-[2px]" />
-                  <span className="text-white/80 font-semibold text-sm" style={{ fontFamily: 'var(--font-display)' }}>{c.name}</span>
+                <div className="flex items-end justify-between mb-8 gap-6">
+                  <div>
+                    <h2 className="text-4xl sm:text-5xl font-black text-white leading-[0.9]" style={{ fontFamily: 'var(--font-display)' }}>
+                      Clients<br />
+                      <span style={{ WebkitTextStroke: '1.5px rgba(236,30,142,0.88)', color: 'transparent' }}>Across</span><br />
+                      <span className="pill-word-coral">Nations.</span>
+                    </h2>
+                  </div>
+                  <div className="flex items-end gap-5">
+                    <div className="text-[60px] sm:text-[80px] font-black leading-none select-none animate-pulse" style={{ color: 'rgba(255,255,255,0.14)', fontFamily: 'var(--font-display)' }}>6+</div>
+                    <p className="text-white/55 text-xs max-w-[130px] leading-relaxed pb-1 border-l border-white/15 pl-4">Delivering real digital systems across global markets.</p>
+                  </div>
                 </div>
-              ))}
+
+                {/* Marquee pills */}
+                <div
+                  className="w-full mb-8 overflow-hidden"
+                  style={{
+                    maskImage: 'linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%)',
+                    WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%)',
+                  }}
+                  onMouseEnter={e => { const t = e.currentTarget.querySelector('.mq-track') as HTMLDivElement | null; if (t) t.style.animationPlayState = 'paused'; }}
+                  onMouseLeave={e => { const t = e.currentTarget.querySelector('.mq-track') as HTMLDivElement | null; if (t) t.style.animationPlayState = 'running'; }}
+                >
+                  <div
+                    className="mq-track"
+                    style={{ display: 'flex', width: 'max-content', animation: 'marquee-scroll 28s linear infinite', willChange: 'transform' }}
+                  >
+                    {[...COUNTRIES, ...COUNTRIES].map((c, i) => (
+                      <div key={i} className="flex items-center gap-2.5 mx-2.5 select-none px-4 py-2 rounded-full" style={{ border: '1px solid rgba(255,255,255,0.12)', background: 'rgba(255,255,255,0.06)', minWidth: 'max-content' }}>
+                        <img src={`https://flagcdn.com/20x15/${c.code}.png`} alt={c.name} width="20" height="15" className="flex-shrink-0 rounded-[2px]" />
+                        <span className="text-white/80 font-semibold text-xs" style={{ fontFamily: 'var(--font-display)' }}>{c.name}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-3 mt-4">
+                  <Shield className="w-5 h-5 text-primary/50 flex-shrink-0" />
+                  <span className="text-white/40 text-xs sm:text-sm">Trusted by businesses worldwide to drive growth and innovation.</span>
+                </div>
+              </motion.div>
+            </div>
+
+            {/* Right Globe Column */}
+            <div className="md:col-span-5 flex justify-center items-center w-full h-[360px] sm:h-[420px]">
+              <motion.div 
+                initial={{ opacity: 0, scale: 0.8 }} 
+                whileInView={{ opacity: 1, scale: 1 }} 
+                viewport={{ once: true }} 
+                transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }} 
+                className="w-full h-full"
+              >
+                <InteractiveGlobe />
+              </motion.div>
             </div>
           </div>
-          <div className="flex justify-center">
-            <div className="flex items-center gap-3">
-              <Shield className="w-5 h-5 text-primary/50" />
-              <span className="text-white/40 text-sm">Trusted by businesses worldwide to drive growth and innovation.</span>
-            </div>
-          </div>
-        </motion.div>
+        </div>
       </section>
 
       {/* ── Why Choose Us ────────────────────────────────────────────────────── */}
@@ -407,36 +441,44 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
               viewport={{ once: true }}
               transition={{ duration: 0.5 }}
               whileHover={{ y: -5, transition: { duration: 0.2 } }}
-              className="md:col-span-4 flex flex-col justify-between p-7 rounded-3xl glass-card-premium spotlight-sweep border border-white/10 group min-h-[220px]"
+              className="md:col-span-4 min-h-[220px]"
             >
-              <div className="flex items-start justify-between">
-                <div className="flex items-center gap-2.5">
-                  <div className="w-7 h-7 rounded-full flex items-center justify-center border border-[#EC1E8E]/30 bg-[#EC1E8E]/10 flex-shrink-0">
-                    <span className="text-[9px] font-mono font-bold text-[#EC1E8E]">01</span>
+              <SpotlightCard className="w-full h-full flex flex-col justify-between p-7 rounded-3xl glass-card-premium border border-white/10 group">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-7 h-7 rounded-full flex items-center justify-center border border-[#EC1E8E]/30 bg-[#EC1E8E]/10 flex-shrink-0">
+                      <span className="text-[9px] font-mono font-bold text-[#EC1E8E]">01</span>
+                    </div>
+                    <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-primary/10 border border-primary/20">
+                      <Workflow className="w-5.5 h-5.5 text-lavender" />
+                    </div>
                   </div>
-                  <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-primary/10 border border-primary/20">
-                    <Workflow className="w-5.5 h-5.5 text-lavender" />
+                  {/* Interactive Node Graph Infographic */}
+                  <div className="flex items-center gap-3 bg-white/5 rounded-2xl px-4 py-2.5 border border-white/5 relative overflow-hidden select-none">
+                    <div className="flex items-center gap-2 relative z-10">
+                      <div className="w-3 h-3 rounded-full bg-[#FF7A45] animate-pulse" title="Discover" />
+                      <span className="w-6 h-px border-t border-dashed border-white/20 relative">
+                        <span className="absolute top-[-2px] left-0 w-1.5 h-1.5 rounded-full bg-white animate-flow-right" />
+                      </span>
+                      <div className="w-3 h-3 rounded-full bg-[#EC1E8E]" title="Architect" />
+                      <span className="w-6 h-px border-t border-dashed border-white/20 relative">
+                        <span className="absolute top-[-2px] left-0 w-1.5 h-1.5 rounded-full bg-white animate-flow-right" style={{ animationDelay: '0.6s' }} />
+                      </span>
+                      <div className="w-3 h-3 rounded-full bg-[#5B23A8] animate-pulse" title="Optimize" />
+                    </div>
                   </div>
                 </div>
-                {/* Micro tech chart inside Card 1 */}
-                <div className="hidden sm:flex items-center gap-1.5 font-mono text-[9px] text-white/35 bg-white/5 rounded-lg px-2.5 py-1 border border-white/5">
-                  <span>DISCOVER</span>
-                  <span className="text-primary">→</span>
-                  <span>ARCHITECT</span>
-                  <span className="text-primary">→</span>
-                  <span>OPTIMIZE</span>
+                <div className="mt-6 flex flex-col sm:flex-row gap-6 items-end justify-between">
+                  <div className="max-w-md">
+                    <h3 className="text-white font-bold text-base mb-2 font-display">Systems-First Approach</h3>
+                    <p className="text-white/65 text-xs leading-relaxed">We architect before we build — mapping workflows, infrastructure, and dependencies so strategy is never an afterthought.</p>
+                  </div>
+                  <div className="flex flex-col gap-1 w-full sm:w-auto font-mono text-[9px] text-primary/70 bg-primary/5 rounded-lg p-2.5 border border-primary/10">
+                    <div className="flex justify-between gap-4"><span>Sys.Map:</span><span className="text-white font-semibold">Active</span></div>
+                    <div className="flex justify-between gap-4"><span>Integrity:</span><span className="text-emerald-400 font-semibold">99.8%</span></div>
+                  </div>
                 </div>
-              </div>
-              <div className="mt-6 flex flex-col sm:flex-row gap-6 items-end justify-between">
-                <div className="max-w-md">
-                  <h3 className="text-white font-bold text-base mb-2 font-display">Systems-First Approach</h3>
-                  <p className="text-white/65 text-xs leading-relaxed">We architect before we build — mapping workflows, infrastructure, and dependencies so strategy is never an afterthought.</p>
-                </div>
-                <div className="flex flex-col gap-1 w-full sm:w-auto font-mono text-[9px] text-primary/70 bg-primary/5 rounded-lg p-2.5 border border-primary/10">
-                  <div className="flex justify-between gap-4"><span>Sys.Map:</span><span className="text-white font-semibold">Active</span></div>
-                  <div className="flex justify-between gap-4"><span>Integrity:</span><span className="text-emerald-400 font-semibold">99.8%</span></div>
-                </div>
-              </div>
+              </SpotlightCard>
             </motion.div>
 
             {/* Card 2: End-to-End Delivery */}
@@ -446,23 +488,44 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: 0.1 }}
               whileHover={{ y: -5, transition: { duration: 0.2 } }}
-              className="md:col-span-2 flex flex-col justify-between p-7 rounded-3xl glass-card-premium spotlight-sweep border border-white/10 group min-h-[220px]"
+              className="md:col-span-2 min-h-[220px]"
             >
-              <div className="flex items-center gap-2.5">
-                <div className="w-7 h-7 rounded-full flex items-center justify-center border border-[#EC1E8E]/30 bg-[#EC1E8E]/10 flex-shrink-0">
-                  <span className="text-[9px] font-mono font-bold text-[#EC1E8E]">02</span>
+              <SpotlightCard className="w-full h-full flex flex-col justify-between p-7 rounded-3xl glass-card-premium border border-white/10 group">
+                <div className="flex items-center gap-2.5">
+                  <div className="w-7 h-7 rounded-full flex items-center justify-center border border-[#EC1E8E]/30 bg-[#EC1E8E]/10 flex-shrink-0">
+                    <span className="text-[9px] font-mono font-bold text-[#EC1E8E]">02</span>
+                  </div>
+                  <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-primary/10 border border-primary/20">
+                    <Rocket className="w-5.5 h-5.5 text-lavender" />
+                  </div>
                 </div>
-                <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-primary/10 border border-primary/20">
-                  <Rocket className="w-5.5 h-5.5 text-lavender" />
+                <div className="mt-4">
+                  <h3 className="text-white font-bold text-base mb-2 font-display">End-to-End</h3>
+                  <p className="text-white/50 text-xs leading-relaxed mb-4">From roadmap planning through production code deployment, our team owns the entire lifecycle.</p>
+                  
+                  {/* Multi-Stage Pipeline Infographic */}
+                  <div className="flex flex-col gap-2.5 w-full bg-white/5 rounded-2xl p-3 border border-white/5 font-mono text-[9px] text-white/50">
+                    <div className="flex items-center justify-between">
+                      <span>PLAN</span>
+                      <div className="w-[60%] bg-white/10 rounded-full h-1 overflow-hidden border border-white/5">
+                        <motion.div initial={{ width: 0 }} whileInView={{ width: '100%' }} transition={{ duration: 1, ease: 'easeOut' }} className="h-full bg-gradient-to-r from-[#FF7A45] to-[#EC1E8E] rounded-full" />
+                      </div>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span>CODE</span>
+                      <div className="w-[60%] bg-white/10 rounded-full h-1 overflow-hidden border border-white/5">
+                        <motion.div initial={{ width: 0 }} whileInView={{ width: '85%' }} transition={{ duration: 1.2, delay: 0.3, ease: 'easeOut' }} className="h-full bg-gradient-to-r from-[#EC1E8E] to-[#5B23A8] rounded-full" />
+                      </div>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span>DEPLOY</span>
+                      <div className="w-[60%] bg-white/10 rounded-full h-1 overflow-hidden border border-white/5">
+                        <motion.div initial={{ width: 0 }} whileInView={{ width: '100%' }} transition={{ duration: 1.5, delay: 0.6, ease: 'easeOut' }} className="h-full bg-gradient-to-r from-[#5B23A8] to-emerald-400 rounded-full" />
+                      </div>
+                    </div>
+                  </div>
                 </div>
-              </div>
-              <div className="mt-4">
-                <h3 className="text-white font-bold text-base mb-2 font-display">End-to-End</h3>
-                <p className="text-white/50 text-xs leading-relaxed mb-4">From roadmap planning through production code deployment, our team owns the entire lifecycle.</p>
-                <div className="w-full bg-white/5 rounded-full h-1 border border-white/5">
-                  <motion.div initial={{ width: 0 }} whileInView={{ width: '100%' }} transition={{ duration: 1.5 }} className="h-full bg-gradient-to-r from-primary to-lavender rounded-full" />
-                </div>
-              </div>
+              </SpotlightCard>
             </motion.div>
 
             {/* Card 3: Builders Mindset */}
@@ -472,30 +535,37 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: 0.2 }}
               whileHover={{ y: -5, transition: { duration: 0.2 } }}
-              className="md:col-span-2 flex flex-col justify-between p-7 rounded-3xl glass-card-premium spotlight-sweep border border-white/10 group min-h-[220px]"
+              className="md:col-span-2 min-h-[220px]"
             >
-              <div className="flex items-start justify-between">
-                <div className="flex items-center gap-2.5">
-                  <div className="w-7 h-7 rounded-full flex items-center justify-center border border-[#EC1E8E]/30 bg-[#EC1E8E]/10 flex-shrink-0">
-                    <span className="text-[9px] font-mono font-bold text-[#EC1E8E]">03</span>
+              <SpotlightCard className="w-full h-full flex flex-col justify-between p-7 rounded-3xl glass-card-premium border border-white/10 group">
+                <div className="flex items-start justify-between">
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-7 h-7 rounded-full flex items-center justify-center border border-[#EC1E8E]/30 bg-[#EC1E8E]/10 flex-shrink-0">
+                      <span className="text-[9px] font-mono font-bold text-[#EC1E8E]">03</span>
+                    </div>
+                    <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-primary/10 border border-primary/20">
+                      <Users className="w-5.5 h-5.5 text-lavender" />
+                    </div>
                   </div>
-                  <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-primary/10 border border-primary/20">
-                    <Users className="w-5.5 h-5.5 text-lavender" />
+                  <span className="flex items-center gap-1 text-[8px] font-mono text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20 font-bold uppercase animate-pulse">
+                    <span className="w-1 h-1 rounded-full bg-emerald-400" />
+                    148 Live
+                  </span>
+                </div>
+                <div className="mt-4">
+                  <h3 className="text-white font-bold text-base mb-2 font-display">Builders Mindset</h3>
+                  <p className="text-white/50 text-xs leading-relaxed mb-3">We run our own builder community ecosystem — direct production and fast iteration are in our DNA.</p>
+                  
+                  {/* Builder Tag Cloud Infographic */}
+                  <div className="flex items-center gap-1.5 flex-wrap bg-white/5 rounded-2xl p-2.5 border border-white/5 font-mono text-[8px] select-none">
+                    <span className="px-2 py-0.5 rounded bg-[#EC1E8E]/10 text-[#EC1E8E] border border-[#EC1E8E]/20 font-bold">DEV</span>
+                    <span className="px-2 py-0.5 rounded bg-[#FF7A45]/10 text-[#FF7A45] border border-[#FF7A45]/20 font-bold">ARCH</span>
+                    <span className="px-2 py-0.5 rounded bg-[#5B23A8]/10 text-[#5B23A8] border border-[#5B23A8]/20 font-bold">AI</span>
+                    <span className="px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-bold">PROD</span>
+                    <span className="text-white/30 font-bold ml-1">+130 Active</span>
                   </div>
                 </div>
-                <span className="text-[9px] font-mono text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20 font-bold">Live</span>
-              </div>
-              <div className="mt-4">
-                <h3 className="text-white font-bold text-base mb-2 font-display">Builders Mindset</h3>
-                <p className="text-white/50 text-xs leading-relaxed mb-3">We run our own builder community ecosystem — direct production and fast iteration are in our DNA.</p>
-                <div className="flex flex-wrap gap-[3px] mb-2">
-                  {Array.from({ length: 24 }).map((_, i) => (
-                    <div key={i} className="w-2 h-2 rounded-full" style={{ background: i < 18 ? `hsl(${330 + (i % 6) * 18}, 80%, ${55 + (i % 3) * 10}%)` : 'rgba(255,255,255,0.08)' }} />
-                  ))}
-                  <span className="text-[9px] font-mono text-white/25 self-end ml-0.5">+130</span>
-                </div>
-                <div className="font-mono text-[10px] text-white/30">Active: <span className="text-white font-bold">148+ builders</span></div>
-              </div>
+              </SpotlightCard>
             </motion.div>
 
             {/* Card 4: Global Standards */}
@@ -505,63 +575,77 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: 0.3 }}
               whileHover={{ y: -5, transition: { duration: 0.2 } }}
-              className="md:col-span-2 flex flex-col justify-between p-7 rounded-3xl glass-card-premium spotlight-sweep border border-white/10 group min-h-[220px]"
+              className="md:col-span-2 min-h-[220px]"
             >
-              <div className="flex items-center gap-2.5">
-                <div className="w-7 h-7 rounded-full flex items-center justify-center border border-[#EC1E8E]/30 bg-[#EC1E8E]/10 flex-shrink-0">
-                  <span className="text-[9px] font-mono font-bold text-[#EC1E8E]">04</span>
-                </div>
-                <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-primary/10 border border-primary/20">
-                  <Globe className="w-5.5 h-5.5 text-lavender" />
-                </div>
-              </div>
-              <div className="mt-4">
-                <h3 className="text-white font-bold text-base mb-2 font-display">Global Standard</h3>
-                <p className="text-white/50 text-xs leading-relaxed mb-3">Serving clients across 6 countries with enterprise stability and low-latency operational support.</p>
-                <div className="font-mono text-[9px] flex flex-col gap-1">
-                  <span style={{ color: '#78D5FF' }}>23.685°N 90.356°E</span>
-                  <span className="text-white/25 tracking-widest">DHAKA → WORLD</span>
-                  <div className="flex gap-3 mt-0.5">
-                    <span className="text-white/30">US <span className="text-emerald-400 font-bold">12ms</span></span>
-                    <span className="text-white/30">EU <span className="text-emerald-400 font-bold">38ms</span></span>
+              <SpotlightCard className="w-full h-full flex flex-col justify-between p-7 rounded-3xl glass-card-premium border border-white/10 group">
+                <div className="flex items-center gap-2.5">
+                  <div className="w-7 h-7 rounded-full flex items-center justify-center border border-[#EC1E8E]/30 bg-[#EC1E8E]/10 flex-shrink-0">
+                    <span className="text-[9px] font-mono font-bold text-[#EC1E8E]">04</span>
+                  </div>
+                  <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-primary/10 border border-primary/20">
+                    <Globe className="w-5.5 h-5.5 text-lavender" />
                   </div>
                 </div>
-              </div>
+                <div className="mt-4">
+                  <h3 className="text-white font-bold text-base mb-2 font-display">Global Standard</h3>
+                  <p className="text-white/50 text-xs leading-relaxed mb-3">Serving clients across 6 countries with enterprise stability and low-latency operational support.</p>
+                  
+                  {/* Network Ping Monitor Infographic */}
+                  <div className="flex flex-col gap-1.5 bg-white/5 rounded-2xl p-2.5 border border-white/5 font-mono text-[9px] w-full">
+                    <div className="flex justify-between items-center text-white/40">
+                      <span>DHAKA → USA</span>
+                      <span className="text-emerald-400 font-bold animate-pulse">12ms · stable</span>
+                    </div>
+                    <div className="flex justify-between items-center text-white/40">
+                      <span>DHAKA → EUR</span>
+                      <span className="text-emerald-400 font-bold animate-pulse" style={{ animationDelay: '0.4s' }}>38ms · active</span>
+                    </div>
+                  </div>
+                </div>
+              </SpotlightCard>
             </motion.div>
 
-            {/* Card 5: Fast Communication */}
+            {/* Card 5: Fast Operations */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: 0.4 }}
               whileHover={{ y: -5, transition: { duration: 0.2 } }}
-              className="md:col-span-2 flex flex-col justify-between p-7 rounded-3xl glass-card-premium spotlight-sweep border border-white/10 group min-h-[220px]"
+              className="md:col-span-2 min-h-[220px]"
             >
-              <div className="flex items-center gap-2.5">
-                <div className="w-7 h-7 rounded-full flex items-center justify-center border border-[#EC1E8E]/30 bg-[#EC1E8E]/10 flex-shrink-0">
-                  <span className="text-[9px] font-mono font-bold text-[#EC1E8E]">05</span>
-                </div>
-                <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-primary/10 border border-primary/20">
-                  <MessageCircle className="w-5.5 h-5.5 text-lavender" />
-                </div>
-              </div>
-              <div className="mt-4">
-                <h3 className="text-white font-bold text-base mb-2 font-display">Fast Operations</h3>
-                <p className="text-white/50 text-xs leading-relaxed mb-3">WhatsApp-first, live Client Hub dashboards, and daily updates — you're never left guessing.</p>
-                <div className="rounded-xl overflow-hidden border border-white/[0.07]" style={{ background: 'rgba(255,255,255,0.03)' }}>
-                  <div className="flex items-center gap-2 px-3 py-2 border-b border-white/[0.05]">
-                    <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse flex-shrink-0" />
-                    <span className="font-mono text-[9px] text-white/40">Update sent · just now</span>
+              <SpotlightCard className="w-full h-full flex flex-col justify-between p-7 rounded-3xl glass-card-premium border border-white/10 group">
+                <div className="flex items-center gap-2.5">
+                  <div className="w-7 h-7 rounded-full flex items-center justify-center border border-[#EC1E8E]/30 bg-[#EC1E8E]/10 flex-shrink-0">
+                    <span className="text-[9px] font-mono font-bold text-[#EC1E8E]">05</span>
                   </div>
-                  <div className="flex items-center gap-1.5 px-3 py-2">
-                    {[0, 150, 300].map(d => (
-                      <div key={d} className="w-1.5 h-1.5 rounded-full bg-white/25 animate-bounce" style={{ animationDelay: `${d}ms` }} />
-                    ))}
-                    <span className="font-mono text-[9px] text-white/20 ml-1">client typing…</span>
+                  <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-primary/10 border border-primary/20">
+                    <MessageCircle className="w-5.5 h-5.5 text-lavender" />
                   </div>
                 </div>
-              </div>
+                <div className="mt-4">
+                  <h3 className="text-white font-bold text-base mb-2 font-display">Fast Operations</h3>
+                  <p className="text-white/50 text-xs leading-relaxed mb-3">WhatsApp-first, live Client Hub dashboards, and daily updates — you're never left guessing.</p>
+                  
+                  {/* Live Chat Bubbles Infographic */}
+                  <div className="flex flex-col gap-2 rounded-2xl p-2.5 border border-white/[0.06] select-none text-[9px] font-sans w-full" style={{ background: 'rgba(255,255,255,0.02)' }}>
+                    <div className="flex flex-col items-start max-w-[85%]">
+                      <div className="bg-white/5 rounded-2xl rounded-tl-sm px-2.5 py-1 border border-white/5 text-white/70 leading-normal">
+                        Status of build?
+                      </div>
+                    </div>
+                    <div className="flex flex-col items-end w-full">
+                      <div className="primary-gradient rounded-2xl rounded-tr-sm px-2.5 py-1 text-white leading-normal font-medium shadow-md shadow-[#EC1E8E]/10">
+                        Live now. Integrity: 99.8%!
+                      </div>
+                      <div className="flex items-center gap-1 mt-1 text-[7px] font-mono text-white/35">
+                        <span>delivered</span>
+                        <span className="text-emerald-400 font-bold">✓✓</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </SpotlightCard>
             </motion.div>
           </div>
         </div>
@@ -580,8 +664,8 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
                 <span className="pill-word-coral">Build.</span>
               </h2>
             </motion.div>
-            <motion.p initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ duration: 0.7, delay: 0.2 }} className="text-white/55 text-sm leading-relaxed max-w-[200px] sm:text-right border-t border-white/10 pt-4 sm:border-t-0 sm:pt-0 sm:border-l sm:border-white/[0.08] sm:pl-6">
-              Drag or tap the carousel to explore all six service verticals.
+            <motion.p initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ duration: 0.7, delay: 0.2 }} className="text-white/55 text-sm leading-relaxed max-w-[320px] sm:text-right border-t border-white/10 pt-4 sm:border-t-0 sm:pt-0 sm:border-l sm:border-white/[0.08] sm:pl-6">
+              We architect high-performance digital ecosystems, custom AI pipelines, and bespoke brand platforms built for scale.
             </motion.p>
           </div>
 
@@ -589,7 +673,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
           <div
             className="relative select-none"
             ref={carouselContainerRef}
-            style={{ perspective: isMobile ? '800px' : '1400px', height: isMobile ? '300px' : '360px', touchAction: 'pan-y' }}
+            style={{ perspective: isMobile ? '800px' : '1400px', height: isMobile ? '300px' : '450px', touchAction: 'pan-y' }}
             onPointerDown={handleCarouselPointerDown}
             onPointerMove={handleCarouselPointerMove}
             onPointerUp={handleCarouselPointerUp}
@@ -597,13 +681,21 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
             onMouseMove={e => {
               if (!carouselContainerRef.current || dragRef.current) return;
               const rect = carouselContainerRef.current.getBoundingClientRect();
-              setCarouselAutoScrollDir(e.clientX - rect.left > rect.width / 2 ? 'right' : 'left');
+              const relX = e.clientX - rect.left;
+              // Left 35% scrolls left, Right 35% scrolls right, Middle 30% pauses
+              if (relX > rect.width * 0.65) {
+                setCarouselAutoScrollDir('right');
+              } else if (relX < rect.width * 0.35) {
+                setCarouselAutoScrollDir('left');
+              } else {
+                setCarouselAutoScrollDir(null);
+              }
             }}
             onMouseLeave={() => setCarouselAutoScrollDir(null)}
           >
             {SERVICES.map((svc, i) => {
               const offset = getCarouselOffset(i, activeIndex, SERVICES.length);
-              const xStep = isMobile ? 155 : 245;
+              const xStep = isMobile ? 155 : 330;
               
               // Apparent fractional offset including real-time drag displacement
               const apparentOffset = offset + (dragOffset / xStep);
@@ -614,14 +706,14 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
 
               // Calculate real-time visual positioning
               const x = offset * xStep + dragOffset;
-              const rotY = isMobile ? apparentOffset * 14 : apparentOffset * 22;
-              const z = -absOff * (isMobile ? 70 : 100);
-              const scale = 1 - absOff * 0.13;
+              const rotY = isMobile ? apparentOffset * 10 : apparentOffset * 15;
+              const z = -absOff * (isMobile ? 70 : 120);
+              const scale = 1 - absOff * 0.08;
 
               // Smoothly fade — keeps side cards visible as peek
               const opacity = visible ? Math.max(0, 1 - absOff * 0.32) : 0;
               const isActive = absOff < 0.5;
-              const cardWidth = isMobile ? '175px' : '240px';
+              const cardWidth = isMobile ? '175px' : '320px';
               return (
                 <div
                   key={svc.anchor}
@@ -682,24 +774,6 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
               );
             })}
           </div>
-
-          {/* Nav */}
-          <div className="flex items-center justify-center gap-5 mt-8">
-            <button onClick={carouselPrev} aria-label="Previous service" className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-white/60 hover:text-white hover:border-primary/40 transition-all duration-200 hover:scale-[1.05] active:scale-[0.98]">
-              <ChevronLeft className="w-5 h-5" />
-            </button>
-            <div className="px-4 py-2 rounded-full border border-white/10 text-[11px] font-mono text-white/40">
-              {String(activeIndex + 1).padStart(2, '0')} / {String(SERVICES.length).padStart(2, '0')}
-            </div>
-            <div className="flex gap-2" role="tablist" aria-label="Service slides">
-              {SERVICES.map((svc, i) => (
-                <button key={i} onClick={() => setActiveIndex(i)} role="tab" aria-selected={i === activeIndex} aria-label={svc.label} className="rounded-full transition-all duration-300" style={{ width: i === activeIndex ? '24px' : '8px', height: '8px', background: i === activeIndex ? '#EC1E8E' : 'rgba(255,255,255,0.2)' }} />
-              ))}
-            </div>
-            <button onClick={carouselNext} aria-label="Next service" className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-white/60 hover:text-white hover:border-primary/40 transition-all duration-200 hover:scale-[1.05] active:scale-[0.98]">
-              <ChevronRight className="w-5 h-5" />
-            </button>
-          </div>
         </div>
       </section>
 
@@ -735,17 +809,19 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
                   viewport={{ once: true }}
                   transition={{ duration: 0.5, delay: i * 0.1 }}
                   whileHover={{ y: -4 }}
-                  className="relative flex flex-col p-7 rounded-3xl glass-card-premium spotlight-sweep border border-white/10 group overflow-hidden hover:border-primary/30 transition-colors duration-300"
+                  className="relative flex flex-col"
                 >
-                  <div className="absolute right-5 bottom-4 font-black select-none pointer-events-none leading-none" style={{ fontSize: '100px', color: 'rgba(236,30,142,0.06)', fontFamily: 'var(--font-display)' }}>{step.num}</div>
-                  <div className="flex items-start justify-between mb-6">
-                    <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-primary/10 border border-primary/20 group-hover:bg-primary/15 group-hover:border-primary/35 transition-colors duration-300">
-                      <StepIcon className="w-5 h-5 text-lavender" />
+                  <SpotlightCard className="w-full h-full p-7 rounded-3xl glass-card-premium border border-white/10 group">
+                    <div className="absolute right-5 bottom-4 font-black select-none pointer-events-none leading-none z-0" style={{ fontSize: '100px', color: 'rgba(236,30,142,0.06)', fontFamily: 'var(--font-display)' }}>{step.num}</div>
+                    <div className="flex items-start justify-between mb-6 relative z-10">
+                      <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-primary/10 border border-primary/20 group-hover:bg-primary/15 group-hover:border-primary/35 transition-colors duration-300">
+                        <StepIcon className="w-5 h-5 text-lavender" />
+                      </div>
+                      <span className="text-[11px] font-mono text-primary/70 font-semibold bg-primary/8 px-2.5 py-1 rounded-full border border-primary/15">{step.num}</span>
                     </div>
-                    <span className="text-[11px] font-mono text-primary/70 font-semibold bg-primary/8 px-2.5 py-1 rounded-full border border-primary/15">{step.num}</span>
-                  </div>
-                  <h3 className="text-white font-bold text-lg mb-2 font-display relative z-10">{step.title}</h3>
-                  <p className="text-white/60 text-sm leading-relaxed relative z-10">{step.desc}</p>
+                    <h3 className="text-white font-bold text-lg mb-2 font-display relative z-10">{step.title}</h3>
+                    <p className="text-white/60 text-sm leading-relaxed relative z-10">{step.desc}</p>
+                  </SpotlightCard>
                 </motion.div>
               );
             })}
@@ -764,7 +840,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
       <section className="py-16 px-6 overflow-x-hidden relative" style={{ background: 'linear-gradient(to bottom, #0B0710 0%, #100918 50%, #0B0710 100%)' }}>
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[500px] bg-[#5B23A8]/8 blur-[160px] rounded-full pointer-events-none" />
         <div className="max-w-5xl mx-auto relative z-10">
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-16 gap-6">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-6 gap-6">
             <motion.div initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, amount: 0.3 }} transition={{ duration: 0.7 }}>
               <span className="text-[10px] font-mono text-primary/70 tracking-[0.3em] uppercase block mb-3">05 — Portfolio</span>
               <h2 className="text-4xl sm:text-5xl font-black text-white leading-[0.9]" style={{ fontFamily: 'var(--font-display)' }}>
@@ -788,8 +864,8 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
               WebkitMaskSize: '100% 100%',
               maskRepeat: 'no-repeat',
               WebkitMaskRepeat: 'no-repeat',
-              backdropFilter: 'blur(16px) saturate(140%)',
-              WebkitBackdropFilter: 'blur(16px) saturate(140%)',
+              backdropFilter: 'blur(32px) saturate(140%)',
+              WebkitBackdropFilter: 'blur(32px) saturate(140%)',
               background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.015))',
             };
 
@@ -800,8 +876,8 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
               WebkitMaskSize: '100% 100%',
               maskRepeat: 'no-repeat',
               WebkitMaskRepeat: 'no-repeat',
-              backdropFilter: 'blur(8px)',
-              WebkitBackdropFilter: 'blur(8px)',
+              backdropFilter: 'blur(18px)',
+              WebkitBackdropFilter: 'blur(18px)',
               background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.005))',
             };
 
@@ -821,7 +897,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
                   style={{
                     height: isMobile ? '380px' : '480px',
                     perspective: '1600px',
-                    touchAction: 'none',
+                    touchAction: isMobile ? 'auto' : 'none',
                   }}
                 >
                   {/* Core 3D Scene Wrapper - Facing forward, tilts slightly on hover */}
@@ -956,7 +1032,15 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
                             <Globe className="w-9 h-9 opacity-25" style={{ color: proj.color }} />
                             <span className="absolute top-3 left-3 text-[9px] font-mono text-white/50">{proj.num}</span>
                           </div>
-                          <div className="p-3.5 h-[45%] flex flex-col justify-between" style={{ background: 'rgba(10,8,37,0.92)', backdropFilter: 'blur(5px)' }}>
+                          <div 
+                            className="p-3.5 h-[45%] flex flex-col justify-between transition-all duration-500" 
+                            style={{ 
+                              background: 'rgba(10,8,37,0.92)', 
+                              backdropFilter: 'blur(5px)',
+                              opacity: folderHovered ? 1 : 0,
+                              transform: folderHovered ? 'translateY(0)' : 'translateY(12px)',
+                            }}
+                          >
                             <div>
                               <p className="text-white font-bold text-xs sm:text-sm leading-tight font-display">{proj.name}</p>
                               <p className="text-white/40 text-[9px] mt-0.5 font-sans">{proj.type}</p>
@@ -1151,12 +1235,13 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
               aria-label="Join Galaxa community"
               className="relative flex items-center rounded-full p-1 cursor-pointer select-none hover:scale-[1.02] active:scale-[0.98] transition-transform duration-200"
               style={{
-                width: 'min(280px, calc(100vw - 3rem))',
-                height: '54px',
-                background: 'rgba(10, 8, 37, 0.65)',
-                backdropFilter: 'blur(20px)',
-                border: '1px solid rgba(255,255,255,0.08)',
-                boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.5), 0 1px 0 rgba(255,255,255,0.05)',
+                width: 'min(300px, calc(100vw - 3rem))',
+                height: '56px',
+                background: 'rgba(255, 255, 255, 0.042)',
+                backdropFilter: 'blur(22px) saturate(140%)',
+                WebkitBackdropFilter: 'blur(22px) saturate(140%)',
+                border: '1px solid rgba(181, 141, 255, 0.25)',
+                boxShadow: 'inset 0 1px 0 rgba(255, 255, 255, 0.09), 0 10px 30px rgba(0,0,0,0.5)',
               }}
               onClick={handleToggle}
             >
@@ -1166,17 +1251,18 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
                   position: 'absolute',
                   top: '5px',
                   left: '5px',
-                  width: '132px',
-                  height: '42px',
+                  width: '142px',
+                  height: '44px',
                   borderRadius: '999px',
-                  background: 'linear-gradient(135deg, #EC1E8E 0%, #FF7A45 100%)',
-                  boxShadow: '0 4px 18px rgba(236, 30, 142, 0.6), inset 0 1px 1px rgba(255,255,255,0.3)',
-                  transform: toggled ? 'translateX(133px)' : 'translateX(0px)',
+                  background: 'linear-gradient(135deg, rgba(236, 30, 142, 0.25) 0%, rgba(255, 122, 69, 0.25) 100%)',
+                  border: '1px solid rgba(236, 30, 142, 0.6)',
+                  boxShadow: '0 0 24px rgba(236, 30, 142, 0.45), inset 0 1px 0 rgba(255,255,255,0.2)',
+                  transform: toggled ? 'translateX(144px)' : 'translateX(0px)',
                   transition: '0.4s cubic-bezier(0.16, 1, 0.3, 1)',
                 }}
               />
-              <span className="relative z-10 flex-1 text-center text-xs font-bold uppercase tracking-wider font-mono transition-colors duration-300" style={{ color: toggled ? 'rgba(255,255,255,0.35)' : 'white' }}>Not yet</span>
-              <span className="relative z-10 flex-1 text-center text-xs font-bold uppercase tracking-wider font-mono transition-colors duration-300" style={{ color: toggled ? 'white' : 'rgba(255,255,255,0.35)' }}>Yes, I'm in</span>
+              <span className="relative z-10 flex-1 text-center text-xs font-bold uppercase tracking-wider transition-colors duration-300 font-display" style={{ color: toggled ? 'rgba(255,255,255,0.4)' : 'white' }}>Not yet</span>
+              <span className="relative z-10 flex-1 text-center text-xs font-bold uppercase tracking-wider transition-colors duration-300 font-display" style={{ color: toggled ? 'white' : 'rgba(255,255,255,0.4)' }}>Yes, I'm in</span>
             </div>
           </div>
         </motion.div>

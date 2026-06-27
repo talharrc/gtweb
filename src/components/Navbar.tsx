@@ -128,37 +128,16 @@ export default function Navbar({ onPageChange, dhakaTime, isDhakaOpen, currentUs
               <img alt="GalaxaTech" className="w-10 h-10 rounded-xl object-cover transition-transform duration-500 group-hover:scale-105" src={brandmarkLogo} referrerPolicy="no-referrer" />
               <span className="absolute -inset-1 rounded-xl bg-primary/20 blur opacity-0 group-hover:opacity-100 transition-opacity" />
             </div>
-            <span className="font-display text-lg sm:text-xl font-bold tracking-tight text-white group-hover:text-primary transition-colors">GalaxaTech</span>
+            <span className="font-display text-lg sm:text-xl font-bold tracking-tight text-white transition-all group-hover:bg-gradient-to-r group-hover:from-secondary group-hover:to-primary group-hover:text-transparent group-hover:bg-clip-text">GalaxaTech</span>
           </button>
 
           {/* Desktop Nav */}
           <div className="hidden md:flex items-center gap-6">
             <button
-              onClick={() => navTo('/')}
-              className={`text-sm font-medium transition-colors hover:text-primary ${currentPath === '/' ? 'text-primary font-bold border-b-2 border-primary pb-0.5' : 'text-white/80'}`}
+              onClick={() => navTo('/browse')}
+              className={`text-sm font-medium transition-colors hover:text-primary ${currentPath === '/browse' ? 'text-primary font-bold border-b-2 border-primary pb-0.5' : 'text-white/80'}`}
             >
-              Home
-            </button>
-
-            <button
-              onClick={() => navTo('/portfolio')}
-              className={`text-sm font-medium transition-colors hover:text-primary ${currentPath === '/portfolio' ? 'text-primary font-bold border-b-2 border-primary pb-0.5' : 'text-white/80'}`}
-            >
-              Portfolio
-            </button>
-
-            <button
-              onClick={() => navTo('/about')}
-              className={`text-sm font-medium transition-colors hover:text-primary ${currentPath === '/about' ? 'text-primary font-bold border-b-2 border-primary pb-0.5' : 'text-white/80'}`}
-            >
-              About
-            </button>
-
-            <button
-              onClick={() => navTo('/contact')}
-              className={`text-sm font-medium transition-colors hover:text-primary ${currentPath === '/contact' ? 'text-primary font-bold border-b-2 border-primary pb-0.5' : 'text-white/80'}`}
-            >
-              Contact
+              Browse
             </button>
 
             {/* Hubs Dropdown */}
@@ -173,25 +152,25 @@ export default function Navbar({ onPageChange, dhakaTime, isDhakaOpen, currentUs
                     initial={{ opacity: 0, y: -10, scale: 0.95 }}
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, y: -10, scale: 0.95 }}
-                    transition={{ duration: 0.25 }}
-                    className="absolute top-full left-1/2 -translate-x-1/2 mt-1 w-[460px] bg-white/[0.042] [backdrop-filter:blur(22px)_saturate(140%)] [-webkit-backdrop-filter:blur(22px)_saturate(140%)] border border-[rgba(181,141,255,0.20)] rounded-[24px] overflow-hidden shadow-[inset_0_1px_0_rgba(255,255,255,0.09),inset_0_0_28px_rgba(124,42,235,0.05),0_24px_60px_rgba(0,0,0,0.70)] z-50 grid grid-cols-5"
+                    transition={{ duration: 0.22 }}
+                    className="absolute top-full left-1/2 -translate-x-1/2 mt-1 w-[460px] bg-[#120E22]/95 border border-[rgba(181,141,255,0.28)] rounded-[24px] overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.85),inset_0_1px_0_rgba(255,255,255,0.12)] z-50 grid grid-cols-5 backdrop-blur-md"
                   >
                     <div className="col-span-3 p-5 flex flex-col gap-2.5">
                       <h4 className="text-[11px] uppercase tracking-wider text-primary font-bold mb-1 px-2.5">Galaxa Hubs</h4>
-                      <button onClick={() => goToHub('/hub/visitor')} className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-[rgba(124,42,235,0.08)] text-left transition-all group/item">
+                      <button onClick={() => goToHub('/space')} className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-[rgba(181,141,255,0.1)] text-left transition-all group/item">
                         <div className="w-8 h-8 rounded-lg bg-pink-500/20 flex items-center justify-center text-pink-400 group-hover/item:scale-110 transition-transform"><Compass className="w-4 h-4" /></div>
-                        <div><p className="text-xs font-bold text-white mb-0.5">Visitor's Hub</p><p className="text-[10px] text-white/50">Zero-code AI guides & prompts</p></div>
+                        <div><p className="text-xs font-bold text-white mb-0.5">Galaxa Space</p><p className="text-[10px] text-white/50">Generative utilities & prompt packs</p></div>
                       </button>
-                      <button onClick={() => goToHub('/hub/client')} className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-[rgba(124,42,235,0.08)] text-left transition-all group/item">
+                      <button onClick={() => goToHub('/hub/client')} className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-[rgba(181,141,255,0.1)] text-left transition-all group/item">
                         <div className="w-8 h-8 rounded-lg bg-cyan-500/20 flex items-center justify-center text-cyan-400 group-hover/item:scale-110 transition-transform"><Lock className="w-4 h-4" /></div>
-                        <div><p className="text-xs font-bold text-white mb-0.5">Client's Hub</p><p className="text-[10px] text-white/50">Agreements, metrics & live logs</p></div>
+                        <div><p className="text-xs font-bold text-white mb-0.5">Client Hub</p><p className="text-[10px] text-white/50">Project roadmap & live systems metrics</p></div>
                       </button>
-                      <button onClick={() => goToHub('/hub/builder')} className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-[rgba(124,42,235,0.08)] text-left transition-all group/item">
+                      <button onClick={() => goToHub('/hub/builder')} className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-[rgba(181,141,255,0.1)] text-left transition-all group/item">
                         <div className="w-8 h-8 rounded-lg bg-emerald-500/20 flex items-center justify-center text-emerald-400 group-hover/item:scale-110 transition-transform"><BookOpen className="w-4 h-4" /></div>
-                        <div><p className="text-xs font-bold text-white mb-0.5">Builder's Hub</p><p className="text-[10px] text-white/50">Project management & payments</p></div>
+                        <div><p className="text-xs font-bold text-white mb-0.5">Builder Hub</p><p className="text-[10px] text-white/50">Sprint boards & performance logs</p></div>
                       </button>
                     </div>
-                    <div className="col-span-2 bg-white/[0.04] p-5 flex flex-col justify-between border-l border-[rgba(181,141,255,0.15)] text-left">
+                    <div className="col-span-2 bg-white/[0.02] p-5 flex flex-col justify-between border-l border-[rgba(181,141,255,0.15)] text-left">
                       <div>
                         <h4 className="text-[10px] uppercase tracking-wider text-white/40 font-bold mb-2">Workspace HQ</h4>
                         <div className="flex items-center gap-1.5 mb-1.5">
@@ -222,8 +201,8 @@ export default function Navbar({ onPageChange, dhakaTime, isDhakaOpen, currentUs
                     initial={{ opacity: 0, y: -10, scale: 0.95 }}
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, y: -10, scale: 0.95 }}
-                    transition={{ duration: 0.25 }}
-                    className="absolute top-full left-1/2 -translate-x-1/2 mt-1 w-[500px] bg-white/[0.042] [backdrop-filter:blur(22px)_saturate(140%)] [-webkit-backdrop-filter:blur(22px)_saturate(140%)] border border-[rgba(181,141,255,0.20)] rounded-[24px] overflow-hidden shadow-[inset_0_1px_0_rgba(255,255,255,0.09),inset_0_0_28px_rgba(124,42,235,0.05),0_24px_60px_rgba(0,0,0,0.70)] z-50 p-5 grid grid-cols-2 gap-3"
+                    transition={{ duration: 0.22 }}
+                    className="absolute top-full left-1/2 -translate-x-1/2 mt-1 w-[500px] bg-[#120E22]/95 border border-[rgba(181,141,255,0.28)] rounded-[24px] overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.85),inset_0_1px_0_rgba(255,255,255,0.12)] z-50 p-5 grid grid-cols-2 gap-3 backdrop-blur-md"
                   >
                     <div className="col-span-2 mb-1">
                       <h4 className="text-[11px] uppercase tracking-wider text-secondary font-bold mb-1 px-2">Galaxa Expertise</h4>
@@ -232,7 +211,7 @@ export default function Navbar({ onPageChange, dhakaTime, isDhakaOpen, currentUs
                       <button
                         key={item.anchor}
                         onClick={() => navTo(`/services#${item.anchor}`)}
-                        className="flex items-start gap-3 p-3 rounded-2xl hover:bg-[rgba(124,42,235,0.08)] text-left transition-all group/exp"
+                        className="flex items-start gap-3 p-3 rounded-2xl hover:bg-[rgba(181,141,255,0.1)] text-left transition-all group/exp"
                       >
                         <div className={`w-8 h-8 rounded-xl flex items-center justify-center border group-hover/exp:scale-110 transition-transform flex-shrink-0 ${COLOR_MAP[item.color]}`}>
                           <item.icon className="w-4 h-4" />
@@ -255,7 +234,7 @@ export default function Navbar({ onPageChange, dhakaTime, isDhakaOpen, currentUs
             <button
               onClick={() => navTo('/audit')}
               aria-label="Book a free audit"
-              className="relative flex items-center w-10 hover:w-[160px] h-10 bg-gradient-to-tr from-secondary to-primary text-white rounded-full transition-all duration-500 overflow-hidden group focus:outline-none cursor-pointer shadow-[0_8px_20px_-6px_rgba(124,42,235,0.4)]"
+              className="relative flex items-center w-10 hover:w-[160px] h-10 bg-gradient-to-r from-primary to-secondary text-white rounded-full transition-all duration-500 overflow-hidden group focus:outline-none cursor-pointer shadow-[0_8px_20px_-6px_rgba(236,30,142,0.4)]"
             >
               <div className="w-10 h-10 flex items-center justify-center flex-shrink-0 group-hover:rotate-45 transition-transform duration-500">
                 <ArrowUpRight className="w-4 h-4 text-white" />
@@ -283,32 +262,19 @@ export default function Navbar({ onPageChange, dhakaTime, isDhakaOpen, currentUs
                     initial={{ opacity: 0, scale: 0.9, y: 15 }}
                     animate={{ opacity: 1, scale: 1, y: 0 }}
                     exit={{ opacity: 0, scale: 0.9, y: 15 }}
-                    transition={{ duration: 0.25 }}
-                    className="absolute right-0 top-full mt-3 w-64 bg-white/[0.042] [backdrop-filter:blur(22px)_saturate(140%)] [-webkit-backdrop-filter:blur(22px)_saturate(140%)] border border-[rgba(181,141,255,0.20)] rounded-[18px] overflow-hidden shadow-[inset_0_1px_0_rgba(255,255,255,0.09),inset_0_0_28px_rgba(124,42,235,0.05),0_20px_60px_rgba(0,0,0,0.70)] z-50 text-left"
+                    transition={{ duration: 0.22 }}
+                    className="absolute right-0 top-full mt-3 w-64 bg-[#120E22]/95 border border-[rgba(181,141,255,0.28)] rounded-[18px] overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.85),inset_0_1px_0_rgba(255,255,255,0.12)] z-50 text-left backdrop-blur-md"
                   >
-                    {/* User profile (if signed in) */}
-                    {currentUser && (
-                      <div className="px-5 py-4 border-b border-[rgba(181,141,255,0.15)] bg-white/[0.03]">
-                        <div className="flex items-center gap-2.5 mb-2.5">
-                          {currentUser.photoURL ? (
-                            <img src={currentUser.photoURL} alt={currentUser.displayName || 'Profile'} className="w-8 h-8 rounded-full border border-primary/40 object-cover" referrerPolicy="no-referrer" />
-                          ) : (
-                            <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-primary to-secondary flex items-center justify-center text-white text-xs font-bold font-mono">
-                              {currentUser.email ? currentUser.email[0].toUpperCase() : 'U'}
-                            </div>
-                          )}
-                          <div className="overflow-hidden">
-                            <p className="text-xs font-bold text-white truncate">{currentUser.displayName || 'Galaxa User'}</p>
-                            <p className="text-[10px] text-white/50 truncate">{currentUser.email}</p>
-                          </div>
-                        </div>
-                        <button onClick={signOut} className="w-full flex items-center justify-center gap-1.5 py-1.5 px-3 bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20 rounded-lg text-[10px] font-mono font-bold transition-all cursor-pointer focus:outline-none">
-                          <LogOut className="w-3.5 h-3.5" /> Sign Out
-                        </button>
-                      </div>
-                    )}
+                    {/* About and Contact listed here in three dots menu */}
+                    <div className="px-5 py-3.5 border-b border-[rgba(181,141,255,0.15)] flex flex-col gap-1.5">
+                      <button onClick={() => navTo('/about')} className="flex items-center gap-3 py-1.5 text-white/70 hover:text-white transition-all text-xs font-semibold text-left w-full focus:outline-none">
+                        <Users className="w-3.5 h-3.5 text-primary" /> About Us
+                      </button>
+                      <button onClick={() => navTo('/contact')} className="flex items-center gap-3 py-1.5 text-white/70 hover:text-white transition-all text-xs font-semibold text-left w-full focus:outline-none">
+                        <Mail className="w-3.5 h-3.5 text-secondary" /> Contact Agency
+                      </button>
+                    </div>
 
-                    {/* Desktop-only: Login/signup + Profile + social links */}
                     <div className="hidden md:block">
                       <div className="px-5 py-3 border-b border-[rgba(181,141,255,0.15)]">
                         {isSignedIn && (
@@ -344,12 +310,13 @@ export default function Navbar({ onPageChange, dhakaTime, isDhakaOpen, currentUs
                       <div className="flex flex-col border-b border-[rgba(181,141,255,0.15)] pb-2 pt-1">
                         {[
                           { label: 'Home', path: '/', icon: Home },
+                          { label: 'Browse Store', path: '/browse', icon: Compass },
                           { label: 'Services', path: '/services', icon: Briefcase },
                           { label: 'Portfolio', path: '/portfolio', icon: Briefcase },
                           { label: 'About', path: '/about', icon: Users },
                           { label: 'Contact', path: '/contact', icon: Mail },
                         ].map(({ label, path, icon: Icon }) => (
-                          <button key={path} onClick={() => navTo(path)} className={`px-5 py-3 hover:bg-[rgba(124,42,235,0.08)] text-sm font-semibold flex items-center gap-3 cursor-pointer text-left ${currentPath === path ? 'text-primary' : 'text-white/80'}`}>
+                          <button key={path} onClick={() => navTo(path)} className={`px-5 py-3 hover:bg-[rgba(181,141,255,0.1)] text-sm font-semibold flex items-center gap-3 cursor-pointer text-left ${currentPath === path ? 'text-primary' : 'text-white/80'}`}>
                             <Icon className="w-4 h-4" /> {label}
                           </button>
                         ))}
@@ -358,7 +325,7 @@ export default function Navbar({ onPageChange, dhakaTime, isDhakaOpen, currentUs
                       <div className="px-5 py-3 border-b border-[rgba(181,141,255,0.15)]">
                         <span className="text-[9px] font-bold text-primary tracking-widest uppercase font-mono block mb-2">Hubs</span>
                         <div className="flex flex-col gap-1">
-                          <button onClick={() => goToHub('/hub/visitor')} className="py-2.5 text-white/75 hover:text-white text-sm font-semibold flex items-center gap-3"><Compass className="w-4 h-4 text-pink-400" /> Visitor Hub</button>
+                          <button onClick={() => goToHub('/space')} className="py-2.5 text-white/75 hover:text-white text-sm font-semibold flex items-center gap-3"><Compass className="w-4 h-4 text-pink-400" /> Galaxa Space</button>
                           <button onClick={() => goToHub('/hub/client')} className="py-2.5 text-white/75 hover:text-white text-sm font-semibold flex items-center gap-3"><Lock className="w-4 h-4 text-cyan-400" /> Client Hub</button>
                           <button onClick={() => goToHub('/hub/builder')} className="py-2.5 text-white/75 hover:text-white text-sm font-semibold flex items-center gap-3"><BookOpen className="w-4 h-4 text-emerald-400" /> Builder Hub</button>
                         </div>

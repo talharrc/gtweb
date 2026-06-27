@@ -10,6 +10,7 @@ import PortfolioCaseStudy from './components/PortfolioCaseStudy';
 import AboutView from './components/AboutView';
 import ContactView from './components/ContactView';
 import AuditView from './components/AuditView';
+import BrowseView from './components/BrowseView';
 import GBPView from './components/GBPView';
 import PrivacyView from './components/PrivacyView';
 import TermsView from './components/TermsView';
@@ -41,7 +42,7 @@ const PAGE_ROUTES: Record<PageType, string> = {
   gbp: '/gbp',
   privacy: '/privacy',
   terms: '/terms',
-  'visitor-hub': '/hub/visitor',
+  'visitor-hub': '/space',
   'client-hub': '/hub/client',
   'builders-program': '/gbp',
 };
@@ -52,6 +53,7 @@ function HubAccessDenied({ hubRole }: { hubRole: 'client' | 'builder' }) {
   const accentColor = isClient ? 'text-cyan-400' : 'text-emerald-400';
   const accentBg = isClient ? 'bg-cyan-500/15' : 'bg-emerald-500/15';
   const accentBorder = isClient ? 'border-cyan-500/30' : 'border-emerald-500/30';
+  const navigate = useNavigate();
 
   return (
     <div className="min-h-screen flex items-center justify-center px-6">
@@ -60,11 +62,21 @@ function HubAccessDenied({ hubRole }: { hubRole: 'client' | 'builder' }) {
           <Link className={`w-5 h-5 ${accentColor}`} />
         </div>
         <h2 className="text-white font-bold text-xl mb-2">Enter your invite link</h2>
-        <p className="text-white/50 text-sm mb-2">
+        <p className="text-white/50 text-sm mb-4">
           Access to the {isClient ? 'Client' : 'Builder'} Hub is by invite only.
         </p>
-        <p className="text-white/30 text-xs">
-          Check your email for the invite link sent by GalaxaTech, or contact us to get one.
+        
+        <div className="flex flex-col gap-2.5 mb-5">
+          <button 
+            onClick={() => navigate(`/hub/${hubRole}?demo=true`)}
+            className="w-full py-2.5 bg-gradient-to-r from-primary to-secondary text-white font-bold text-xs rounded-xl uppercase tracking-wider hover:opacity-90 transition-all cursor-pointer"
+          >
+            View Demo Dashboard
+          </button>
+        </div>
+
+        <p className="text-white/30 text-[10px] leading-relaxed">
+          Check your email for the invite link sent by GalaxaTech, or contact us to request sandbox credentials.
         </p>
       </div>
     </div>
@@ -74,6 +86,7 @@ function HubAccessDenied({ hubRole }: { hubRole: 'client' | 'builder' }) {
 // Route guard for hub and admin routes
 function RequireRole({ requiredRole, children }: { requiredRole: UserRole | 'admin'; children: ReactNode }) {
   const { isLoading, isSignedIn, role } = useAuth();
+  const location = useLocation();
 
   if (isLoading) {
     return (
@@ -81,6 +94,12 @@ function RequireRole({ requiredRole, children }: { requiredRole: UserRole | 'adm
         <Loader2 className="w-8 h-8 text-primary animate-spin" />
       </div>
     );
+  }
+
+  // Allow demo bypass
+  const queryParams = new URLSearchParams(location.search);
+  if (queryParams.get('demo') === 'true') {
+    return <>{children}</>;
   }
 
   // Admin gate: show login form instead of redirecting
@@ -155,7 +174,7 @@ function AppInner() {
   const location = useLocation();
   const navigate = useNavigate();
   const { email, userProfile } = useAuth();
-  const isHubRoute = location.pathname.startsWith('/hub') || location.pathname.startsWith('/admin');
+  const isHubRoute = location.pathname.startsWith('/hub') || location.pathname.startsWith('/admin') || location.pathname.startsWith('/space');
 
   const [dhakaTime, setDhakaTime] = useState<string>('Dhaka HQ');
   const [isDhakaOpen, setIsDhakaOpen] = useState<boolean>(true);
@@ -191,11 +210,8 @@ function AppInner() {
         <ScrollToTop />
         <Routes>
           <Route path="/hub/invite/:token" element={<InviteLandingPage />} />
-          <Route path="/hub/visitor/*" element={
-            <RequireRole requiredRole="visitor">
-              <VisitorHubView />
-            </RequireRole>
-          } />
+          <Route path="/hub/visitor/*" element={<VisitorHubView />} />
+          <Route path="/space/*" element={<VisitorHubView />} />
           <Route path="/hub/client/*" element={
             <RequireRole requiredRole="client">
               <ClientHubView />
@@ -240,6 +256,7 @@ function AppInner() {
           <Route path="/about"             element={<AboutView />} />
           <Route path="/contact"           element={<ContactView />} />
           <Route path="/audit"             element={<AuditView />} />
+          <Route path="/browse"            element={<BrowseView />} />
           <Route path="/gbp"               element={<GBPView />} />
           <Route path="/builders-program"  element={<Navigate to="/gbp" replace />} />
           <Route path="/privacy"           element={<PrivacyView />} />
