@@ -3,6 +3,7 @@ import { Lock, Loader2, Eye, EyeOff } from 'lucide-react';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../../lib/firebase';
 import { useAuth } from '../../context/AuthContext';
+import { AUTH_DISABLED } from '../../config';
 import brandmarkLogo from '../../assets/images/logo.png';
 
 interface CredentialsLoginGuardProps {
@@ -17,6 +18,8 @@ export default function CredentialsLoginGuard({ role, children }: CredentialsLog
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+
+  if (AUTH_DISABLED) return <>{children}</>;
 
   if (isLoading) {
     return (

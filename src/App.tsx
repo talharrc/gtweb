@@ -25,6 +25,7 @@ import { AuthProvider, useAuth } from './context/AuthContext';
 import { DevRoleProvider } from './context/DevRoleContext';
 import DevRoleSwitcher from './components/dev/DevRoleSwitcher';
 import { PageType, UserRole } from './types';
+import { AUTH_DISABLED } from './config';
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -53,6 +54,7 @@ function RequireRole({ requiredRole, children }: { requiredRole: UserRole | 'adm
   const navigate = useNavigate();
 
   useEffect(() => {
+    if (AUTH_DISABLED) return;
     if (isLoading) return;
 
     if (!isSignedIn) {
@@ -70,6 +72,8 @@ function RequireRole({ requiredRole, children }: { requiredRole: UserRole | 'adm
       navigate('/', { replace: true });
     }
   }, [isLoading, isSignedIn, role, requiredRole]);
+
+  if (AUTH_DISABLED) return <>{children}</>;
 
   if (isLoading) {
     return (
