@@ -5,7 +5,7 @@ import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '../lib/firebase';
 import { Mail, Phone, MapPin, Facebook, Twitter, CheckCircle, MessageCircle } from 'lucide-react';
 
-const SUBJECTS = ['General Inquiry', 'Partnership', 'Careers', 'Other'];
+const SUBJECTS = ['Project Request', 'Free Audit', 'Partnership', 'Careers', 'General Inquiry', 'Other'];
 
 export default function ContactView() {
   const location = useLocation();

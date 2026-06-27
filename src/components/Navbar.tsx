@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
-import brandmarkLogo from '../assets/images/gt-logo.jpeg';
+import brandmarkLogo from '../assets/images/gt-logo-new.svg';
 import {
   ChevronDown,
   ArrowUpRight,
@@ -138,6 +138,27 @@ export default function Navbar({ onPageChange, dhakaTime, isDhakaOpen, currentUs
               className={`text-sm font-medium transition-colors hover:text-primary ${currentPath === '/' ? 'text-primary font-bold border-b-2 border-primary pb-0.5' : 'text-white/80'}`}
             >
               Home
+            </button>
+
+            <button
+              onClick={() => navTo('/portfolio')}
+              className={`text-sm font-medium transition-colors hover:text-primary ${currentPath === '/portfolio' ? 'text-primary font-bold border-b-2 border-primary pb-0.5' : 'text-white/80'}`}
+            >
+              Portfolio
+            </button>
+
+            <button
+              onClick={() => navTo('/about')}
+              className={`text-sm font-medium transition-colors hover:text-primary ${currentPath === '/about' ? 'text-primary font-bold border-b-2 border-primary pb-0.5' : 'text-white/80'}`}
+            >
+              About
+            </button>
+
+            <button
+              onClick={() => navTo('/contact')}
+              className={`text-sm font-medium transition-colors hover:text-primary ${currentPath === '/contact' ? 'text-primary font-bold border-b-2 border-primary pb-0.5' : 'text-white/80'}`}
+            >
+              Contact
             </button>
 
             {/* Hubs Dropdown */}

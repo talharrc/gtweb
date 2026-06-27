@@ -92,7 +92,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
 
   const [wordIndex, setWordIndex] = useState(0);
   const [buildMins, setBuildMins] = useState(42);
-  const [activeFAQ, setActiveFAQ] = useState<number | null>(null);
+  const [activeFAQ, setActiveFAQ] = useState<number | null>(0);
   const [activeIndex, setActiveIndex] = useState(0);
   const [hoveredCarouselIndex, setHoveredCarouselIndex] = useState<number | null>(null);
   const [dragOffset, setDragOffset] = useState(0);
@@ -258,18 +258,25 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
               </AnimatePresence>
             </span>
           </motion.h1>
-          <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.2, ease: [0.16,1,0.3,1] }} className="text-[15px] sm:text-lg text-white/55 max-w-xl mx-auto mb-8 leading-relaxed font-sans tracking-wide">
-            Give us 5 minutes. We'll show you exactly what your brand is missing online — for free.
+          <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.2, ease: [0.16,1,0.3,1] }} className="text-base sm:text-lg text-white/70 max-w-2xl mx-auto mb-10 leading-relaxed font-sans">
+            Tell us about your business in 5 minutes — we'll map out exactly how to grow your digital presence.
           </motion.p>
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.3, ease: [0.16,1,0.3,1] }} className="flex justify-center px-4 sm:px-0">
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.3, ease: [0.16,1,0.3,1] }} className="flex flex-col sm:flex-row items-center justify-center gap-3 px-4 sm:px-0">
             <button
               onClick={() => navigate('/audit')}
-              className="group flex items-center gap-4 text-white hover:text-white font-bold py-3.5 px-8 rounded-full transition-all duration-500 cursor-pointer hover:scale-[1.03] active:scale-[0.98] max-w-[280px] w-full sm:w-auto justify-center shadow-xl glass-card-premium spotlight-sweep border border-white/10"
+              className="group flex items-center gap-4 text-white hover:text-white font-bold py-3.5 px-8 rounded-full transition-all duration-500 cursor-pointer hover:scale-[1.03] active:scale-[0.98] w-full sm:w-auto justify-center shadow-xl glass-card-premium spotlight-sweep border border-white/10"
             >
               <span className="w-9 h-9 primary-gradient text-white rounded-full flex items-center justify-center group-hover:rotate-45 transition-transform duration-500 flex-shrink-0">
                 <ArrowUpRight className="w-4.5 h-4.5" />
               </span>
               <span className="text-sm font-semibold tracking-wider uppercase font-mono">Book an Audit</span>
+            </button>
+            <button
+              onClick={() => navigate('/portfolio')}
+              className="group flex items-center gap-3 text-white/70 hover:text-white font-semibold py-3.5 px-7 rounded-full transition-all duration-300 cursor-pointer hover:scale-[1.02] active:scale-[0.98] w-full sm:w-auto justify-center border border-white/15 hover:border-white/30 backdrop-blur-sm"
+            >
+              <span className="text-sm tracking-wide">See Our Work</span>
+              <ChevronRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
             </button>
           </motion.div>
 
