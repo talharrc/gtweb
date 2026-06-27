@@ -238,7 +238,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
 
         <div className="max-w-5xl mx-auto px-4 sm:px-6 text-center relative z-10 pt-8 sm:pt-12">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, ease: [0.16,1,0.3,1] }}>
-            <div className="inline-flex items-center gap-2 sm:gap-2.5 bg-white/[0.08] backdrop-blur-md rounded-full px-4 sm:px-5 py-2 sm:py-2.5 mb-8 border border-red-500/20 shadow-[0_0_15px_rgba(239,68,68,0.1)] max-w-[92vw]">
+            <div className="eyebrow-badge rounded-full px-4 sm:px-5 py-2 sm:py-2.5 mb-8 border border-red-500/20 shadow-[0_0_15px_rgba(239,68,68,0.1)] max-w-[92vw]">
               <span className="w-2 h-2 rounded-full bg-red-500 dot-pulse-glow flex-shrink-0" />
               <span className="text-[9px] sm:text-[11px] font-mono font-bold tracking-wide sm:tracking-widest text-white uppercase leading-tight">
                 <span className="hidden sm:inline">AUTONOMOUS OPTIMIZATION • AGENTS ACTIVE • </span>

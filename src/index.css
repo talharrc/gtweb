@@ -1,10 +1,9 @@
-@import url('https://api.fontshare.com/v2/css?f%5B%5D=satoshi@300,400,500,700,900&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Noto+Sans+Bengali:wght@500;700&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+Bengali:wght@500;700&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Sora:wght@400;600;700;800&display=swap');
 @import "tailwindcss";
 
 @theme {
-  --font-sans: "Satoshi", "Segoe UI", ui-sans-serif, system-ui, sans-serif;
-  --font-display: "Satoshi", "Segoe UI", sans-serif;
+  --font-sans: "Inter", "Segoe UI", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Sora", "Segoe UI", sans-serif;
   --font-serif: "Playfair Display", Georgia, serif;
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 
@@ -28,6 +27,8 @@
 
 :root {
   color-scheme: dark;
+  --lavender: #B58DFF;
+  --blue: #78D5FF;
 }
 
 body {
@@ -58,10 +59,10 @@ body {
 
 /* Glass Panels — brand kit spec */
 .glass-card {
-  background: rgba(255,255,255,0.05);
-  backdrop-filter: blur(22px) saturate(140%);
-  -webkit-backdrop-filter: blur(22px) saturate(140%);
+  background: linear-gradient(160deg, rgba(255,255,255,0.065), rgba(255,255,255,0.018));
   border: 1px solid rgba(255,255,255,0.12);
+  backdrop-filter: blur(13px);
+  -webkit-backdrop-filter: blur(13px);
   border-radius: 18px;
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,0.09),
@@ -106,11 +107,23 @@ body {
   border: 1px solid rgba(255,255,255,0.12);
 }
 
+/* Eyebrow Badge Pattern */
+.eyebrow-badge {
+  display: inline-flex;
+  align-items: center;
+  background: linear-gradient(160deg, rgba(255,255,255,0.065), rgba(255,255,255,0.018));
+  border: 1px solid rgba(255,255,255,0.12);
+  backdrop-filter: blur(13px);
+  -webkit-backdrop-filter: blur(13px);
+}
+
 /* Text gradients */
-.text-gradient {
-  background: linear-gradient(135deg, #7C2AEB 0%, #B58DFF 100%);
+.text-grad, .text-gradient {
+  background: linear-gradient(90deg, var(--lavender), var(--blue));
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
+  color: transparent;
 }
 
 .text-gradient-cyan {
