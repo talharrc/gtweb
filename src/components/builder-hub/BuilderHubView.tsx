@@ -1,4 +1,4 @@
-import { useState, useEffect, FormEvent } from 'react';
+import React, { useState, useEffect, FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   collection, query, where, onSnapshot, addDoc, serverTimestamp, Timestamp,
@@ -228,7 +228,7 @@ export default function BuilderHubView() {
               <p className="text-white/40 text-sm mt-0.5">{projects.length} project{projects.length !== 1 ? 's' : ''} assigned</p>
             </div>
             {projects.map(p => (
-              <ProjectCard key={p.id} project={p} builderEmail={email!} />
+              <React.Fragment key={p.id}><ProjectCard project={p} builderEmail={email!} /></React.Fragment>
             ))}
           </div>
         )}

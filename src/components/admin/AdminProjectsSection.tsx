@@ -127,7 +127,7 @@ export default function AdminProjectsSection() {
         // Keep legacy fields empty/compat
         clientUid: '',
         builderUids: [],
-        clientInfo: { email: form.clientEmail.trim().toLowerCase() },
+        clientInfo: { name: '', email: form.clientEmail.trim().toLowerCase() },
       };
 
       if (editingId) {
