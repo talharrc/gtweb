@@ -24,12 +24,12 @@ interface HomeViewProps {
 const TYPEWRITER_WORDS = ['Website Presence', 'Social Media Engagement', 'Client conversion'];
 
 const SERVICES = [
-  { num: '01', icon: Laptop,         label: 'Web Development',         desc: 'Fast, secure, and scalable websites built for performance and growth.',              anchor: 'web-development',    color: '#78D5FF' },
-  { num: '02', icon: Smartphone,     label: 'App Development',         desc: 'High-performance mobile and web apps tailored to user needs and business goals.',    anchor: 'app-development',    color: '#B58DFF' },
-  { num: '03', icon: MessageCircle,  label: 'Social Media & Content',  desc: 'Engaging content and social strategies that build brand presence and loyalty.',      anchor: 'social-media',       color: '#7C2AEB' },
-  { num: '04', icon: Cpu,            label: 'AI & Automation',         desc: 'Intelligent automation that streamlines workflows and boosts productivity.',          anchor: 'ai-automation',      color: '#7C2AEB' },
-  { num: '05', icon: Brush,          label: 'Brand Identity & Design', desc: 'Distinctive visuals and brand experiences that leave a lasting impression.',         anchor: 'brand-identity',     color: '#78D5FF' },
-  { num: '06', icon: Workflow,       label: 'Systems Consulting',      desc: 'Strategic guidance and system architectures that drive sustainable growth.',         anchor: 'systems-consulting', color: '#B58DFF' },
+  { num: '01', icon: Laptop,         label: 'Web Development',         desc: 'Fast, secure, and scalable websites built for performance and growth.',              anchor: 'web-development',    color: '#FF7A45' },
+  { num: '02', icon: Smartphone,     label: 'App Development',         desc: 'High-performance mobile and web apps tailored to user needs and business goals.',    anchor: 'app-development',    color: '#EC1E8E' },
+  { num: '03', icon: MessageCircle,  label: 'Social Media & Content',  desc: 'Engaging content and social strategies that build brand presence and loyalty.',      anchor: 'social-media',       color: '#5B23A8' },
+  { num: '04', icon: Cpu,            label: 'AI & Automation',         desc: 'Intelligent automation that streamlines workflows and boosts productivity.',          anchor: 'ai-automation',      color: '#EC1E8E' },
+  { num: '05', icon: Brush,          label: 'Brand Identity & Design', desc: 'Distinctive visuals and brand experiences that leave a lasting impression.',         anchor: 'brand-identity',     color: '#FF7A45' },
+  { num: '06', icon: Workflow,       label: 'Systems Consulting',      desc: 'Strategic guidance and system architectures that drive sustainable growth.',         anchor: 'systems-consulting', color: '#5B23A8' },
 ];
 
 const PROCESS_STEPS = [
@@ -40,9 +40,9 @@ const PROCESS_STEPS = [
 ];
 
 const PROJECTS = [
-  { slug: 'harmans-trading',  num: '01', name: 'Harmans Trading',  type: 'Trading Platform',      color: '#78D5FF', bg: 'linear-gradient(135deg,rgba(120,213,255,0.25) 0%,rgba(124,42,235,0.3) 60%,rgba(0,0,0,0.6) 100%)' },
-  { slug: 'sunnah-grandeur',  num: '02', name: 'Sunnah Grandeur',  type: 'E-Commerce Platform',   color: '#B58DFF', bg: 'linear-gradient(135deg,rgba(124,42,235,0.3) 0%,rgba(181,141,255,0.2) 60%,rgba(0,0,0,0.6) 100%)' },
-  { slug: 'salfas-bazar',     num: '03', name: 'Salfas Bazar',     type: 'Organic Food Platform', color: '#78FFB5', bg: 'linear-gradient(135deg,rgba(0,180,120,0.2) 0%,rgba(124,42,235,0.25) 60%,rgba(0,0,0,0.6) 100%)' },
+  { slug: 'harmans-trading',  num: '01', name: 'Harmans Trading',  type: 'Trading Platform',      color: '#FF7A45', bg: 'linear-gradient(135deg,rgba(255,122,69,0.28) 0%,rgba(236,30,142,0.25) 60%,rgba(0,0,0,0.6) 100%)' },
+  { slug: 'sunnah-grandeur',  num: '02', name: 'Sunnah Grandeur',  type: 'E-Commerce Platform',   color: '#EC1E8E', bg: 'linear-gradient(135deg,rgba(236,30,142,0.3) 0%,rgba(91,35,168,0.25) 60%,rgba(0,0,0,0.6) 100%)' },
+  { slug: 'salfas-bazar',     num: '03', name: 'Salfas Bazar',     type: 'Organic Food Platform', color: '#5B23A8', bg: 'linear-gradient(135deg,rgba(91,35,168,0.3) 0%,rgba(236,30,142,0.2) 60%,rgba(0,0,0,0.6) 100%)' },
 ];
 
 const FAQS = [
@@ -77,7 +77,7 @@ const GLASS_STYLE: React.CSSProperties = {
   WebkitBackdropFilter: 'blur(22px) saturate(140%)',
   border: '1px solid rgba(255,255,255,0.15)',
   borderRadius: '20px',
-  boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.10), inset 0 0 28px rgba(124,42,235,0.05), 0 20px 60px rgba(0,0,0,0.50)',
+  boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.10), inset 0 0 28px rgba(236,30,142,0.05), 0 20px 60px rgba(0,0,0,0.50)',
 };
 
 function getCarouselOffset(i: number, active: number, total: number): number {
@@ -189,7 +189,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
   const lineProgress = maxIlluminated >= 0 ? (maxIlluminated / (PROCESS_STEPS.length - 1)) * 100 : 0;
 
   return (
-    <div className="relative bg-[#05030F]">
+    <div className="relative bg-[#0B0710]">
       <Helmet>
         <title>GalaxaTech — Ecosystems, Optimized</title>
         <meta name="description" content="GalaxaTech is a systems-driven creative tech agency from Dhaka, building digital ecosystems for brands worldwide." />
@@ -206,7 +206,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
           50%      { box-shadow: 0 0 14px #ef4444, 0 0 28px rgba(239,68,68,0.65); opacity: 0.6; }
         }
         .dot-pulse-glow { animation: dot-pulse-glow 2s ease-in-out infinite; }
-        .faq-item:hover { box-shadow: 0 0 30px rgba(124,42,235,0.2), inset 0 1px 0 rgba(255,255,255,0.08); }
+        .faq-item:hover { box-shadow: 0 0 30px rgba(236,30,142,0.2), inset 0 1px 0 rgba(255,255,255,0.08); }
         .modal-backdrop { animation: fadeIn 0.2s ease; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         @keyframes slideUp { from { opacity: 0; transform: translateY(24px) scale(0.97); } to { opacity: 1; transform: translateY(0) scale(1); } }
@@ -215,10 +215,10 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
 
       {/* ── Hero ─────────────────────────────────────────────────────────────── */}
       <section className="relative min-h-[82vh] sm:min-h-[92vh] flex flex-col items-center justify-center pt-28 pb-4 sm:pb-12 overflow-hidden">
-        <div className="absolute inset-0 z-0 select-none overflow-hidden bg-[#05030F]">
+        <div className="absolute inset-0 z-0 select-none overflow-hidden bg-[#0B0710]">
           <img
             alt="GalaxaTech Hero"
-            className="w-full h-full object-cover object-center opacity-70 pointer-events-none"
+            className="w-full h-full object-cover object-center opacity-60 pointer-events-none"
             style={{
               maskImage: 'radial-gradient(ellipse at 50% 40%, rgba(0,0,0,1) 30%, rgba(0,0,0,0.6) 65%, rgba(0,0,0,0) 100%)',
               WebkitMaskImage: 'radial-gradient(ellipse at 50% 40%, rgba(0,0,0,1) 30%, rgba(0,0,0,0.6) 65%, rgba(0,0,0,0) 100%)',
@@ -226,15 +226,16 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
             src={heroLaptopDashboard}
             referrerPolicy="no-referrer"
           />
-          {/* Subtle dark-to-purple tint */}
-          <div className="absolute inset-0 bg-[#05030F]/40 pointer-events-none" />
-          <div className="absolute inset-0 bg-gradient-to-b from-[#05030F]/70 via-transparent to-transparent pointer-events-none" />
-          <div className="absolute inset-x-0 bottom-0 h-2/5 bg-gradient-to-t from-[#05030F] via-[#05030F]/60 to-transparent pointer-events-none" />
-          {/* Ambient purple glows */}
-          <div className="absolute top-1/3 left-1/4 -translate-y-1/2 -translate-x-1/2 w-[500px] h-[500px] bg-[#7C2AEB]/10 blur-[120px] rounded-full pointer-events-none" />
-          <div className="absolute top-1/3 right-1/4 -translate-y-1/2 translate-x-1/2 w-[400px] h-[400px] bg-[#7C2AEB]/8 blur-[100px] rounded-full pointer-events-none" />
+          {/* Dark base tint */}
+          <div className="absolute inset-0 bg-[#0B0710]/45 pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-to-b from-[#0B0710]/70 via-transparent to-transparent pointer-events-none" />
+          <div className="absolute inset-x-0 bottom-0 h-2/5 bg-gradient-to-t from-[#0B0710] via-[#0B0710]/60 to-transparent pointer-events-none" />
+          {/* Atmospheric pink/coral blob glows */}
+          <div className="absolute top-1/3 left-1/4 -translate-y-1/2 -translate-x-1/2 w-[560px] h-[560px] bg-[#EC1E8E]/12 blur-[130px] rounded-full pointer-events-none" />
+          <div className="absolute top-1/2 right-1/4 -translate-y-1/2 translate-x-1/2 w-[420px] h-[420px] bg-[#FF7A45]/10 blur-[110px] rounded-full pointer-events-none" />
+          <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-[#5B23A8]/12 blur-[100px] rounded-full pointer-events-none" />
           {/* Diagonal spotlight beam */}
-          <div className="absolute top-0 right-0 w-[45vw] h-full bg-gradient-to-bl from-white/[0.025] via-transparent to-transparent pointer-events-none" style={{ clipPath: 'polygon(100% 0, 30% 0, 100% 100%)' }} />
+          <div className="absolute top-0 right-0 w-[45vw] h-full bg-gradient-to-bl from-white/[0.02] via-transparent to-transparent pointer-events-none" style={{ clipPath: 'polygon(100% 0, 30% 0, 100% 100%)' }} />
         </div>
 
         <div className="max-w-5xl mx-auto px-4 sm:px-6 text-center relative z-10 pt-8 sm:pt-12">
@@ -249,7 +250,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
             </div>
           </motion.div>
           <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.1, ease: [0.16,1,0.3,1] }} className="font-display text-[2rem] sm:text-[3.25rem] md:text-[5.5rem] font-extrabold tracking-[-0.03em] text-white mb-4 leading-[1.06] drop-shadow-[0_4px_24px_rgba(0,0,0,0.8)]">
-            Assure your brand's <br className="hidden md:block" />
+            Assure your <span className="pill-word">brand's</span> <br className="hidden md:block" />
             <span className="font-serif italic font-normal typewriter-container block min-h-[1.2em] mt-3 pb-1 overflow-hidden">
               <AnimatePresence mode="wait">
                 <motion.span key={wordIndex} initial={{ y: 35, opacity: 0, filter: 'blur(5px)' }} animate={{ y: 0, opacity: 1, filter: 'blur(0px)' }} exit={{ y: -35, opacity: 0, filter: 'blur(5px)' }} transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }} className="inline-block text-gradient">
@@ -309,9 +310,12 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
       </section>
 
       {/* ── Global Presence ──────────────────────────────────────────────────── */}
-      <section className="relative py-16 px-6 overflow-hidden" style={{ background: '#0A0717' }}>
-        <div className="absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-[#05030F] to-transparent pointer-events-none z-10" />
-        <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-[#05030F] to-transparent pointer-events-none z-10" />
+      <section className="relative py-16 px-6 overflow-hidden" style={{ background: '#100918' }}>
+        <div className="absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-[#0B0710] to-transparent pointer-events-none z-10" />
+        <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-[#0B0710] to-transparent pointer-events-none z-10" />
+        {/* Atmospheric blobs */}
+        <div className="absolute top-1/2 right-0 translate-x-1/3 -translate-y-1/2 w-[450px] h-[450px] bg-[#FF7A45]/8 blur-[120px] rounded-full pointer-events-none" />
+        <div className="absolute top-0 left-1/4 -translate-y-1/2 w-[300px] h-[300px] bg-[#EC1E8E]/7 blur-[100px] rounded-full pointer-events-none" />
         <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.6 }} className="relative z-20">
           <div className="max-w-5xl mx-auto mb-12">
             <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6">
@@ -319,8 +323,8 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
                 <span className="text-[10px] font-mono text-primary/40 tracking-[0.3em] uppercase block mb-3">00 — Global Reach</span>
                 <h2 className="text-4xl sm:text-5xl font-black text-white leading-[0.9]" style={{ fontFamily: 'var(--font-display)' }}>
                   Clients<br />
-                  <span style={{ WebkitTextStroke: '1.5px rgba(181,141,255,0.55)', color: 'transparent' }}>Across</span><br />
-                  <span style={{ color: '#B58DFF' }}>6 Nations.</span>
+                  <span style={{ WebkitTextStroke: '1.5px rgba(236,30,142,0.5)', color: 'transparent' }}>Across</span><br />
+                  <span className="pill-word-coral">6 Nations.</span>
                 </h2>
               </motion.div>
               <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ duration: 0.7, delay: 0.2 }} className="flex items-end gap-5 sm:pb-1">
@@ -357,15 +361,20 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
       </section>
 
       {/* ── Why Choose Us ────────────────────────────────────────────────────── */}
-      <section className="py-16 px-6" style={{ background: 'linear-gradient(to bottom, #05030F 0%, #0A0717 50%, #05030F 100%)' }}>
-        <div className="max-w-7xl mx-auto">
+      <section className="py-16 px-6 relative overflow-hidden" style={{ background: 'linear-gradient(to bottom, #0B0710 0%, #100918 50%, #0B0710 100%)' }}>
+        {/* Atmospheric blobs */}
+        <div className="absolute top-0 left-0 w-[500px] h-[400px] bg-[#EC1E8E]/7 blur-[140px] rounded-full pointer-events-none" />
+        <div className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-[#FF7A45]/6 blur-[120px] rounded-full pointer-events-none" />
+        <div className="max-w-7xl mx-auto relative z-10">
           <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-12 gap-6">
-            <motion.div initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, amount: 0.3 }} transition={{ duration: 0.7 }}>
+            <motion.div initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, amount: 0.3 }} transition={{ duration: 0.7 }} className="relative">
+              {/* Dotted grid accent */}
+              <div className="absolute -right-8 -top-4 w-20 h-20 dotted-grid opacity-35 rounded-lg" />
               <span className="text-[10px] font-mono text-primary/40 tracking-[0.3em] uppercase block mb-3">01 — Why GalaxaTech</span>
               <h2 className="text-4xl sm:text-5xl font-black text-white leading-[0.9]" style={{ fontFamily: 'var(--font-display)' }}>
                 Why<br />
-                <span style={{ WebkitTextStroke: '1.5px rgba(181,141,255,0.55)', color: 'transparent' }}>Choose</span><br />
-                <span style={{ color: '#B58DFF' }}>Us.</span>
+                <span style={{ WebkitTextStroke: '1.5px rgba(236,30,142,0.5)', color: 'transparent' }}>Choose</span><br />
+                <span className="pill-word">Us.</span>
               </h2>
             </motion.div>
             <motion.p initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ duration: 0.7, delay: 0.2 }} className="text-white/35 text-sm leading-relaxed max-w-[200px] sm:text-right border-t border-white/10 pt-4 sm:border-t-0 sm:pt-0 sm:border-l sm:border-white/[0.08] sm:pl-6">
@@ -383,8 +392,13 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
               className="md:col-span-4 flex flex-col justify-between p-7 rounded-3xl glass-card-premium spotlight-sweep border border-white/10 group min-h-[220px]"
             >
               <div className="flex items-start justify-between">
-                <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-primary/10 border border-primary/20">
-                  <Workflow className="w-5.5 h-5.5 text-lavender" />
+                <div className="flex items-center gap-2.5">
+                  <div className="w-7 h-7 rounded-full flex items-center justify-center border border-[#EC1E8E]/30 bg-[#EC1E8E]/10 flex-shrink-0">
+                    <span className="text-[9px] font-mono font-bold text-[#EC1E8E]">01</span>
+                  </div>
+                  <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-primary/10 border border-primary/20">
+                    <Workflow className="w-5.5 h-5.5 text-lavender" />
+                  </div>
                 </div>
                 {/* Micro tech chart inside Card 1 */}
                 <div className="hidden sm:flex items-center gap-1.5 font-mono text-[9px] text-white/35 bg-white/5 rounded-lg px-2.5 py-1 border border-white/5">
@@ -415,8 +429,13 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
               transition={{ duration: 0.5, delay: 0.1 }}
               className="md:col-span-2 flex flex-col justify-between p-7 rounded-3xl glass-card-premium spotlight-sweep border border-white/10 group min-h-[220px]"
             >
-              <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-primary/10 border border-primary/20">
-                <Rocket className="w-5.5 h-5.5 text-lavender" />
+              <div className="flex items-center gap-2.5">
+                <div className="w-7 h-7 rounded-full flex items-center justify-center border border-[#EC1E8E]/30 bg-[#EC1E8E]/10 flex-shrink-0">
+                  <span className="text-[9px] font-mono font-bold text-[#EC1E8E]">02</span>
+                </div>
+                <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-primary/10 border border-primary/20">
+                  <Rocket className="w-5.5 h-5.5 text-lavender" />
+                </div>
               </div>
               <div className="mt-4">
                 <h3 className="text-white font-bold text-base mb-2 font-display">End-to-End</h3>
@@ -436,8 +455,13 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
               className="md:col-span-2 flex flex-col justify-between p-7 rounded-3xl glass-card-premium spotlight-sweep border border-white/10 group min-h-[220px]"
             >
               <div className="flex items-start justify-between">
-                <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-primary/10 border border-primary/20">
-                  <Users className="w-5.5 h-5.5 text-lavender" />
+                <div className="flex items-center gap-2.5">
+                  <div className="w-7 h-7 rounded-full flex items-center justify-center border border-[#EC1E8E]/30 bg-[#EC1E8E]/10 flex-shrink-0">
+                    <span className="text-[9px] font-mono font-bold text-[#EC1E8E]">03</span>
+                  </div>
+                  <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-primary/10 border border-primary/20">
+                    <Users className="w-5.5 h-5.5 text-lavender" />
+                  </div>
                 </div>
                 <span className="text-[9px] font-mono text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20 font-bold">Live</span>
               </div>
@@ -446,7 +470,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
                 <p className="text-white/50 text-xs leading-relaxed mb-3">We run our own builder community ecosystem — direct production and fast iteration are in our DNA.</p>
                 <div className="flex flex-wrap gap-[3px] mb-2">
                   {Array.from({ length: 24 }).map((_, i) => (
-                    <div key={i} className="w-2 h-2 rounded-full" style={{ background: i < 18 ? `hsl(${265 + (i % 6) * 18}, 65%, ${55 + (i % 3) * 12}%)` : 'rgba(255,255,255,0.08)' }} />
+                    <div key={i} className="w-2 h-2 rounded-full" style={{ background: i < 18 ? `hsl(${330 + (i % 6) * 18}, 80%, ${55 + (i % 3) * 10}%)` : 'rgba(255,255,255,0.08)' }} />
                   ))}
                   <span className="text-[9px] font-mono text-white/25 self-end ml-0.5">+130</span>
                 </div>
@@ -462,8 +486,13 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
               transition={{ duration: 0.5, delay: 0.3 }}
               className="md:col-span-2 flex flex-col justify-between p-7 rounded-3xl glass-card-premium spotlight-sweep border border-white/10 group min-h-[220px]"
             >
-              <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-primary/10 border border-primary/20">
-                <Globe className="w-5.5 h-5.5 text-lavender" />
+              <div className="flex items-center gap-2.5">
+                <div className="w-7 h-7 rounded-full flex items-center justify-center border border-[#EC1E8E]/30 bg-[#EC1E8E]/10 flex-shrink-0">
+                  <span className="text-[9px] font-mono font-bold text-[#EC1E8E]">04</span>
+                </div>
+                <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-primary/10 border border-primary/20">
+                  <Globe className="w-5.5 h-5.5 text-lavender" />
+                </div>
               </div>
               <div className="mt-4">
                 <h3 className="text-white font-bold text-base mb-2 font-display">Global Standard</h3>
@@ -487,8 +516,13 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
               transition={{ duration: 0.5, delay: 0.4 }}
               className="md:col-span-2 flex flex-col justify-between p-7 rounded-3xl glass-card-premium spotlight-sweep border border-white/10 group min-h-[220px]"
             >
-              <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-primary/10 border border-primary/20">
-                <MessageCircle className="w-5.5 h-5.5 text-lavender" />
+              <div className="flex items-center gap-2.5">
+                <div className="w-7 h-7 rounded-full flex items-center justify-center border border-[#EC1E8E]/30 bg-[#EC1E8E]/10 flex-shrink-0">
+                  <span className="text-[9px] font-mono font-bold text-[#EC1E8E]">05</span>
+                </div>
+                <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-primary/10 border border-primary/20">
+                  <MessageCircle className="w-5.5 h-5.5 text-lavender" />
+                </div>
               </div>
               <div className="mt-4">
                 <h3 className="text-white font-bold text-base mb-2 font-display">Fast Operations</h3>
@@ -512,15 +546,16 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
       </section>
 
       {/* ── What We Build — 3D Service Carousel ──────────────────────────────── */}
-      <section className="py-16 px-6" style={{ background: 'linear-gradient(to bottom, #05030F 0%, #0A0717 50%, #05030F 100%)' }}>
-        <div className="max-w-7xl mx-auto">
+      <section className="py-16 px-6 relative overflow-hidden" style={{ background: 'linear-gradient(to bottom, #0B0710 0%, #100918 50%, #0B0710 100%)' }}>
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] bg-[#5B23A8]/10 blur-[150px] rounded-full pointer-events-none" />
+        <div className="max-w-7xl mx-auto relative z-10">
           <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-12 gap-6">
             <motion.div initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, amount: 0.3 }} transition={{ duration: 0.7 }}>
               <span className="text-[10px] font-mono text-primary/40 tracking-[0.3em] uppercase block mb-3">02 — Services</span>
               <h2 className="text-4xl sm:text-5xl font-black text-white leading-[0.9]" style={{ fontFamily: 'var(--font-display)' }}>
                 What<br />
-                <span style={{ WebkitTextStroke: '1.5px rgba(181,141,255,0.55)', color: 'transparent' }}>We</span><br />
-                <span style={{ color: '#B58DFF' }}>Build.</span>
+                <span style={{ WebkitTextStroke: '1.5px rgba(236,30,142,0.5)', color: 'transparent' }}>We</span><br />
+                <span className="pill-word-coral">Build.</span>
               </h2>
             </motion.div>
             <motion.p initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ duration: 0.7, delay: 0.2 }} className="text-white/35 text-sm leading-relaxed max-w-[200px] sm:text-right border-t border-white/10 pt-4 sm:border-t-0 sm:pt-0 sm:border-l sm:border-white/[0.08] sm:pl-6">
@@ -605,7 +640,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
                   <h3 className="text-white font-bold text-base mb-2 font-display relative z-10">{svc.label}</h3>
                   <p className="text-white/45 text-sm leading-relaxed relative z-10">{svc.desc}</p>
                   {isActive && (
-                    <div className="flex items-center gap-1.5 mt-5 text-xs font-semibold relative z-10" style={{ color: '#B58DFF' }}>
+                    <div className="flex items-center gap-1.5 mt-5 text-xs font-semibold relative z-10" style={{ color: '#FF7A45' }}>
                       Explore Service <ArrowUpRight className="w-3.5 h-3.5" />
                     </div>
                   )}
@@ -629,7 +664,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
             </div>
             <div className="flex gap-2" role="tablist" aria-label="Service slides">
               {SERVICES.map((svc, i) => (
-                <button key={i} onClick={() => setActiveIndex(i)} role="tab" aria-selected={i === activeIndex} aria-label={svc.label} className="rounded-full transition-all duration-300" style={{ width: i === activeIndex ? '24px' : '8px', height: '8px', background: i === activeIndex ? '#7C2AEB' : 'rgba(255,255,255,0.2)' }} />
+                <button key={i} onClick={() => setActiveIndex(i)} role="tab" aria-selected={i === activeIndex} aria-label={svc.label} className="rounded-full transition-all duration-300" style={{ width: i === activeIndex ? '24px' : '8px', height: '8px', background: i === activeIndex ? '#EC1E8E' : 'rgba(255,255,255,0.2)' }} />
               ))}
             </div>
             <button onClick={carouselNext} aria-label="Next service" className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-white/60 hover:text-white hover:border-primary/40 transition-all duration-200 hover:scale-[1.05] active:scale-[0.98]">
@@ -639,18 +674,24 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
         </div>
       </section>
 
-      {/* ── How We Work — vertical timeline ──────────────────────────────────── */}
-      <section className="py-16 px-6" style={{ background: 'linear-gradient(to bottom, #05030F 0%, #0A0717 50%, #05030F 100%)' }}>
-        <div className="max-w-4xl mx-auto">
+      {/* ── How We Work — vertical timeline (light section) ───────────────────── */}
+      <section className="py-24 px-6 relative overflow-hidden" style={{ background: '#FAF8FF' }}>
+        {/* Smooth transitions into dark sections above/below */}
+        <div className="absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-[#0B0710] to-transparent pointer-events-none z-10" />
+        <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-[#0B0710] to-transparent pointer-events-none z-10" />
+        {/* Very subtle blob warmth on light bg */}
+        <div className="absolute top-0 right-0 w-[380px] h-[380px] bg-[#EC1E8E]/5 blur-[100px] rounded-full pointer-events-none" />
+        <div className="absolute bottom-0 left-0 w-[300px] h-[300px] bg-[#FF7A45]/5 blur-[90px] rounded-full pointer-events-none" />
+        <div className="max-w-4xl mx-auto relative z-20">
           <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-12 gap-6">
             <motion.div initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, amount: 0.3 }} transition={{ duration: 0.7 }}>
-              <span className="text-[10px] font-mono text-primary/40 tracking-[0.3em] uppercase block mb-3">03 — Process</span>
-              <h2 className="text-4xl sm:text-5xl font-black text-white leading-[0.9]" style={{ fontFamily: 'var(--font-display)' }}>
+              <span className="text-[10px] font-mono tracking-[0.3em] uppercase block mb-3" style={{ color: 'rgba(236,30,142,0.65)' }}>03 — Process</span>
+              <h2 className="text-4xl sm:text-5xl font-black leading-[0.9]" style={{ fontFamily: 'var(--font-display)', color: '#1A0730' }}>
                 How<br />
-                <span style={{ color: '#B58DFF' }}>We Work.</span>
+                <span className="text-gradient">We Work.</span>
               </h2>
             </motion.div>
-            <motion.p initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ duration: 0.7, delay: 0.2 }} className="text-white/35 text-sm leading-relaxed max-w-[200px] sm:text-right border-t border-white/10 pt-4 sm:border-t-0 sm:pt-0 sm:border-l sm:border-white/[0.08] sm:pl-6">
+            <motion.p initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ duration: 0.7, delay: 0.2 }} className="text-sm leading-relaxed max-w-[200px] sm:text-right border-t pt-4 sm:border-t-0 sm:pt-0 sm:border-l sm:pl-6" style={{ color: 'rgba(74,59,92,0.7)', borderColor: 'rgba(26,7,48,0.12)' }}>
               A clear, collaborative journey from idea to deployed digital systems.
             </motion.p>
           </div>
@@ -668,7 +709,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
               <path
                 d="M16,0 C4,50 28,100 16,150 C4,200 28,250 16,300 C4,350 16,400 16,400"
                 fill="none"
-                stroke="rgba(124,42,235,0.15)"
+                stroke="rgba(236,30,142,0.15)"
                 strokeWidth="2"
                 vectorEffect="non-scaling-stroke"
               />
@@ -681,12 +722,12 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
                 vectorEffect="non-scaling-stroke"
                 strokeDasharray="1000"
                 strokeDashoffset={1000 - (lineProgress / 100) * 1000}
-                style={{ transition: 'stroke-dashoffset 0.8s cubic-bezier(.2,.7,.2,1)', filter: 'drop-shadow(0 0 8px rgba(124,42,235,0.65))' }}
+                style={{ transition: 'stroke-dashoffset 0.8s cubic-bezier(.2,.7,.2,1)', filter: 'drop-shadow(0 0 8px rgba(236,30,142,0.65))' }}
               />
               <defs>
                 <linearGradient id="waveGrad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#7C2AEB" />
-                  <stop offset="100%" stopColor="#B58DFF" />
+                  <stop offset="0%" stopColor="#EC1E8E" />
+                  <stop offset="100%" stopColor="#FF7A45" />
                 </linearGradient>
               </defs>
             </svg>
@@ -697,35 +738,33 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
                 const StepIcon = step.Icon;
                 return (
                   <div key={step.num} ref={el => { stepRefs.current[i] = el; }} className="flex items-center gap-5 relative z-10">
+                    {/* Numbered circle badge */}
                     <div className="w-[58px] h-[58px] rounded-full flex items-center justify-center flex-shrink-0 relative" style={{ transition: '0.6s cubic-bezier(.2,.7,.2,1)' }}>
-                      {/* Outer border ring */}
-                      <div className="absolute inset-0 rounded-full border" style={{ borderColor: lit ? '#7C2AEB' : 'rgba(124,42,235,0.2)', transition: '0.6s' }} />
-                      {/* Mid glowing backing */}
-                      <div className="absolute inset-1 rounded-full blur-[4px]" style={{ background: lit ? 'rgba(124, 42, 235, 0.45)' : 'rgba(124, 42, 235, 0.05)', transition: '0.6s' }} />
-                      {/* Inner ring */}
-                      <div className="absolute inset-[3px] rounded-full bg-[#0A0717]/95 flex items-center justify-center border border-white/5" style={{ boxShadow: lit ? '0 0 20px rgba(124,42,235,0.4)' : 'none', transition: '0.6s' }}>
-                        <StepIcon className="w-5 h-5" style={{ color: lit ? '#B58DFF' : 'rgba(181,141,255,0.3)', transition: '0.6s' }} />
+                      <div className="absolute inset-0 rounded-full border" style={{ borderColor: lit ? '#EC1E8E' : 'rgba(236,30,142,0.2)', transition: '0.6s' }} />
+                      <div className="absolute inset-1 rounded-full blur-[4px]" style={{ background: lit ? 'rgba(236,30,142,0.32)' : 'rgba(236,30,142,0.04)', transition: '0.6s' }} />
+                      <div className="absolute inset-[3px] rounded-full bg-white/95 flex items-center justify-center border border-[rgba(26,7,48,0.06)]" style={{ boxShadow: lit ? '0 0 20px rgba(236,30,142,0.3)' : 'none', transition: '0.6s' }}>
+                        <StepIcon className="w-5 h-5" style={{ color: lit ? '#EC1E8E' : 'rgba(236,30,142,0.3)', transition: '0.6s' }} />
                       </div>
                     </div>
                     <div className="flex-1 flex items-center justify-between p-5 rounded-3xl relative overflow-hidden" style={{
-                      background: 'rgba(10, 8, 37, 0.55)',
+                      background: 'rgba(255,255,255,0.95)',
                       backdropFilter: 'blur(20px) saturate(140%)',
-                      border: '1px solid rgba(255, 255, 255, 0.06)',
-                      borderTop: lit ? '1px solid rgba(181,141,255,0.35)' : '1px solid rgba(255, 255, 255, 0.12)',
-                      boxShadow: lit ? '0 0 35px rgba(124,42,235,0.18), 0 10px 30px rgba(0,0,0,0.5)' : '0 8px 25px rgba(0,0,0,0.35)',
+                      border: '1px solid rgba(26,7,48,0.08)',
+                      borderTop: lit ? '1px solid rgba(236,30,142,0.45)' : '1px solid rgba(26,7,48,0.1)',
+                      boxShadow: lit ? '0 0 35px rgba(236,30,142,0.09), 0 10px 30px rgba(0,0,0,0.06)' : '0 8px 25px rgba(0,0,0,0.06)',
                       transition: '0.6s cubic-bezier(.2,.7,.2,1)'
                     }}>
                       {/* Ghost step number */}
-                      <div className="absolute right-4 top-1/2 -translate-y-1/2 font-black select-none pointer-events-none leading-none" style={{ fontSize: '80px', color: lit ? 'rgba(124,42,235,0.12)' : 'rgba(124,42,235,0.04)', fontFamily: 'var(--font-display)', transition: '0.6s' }}>{step.num}</div>
+                      <div className="absolute right-4 top-1/2 -translate-y-1/2 font-black select-none pointer-events-none leading-none" style={{ fontSize: '80px', color: lit ? 'rgba(236,30,142,0.08)' : 'rgba(236,30,142,0.03)', fontFamily: 'var(--font-display)', transition: '0.6s' }}>{step.num}</div>
                       <div className="relative z-10">
                         <div className="flex items-center gap-2.5 mb-1">
-                          <span className="text-[10px] font-mono" style={{ color: lit ? '#7C2AEB' : 'rgba(124,42,235,0.35)' }}>{step.num}</span>
-                          <h3 className="font-bold text-base font-display" style={{ color: lit ? '#fff' : 'rgba(255,255,255,0.35)' }}>{step.title}</h3>
+                          <span className="text-[10px] font-mono" style={{ color: lit ? '#EC1E8E' : 'rgba(236,30,142,0.3)' }}>{step.num}</span>
+                          <h3 className="font-bold text-base font-display" style={{ color: lit ? '#1A0730' : 'rgba(26,7,48,0.3)' }}>{step.title}</h3>
                         </div>
-                        <p className="text-sm" style={{ color: lit ? 'rgba(255,255,255,0.5)' : 'rgba(255,255,255,0.2)' }}>{step.desc}</p>
+                        <p className="text-sm" style={{ color: lit ? '#4A3B5C' : 'rgba(74,59,92,0.25)' }}>{step.desc}</p>
                       </div>
-                      <button className="w-8 h-8 rounded-full border flex items-center justify-center flex-shrink-0 ml-4 cursor-pointer relative z-10" style={{ borderColor: lit ? 'rgba(124,42,235,0.5)' : 'rgba(255,255,255,0.08)', background: lit ? 'rgba(124,42,235,0.15)' : 'transparent' }}>
-                        <ChevronRight className="w-4 h-4" style={{ color: lit ? '#B58DFF' : 'rgba(255,255,255,0.2)' }} />
+                      <button className="w-8 h-8 rounded-full border flex items-center justify-center flex-shrink-0 ml-4 cursor-pointer relative z-10" style={{ borderColor: lit ? 'rgba(236,30,142,0.5)' : 'rgba(26,7,48,0.12)', background: lit ? 'rgba(236,30,142,0.10)' : 'transparent' }}>
+                        <ChevronRight className="w-4 h-4" style={{ color: lit ? '#EC1E8E' : 'rgba(26,7,48,0.2)' }} />
                       </button>
                     </div>
                   </div>
@@ -736,16 +775,17 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
 
           <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: 0.3 }} className="flex justify-center mt-12">
             <div className="flex items-center gap-2.5">
-              <Sparkles className="w-4 h-4 text-primary/40" />
-              <span className="text-sm text-white/30">Powered by the <span className="text-primary/60">GalaxaTech</span> intelligence layer</span>
+              <Sparkles className="w-4 h-4" style={{ color: 'rgba(236,30,142,0.55)' }} />
+              <span className="text-sm" style={{ color: 'rgba(26,7,48,0.45)' }}>Powered by the <span style={{ color: '#EC1E8E' }}>GalaxaTech</span> intelligence layer</span>
             </div>
           </motion.div>
         </div>
       </section>
 
       {/* ── Selected Work — glassmorphic folder ───────────────────────────────── */}
-      <section className="py-16 px-6 overflow-x-hidden" style={{ background: 'linear-gradient(to bottom, #05030F 0%, #0A0717 50%, #05030F 100%)' }}>
-        <div className="max-w-5xl mx-auto">
+      <section className="py-16 px-6 overflow-x-hidden relative" style={{ background: 'linear-gradient(to bottom, #0B0710 0%, #100918 50%, #0B0710 100%)' }}>
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[500px] bg-[#5B23A8]/8 blur-[160px] rounded-full pointer-events-none" />
+        <div className="max-w-5xl mx-auto relative z-10">
           <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-16 gap-6">
             <motion.div initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, amount: 0.3 }} transition={{ duration: 0.7 }}>
               <span className="text-[10px] font-mono text-primary/40 tracking-[0.3em] uppercase block mb-3">05 — Portfolio</span>
@@ -823,7 +863,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
                     <div
                       className="absolute inset-0 rounded-3xl opacity-35 pointer-events-none transition-all duration-700"
                       style={{
-                        background: 'radial-gradient(circle at 50% 50%, #7C2AEB 0%, transparent 70%)',
+                        background: 'radial-gradient(circle at 50% 50%, #5B23A8 0%, transparent 70%)',
                         transform: folderHovered ? 'translateZ(-90px) scale(1.3)' : 'translateZ(-90px) scale(0.9)',
                         filter: 'blur(40px)',
                       }}
@@ -965,9 +1005,9 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
                       <svg viewBox="0 0 600 400" className="absolute inset-0 w-full h-full pointer-events-none">
                         <defs>
                           <linearGradient id="neonBorderGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" stopColor="#B58DFF" stopOpacity="0.5" />
-                            <stop offset="50%" stopColor="#78D5FF" stopOpacity="0.3" />
-                            <stop offset="100%" stopColor="#7C2AEB" stopOpacity="0.5" />
+                            <stop offset="0%" stopColor="#EC1E8E" stopOpacity="0.5" />
+                            <stop offset="50%" stopColor="#FF7A45" stopOpacity="0.35" />
+                            <stop offset="100%" stopColor="#5B23A8" stopOpacity="0.5" />
                           </linearGradient>
                         </defs>
                         <path
@@ -996,7 +1036,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
                           <button
                             onClick={e => { e.stopPropagation(); navigate('/portfolio'); }}
                             className="w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-[1.1] primary-gradient cursor-pointer"
-                            style={{ boxShadow: '0 8px 30px rgba(124,42,235,0.4)' }}
+                            style={{ boxShadow: '0 8px 30px rgba(236,30,142,0.4)' }}
                           >
                             <ArrowUpRight className="w-4 h-4 text-white" />
                           </button>
@@ -1014,14 +1054,15 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
       </section>
 
       {/* ── FAQ — two-column with icons ───────────────────────────────────────── */}
-      <section className="py-16 px-6" style={{ background: 'linear-gradient(to bottom, #05030F 0%, #0A0717 60%, #05030F 100%)' }}>
-        <div className="max-w-5xl mx-auto">
+      <section className="py-16 px-6 relative overflow-hidden" style={{ background: 'linear-gradient(to bottom, #0B0710 0%, #100918 60%, #0B0710 100%)' }}>
+        <div className="absolute top-0 right-1/4 w-[350px] h-[350px] bg-[#EC1E8E]/7 blur-[120px] rounded-full pointer-events-none" />
+        <div className="max-w-5xl mx-auto relative z-10">
           <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-12 gap-6">
             <motion.div initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, amount: 0.3 }} transition={{ duration: 0.7 }}>
               <span className="text-[10px] font-mono text-primary/40 tracking-[0.3em] uppercase block mb-3">04 — FAQ</span>
               <h2 className="text-4xl sm:text-5xl font-black text-white leading-[0.9]" style={{ fontFamily: 'var(--font-display)' }}>
                 Common<br />
-                <span style={{ color: '#B58DFF' }}>Questions.</span>
+                <span className="pill-word">Questions.</span>
               </h2>
             </motion.div>
             <motion.p initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ duration: 0.7, delay: 0.2 }} className="text-white/35 text-sm leading-relaxed max-w-[200px] sm:text-right border-t border-white/10 pt-4 sm:border-t-0 sm:pt-0 sm:border-l sm:border-white/[0.08] sm:pl-6">
@@ -1046,16 +1087,16 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
                     className="faq-item w-full flex items-center gap-3 p-4 rounded-2xl text-left transition-all duration-300"
                     style={{
                       ...GLASS_STYLE,
-                      borderColor: isActive ? 'rgba(124,42,235,0.5)' : 'rgba(255,255,255,0.12)',
-                      boxShadow: isActive ? '0 0 30px rgba(124,42,235,0.25), inset 0 1px 0 rgba(255,255,255,0.1)' : GLASS_STYLE.boxShadow,
+                      borderColor: isActive ? 'rgba(236,30,142,0.5)' : 'rgba(255,255,255,0.12)',
+                      boxShadow: isActive ? '0 0 30px rgba(236,30,142,0.22), inset 0 1px 0 rgba(255,255,255,0.1)' : GLASS_STYLE.boxShadow,
                       borderRadius: '16px',
                     }}
                   >
-                    <div className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 transition-all duration-300" style={{ background: isActive ? 'rgba(124,42,235,0.25)' : 'rgba(124,42,235,0.1)', border: `1px solid ${isActive ? 'rgba(181,141,255,0.4)' : 'rgba(181,141,255,0.15)'}` }}>
-                      <FaqIcon className="w-4 h-4" style={{ color: isActive ? '#B58DFF' : 'rgba(181,141,255,0.5)' }} />
+                    <div className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 transition-all duration-300" style={{ background: isActive ? 'rgba(236,30,142,0.22)' : 'rgba(236,30,142,0.08)', border: `1px solid ${isActive ? 'rgba(236,30,142,0.45)' : 'rgba(236,30,142,0.15)'}` }}>
+                      <FaqIcon className="w-4 h-4" style={{ color: isActive ? '#EC1E8E' : 'rgba(236,30,142,0.45)' }} />
                     </div>
                     <span className="text-sm font-semibold flex-1 text-left leading-snug" style={{ color: isActive ? '#fff' : 'rgba(255,255,255,0.65)' }}>{faq.q}</span>
-                    <ChevronRight className="w-4 h-4 flex-shrink-0 transition-transform duration-300" style={{ color: isActive ? '#B58DFF' : 'rgba(255,255,255,0.2)', transform: isActive ? 'rotate(90deg)' : 'rotate(0deg)' }} />
+                    <ChevronRight className="w-4 h-4 flex-shrink-0 transition-transform duration-300" style={{ color: isActive ? '#EC1E8E' : 'rgba(255,255,255,0.2)', transform: isActive ? 'rotate(90deg)' : 'rotate(0deg)' }} />
                   </motion.button>
                 );
               })}
@@ -1072,14 +1113,14 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
                     exit={{ opacity: 0, y: -12 }}
                     transition={{ duration: 0.3 }}
                     className="p-8 rounded-2xl"
-                    style={{ ...GLASS_STYLE, borderColor: 'rgba(124,42,235,0.3)', boxShadow: '0 0 60px rgba(124,42,235,0.12), inset 0 1px 0 rgba(255,255,255,0.1)', minHeight: '200px' }}
+                    style={{ ...GLASS_STYLE, borderColor: 'rgba(236,30,142,0.3)', boxShadow: '0 0 60px rgba(236,30,142,0.10), inset 0 1px 0 rgba(255,255,255,0.1)', minHeight: '200px' }}
                   >
                     <div className="flex items-center gap-3 mb-5">
                       {activeFAQ !== null && (() => {
                         const ActiveIcon = FAQS[activeFAQ].icon;
                         return (
-                          <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: 'rgba(124,42,235,0.2)', border: '1px solid rgba(181,141,255,0.3)' }}>
-                            <ActiveIcon className="w-5 h-5" style={{ color: '#B58DFF' }} />
+                          <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: 'rgba(236,30,142,0.15)', border: '1px solid rgba(236,30,142,0.35)' }}>
+                            <ActiveIcon className="w-5 h-5" style={{ color: '#EC1E8E' }} />
                           </div>
                         );
                       })()}
@@ -1110,9 +1151,11 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
       </section>
 
       {/* ── Closing CTA — toggle + modal ─────────────────────────────────────── */}
-      <section className="py-24 px-6 relative overflow-hidden" style={{ background: 'linear-gradient(to bottom, #05030F 0%, #0A0717 50%, #05030F 100%)' }}>
-        {/* Deep ambient glow */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[500px] bg-primary/8 blur-[160px] rounded-full pointer-events-none" />
+      <section className="py-24 px-6 relative overflow-hidden" style={{ background: 'linear-gradient(to bottom, #0B0710 0%, #100918 50%, #0B0710 100%)' }}>
+        {/* Layered atmospheric blob glows */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[500px] bg-[#EC1E8E]/9 blur-[160px] rounded-full pointer-events-none" />
+        <div className="absolute top-0 right-0 w-[350px] h-[350px] bg-[#FF7A45]/7 blur-[130px] rounded-full pointer-events-none" />
+        <div className="absolute bottom-0 left-0 w-[300px] h-[300px] bg-[#5B23A8]/10 blur-[120px] rounded-full pointer-events-none" />
         {/* Floating geometric rings */}
         {[
           { size: 140, left: '5%',  top: '10%', duration: 9,  delay: 0   },
@@ -1130,11 +1173,11 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
           />
         ))}
         {/* Ghost "JOIN" text decoration */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 font-black select-none pointer-events-none leading-none whitespace-nowrap" style={{ fontSize: 'clamp(80px, 20vw, 180px)', color: 'rgba(124,42,235,0.04)', fontFamily: 'var(--font-display)', letterSpacing: '-0.05em' }}>JOIN</div>
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 font-black select-none pointer-events-none leading-none whitespace-nowrap" style={{ fontSize: 'clamp(80px, 20vw, 180px)', color: 'rgba(236,30,142,0.05)', fontFamily: 'var(--font-display)', letterSpacing: '-0.05em' }}>JOIN</div>
 
         <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.6 }} className="max-w-2xl mx-auto relative z-10 text-center">
           <div className="flex justify-center mb-8">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-primary/25" style={{ background: 'rgba(124,42,235,0.08)' }}>
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-primary/25" style={{ background: 'rgba(236,30,142,0.08)' }}>
               <Sparkles className="w-3.5 h-3.5 text-primary/70" />
               <span className="text-[10px] font-mono tracking-[0.25em] text-primary/70 uppercase">Builders Community</span>
             </div>
@@ -1142,8 +1185,8 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
 
           <h2 className="font-black text-white mb-5 leading-[0.9]" style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(2.5rem, 7vw, 4.5rem)' }}>
             Wanna join the<br />
-            <span style={{ WebkitTextStroke: '2px rgba(181,141,255,0.6)', color: 'transparent' }}>Galaxa</span>{' '}
-            <span style={{ color: '#B58DFF' }}>team?</span>
+            <span style={{ WebkitTextStroke: '2px rgba(236,30,142,0.55)', color: 'transparent' }}>Galaxa</span>{' '}
+            <span className="pill-word">team?</span>
           </h2>
           <p className="text-white/45 text-base mb-10 leading-relaxed max-w-md mx-auto">
             Toggle in to join our builders / newsletter community and hear about opportunities first.
@@ -1175,8 +1218,8 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
                   width: '132px',
                   height: '42px',
                   borderRadius: '999px',
-                  background: 'linear-gradient(135deg, #7C2AEB 0%, #B58DFF 100%)',
-                  boxShadow: '0 4px 18px rgba(124, 42, 235, 0.6), inset 0 1px 1px rgba(255,255,255,0.3)',
+                  background: 'linear-gradient(135deg, #EC1E8E 0%, #FF7A45 100%)',
+                  boxShadow: '0 4px 18px rgba(236, 30, 142, 0.6), inset 0 1px 1px rgba(255,255,255,0.3)',
                   transform: toggled ? 'translateX(133px)' : 'translateX(0px)',
                   transition: '0.4s cubic-bezier(0.16, 1, 0.3, 1)',
                 }}
@@ -1206,7 +1249,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
                 transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
                 onClick={e => e.stopPropagation()}
                 className="relative w-full max-w-sm"
-                style={{ ...GLASS_STYLE, borderRadius: '24px', padding: isMobile ? '20px' : '32px', borderColor: 'rgba(124,42,235,0.45)', boxShadow: '0 0 80px rgba(124,42,235,0.35), inset 0 1px 0 rgba(255,255,255,0.1)' }}
+                style={{ ...GLASS_STYLE, borderRadius: '24px', padding: isMobile ? '20px' : '32px', borderColor: 'rgba(236,30,142,0.45)', boxShadow: '0 0 80px rgba(236,30,142,0.30), inset 0 1px 0 rgba(255,255,255,0.1)' }}
               >
                 <button
                   onClick={() => setCircleModalOpen(false)}
@@ -1219,17 +1262,17 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
 
                 {submitted ? (
                   <div className="flex flex-col items-center gap-3 py-6 text-center">
-                    <Sparkles className="w-8 h-8" style={{ color: '#B58DFF' }} />
-                    <p className="text-white font-bold text-lg" style={{ fontFamily: 'var(--font-display)' }}>You're in the circle.</p>
+                    <Sparkles className="w-8 h-8" style={{ color: '#EC1E8E' }} />
+                    <p className="text-white font-bold text-lg font-display">You're in the circle.</p>
                     <p className="text-white/40 text-sm">We'll reach out with opportunities first.</p>
                   </div>
                 ) : (
                   <>
-                    <div className="w-11 h-11 rounded-full border border-primary/20 flex items-center justify-center mb-5" style={{ background: 'rgba(124,42,235,0.1)' }}>
+                    <div className="w-11 h-11 rounded-full border border-primary/20 flex items-center justify-center mb-5" style={{ background: 'rgba(236,30,142,0.08)' }}>
                       <Mail className="w-5 h-5 text-primary/70" />
                     </div>
-                    <h3 className="text-white font-bold text-xl mb-1" style={{ fontFamily: 'var(--font-display)' }}>
-                      Join the <span style={{ color: '#B58DFF' }}>Galaxa</span> circle
+                    <h3 className="text-white font-bold text-xl mb-1 font-display">
+                      Join the <span className="text-gradient">Galaxa</span> circle
                     </h3>
                     <p className="text-white/45 text-sm mb-5 leading-relaxed">Get early access, opportunities, and builder-only updates.</p>
                     <form onSubmit={handleNewsletterSubmit} className="flex flex-col gap-3">
@@ -1249,7 +1292,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
                         type="submit"
                         disabled={submitting}
                         className="w-full flex items-center justify-center gap-2 py-3 rounded-xl text-white font-bold text-sm transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
-                        style={{ background: submitting ? 'rgba(124,42,235,0.5)' : 'linear-gradient(135deg,#7C2AEB,#B58DFF)', boxShadow: '0 8px 30px rgba(124,42,235,0.35)' }}
+                        style={{ background: submitting ? 'rgba(236,30,142,0.5)' : 'linear-gradient(135deg,#EC1E8E,#FF7A45)', boxShadow: '0 8px 30px rgba(236,30,142,0.35)' }}
                       >
                         {submitting ? 'Sending…' : <>Join the circle <ArrowUpRight className="w-4 h-4" /></>}
                       </button>

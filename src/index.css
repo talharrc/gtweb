@@ -3,11 +3,11 @@
 
 @theme {
   --font-sans: "Inter", "Segoe UI", ui-sans-serif, system-ui, sans-serif;
-  --font-display: "Satoshi", "Sora", "Segoe UI", sans-serif;
+  --font-display: "Sora", "Segoe UI", sans-serif;
   --font-serif: "Playfair Display", Georgia, serif;
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 
-  /* Brand palette — GalaxaTech visual direction theme */
+  /* Brand palette — GalaxaTech pink/coral/purple theme */
   --color-void:     var(--void);
   --color-midnight: var(--void-2);
   --color-indigo:   var(--void-2);
@@ -16,7 +16,6 @@
   --color-lavender: var(--lavender);
   --color-cool:     var(--blue);
 
-  /* Tailwind semantic aliases */
   --color-secondary: var(--lavender);
   --color-tertiary:  var(--blue);
   --color-dark-bg:   var(--void);
@@ -27,13 +26,13 @@
 
 :root {
   color-scheme: dark;
-  --void: #05030F;
-  --void-2: #0A0717;
-  --violet: #7C2AEB;
-  --lavender: #B58DFF;
-  --blue: #78D5FF;
-  --text: #F1EEFB;
-  --muted: #8B86A8;
+  --void: #0B0710;
+  --void-2: #100918;
+  --violet: #EC1E8E;
+  --lavender: #FF7A45;
+  --blue: #5B23A8;
+  --text: #F7F4F8;
+  --muted: #B7AFC2;
   --glass: rgba(255, 255, 255, 0.05);
   --glass-border: rgba(255, 255, 255, 0.12);
 }
@@ -54,7 +53,7 @@ body {
   width: 100%;
   height: 100%;
   z-index: -9;
-  background-image: 
+  background-image:
     linear-gradient(rgba(255, 255, 255, 0.007) 1px, transparent 1px),
     linear-gradient(90deg, rgba(255, 255, 255, 0.007) 1px, transparent 1px);
   background-size: 50px 50px;
@@ -64,7 +63,7 @@ body {
   -webkit-mask-image: radial-gradient(ellipse at center, rgba(0,0,0,1) 10%, rgba(0,0,0,0) 80%);
 }
 
-/* Glass Panels — brand kit spec */
+/* Glass Panels */
 .glass-card {
   background: linear-gradient(160deg, rgba(255,255,255,0.065), rgba(255,255,255,0.018));
   border: 1px solid rgba(255,255,255,0.12);
@@ -73,12 +72,12 @@ body {
   border-radius: 18px;
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,0.09),
-    inset 0 0 28px rgba(124,42,235,0.05),
+    inset 0 0 28px rgba(236,30,142,0.05),
     0 20px 60px rgba(0,0,0,0.50);
 }
 
 .glass-card-premium {
-  background: rgba(10, 7, 23, 0.55);
+  background: rgba(16, 9, 24, 0.55);
   backdrop-filter: blur(24px) saturate(160%);
   -webkit-backdrop-filter: blur(24px) saturate(160%);
   border: 1px solid rgba(255, 255, 255, 0.06);
@@ -87,28 +86,28 @@ body {
   border-radius: 24px;
   box-shadow:
     inset 0 1px 1px rgba(255, 255, 255, 0.08),
-    0 0 1px rgba(124, 42, 235, 0.15),
+    0 0 1px rgba(236, 30, 142, 0.15),
     0 15px 45px rgba(0, 0, 0, 0.65);
   transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .glass-card-premium-glow {
-  background: rgba(15, 12, 50, 0.6);
+  background: rgba(20, 8, 28, 0.6);
   backdrop-filter: blur(24px) saturate(160%);
   -webkit-backdrop-filter: blur(24px) saturate(160%);
-  border: 1px solid rgba(124, 42, 235, 0.3);
-  border-top: 1px solid rgba(181, 141, 255, 0.4);
-  border-left: 1px solid rgba(181, 141, 255, 0.3);
+  border: 1px solid rgba(236, 30, 142, 0.3);
+  border-top: 1px solid rgba(255, 122, 69, 0.4);
+  border-left: 1px solid rgba(255, 122, 69, 0.3);
   border-radius: 24px;
   box-shadow:
     inset 0 1px 1px rgba(255, 255, 255, 0.15),
-    0 0 45px rgba(124, 42, 235, 0.45),
+    0 0 45px rgba(236, 30, 142, 0.45),
     0 15px 45px rgba(0, 0, 0, 0.65);
   transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .glass-nav {
-  background: rgba(5,3,15,0.85);
+  background: rgba(11,7,16,0.85);
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
   border: 1px solid rgba(255,255,255,0.12);
@@ -126,7 +125,7 @@ body {
 
 /* Text gradients */
 .text-grad, .text-gradient {
-  background: linear-gradient(90deg, var(--lavender), var(--blue));
+  background: linear-gradient(90deg, #EC1E8E, #FF7A45);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -134,23 +133,26 @@ body {
 }
 
 .text-gradient-cyan {
-  background: linear-gradient(135deg, #7C2AEB 0%, #78D5FF 100%);
+  background: linear-gradient(135deg, #EC1E8E 0%, #FF7A45 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
 /* Button / section gradients */
 .primary-gradient {
-  background: linear-gradient(135deg, var(--violet) 0%, var(--lavender) 100%);
+  background: linear-gradient(135deg, #EC1E8E 0%, #FF7A45 100%);
 }
 
 .cyan-gradient {
-  background: linear-gradient(135deg, var(--violet) 0%, var(--blue) 100%);
+  background: linear-gradient(135deg, #EC1E8E 0%, #5B23A8 100%);
 }
 
 /* Card hover glow */
+.glow-hover {
+  will-change: transform, box-shadow;
+}
 .glow-hover:hover {
-  box-shadow: 0 0 40px rgba(124,42,235,0.45);
+  box-shadow: 0 0 40px rgba(236,30,142,0.45);
   transform: translateY(-5px);
   transition: all 0.35s cubic-bezier(0.2,0.7,0.2,1);
 }
@@ -168,9 +170,9 @@ body {
   height: 100%;
   z-index: -10;
   background:
-    radial-gradient(circle at 20% 10%, rgba(124,42,235,0.18), transparent 40%),
-    radial-gradient(circle at 85% 25%, rgba(120,213,255,0.12), transparent 45%),
-    radial-gradient(circle at 50% 90%, rgba(181,141,255,0.10), transparent 40%),
+    radial-gradient(circle at 20% 10%, rgba(236,30,142,0.15), transparent 40%),
+    radial-gradient(circle at 85% 25%, rgba(255,122,69,0.10), transparent 45%),
+    radial-gradient(circle at 50% 90%, rgba(91,35,168,0.12), transparent 40%),
     var(--void);
 }
 
@@ -213,7 +215,7 @@ button:not([class*="w-"]):not([class*="h-"]) {
 
 /* Smooth focus ring on keyboard nav */
 :focus-visible {
-  outline: 2px solid rgba(181, 141, 255, 0.7);
+  outline: 2px solid rgba(236, 30, 142, 0.7);
   outline-offset: 3px;
   border-radius: 6px;
 }
@@ -227,16 +229,6 @@ button:not([class*="w-"]):not([class*="h-"]) {
   max-width: 80rem;
   margin-inline: auto;
   padding-inline: 1.5rem;
-}
-
-/* Improved glow-hover with will-change for perf */
-.glow-hover {
-  will-change: transform, box-shadow;
-}
-.glow-hover:hover {
-  box-shadow: 0 0 40px rgba(124,42,235,0.45);
-  transform: translateY(-5px);
-  transition: all 0.35s cubic-bezier(0.2,0.7,0.2,1);
 }
 
 /* Marquee performance */
@@ -254,10 +246,10 @@ button:not([class*="w-"]):not([class*="h-"]) {
 }
 .admin-input:focus {
   outline: none;
-  border-color: rgba(124,42,235,0.5);
+  border-color: rgba(236,30,142,0.5);
 }
 .admin-input::placeholder { color: rgba(255,255,255,0.3); }
-.admin-input option { background: #05030F; color: #fff; }
+.admin-input option { background: #0B0710; color: #fff; }
 
 /* Spotlight Diagonal sweep reflection */
 .spotlight-sweep {
@@ -285,3 +277,29 @@ button:not([class*="w-"]):not([class*="h-"]) {
   left: 140%;
 }
 
+/* Dotted grid decorative motif — place as small absolute block near headings */
+.dotted-grid {
+  background-image: radial-gradient(circle, rgba(236,30,142,0.22) 1px, transparent 1px);
+  background-size: 18px 18px;
+  pointer-events: none;
+}
+
+/* Pill highlight for key heading words on dark bg */
+.pill-word {
+  display: inline-block;
+  background: rgba(236,30,142,0.15);
+  border: 1px solid rgba(236,30,142,0.30);
+  padding: 0.05em 0.45em 0.1em;
+  border-radius: 999px;
+  color: #EC1E8E;
+}
+
+/* Pill highlight variant — coral, for secondary accent words */
+.pill-word-coral {
+  display: inline-block;
+  background: rgba(255,122,69,0.14);
+  border: 1px solid rgba(255,122,69,0.30);
+  padding: 0.05em 0.45em 0.1em;
+  border-radius: 999px;
+  color: #FF7A45;
+}
