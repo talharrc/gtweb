@@ -1,6 +1,7 @@
 import { useEffect, useState, ReactNode } from 'react';
 import { Routes, Route, useLocation, useNavigate, Navigate } from 'react-router-dom';
-import { Loader2 } from 'lucide-react';
+import { Loader2, ChevronUp, MessageCircle } from 'lucide-react';
+import { motion, AnimatePresence } from 'motion/react';
 import Navbar from './components/Navbar';
 import HomeView from './components/HomeView';
 import ServicesView from './components/ServicesView';
@@ -93,6 +94,57 @@ function RequireRole({ requiredRole, children }: { requiredRole: UserRole | 'adm
   }
 
   return <>{children}</>;
+}
+
+function ScrollToTopButton() {
+  const [visible, setVisible] = useState(false);
+  useEffect(() => {
+    const handler = () => setVisible(window.scrollY > 400);
+    window.addEventListener('scroll', handler, { passive: true });
+    return () => window.removeEventListener('scroll', handler);
+  }, []);
+  return (
+    <AnimatePresence>
+      {visible && (
+        <motion.button
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.8 }}
+          transition={{ duration: 0.2 }}
+          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+          aria-label="Scroll to top"
+          className="fixed bottom-24 right-4 sm:right-6 z-40 w-10 h-10 rounded-full flex items-center justify-center text-white/70 hover:text-white transition-all hover:scale-110 active:scale-95"
+          style={{
+            background: 'rgba(10,7,23,0.75)',
+            backdropFilter: 'blur(14px)',
+            border: '1px solid rgba(255,255,255,0.12)',
+            boxShadow: '0 4px 20px rgba(0,0,0,0.5)',
+          }}
+        >
+          <ChevronUp className="w-4 h-4" />
+        </motion.button>
+      )}
+    </AnimatePresence>
+  );
+}
+
+function WhatsAppButton() {
+  return (
+    <a
+      href="https://wa.me/8801959209103"
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label="Chat on WhatsApp"
+      className="fixed bottom-6 right-4 sm:right-6 z-40 flex items-center gap-2 px-4 py-2.5 rounded-full text-white font-semibold text-sm transition-all hover:scale-105 active:scale-95 group"
+      style={{
+        background: 'linear-gradient(135deg, #25d366 0%, #128c48 100%)',
+        boxShadow: '0 4px 20px rgba(37,211,102,0.35)',
+      }}
+    >
+      <MessageCircle className="w-4 h-4 flex-shrink-0" />
+      <span className="hidden sm:inline">WhatsApp Us</span>
+    </a>
+  );
 }
 
 function AppInner() {
@@ -194,6 +246,8 @@ function AppInner() {
       <Footer onPageChange={handlePageSelect} dhakaTime={dhakaTime} />
       <CookieBanner />
       <AuthModal />
+      <ScrollToTopButton />
+      <WhatsAppButton />
     </div>
   );
 }

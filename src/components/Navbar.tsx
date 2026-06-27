@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
-import brandmarkLogo from '../assets/images/gt-logo.jpeg';
+import brandmarkLogo from '../assets/images/gt-logo-new.svg';
 import {
   ChevronDown,
   ArrowUpRight,
@@ -139,9 +139,68 @@ export default function Navbar({ onPageChange, dhakaTime, isDhakaOpen, currentUs
               Home
             </button>
 
+            {/* Expertise Dropdown (moved before Hubs for better UX flow) */}
+            <div className="relative" onMouseEnter={() => setActiveDropdown('expertise')} onMouseLeave={() => setActiveDropdown(null)}>
+              <button className={`text-sm font-medium transition-colors hover:text-primary flex items-center gap-2 py-3 focus:outline-none ${activeDropdown === 'expertise' ? 'text-primary' : 'text-white/80'}`}>
+                Expertise
+                <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-300 ${activeDropdown === 'expertise' ? 'rotate-180' : ''}`} />
+              </button>
+              <AnimatePresence>
+                {activeDropdown === 'expertise' && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -10, scale: 0.95 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: -10, scale: 0.95 }}
+                    transition={{ duration: 0.25 }}
+                    className="absolute top-full left-1/2 -translate-x-1/2 mt-1 w-[500px] bg-white/[0.042] [backdrop-filter:blur(22px)_saturate(140%)] [-webkit-backdrop-filter:blur(22px)_saturate(140%)] border border-[rgba(181,141,255,0.20)] rounded-[24px] overflow-hidden shadow-[inset_0_1px_0_rgba(255,255,255,0.09),inset_0_0_28px_rgba(124,42,235,0.05),0_24px_60px_rgba(0,0,0,0.70)] z-50 p-5 grid grid-cols-2 gap-3"
+                  >
+                    <div className="col-span-2 mb-1">
+                      <h4 className="text-[11px] uppercase tracking-wider text-secondary font-bold mb-1 px-2">Galaxa Expertise</h4>
+                    </div>
+                    {EXPERTISE_ITEMS.map((item) => (
+                      <button
+                        key={item.anchor}
+                        onClick={() => navTo(`/services#${item.anchor}`)}
+                        className="flex items-start gap-3 p-3 rounded-2xl hover:bg-[rgba(124,42,235,0.08)] text-left transition-all group/exp"
+                      >
+                        <div className={`w-8 h-8 rounded-xl flex items-center justify-center border group-hover/exp:scale-110 transition-transform flex-shrink-0 ${COLOR_MAP[item.color]}`}>
+                          <item.icon className="w-4 h-4" />
+                        </div>
+                        <div>
+                          <p className="text-xs font-bold text-white mb-0.5">{item.label}</p>
+                          <p className="text-[10px] text-white/50 leading-normal">{item.desc}</p>
+                        </div>
+                      </button>
+                    ))}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+
+            <button
+              onClick={() => navTo('/portfolio')}
+              className={`text-sm font-medium transition-colors hover:text-primary ${currentPath === '/portfolio' ? 'text-primary font-bold border-b-2 border-primary pb-0.5' : 'text-white/80'}`}
+            >
+              Portfolio
+            </button>
+
+            <button
+              onClick={() => navTo('/about')}
+              className={`text-sm font-medium transition-colors hover:text-primary ${currentPath === '/about' ? 'text-primary font-bold border-b-2 border-primary pb-0.5' : 'text-white/80'}`}
+            >
+              About
+            </button>
+
+            <button
+              onClick={() => navTo('/contact')}
+              className={`text-sm font-medium transition-colors hover:text-primary ${currentPath === '/contact' ? 'text-primary font-bold border-b-2 border-primary pb-0.5' : 'text-white/80'}`}
+            >
+              Contact
+            </button>
+
             {/* Hubs Dropdown */}
             <div className="relative" onMouseEnter={() => setActiveDropdown('hubs')} onMouseLeave={() => setActiveDropdown(null)}>
-              <button className={`text-sm font-medium transition-colors hover:text-primary flex items-center gap-2 py-3 focus:outline-none ${activeDropdown === 'hubs' ? 'text-primary animate-pulse' : 'text-white/80'}`}>
+              <button className={`text-sm font-medium transition-colors hover:text-primary flex items-center gap-2 py-3 focus:outline-none ${activeDropdown === 'hubs' ? 'text-primary' : 'text-white/80'}`}>
                 Hubs
                 <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-300 ${activeDropdown === 'hubs' ? 'rotate-180' : ''}`} />
               </button>
@@ -188,43 +247,6 @@ export default function Navbar({ onPageChange, dhakaTime, isDhakaOpen, currentUs
               </AnimatePresence>
             </div>
 
-            {/* Expertise Dropdown */}
-            <div className="relative" onMouseEnter={() => setActiveDropdown('expertise')} onMouseLeave={() => setActiveDropdown(null)}>
-              <button className={`text-sm font-medium transition-colors hover:text-primary flex items-center gap-2 py-3 focus:outline-none ${activeDropdown === 'expertise' ? 'text-primary' : 'text-white/80'}`}>
-                Expertise
-                <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-300 ${activeDropdown === 'expertise' ? 'rotate-180' : ''}`} />
-              </button>
-              <AnimatePresence>
-                {activeDropdown === 'expertise' && (
-                  <motion.div
-                    initial={{ opacity: 0, y: -10, scale: 0.95 }}
-                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                    exit={{ opacity: 0, y: -10, scale: 0.95 }}
-                    transition={{ duration: 0.25 }}
-                    className="absolute top-full left-1/2 -translate-x-1/2 mt-1 w-[500px] bg-white/[0.042] [backdrop-filter:blur(22px)_saturate(140%)] [-webkit-backdrop-filter:blur(22px)_saturate(140%)] border border-[rgba(181,141,255,0.20)] rounded-[24px] overflow-hidden shadow-[inset_0_1px_0_rgba(255,255,255,0.09),inset_0_0_28px_rgba(124,42,235,0.05),0_24px_60px_rgba(0,0,0,0.70)] z-50 p-5 grid grid-cols-2 gap-3"
-                  >
-                    <div className="col-span-2 mb-1">
-                      <h4 className="text-[11px] uppercase tracking-wider text-secondary font-bold mb-1 px-2">Galaxa Expertise</h4>
-                    </div>
-                    {EXPERTISE_ITEMS.map((item) => (
-                      <button
-                        key={item.anchor}
-                        onClick={() => navTo(`/services#${item.anchor}`)}
-                        className="flex items-start gap-3 p-3 rounded-2xl hover:bg-[rgba(124,42,235,0.08)] text-left transition-all group/exp"
-                      >
-                        <div className={`w-8 h-8 rounded-xl flex items-center justify-center border group-hover/exp:scale-110 transition-transform flex-shrink-0 ${COLOR_MAP[item.color]}`}>
-                          <item.icon className="w-4 h-4" />
-                        </div>
-                        <div>
-                          <p className="text-xs font-bold text-white mb-0.5">{item.label}</p>
-                          <p className="text-[10px] text-white/50 leading-normal">{item.desc}</p>
-                        </div>
-                      </button>
-                    ))}
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
           </div>
 
           {/* Action Buttons */}

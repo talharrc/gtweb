@@ -91,7 +91,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
 
   const [wordIndex, setWordIndex] = useState(0);
   const [buildMins, setBuildMins] = useState(42);
-  const [activeFAQ, setActiveFAQ] = useState<number | null>(null);
+  const [activeFAQ, setActiveFAQ] = useState<number | null>(0);
   const [activeIndex, setActiveIndex] = useState(0);
   const [hoveredCarouselIndex, setHoveredCarouselIndex] = useState<number | null>(null);
   const [dragOffset, setDragOffset] = useState(0);
@@ -258,17 +258,24 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
             </span>
           </motion.h1>
           <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.2, ease: [0.16,1,0.3,1] }} className="text-base sm:text-lg text-white/70 max-w-2xl mx-auto mb-10 leading-relaxed font-sans">
-            By investing only FIVE minutes, giving us some information about your business.
+            Tell us about your business in 5 minutes — we'll map out exactly how to grow your digital presence.
           </motion.p>
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.3, ease: [0.16,1,0.3,1] }} className="flex justify-center px-4 sm:px-0">
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.3, ease: [0.16,1,0.3,1] }} className="flex flex-col sm:flex-row items-center justify-center gap-3 px-4 sm:px-0">
             <button
               onClick={() => navigate('/audit')}
-              className="group flex items-center gap-4 text-white hover:text-white font-bold py-3.5 px-8 rounded-full transition-all duration-500 cursor-pointer hover:scale-[1.03] active:scale-[0.98] max-w-[280px] w-full sm:w-auto justify-center shadow-xl glass-card-premium spotlight-sweep border border-white/10"
+              className="group flex items-center gap-4 text-white hover:text-white font-bold py-3.5 px-8 rounded-full transition-all duration-500 cursor-pointer hover:scale-[1.03] active:scale-[0.98] w-full sm:w-auto justify-center shadow-xl glass-card-premium spotlight-sweep border border-white/10"
             >
               <span className="w-9 h-9 primary-gradient text-white rounded-full flex items-center justify-center group-hover:rotate-45 transition-transform duration-500 flex-shrink-0">
                 <ArrowUpRight className="w-4.5 h-4.5" />
               </span>
               <span className="text-sm font-semibold tracking-wider uppercase font-mono">Book an Audit</span>
+            </button>
+            <button
+              onClick={() => navigate('/portfolio')}
+              className="group flex items-center gap-3 text-white/70 hover:text-white font-semibold py-3.5 px-7 rounded-full transition-all duration-300 cursor-pointer hover:scale-[1.02] active:scale-[0.98] w-full sm:w-auto justify-center border border-white/15 hover:border-white/30 backdrop-blur-sm"
+            >
+              <span className="text-sm tracking-wide">See Our Work</span>
+              <ChevronRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
             </button>
           </motion.div>
         </div>
@@ -567,9 +574,20 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
             <div className="px-4 py-2 rounded-full border border-white/10 text-[11px] font-mono text-white/40">
               {String(activeIndex + 1).padStart(2, '0')} / {String(SERVICES.length).padStart(2, '0')}
             </div>
-            <div className="flex gap-2">
+            <div className="flex gap-2 items-center">
               {SERVICES.map((_, i) => (
-                <button key={i} onClick={() => setActiveIndex(i)} className="rounded-full transition-all duration-300" style={{ width: i === activeIndex ? '24px' : '8px', height: '8px', background: i === activeIndex ? '#7C2AEB' : 'rgba(255,255,255,0.2)' }} />
+                <button
+                  key={i}
+                  onClick={() => setActiveIndex(i)}
+                  aria-label={`Go to service ${i + 1}`}
+                  className="relative flex items-center justify-center rounded-full transition-all duration-300"
+                  style={{ width: i === activeIndex ? '24px' : '12px', height: '12px', minWidth: '12px', padding: 0 }}
+                >
+                  <span
+                    className="rounded-full block"
+                    style={{ width: i === activeIndex ? '24px' : '8px', height: '8px', background: i === activeIndex ? '#7C2AEB' : 'rgba(255,255,255,0.2)', transition: 'all 0.3s' }}
+                  />
+                </button>
               ))}
             </div>
             <button onClick={carouselNext} className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-white/60 hover:text-white hover:border-primary/40 transition-all duration-200 hover:scale-[1.05] active:scale-[0.98]">
@@ -660,7 +678,12 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
                         </div>
                         <p className="text-sm" style={{ color: lit ? 'rgba(255,255,255,0.5)' : 'rgba(255,255,255,0.2)' }}>{step.desc}</p>
                       </div>
-                      <button className="w-8 h-8 rounded-full border flex items-center justify-center flex-shrink-0 ml-4 cursor-pointer" style={{ borderColor: lit ? 'rgba(124,42,235,0.5)' : 'rgba(255,255,255,0.08)', background: lit ? 'rgba(124,42,235,0.15)' : 'transparent' }}>
+                      <button
+                        onClick={() => stepRefs.current[Math.min(i + 1, PROCESS_STEPS.length - 1)]?.scrollIntoView({ behavior: 'smooth', block: 'center' })}
+                        aria-label={`Go to step ${i + 2}`}
+                        className="w-8 h-8 rounded-full border flex items-center justify-center flex-shrink-0 ml-4 cursor-pointer hover:scale-110 transition-transform"
+                        style={{ borderColor: lit ? 'rgba(124,42,235,0.5)' : 'rgba(255,255,255,0.08)', background: lit ? 'rgba(124,42,235,0.15)' : 'transparent' }}
+                      >
                         <ChevronRight className="w-4 h-4" style={{ color: lit ? '#B58DFF' : 'rgba(255,255,255,0.2)' }} />
                       </button>
                     </div>
@@ -812,7 +835,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
                 })}
               </div>
             </div>
-            <p className="text-white/25 text-[11px] font-mono mt-6">Hover to reveal</p>
+            <p className="text-white/25 text-[11px] font-mono mt-6">{isMobile ? 'Tap to explore' : 'Hover to reveal'}</p>
           </motion.div>
         </div>
       </section>
@@ -972,7 +995,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[90] flex items-center justify-center p-4"
-              onClick={() => setCircleModalOpen(false)}
+              onClick={() => { setCircleModalOpen(false); if (!submitted) setToggled(false); }}
             >
               <motion.div
                 initial={{ opacity: 0, y: 24, scale: 0.95 }}
@@ -984,7 +1007,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
                 style={{ ...GLASS_STYLE, borderRadius: '24px', padding: '32px', borderColor: 'rgba(124,42,235,0.45)', boxShadow: '0 0 80px rgba(124,42,235,0.35), inset 0 1px 0 rgba(255,255,255,0.1)' }}
               >
                 <button
-                  onClick={() => setCircleModalOpen(false)}
+                  onClick={() => { setCircleModalOpen(false); if (!submitted) setToggled(false); }}
                   className="absolute top-4 right-4 w-8 h-8 rounded-full flex items-center justify-center transition-all hover:scale-110"
                   style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)' }}
                 >
