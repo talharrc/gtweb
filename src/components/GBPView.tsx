@@ -259,7 +259,7 @@ export default function GBPView() {
               </div>
               <div>
                 <label className={labelClass}>What track are you interested in?</label>
-                <select value={form.track} onChange={e => updateForm('track', e.target.value)} className="w-full bg-[#0A0825] border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-primary/50 transition-colors appearance-none cursor-pointer">
+                <select value={form.track} onChange={e => updateForm('track', e.target.value)} className="w-full bg-[#0A0717] border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-primary/50 transition-colors appearance-none cursor-pointer">
                   {[...TRACKS, 'Open to anything'].map(t => <option key={t} value={t}>{t}</option>)}
                 </select>
               </div>

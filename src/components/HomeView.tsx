@@ -26,7 +26,7 @@ const SERVICES = [
   { num: '01', icon: Laptop,         label: 'Web Development',         desc: 'Fast, secure, and scalable websites built for performance and growth.',              anchor: 'web-development',    color: '#78D5FF' },
   { num: '02', icon: Smartphone,     label: 'App Development',         desc: 'High-performance mobile and web apps tailored to user needs and business goals.',    anchor: 'app-development',    color: '#B58DFF' },
   { num: '03', icon: MessageCircle,  label: 'Social Media & Content',  desc: 'Engaging content and social strategies that build brand presence and loyalty.',      anchor: 'social-media',       color: '#7C2AEB' },
-  { num: '04', icon: Cpu,            label: 'AI & Automation',         desc: 'Intelligent automation that streamlines workflows and boosts productivity.',          anchor: 'ai-automation',      color: '#5E29E8' },
+  { num: '04', icon: Cpu,            label: 'AI & Automation',         desc: 'Intelligent automation that streamlines workflows and boosts productivity.',          anchor: 'ai-automation',      color: '#7C2AEB' },
   { num: '05', icon: Brush,          label: 'Brand Identity & Design', desc: 'Distinctive visuals and brand experiences that leave a lasting impression.',         anchor: 'brand-identity',     color: '#78D5FF' },
   { num: '06', icon: Workflow,       label: 'Systems Consulting',      desc: 'Strategic guidance and system architectures that drive sustainable growth.',         anchor: 'systems-consulting', color: '#B58DFF' },
 ];
@@ -39,9 +39,9 @@ const PROCESS_STEPS = [
 ];
 
 const PROJECTS = [
-  { slug: 'harmans-trading',  num: '01', name: 'Harmans Trading',  type: 'Trading Platform',      color: '#78D5FF', bg: 'linear-gradient(135deg,rgba(120,213,255,0.25) 0%,rgba(94,41,232,0.3) 60%,rgba(0,0,0,0.6) 100%)' },
-  { slug: 'sunnah-grandeur',  num: '02', name: 'Sunnah Grandeur',  type: 'E-Commerce Platform',   color: '#B58DFF', bg: 'linear-gradient(135deg,rgba(94,41,232,0.3) 0%,rgba(181,141,255,0.2) 60%,rgba(0,0,0,0.6) 100%)' },
-  { slug: 'salfas-bazar',     num: '03', name: 'Salfas Bazar',     type: 'Organic Food Platform', color: '#78FFB5', bg: 'linear-gradient(135deg,rgba(0,180,120,0.2) 0%,rgba(94,41,232,0.25) 60%,rgba(0,0,0,0.6) 100%)' },
+  { slug: 'harmans-trading',  num: '01', name: 'Harmans Trading',  type: 'Trading Platform',      color: '#78D5FF', bg: 'linear-gradient(135deg,rgba(120,213,255,0.25) 0%,rgba(124,42,235,0.3) 60%,rgba(0,0,0,0.6) 100%)' },
+  { slug: 'sunnah-grandeur',  num: '02', name: 'Sunnah Grandeur',  type: 'E-Commerce Platform',   color: '#B58DFF', bg: 'linear-gradient(135deg,rgba(124,42,235,0.3) 0%,rgba(181,141,255,0.2) 60%,rgba(0,0,0,0.6) 100%)' },
+  { slug: 'salfas-bazar',     num: '03', name: 'Salfas Bazar',     type: 'Organic Food Platform', color: '#78FFB5', bg: 'linear-gradient(135deg,rgba(0,180,120,0.2) 0%,rgba(124,42,235,0.25) 60%,rgba(0,0,0,0.6) 100%)' },
 ];
 
 const FAQS = [
@@ -94,6 +94,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
   const [activeFAQ, setActiveFAQ] = useState<number | null>(null);
   const [activeIndex, setActiveIndex] = useState(0);
   const [hoveredCarouselIndex, setHoveredCarouselIndex] = useState<number | null>(null);
+  const [dragOffset, setDragOffset] = useState(0);
   const stepRefs = useRef<(HTMLDivElement | null)[]>([]);
   const dragRef = useRef<{ startX: number; moved: boolean } | null>(null);
   const [illuminatedSteps, setIlluminatedSteps] = useState<Set<number>>(new Set());
@@ -146,12 +147,24 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
   };
   const handleCarouselPointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
     if (!dragRef.current) return;
-    if (Math.abs(e.clientX - dragRef.current.startX) > 6) dragRef.current.moved = true;
+    const d = e.clientX - dragRef.current.startX;
+    if (Math.abs(d) > 6) {
+      dragRef.current.moved = true;
+    }
+    setDragOffset(d);
   };
   const handleCarouselPointerUp = (e: React.PointerEvent<HTMLDivElement>) => {
     if (!dragRef.current) return;
     const d = e.clientX - dragRef.current.startX;
-    if (Math.abs(d) > 40) { d < 0 ? carouselNext() : carouselPrev(); }
+    const xStep = isMobile ? 155 : 245;
+    if (Math.abs(d) > xStep * 0.2) {
+      if (d < 0) {
+        carouselNext();
+      } else {
+        carouselPrev();
+      }
+    }
+    setDragOffset(0);
     dragRef.current = null;
   };
 
@@ -219,6 +232,8 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
           {/* Ambient purple glows */}
           <div className="absolute top-1/3 left-1/4 -translate-y-1/2 -translate-x-1/2 w-[500px] h-[500px] bg-[#7C2AEB]/10 blur-[120px] rounded-full pointer-events-none" />
           <div className="absolute top-1/3 right-1/4 -translate-y-1/2 translate-x-1/2 w-[400px] h-[400px] bg-[#7C2AEB]/8 blur-[100px] rounded-full pointer-events-none" />
+          {/* Diagonal spotlight beam */}
+          <div className="absolute top-0 right-0 w-[45vw] h-full bg-gradient-to-bl from-white/[0.025] via-transparent to-transparent pointer-events-none" style={{ clipPath: 'polygon(100% 0, 30% 0, 100% 100%)' }} />
         </div>
 
         <div className="max-w-5xl mx-auto px-4 sm:px-6 text-center relative z-10 pt-8 sm:pt-12">
@@ -234,7 +249,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
           </motion.div>
           <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.1, ease: [0.16,1,0.3,1] }} className="font-display text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight text-white mb-6 leading-[1.08] drop-shadow-[0_4px_24px_rgba(0,0,0,0.8)]">
             Assure your brand's <br className="hidden md:block" />
-            <span className="font-serif italic font-bold typewriter-container block min-h-[1.15em] mt-2 pb-1 overflow-hidden">
+            <span className="font-serif italic font-normal typewriter-container block min-h-[1.15em] mt-2 pb-1 overflow-hidden">
               <AnimatePresence mode="wait">
                 <motion.span key={wordIndex} initial={{ y: 35, opacity: 0, filter: 'blur(5px)' }} animate={{ y: 0, opacity: 1, filter: 'blur(0px)' }} exit={{ y: -35, opacity: 0, filter: 'blur(5px)' }} transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }} className="inline-block text-gradient">
                   {TYPEWRITER_WORDS[wordIndex]}
@@ -248,20 +263,19 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.3, ease: [0.16,1,0.3,1] }} className="flex justify-center px-4 sm:px-0">
             <button
               onClick={() => navigate('/audit')}
-              className="group flex items-center gap-4 text-white hover:text-primary font-bold py-4 px-8 rounded-full transition-all duration-300 shadow-2xl cursor-pointer hover:scale-[1.05] active:scale-[0.98] max-w-[280px] w-full sm:w-auto"
-              style={{ background: 'rgba(255,255,255,0.08)', backdropFilter: 'blur(12px)', border: '1px solid rgba(255,255,255,0.15)' }}
+              className="group flex items-center gap-4 text-white hover:text-white font-bold py-3.5 px-8 rounded-full transition-all duration-500 cursor-pointer hover:scale-[1.03] active:scale-[0.98] max-w-[280px] w-full sm:w-auto justify-center shadow-xl glass-card-premium spotlight-sweep border border-white/10"
             >
-              <span className="w-10 h-10 primary-gradient text-white rounded-full flex items-center justify-center group-hover:rotate-45 transition-transform duration-500">
-                <ArrowUpRight className="w-5 h-5" />
+              <span className="w-9 h-9 primary-gradient text-white rounded-full flex items-center justify-center group-hover:rotate-45 transition-transform duration-500 flex-shrink-0">
+                <ArrowUpRight className="w-4.5 h-4.5" />
               </span>
-              <span className="text-md font-bold text-white">Book an Audit</span>
+              <span className="text-sm font-semibold tracking-wider uppercase font-mono">Book an Audit</span>
             </button>
           </motion.div>
         </div>
       </section>
 
       {/* ── Global Presence ──────────────────────────────────────────────────── */}
-      <section className="relative py-16 px-6 overflow-hidden" style={{ background: '#080620' }}>
+      <section className="relative py-16 px-6 overflow-hidden" style={{ background: '#0A0717' }}>
         <div className="absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-[#05030F] to-transparent pointer-events-none z-10" />
         <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-[#05030F] to-transparent pointer-events-none z-10" />
         <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.6 }} className="relative z-20">
@@ -307,10 +321,10 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
       </section>
 
       {/* ── Why Choose Us ────────────────────────────────────────────────────── */}
-      <section className="py-16 px-6" style={{ background: 'linear-gradient(to bottom, #05030F 0%, #0A0825 50%, #05030F 100%)' }}>
+      <section className="py-16 px-6" style={{ background: 'linear-gradient(to bottom, #05030F 0%, #0A0717 50%, #05030F 100%)' }}>
         <div className="max-w-7xl mx-auto">
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.6 }} className="text-center mb-10">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-primary/20 mb-6" style={{ background: 'rgba(94,41,232,0.08)' }}>
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-primary/20 mb-6" style={{ background: 'rgba(124,42,235,0.08)' }}>
               <CheckCircle className="w-3.5 h-3.5 text-primary/70" />
               <span className="text-[10px] font-mono text-primary/70 tracking-widest uppercase">Why GalaxaTech</span>
             </div>
@@ -320,37 +334,128 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
             <p className="text-white/50 text-lg">Five reasons clients trust GalaxaTech to build their digital future.</p>
           </motion.div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-            {WHY_CHOOSE_US.map((item, i) => {
-              const Icon = item.icon;
-              return (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, y: 24 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, amount: 0.2 }}
-                  transition={{ duration: 0.5, delay: i * 0.1 }}
-                  className="flex flex-col gap-4 p-6 rounded-2xl transition-all duration-300"
-                  style={{ ...GLASS_STYLE }}
-                  onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.boxShadow = '0 0 40px rgba(124,42,235,0.25), inset 0 1px 0 rgba(255,255,255,0.12)'; (e.currentTarget as HTMLDivElement).style.borderColor = 'rgba(181,141,255,0.35)'; }}
-                  onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.boxShadow = GLASS_STYLE.boxShadow as string; (e.currentTarget as HTMLDivElement).style.borderColor = 'rgba(255,255,255,0.15)'; }}
-                >
-                  <div className="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: 'rgba(124,42,235,0.15)', border: '1px solid rgba(181,141,255,0.2)' }}>
-                    <Icon className="w-5 h-5" style={{ color: '#B58DFF' }} />
-                  </div>
-                  <div>
-                    <h3 className="text-white font-bold text-sm mb-1.5 leading-snug" style={{ fontFamily: 'Satoshi, sans-serif' }}>{item.title}</h3>
-                    <p className="text-white/50 text-xs leading-relaxed">{item.desc}</p>
-                  </div>
-                </motion.div>
-              );
-            })}
+          <div className="grid grid-cols-1 md:grid-cols-6 gap-5">
+            {/* Card 1: Systems-First Approach */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5 }}
+              className="md:col-span-4 flex flex-col justify-between p-7 rounded-3xl glass-card-premium spotlight-sweep border border-white/10 group min-h-[220px]"
+            >
+              <div className="flex items-start justify-between">
+                <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-primary/10 border border-primary/20">
+                  <Workflow className="w-5.5 h-5.5 text-lavender" />
+                </div>
+                {/* Micro tech chart inside Card 1 */}
+                <div className="hidden sm:flex items-center gap-1.5 font-mono text-[9px] text-white/35 bg-white/5 rounded-lg px-2.5 py-1 border border-white/5">
+                  <span>DISCOVER</span>
+                  <span className="text-primary">→</span>
+                  <span>ARCHITECT</span>
+                  <span className="text-primary">→</span>
+                  <span>OPTIMIZE</span>
+                </div>
+              </div>
+              <div className="mt-6 flex flex-col sm:flex-row gap-6 items-end justify-between">
+                <div className="max-w-md">
+                  <h3 className="text-white font-bold text-base mb-2 font-display">Systems-First Approach</h3>
+                  <p className="text-white/50 text-xs leading-relaxed">We architect before we build — mapping workflows, infrastructure, and dependencies so strategy is never an afterthought.</p>
+                </div>
+                <div className="flex flex-col gap-1 w-full sm:w-auto font-mono text-[9px] text-primary/70 bg-primary/5 rounded-lg p-2.5 border border-primary/10">
+                  <div className="flex justify-between gap-4"><span>Sys.Map:</span><span className="text-white font-semibold">Active</span></div>
+                  <div className="flex justify-between gap-4"><span>Integrity:</span><span className="text-emerald-400 font-semibold">99.8%</span></div>
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Card 2: End-to-End Delivery */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+              className="md:col-span-2 flex flex-col justify-between p-7 rounded-3xl glass-card-premium spotlight-sweep border border-white/10 group min-h-[220px]"
+            >
+              <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-primary/10 border border-primary/20">
+                <Rocket className="w-5.5 h-5.5 text-lavender" />
+              </div>
+              <div className="mt-4">
+                <h3 className="text-white font-bold text-base mb-2 font-display">End-to-End</h3>
+                <p className="text-white/50 text-xs leading-relaxed mb-4">From roadmap planning through production code deployment, our team owns the entire lifecycle.</p>
+                <div className="w-full bg-white/5 rounded-full h-1 border border-white/5">
+                  <motion.div initial={{ width: 0 }} whileInView={{ width: '100%' }} transition={{ duration: 1.5 }} className="h-full bg-gradient-to-r from-primary to-lavender rounded-full" />
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Card 3: Builders Mindset */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              className="md:col-span-2 flex flex-col justify-between p-7 rounded-3xl glass-card-premium spotlight-sweep border border-white/10 group min-h-[220px]"
+            >
+              <div className="flex items-start justify-between">
+                <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-primary/10 border border-primary/20">
+                  <Users className="w-5.5 h-5.5 text-lavender" />
+                </div>
+                <span className="text-[9px] font-mono text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20 font-bold">Live</span>
+              </div>
+              <div className="mt-4">
+                <h3 className="text-white font-bold text-base mb-2 font-display">Builders Mindset</h3>
+                <p className="text-white/50 text-xs leading-relaxed mb-3">We run our own builder community ecosystem — direct production and fast iteration are in our DNA.</p>
+                <div className="font-mono text-[10px] text-white/30">Active: <span className="text-white font-bold">148+ builders</span></div>
+              </div>
+            </motion.div>
+
+            {/* Card 4: Global Standards */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.3 }}
+              className="md:col-span-2 flex flex-col justify-between p-7 rounded-3xl glass-card-premium spotlight-sweep border border-white/10 group min-h-[220px]"
+            >
+              <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-primary/10 border border-primary/20">
+                <Globe className="w-5.5 h-5.5 text-lavender" />
+              </div>
+              <div className="mt-4">
+                <h3 className="text-white font-bold text-base mb-2 font-display">Global Standard</h3>
+                <p className="text-white/50 text-xs leading-relaxed mb-3">Serving clients across 6 countries with enterprise stability and low-latency operational support.</p>
+                <div className="font-mono text-[9px] text-white/35 flex gap-2">
+                  <span>US-East: <span className="text-emerald-400 font-bold">12ms</span></span>
+                  <span>EU-West: <span className="text-emerald-400 font-bold">38ms</span></span>
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Card 5: Fast Communication */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.4 }}
+              className="md:col-span-2 flex flex-col justify-between p-7 rounded-3xl glass-card-premium spotlight-sweep border border-white/10 group min-h-[220px]"
+            >
+              <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-primary/10 border border-primary/20">
+                <MessageCircle className="w-5.5 h-5.5 text-lavender" />
+              </div>
+              <div className="mt-4">
+                <h3 className="text-white font-bold text-base mb-2 font-display">Fast Operations</h3>
+                <p className="text-white/50 text-xs leading-relaxed mb-3">WhatsApp-first, live Client Hub dashboards, and daily updates — you're never left guessing.</p>
+                <div className="bg-white/5 border border-white/5 rounded-xl p-2 flex items-center gap-2">
+                  <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 flex-shrink-0 animate-pulse" />
+                  <span className="font-mono text-[9px] text-white/55">Update: 2 mins ago</span>
+                </div>
+              </div>
+            </motion.div>
           </div>
         </div>
       </section>
 
       {/* ── What We Build — 3D Service Carousel ──────────────────────────────── */}
-      <section className="py-16 px-6" style={{ background: 'linear-gradient(to bottom, #05030F 0%, #080620 50%, #05030F 100%)' }}>
+      <section className="py-16 px-6" style={{ background: 'linear-gradient(to bottom, #05030F 0%, #0A0717 50%, #05030F 100%)' }}>
         <div className="max-w-7xl mx-auto">
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.6 }} className="text-center mb-10">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-primary/25 mb-5" style={{ background: 'rgba(124,42,235,0.08)' }}>
@@ -366,64 +471,87 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
           {/* 3D Carousel */}
           <div
             className="relative select-none overflow-hidden"
-            style={{ perspective: isMobile ? '800px' : '1400px', height: isMobile ? '300px' : '360px' }}
+            style={{ perspective: isMobile ? '800px' : '1400px', height: isMobile ? '300px' : '360px', touchAction: 'pan-y' }}
             onPointerDown={handleCarouselPointerDown}
             onPointerMove={handleCarouselPointerMove}
             onPointerUp={handleCarouselPointerUp}
-            onPointerCancel={() => { dragRef.current = null; }}
+            onPointerCancel={() => { dragRef.current = null; setDragOffset(0); }}
           >
             {SERVICES.map((svc, i) => {
               const offset = getCarouselOffset(i, activeIndex, SERVICES.length);
-              const absOff = Math.abs(offset);
-              const visible = isMobile ? absOff <= 1 : absOff <= 2;
               const xStep = isMobile ? 155 : 245;
-              const x = offset * xStep;
-              const rotY = isMobile ? offset * 14 : offset * 22;
+              
+              // Apparent fractional offset including real-time drag displacement
+              const apparentOffset = offset + (dragOffset / xStep);
+              const absOff = Math.abs(apparentOffset);
+              
+              // We make a slightly wider visible threshold because cards are moving dynamically
+              const visible = isMobile ? absOff <= 1.5 : absOff <= 2.5;
+              
+              // Calculate real-time visual positioning
+              const x = offset * xStep + dragOffset;
+              const rotY = isMobile ? apparentOffset * 14 : apparentOffset * 22;
               const z = -absOff * (isMobile ? 70 : 100);
               const scale = 1 - absOff * 0.13;
-              const opacity = visible ? (absOff === 0 ? 1 : absOff === 1 ? 0.72 : 0.48) : 0;
-              const isActive = offset === 0;
+              
+              // Smoothly fade out as card moves away from center
+              const opacity = visible ? Math.max(0, 1 - absOff * 0.4) : 0;
+              const isActive = absOff < 0.5;
               const cardWidth = isMobile ? '175px' : '240px';
               return (
                 <div
                   key={svc.anchor}
-                  onClick={() => { if (dragRef.current?.moved) return; if (!isActive) setActiveIndex(i); else navigate(`/services#${svc.anchor}`); }}
+                  onClick={() => { if (dragRef.current?.moved) return; if (Math.abs(apparentOffset) >= 0.5) setActiveIndex(i); else navigate(`/services#${svc.anchor}`); }}
                   onMouseEnter={() => setHoveredCarouselIndex(i)}
                   onMouseLeave={() => setHoveredCarouselIndex(null)}
                   style={{
                     position: 'absolute', left: '50%', top: '50%', width: cardWidth,
                     transform: `translateX(calc(-50% + ${x}px)) translateY(-50%) rotateY(${rotY}deg) translateZ(${z}px) scale(${scale * (hoveredCarouselIndex === i ? 1.02 : 1)})`,
-                    opacity, transition: 'all 0.35s cubic-bezier(.2,.7,.2,1)',
+                    opacity,
+                    // If actively dragging, disable transition for real-time tracking, otherwise use smooth animation
+                    transition: dragOffset !== 0 ? 'none' : 'all 0.35s cubic-bezier(.2,.7,.2,1)',
                     pointerEvents: visible ? 'auto' : 'none', cursor: 'pointer',
-                    zIndex: 10 - absOff, ...GLASS_STYLE, borderRadius: '20px',
-                    ...(isActive ? {
-                      borderColor: 'rgba(167,139,250,0.5)',
-                      boxShadow: hoveredCarouselIndex === i
-                        ? '0 0 80px rgba(124,42,235,0.65), 0 0 25px -5px rgba(124,42,235,0.5), inset 0 1px 0 rgba(255,255,255,0.15)'
-                        : '0 0 60px rgba(124,42,235,0.5), 0 0 25px -5px rgba(124,42,235,0.5), inset 0 1px 0 rgba(255,255,255,0.15)',
-                    } : {
-                      borderColor: 'rgba(255,255,255,0.12)',
-                      boxShadow: '0 0 25px -5px rgba(124,42,235,0.3), inset 0 1px 0 rgba(255,255,255,0.06)',
-                    }),
+                    zIndex: Math.round(10 - absOff * 2), // Keep correct 3D stacking order dynamically
+                    background: 'rgba(10, 8, 37, 0.45)',
+                    backdropFilter: 'blur(20px) saturate(140%)',
+                    WebkitBackdropFilter: 'blur(20px) saturate(140%)',
+                    borderRadius: '24px',
+                    border: '1px solid rgba(255, 255, 255, 0.08)',
+                    borderTop: '1px solid rgba(255, 255, 255, 0.15)',
+                    borderLeft: '1px solid rgba(255, 255, 255, 0.12)',
+                    boxShadow: isActive
+                      ? hoveredCarouselIndex === i
+                        ? `0 0 70px ${svc.color}45, 0 10px 30px rgba(0,0,0,0.65), inset 0 1px 0 rgba(255,255,255,0.12)`
+                        : `0 0 50px ${svc.color}25, 0 10px 30px rgba(0,0,0,0.65), inset 0 1px 0 rgba(255,255,255,0.12)`
+                      : '0 8px 25px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.06)',
                     padding: '28px 24px',
+                    overflow: 'hidden',
                   }}
                 >
-                  <div className="flex items-start justify-between mb-5">
-                    <div className="w-12 h-12 rounded-2xl flex items-center justify-center" style={{ background: `${svc.color}18`, border: `1px solid ${svc.color}30` }}>
+                  {/* Neon backing glow inside card */}
+                  <div
+                    className="absolute inset-0 opacity-10 pointer-events-none transition-opacity duration-500"
+                    style={{
+                      background: `radial-gradient(circle at 50% 50%, ${svc.color} 0%, transparent 70%)`,
+                      opacity: isActive ? 0.22 : 0.06,
+                    }}
+                  />
+                  <div className="flex items-start justify-between mb-5 relative z-10">
+                    <div className="w-12 h-12 rounded-2xl flex items-center justify-center" style={{ background: `${svc.color}15`, border: `1px solid ${svc.color}25` }}>
                       <svc.icon className="w-6 h-6" style={{ color: svc.color }} />
                     </div>
-                    <span className="text-[11px] font-mono text-white/25">{svc.num}</span>
+                    <span className="text-[11px] font-mono text-white/20 font-semibold">{svc.num}</span>
                   </div>
-                  <h3 className="text-white font-bold text-base mb-2" style={{ fontFamily: 'Satoshi, sans-serif' }}>{svc.label}</h3>
-                  <p className="text-white/50 text-sm leading-relaxed">{svc.desc}</p>
+                  <h3 className="text-white font-bold text-base mb-2 font-display relative z-10">{svc.label}</h3>
+                  <p className="text-white/45 text-sm leading-relaxed relative z-10">{svc.desc}</p>
                   {isActive && (
-                    <div className="flex items-center gap-1.5 mt-5 text-xs font-semibold" style={{ color: '#B58DFF' }}>
+                    <div className="flex items-center gap-1.5 mt-5 text-xs font-semibold relative z-10" style={{ color: '#B58DFF' }}>
                       Explore Service <ArrowUpRight className="w-3.5 h-3.5" />
                     </div>
                   )}
                   {!isActive && (
-                    <div className="mt-5">
-                      <ArrowUpRight className="w-4 h-4 text-white/25" />
+                    <div className="mt-5 relative z-10">
+                      <ArrowUpRight className="w-4 h-4 text-white/20" />
                     </div>
                   )}
                 </div>
@@ -452,7 +580,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
       </section>
 
       {/* ── How We Work — vertical timeline ──────────────────────────────────── */}
-      <section className="py-16 px-6" style={{ background: 'linear-gradient(to bottom, #05030F 0%, #0A0825 50%, #05030F 100%)' }}>
+      <section className="py-16 px-6" style={{ background: 'linear-gradient(to bottom, #05030F 0%, #0A0717 50%, #05030F 100%)' }}>
         <div className="max-w-2xl mx-auto">
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.6 }} className="text-center mb-10">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-primary/25 mb-5" style={{ background: 'rgba(124,42,235,0.08)' }}>
@@ -491,34 +619,48 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
                 vectorEffect="non-scaling-stroke"
                 strokeDasharray="1000"
                 strokeDashoffset={1000 - (lineProgress / 100) * 1000}
-                style={{ transition: 'stroke-dashoffset 0.8s cubic-bezier(.2,.7,.2,1)', filter: 'drop-shadow(0 0 4px rgba(124,42,235,0.8))' }}
+                style={{ transition: 'stroke-dashoffset 0.8s cubic-bezier(.2,.7,.2,1)', filter: 'drop-shadow(0 0 8px rgba(124,42,235,0.65))' }}
               />
               <defs>
                 <linearGradient id="waveGrad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#5E29E8" />
+                  <stop offset="0%" stopColor="#7C2AEB" />
                   <stop offset="100%" stopColor="#B58DFF" />
                 </linearGradient>
               </defs>
             </svg>
-
+ 
             <div className="flex flex-col gap-5">
               {PROCESS_STEPS.map((step, i) => {
                 const lit = illuminatedSteps.has(i);
                 const StepIcon = step.Icon;
                 return (
                   <div key={step.num} ref={el => { stepRefs.current[i] = el; }} className="flex items-center gap-5 relative z-10">
-                    <div className="w-[58px] h-[58px] rounded-full flex items-center justify-center flex-shrink-0" style={{ border: `2px solid ${lit ? '#7C2AEB' : 'rgba(124,42,235,0.25)'}`, background: lit ? 'rgba(124,42,235,0.22)' : 'rgba(10,8,37,1)', boxShadow: lit ? '0 0 30px rgba(124,42,235,0.6),0 0 60px rgba(124,42,235,0.2)' : 'none', transition: '0.6s cubic-bezier(.2,.7,.2,1)' }}>
-                      <StepIcon className="w-5 h-5" style={{ color: lit ? '#B58DFF' : 'rgba(181,141,255,0.3)', transition: '0.6s' }} />
+                    <div className="w-[58px] h-[58px] rounded-full flex items-center justify-center flex-shrink-0 relative" style={{ transition: '0.6s cubic-bezier(.2,.7,.2,1)' }}>
+                      {/* Outer border ring */}
+                      <div className="absolute inset-0 rounded-full border" style={{ borderColor: lit ? '#7C2AEB' : 'rgba(124,42,235,0.2)', transition: '0.6s' }} />
+                      {/* Mid glowing backing */}
+                      <div className="absolute inset-1 rounded-full blur-[4px]" style={{ background: lit ? 'rgba(124, 42, 235, 0.45)' : 'rgba(124, 42, 235, 0.05)', transition: '0.6s' }} />
+                      {/* Inner ring */}
+                      <div className="absolute inset-[3px] rounded-full bg-[#0A0717]/95 flex items-center justify-center border border-white/5" style={{ boxShadow: lit ? '0 0 20px rgba(124,42,235,0.4)' : 'none', transition: '0.6s' }}>
+                        <StepIcon className="w-5 h-5" style={{ color: lit ? '#B58DFF' : 'rgba(181,141,255,0.3)', transition: '0.6s' }} />
+                      </div>
                     </div>
-                    <div className="flex-1 flex items-center justify-between p-5 rounded-2xl" style={{ ...GLASS_STYLE, borderColor: lit ? 'rgba(124,42,235,0.4)' : 'rgba(255,255,255,0.1)', transition: '0.6s cubic-bezier(.2,.7,.2,1)' }}>
+                    <div className="flex-1 flex items-center justify-between p-5 rounded-3xl" style={{
+                      background: 'rgba(10, 8, 37, 0.55)',
+                      backdropFilter: 'blur(20px) saturate(140%)',
+                      border: '1px solid rgba(255, 255, 255, 0.06)',
+                      borderTop: lit ? '1px solid rgba(181,141,255,0.35)' : '1px solid rgba(255, 255, 255, 0.12)',
+                      boxShadow: lit ? '0 0 35px rgba(124,42,235,0.18), 0 10px 30px rgba(0,0,0,0.5)' : '0 8px 25px rgba(0,0,0,0.35)',
+                      transition: '0.6s cubic-bezier(.2,.7,.2,1)'
+                    }}>
                       <div>
                         <div className="flex items-center gap-2.5 mb-1">
                           <span className="text-[10px] font-mono" style={{ color: lit ? '#7C2AEB' : 'rgba(124,42,235,0.35)' }}>{step.num}</span>
-                          <h3 className="font-bold text-base" style={{ fontFamily: 'Satoshi, sans-serif', color: lit ? '#fff' : 'rgba(255,255,255,0.35)' }}>{step.title}</h3>
+                          <h3 className="font-bold text-base font-display" style={{ color: lit ? '#fff' : 'rgba(255,255,255,0.35)' }}>{step.title}</h3>
                         </div>
-                        <p className="text-sm" style={{ color: lit ? 'rgba(255,255,255,0.55)' : 'rgba(255,255,255,0.2)' }}>{step.desc}</p>
+                        <p className="text-sm" style={{ color: lit ? 'rgba(255,255,255,0.5)' : 'rgba(255,255,255,0.2)' }}>{step.desc}</p>
                       </div>
-                      <button className="w-8 h-8 rounded-full border flex items-center justify-center flex-shrink-0 ml-4" style={{ borderColor: lit ? 'rgba(124,42,235,0.5)' : 'rgba(255,255,255,0.08)', background: lit ? 'rgba(124,42,235,0.15)' : 'transparent' }}>
+                      <button className="w-8 h-8 rounded-full border flex items-center justify-center flex-shrink-0 ml-4 cursor-pointer" style={{ borderColor: lit ? 'rgba(124,42,235,0.5)' : 'rgba(255,255,255,0.08)', background: lit ? 'rgba(124,42,235,0.15)' : 'transparent' }}>
                         <ChevronRight className="w-4 h-4" style={{ color: lit ? '#B58DFF' : 'rgba(255,255,255,0.2)' }} />
                       </button>
                     </div>
@@ -538,7 +680,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
       </section>
 
       {/* ── Selected Work — glassmorphic folder ───────────────────────────────── */}
-      <section className="py-16 px-6 overflow-x-hidden" style={{ background: 'linear-gradient(to bottom, #05030F 0%, #080618 50%, #05030F 100%)' }}>
+      <section className="py-16 px-6 overflow-x-hidden" style={{ background: 'linear-gradient(to bottom, #05030F 0%, #0A0717 50%, #05030F 100%)' }}>
         <div className="max-w-5xl mx-auto">
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.6 }} className="text-center mb-16">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-primary/25 mb-5" style={{ background: 'rgba(124,42,235,0.08)' }}>
@@ -554,96 +696,121 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
           {/* Folder widget */}
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.6 }} className="flex flex-col items-center">
             <div
-              className="relative cursor-pointer w-full max-w-[680px]"
+              className="relative cursor-pointer w-full max-w-[600px] flex items-center justify-center"
               onMouseEnter={() => setFolderHovered(true)}
               onMouseLeave={() => setFolderHovered(false)}
               onClick={() => navigate('/portfolio')}
-              style={{ height: isMobile ? '380px' : '480px' }}
+              style={{
+                height: isMobile ? '360px' : '440px',
+                perspective: '1200px',
+              }}
             >
-              {/* Folder body — rendered FIRST so it's behind cards in DOM, then z-index controls visibility */}
+              {/* Tilted Container Wrapper */}
               <div
-                className="absolute bottom-0 left-0 right-0 rounded-2xl"
                 style={{
-                  height: '260px',
-                  ...GLASS_STYLE,
-                  borderColor: folderHovered ? 'rgba(124,42,235,0.5)' : 'rgba(255,255,255,0.15)',
-                  boxShadow: folderHovered ? '0 0 80px rgba(124,42,235,0.4), inset 0 1px 0 rgba(255,255,255,0.1)' : GLASS_STYLE.boxShadow,
-                  transition: '0.5s cubic-bezier(.2,.7,.2,1)',
-                  borderRadius: '4px 24px 24px 24px',
-                  zIndex: folderHovered ? 2 : 8,
+                  width: '100%',
+                  height: '100%',
+                  position: 'relative',
+                  transformStyle: 'preserve-3d',
+                  transform: folderHovered
+                    ? 'rotateX(50deg) rotateY(0deg) rotateZ(-30deg) translateZ(10px) scale(1.05)'
+                    : 'rotateX(55deg) rotateY(0deg) rotateZ(-35deg) scale(1)',
+                  transition: 'all 0.6s cubic-bezier(0.16, 1, 0.3, 1)',
                 }}
               >
-                {/* Folder tab */}
-                <div className="absolute -top-[24px] left-0 h-6 w-28 rounded-t-xl" style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.12)', borderBottom: 'none' }} />
-                <div className="flex flex-col justify-between h-full p-8">
-                  <div>
-                    <div className="flex items-center gap-3 mb-2">
-                      <div className="w-10 h-10 rounded-xl border border-primary/20 flex items-center justify-center" style={{ background: 'rgba(124,42,235,0.1)' }}>
-                        <span className="text-xl">📁</span>
-                      </div>
-                      <div>
-                        <p className="text-white font-bold text-lg" style={{ fontFamily: 'Satoshi, sans-serif' }}>Open <span style={{ color: '#B58DFF' }}>Portfolio</span></p>
-                        <p className="text-white/35 text-xs">Hover to reveal selected projects</p>
+                {/* Bottom Folder Plate */}
+                <div
+                  className="absolute bottom-4 left-4 right-4 rounded-3xl"
+                  style={{
+                    height: '240px',
+                    background: 'rgba(10, 8, 37, 0.65)',
+                    backdropFilter: 'blur(20px) saturate(140%)',
+                    WebkitBackdropFilter: 'blur(20px) saturate(140%)',
+                    border: '1px solid rgba(255,255,255,0.08)',
+                    borderTop: '1px solid rgba(255,255,255,0.18)',
+                    borderLeft: '1px solid rgba(255,255,255,0.15)',
+                    borderRadius: '24px 24px 24px 24px',
+                    boxShadow: folderHovered
+                      ? '0 30px 90px rgba(124,42,235,0.45), inset 0 1px 0 rgba(255,255,255,0.15)'
+                      : '0 15px 45px rgba(0,0,0,0.65), inset 0 1px 0 rgba(255,255,255,0.08)',
+                    transform: 'translateZ(0px)',
+                    transition: 'all 0.6s cubic-bezier(0.16, 1, 0.3, 1)',
+                    zIndex: 2,
+                  }}
+                >
+                  <div className="flex flex-col justify-between h-full p-8">
+                    <div>
+                      <div className="flex items-center gap-3.5 mb-2">
+                        <div className="w-10 h-10 rounded-xl border border-primary/20 flex items-center justify-center bg-primary/10">
+                          <span className="text-xl">📁</span>
+                        </div>
+                        <div>
+                          <p className="text-white font-bold text-lg font-display">Open Portfolio</p>
+                          <p className="text-white/40 text-xs">Hover to reveal selected projects</p>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <Sparkles className="w-4 h-4 text-primary/50" />
-                      <span className="text-white/35 text-sm font-semibold" style={{ fontFamily: 'Satoshi, sans-serif' }}>GalaxaTech</span>
+                    <div className="flex items-center justify-between">
+                      <span className="text-white/35 text-xs font-semibold tracking-wider font-mono">GALAXATECH © 2026</span>
+                      <button
+                        onClick={e => { e.stopPropagation(); navigate('/portfolio'); }}
+                        className="w-11 h-11 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-[1.1] primary-gradient cursor-pointer animate-pulse"
+                        style={{ boxShadow: '0 8px 30px rgba(124,42,235,0.4)' }}
+                      >
+                        <ArrowUpRight className="w-5 h-5 text-white" />
+                      </button>
                     </div>
-                    <button
-                      onClick={e => { e.stopPropagation(); navigate('/portfolio'); }}
-                      className="w-11 h-11 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-[1.1]"
-                      style={{ background: 'linear-gradient(135deg,#5E29E8,#7C2AEB)', boxShadow: '0 8px 30px rgba(124,42,235,0.4)' }}
-                    >
-                      <ArrowUpRight className="w-5 h-5 text-white" />
-                    </button>
                   </div>
                 </div>
-              </div>
 
-              {/* Fan-out project cards — layered above folder on hover */}
-              {PROJECTS.map((proj, i) => {
-                const fan = isMobile
-                  ? ['translateX(-120px) translateY(0px) rotate(-12deg)', 'translateX(0px) translateY(-30px) rotate(0deg)', 'translateX(120px) translateY(0px) rotate(12deg)']
-                  : ['translateX(-220px) translateY(0px) rotate(-16deg)', 'translateX(0px) translateY(-40px) rotate(0deg)', 'translateX(220px) translateY(0px) rotate(16deg)'];
-                const stack = isMobile
-                  ? ['translateX(-40px) translateY(90px) rotate(-5deg)', 'translateX(0px) translateY(75px) rotate(0deg)', 'translateX(40px) translateY(90px) rotate(5deg)']
-                  : ['translateX(-60px) translateY(120px) rotate(-6deg)', 'translateX(0px) translateY(100px) rotate(0deg)', 'translateX(60px) translateY(120px) rotate(6deg)'];
-                const cardW = isMobile ? '150px' : '190px';
-                const cardH = isMobile ? '190px' : '240px';
-                const cardZ = folderHovered ? [10, 12, 11][i] : [3, 5, 4][i];
-                return (
-                  <div
-                    key={proj.slug}
-                    style={{
-                      position: 'absolute',
-                      left: '50%',
-                      top: '20px',
-                      width: cardW,
-                      height: cardH,
-                      marginLeft: isMobile ? '-75px' : '-95px',
-                      transform: folderHovered ? fan[i] : stack[i],
-                      transition: `0.5s cubic-bezier(.2,.7,.2,1) ${i * 0.04}s`,
-                      zIndex: cardZ,
-                      borderRadius: '16px',
-                      overflow: 'hidden',
-                      border: '1px solid rgba(167,139,250,0.4)',
-                      boxShadow: folderHovered ? '0 12px 40px rgba(124,42,235,0.6)' : '0 0 25px -5px rgba(124,42,235,0.5)',
-                    }}
-                  >
-                    <div className="h-3/5 relative flex items-center justify-center" style={{ background: proj.bg }}>
-                      <Globe className="w-10 h-10 opacity-20" style={{ color: proj.color }} />
-                      <span className="absolute top-3 left-3 text-[10px] font-mono text-white/50">{proj.num}</span>
+                {/* Overlapping Project Cards - stacked and lifting up in 3D */}
+                {PROJECTS.map((proj, i) => {
+                  const cardZ = folderHovered ? (i + 1) * 60 : (i + 1) * 20;
+                  const cardY = folderHovered ? -i * 30 : -i * 10;
+                  const cardX = folderHovered ? i * 40 : i * 15;
+                  
+                  const cardW = isMobile ? '160px' : '200px';
+                  const cardH = isMobile ? '200px' : '250px';
+                  
+                  return (
+                    <div
+                      key={proj.slug}
+                      style={{
+                        position: 'absolute',
+                        left: '50%',
+                        top: '10px',
+                        width: cardW,
+                        height: cardH,
+                        marginLeft: isMobile ? '-80px' : '-100px',
+                        transform: `translate3d(${cardX}px, ${cardY}px, ${cardZ}px) rotateZ(${folderHovered ? i * 10 - 10 : 0}deg)`,
+                        transformStyle: 'preserve-3d',
+                        transition: `all 0.6s cubic-bezier(0.16, 1, 0.3, 1)`,
+                        zIndex: 10 + i,
+                        borderRadius: '20px',
+                        overflow: 'hidden',
+                        border: '1px solid rgba(255, 255, 255, 0.08)',
+                        borderTop: '1px solid rgba(255, 255, 255, 0.15)',
+                        borderLeft: '1px solid rgba(255, 255, 255, 0.12)',
+                        boxShadow: folderHovered 
+                          ? '0 20px 45px rgba(124,42,235,0.35)' 
+                          : '0 8px 25px rgba(0,0,0,0.5)',
+                      }}
+                    >
+                      <div className="h-3/5 relative flex items-center justify-center" style={{ background: proj.bg }}>
+                        <Globe className="w-10 h-10 opacity-20" style={{ color: proj.color }} />
+                        <span className="absolute top-3.5 left-3.5 text-[10px] font-mono text-white/50">{proj.num}</span>
+                      </div>
+                      <div className="p-4 h-2/5 flex flex-col justify-between" style={{ background: 'rgba(10,8,37,0.95)' }}>
+                        <div>
+                          <p className="text-white font-bold text-sm leading-tight font-display">{proj.name}</p>
+                          <p className="text-white/40 text-[10px] mt-0.5">{proj.type}</p>
+                        </div>
+                        <span className="text-[9px] font-mono text-primary/70">Explore ↗</span>
+                      </div>
                     </div>
-                    <div className="p-3 h-2/5" style={{ background: 'rgba(10,8,37,0.95)' }}>
-                      <p className="text-white font-bold text-sm leading-tight mb-0.5" style={{ fontFamily: 'Satoshi, sans-serif' }}>{proj.name}</p>
-                      <p className="text-white/40 text-[11px]">{proj.type}</p>
-                    </div>
-                  </div>
-                );
-              })}
+                  );
+                })}
+              </div>
             </div>
             <p className="text-white/25 text-[11px] font-mono mt-6">Hover to reveal</p>
           </motion.div>
@@ -651,7 +818,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
       </section>
 
       {/* ── FAQ — two-column with icons ───────────────────────────────────────── */}
-      <section className="py-16 px-6" style={{ background: 'linear-gradient(to bottom, #05030F 0%, #0A0825 60%, #05030F 100%)' }}>
+      <section className="py-16 px-6" style={{ background: 'linear-gradient(to bottom, #05030F 0%, #0A0717 60%, #05030F 100%)' }}>
         <div className="max-w-5xl mx-auto">
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.6 }} className="text-center mb-10">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-primary/25 mb-5" style={{ background: 'rgba(124,42,235,0.08)' }}>
@@ -743,7 +910,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
       </section>
 
       {/* ── Closing CTA — toggle + modal ─────────────────────────────────────── */}
-      <section className="py-16 px-6 relative overflow-hidden" style={{ background: 'linear-gradient(to bottom, #05030F 0%, #080620 50%, #05030F 100%)' }}>
+      <section className="py-16 px-6 relative overflow-hidden" style={{ background: 'linear-gradient(to bottom, #05030F 0%, #0A0717 50%, #05030F 100%)' }}>
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[500px] bg-primary/5 blur-[140px] rounded-full pointer-events-none" />
         <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.6 }} className="max-w-2xl mx-auto relative z-10 text-center">
           <div className="flex justify-center mb-10">
@@ -760,17 +927,37 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
             Toggle in to join our builders/newsletter community and hear about opportunities first.
           </p>
 
-          {/* Toggle pill */}
+          {/* Tactile 3D-effect toggle button */}
           <div className="flex flex-col items-center gap-4">
             <div
-              className="relative flex items-center rounded-full p-1 cursor-pointer select-none hover:scale-[1.03] active:scale-[0.98]"
-              style={{ width: '280px', height: '52px', background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)', transition: 'transform 0.2s ease' }}
+              className="relative flex items-center rounded-full p-1 cursor-pointer select-none hover:scale-[1.02] active:scale-[0.98] transition-transform duration-200"
+              style={{
+                width: '280px',
+                height: '54px',
+                background: 'rgba(10, 8, 37, 0.65)',
+                backdropFilter: 'blur(20px)',
+                border: '1px solid rgba(255,255,255,0.08)',
+                boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.5), 0 1px 0 rgba(255,255,255,0.05)',
+              }}
               onClick={handleToggle}
             >
-              {/* Knob */}
-              <div style={{ position: 'absolute', top: '4px', left: '4px', width: '130px', height: '42px', borderRadius: '999px', background: 'linear-gradient(135deg,#5E29E8,#7C2AEB)', boxShadow: '0 4px 24px rgba(124,42,235,0.55)', transform: toggled ? 'translateX(138px)' : 'translateX(0px)', transition: '0.35s cubic-bezier(.2,.7,.2,1)' }} />
-              <span className="relative z-10 flex-1 text-center text-xs font-bold" style={{ color: toggled ? 'rgba(255,255,255,0.3)' : 'white' }}>Not yet</span>
-              <span className="relative z-10 flex-1 text-center text-xs font-bold" style={{ color: toggled ? 'white' : 'rgba(255,255,255,0.3)' }}>Yes, I'm in</span>
+              {/* Tactile Glowing Knob */}
+              <div
+                style={{
+                  position: 'absolute',
+                  top: '5px',
+                  left: '5px',
+                  width: '132px',
+                  height: '42px',
+                  borderRadius: '999px',
+                  background: 'linear-gradient(135deg, #7C2AEB 0%, #B58DFF 100%)',
+                  boxShadow: '0 4px 18px rgba(124, 42, 235, 0.6), inset 0 1px 1px rgba(255,255,255,0.3)',
+                  transform: toggled ? 'translateX(133px)' : 'translateX(0px)',
+                  transition: '0.4s cubic-bezier(0.16, 1, 0.3, 1)',
+                }}
+              />
+              <span className="relative z-10 flex-1 text-center text-xs font-bold uppercase tracking-wider font-mono transition-colors duration-300" style={{ color: toggled ? 'rgba(255,255,255,0.35)' : 'white' }}>Not yet</span>
+              <span className="relative z-10 flex-1 text-center text-xs font-bold uppercase tracking-wider font-mono transition-colors duration-300" style={{ color: toggled ? 'white' : 'rgba(255,255,255,0.35)' }}>Yes, I'm in</span>
             </div>
           </div>
         </motion.div>
@@ -833,7 +1020,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
                         type="submit"
                         disabled={submitting}
                         className="w-full flex items-center justify-center gap-2 py-3 rounded-xl text-white font-bold text-sm transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
-                        style={{ background: submitting ? 'rgba(94,41,232,0.5)' : 'linear-gradient(135deg,#5E29E8,#7C2AEB)', boxShadow: '0 8px 30px rgba(124,42,235,0.35)' }}
+                        style={{ background: submitting ? 'rgba(124,42,235,0.5)' : 'linear-gradient(135deg,#7C2AEB,#B58DFF)', boxShadow: '0 8px 30px rgba(124,42,235,0.35)' }}
                       >
                         {submitting ? 'Sending…' : <>Join the circle <ArrowUpRight className="w-4 h-4" /></>}
                       </button>

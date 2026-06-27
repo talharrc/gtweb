@@ -131,6 +131,7 @@ function AppInner() {
     return (
       <div className="min-h-screen relative">
         <div className="bg-mesh" />
+        <div className="bg-grid-overlay" />
         <ScrollToTop />
         <Routes>
           <Route path="/hub/visitor/*" element={
@@ -162,6 +163,7 @@ function AppInner() {
   return (
     <div className="min-h-screen relative flex flex-col justify-between">
       <div className="bg-mesh" />
+      <div className="bg-grid-overlay" />
       <ScrollToTop />
       <Navbar
         onPageChange={handlePageSelect}

@@ -55,7 +55,7 @@ function labelClass() {
 }
 
 function selectClass() {
-  return 'w-full bg-[#0A0825] border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-primary/50 transition-colors appearance-none cursor-pointer';
+  return 'w-full bg-[#0A0717] border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-primary/50 transition-colors appearance-none cursor-pointer';
 }
 
 interface CommonFields {

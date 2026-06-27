@@ -1,4 +1,4 @@
-﻿import { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
 import brandmarkLogo from '../assets/images/gt-logo.jpeg';
@@ -152,7 +152,7 @@ export default function Navbar({ onPageChange, dhakaTime, isDhakaOpen, currentUs
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, y: -10, scale: 0.95 }}
                     transition={{ duration: 0.25 }}
-                    className="absolute top-full left-1/2 -translate-x-1/2 mt-1 w-[460px] bg-black/85 backdrop-blur-xl border border-[rgba(181,141,255,0.20)] rounded-[24px] overflow-hidden shadow-[inset_0_1px_0_rgba(255,255,255,0.09),inset_0_0_28px_rgba(124,42,235,0.05),0_24px_60px_rgba(0,0,0,0.70)] z-50 grid grid-cols-5"
+                    className="absolute top-full left-1/2 -translate-x-1/2 mt-1 w-[460px] bg-white/[0.042] [backdrop-filter:blur(22px)_saturate(140%)] [-webkit-backdrop-filter:blur(22px)_saturate(140%)] border border-[rgba(181,141,255,0.20)] rounded-[24px] overflow-hidden shadow-[inset_0_1px_0_rgba(255,255,255,0.09),inset_0_0_28px_rgba(124,42,235,0.05),0_24px_60px_rgba(0,0,0,0.70)] z-50 grid grid-cols-5"
                   >
                     <div className="col-span-3 p-5 flex flex-col gap-2.5">
                       <h4 className="text-[11px] uppercase tracking-wider text-primary font-bold mb-1 px-2.5">Galaxa Hubs</h4>
@@ -201,7 +201,7 @@ export default function Navbar({ onPageChange, dhakaTime, isDhakaOpen, currentUs
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, y: -10, scale: 0.95 }}
                     transition={{ duration: 0.25 }}
-                    className="absolute top-full left-1/2 -translate-x-1/2 mt-1 w-[500px] bg-black/85 backdrop-blur-xl border border-[rgba(181,141,255,0.20)] rounded-[24px] overflow-hidden shadow-[inset_0_1px_0_rgba(255,255,255,0.09),inset_0_0_28px_rgba(124,42,235,0.05),0_24px_60px_rgba(0,0,0,0.70)] z-50 p-5 grid grid-cols-2 gap-3"
+                    className="absolute top-full left-1/2 -translate-x-1/2 mt-1 w-[500px] bg-white/[0.042] [backdrop-filter:blur(22px)_saturate(140%)] [-webkit-backdrop-filter:blur(22px)_saturate(140%)] border border-[rgba(181,141,255,0.20)] rounded-[24px] overflow-hidden shadow-[inset_0_1px_0_rgba(255,255,255,0.09),inset_0_0_28px_rgba(124,42,235,0.05),0_24px_60px_rgba(0,0,0,0.70)] z-50 p-5 grid grid-cols-2 gap-3"
                   >
                     <div className="col-span-2 mb-1">
                       <h4 className="text-[11px] uppercase tracking-wider text-secondary font-bold mb-1 px-2">Galaxa Expertise</h4>
@@ -258,7 +258,7 @@ export default function Navbar({ onPageChange, dhakaTime, isDhakaOpen, currentUs
                     animate={{ opacity: 1, scale: 1, y: 0 }}
                     exit={{ opacity: 0, scale: 0.9, y: 15 }}
                     transition={{ duration: 0.25 }}
-                    className="absolute right-0 top-full mt-3 w-64 bg-black/85 backdrop-blur-xl border border-[rgba(181,141,255,0.20)] rounded-[18px] overflow-hidden shadow-[inset_0_1px_0_rgba(255,255,255,0.09),inset_0_0_28px_rgba(124,42,235,0.05),0_20px_60px_rgba(0,0,0,0.70)] z-50 text-left"
+                    className="absolute right-0 top-full mt-3 w-64 bg-white/[0.042] [backdrop-filter:blur(22px)_saturate(140%)] [-webkit-backdrop-filter:blur(22px)_saturate(140%)] border border-[rgba(181,141,255,0.20)] rounded-[18px] overflow-hidden shadow-[inset_0_1px_0_rgba(255,255,255,0.09),inset_0_0_28px_rgba(124,42,235,0.05),0_20px_60px_rgba(0,0,0,0.70)] z-50 text-left"
                   >
                     {/* User profile (if signed in) */}
                     {currentUser && (

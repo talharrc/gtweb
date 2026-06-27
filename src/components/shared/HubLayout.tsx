@@ -41,7 +41,7 @@ export default function HubLayout({ title, navItems, activeSection, onSectionCha
 
       <aside className={`
         fixed top-0 left-0 h-full w-64 z-40 flex flex-col
-        bg-[#070d1e] border-r border-white/5
+        bg-[#0A0717] border-r border-white/5
         transition-transform duration-300 ease-in-out
         ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
         lg:translate-x-0 lg:relative lg:z-auto
@@ -114,7 +114,7 @@ export default function HubLayout({ title, navItems, activeSection, onSectionCha
       </aside>
 
       <div className="flex-1 flex flex-col min-w-0 lg:ml-0">
-        <div className="lg:hidden flex items-center gap-3 px-4 py-3 border-b border-white/5 bg-[#070d1e]/80 backdrop-blur-sm sticky top-0 z-20">
+        <div className="lg:hidden flex items-center gap-3 px-4 py-3 border-b border-white/5 bg-[#0A0717]/80 backdrop-blur-sm sticky top-0 z-20">
           <button onClick={() => setSidebarOpen(true)} className="text-white/60 hover:text-white">
             <Menu className="w-5 h-5" />
           </button>

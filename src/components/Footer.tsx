@@ -32,7 +32,7 @@ export default function Footer({ onPageChange }: FooterProps) {
 
       {/* Ambient glow blobs */}
       <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[700px] h-[350px] rounded-full pointer-events-none" style={{ background: 'radial-gradient(ellipse at center, rgba(124,42,235,0.06) 0%, transparent 70%)' }} />
-      <div className="absolute top-1/2 left-0 w-[300px] h-[300px] rounded-full pointer-events-none" style={{ background: 'radial-gradient(ellipse at center, rgba(94,41,232,0.04) 0%, transparent 70%)' }} />
+      <div className="absolute top-1/2 left-0 w-[300px] h-[300px] rounded-full pointer-events-none" style={{ background: 'radial-gradient(ellipse at center, rgba(124,42,235,0.04) 0%, transparent 70%)' }} />
 
       <div className="max-w-7xl mx-auto px-6 pt-16 pb-10 relative z-10">
 
@@ -58,7 +58,7 @@ export default function Footer({ onPageChange }: FooterProps) {
             className="group flex items-center gap-3 text-white font-bold py-3 px-6 rounded-full transition-all duration-300 hover:scale-[1.04] active:scale-[0.98]"
             style={{ background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.15)', backdropFilter: 'blur(12px)' }}
           >
-            <span className="w-8 h-8 rounded-full flex items-center justify-center group-hover:rotate-45 transition-transform duration-500" style={{ background: 'linear-gradient(135deg,#5E29E8,#7C2AEB)' }}>
+            <span className="w-8 h-8 rounded-full flex items-center justify-center group-hover:rotate-45 transition-transform duration-500" style={{ background: 'linear-gradient(135deg,#7C2AEB,#B58DFF)' }}>
               <ArrowUpRight className="w-4 h-4 text-white" />
             </span>
             <span className="text-sm">Book a Free Audit</span>

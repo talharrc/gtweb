@@ -1,17 +1,18 @@
 @import url('https://api.fontshare.com/v2/css?f%5B%5D=satoshi@300,400,500,700,900&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Noto+Sans+Bengali:wght@500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Noto+Sans+Bengali:wght@500;700&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
 @import "tailwindcss";
 
 @theme {
   --font-sans: "Satoshi", "Segoe UI", ui-sans-serif, system-ui, sans-serif;
   --font-display: "Satoshi", "Segoe UI", sans-serif;
+  --font-serif: "Playfair Display", Georgia, serif;
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 
-  /* Brand palette — GalaxaTech v2.1 */
+  /* Brand palette — GalaxaTech v2.2 */
   --color-void:     #05030F;
-  --color-midnight: #0A0825;
-  --color-indigo:   #1A133F;
-  --color-signal:   #5E29E8;
+  --color-midnight: #0A0717;
+  --color-indigo:   #0A0717;
+  --color-signal:   #7C2AEB;
   --color-primary:  #7C2AEB;
   --color-lavender: #B58DFF;
   --color-cool:     #78D5FF;
@@ -20,7 +21,9 @@
   --color-secondary: #B58DFF;
   --color-tertiary:  #78D5FF;
   --color-dark-bg:   #05030F;
-  --color-glass-dark: rgba(255,255,255,0.042);
+  --color-text:      #F1EEFB;
+  --color-muted:     #8B86A8;
+  --color-glass-dark: rgba(255,255,255,0.05);
 }
 
 :root {
@@ -29,18 +32,36 @@
 
 body {
   background-color: #05030F;
-  color: #A8A3BE;
+  color: #8B86A8;
   font-family: var(--font-sans);
   overflow-x: hidden;
   scroll-behavior: smooth;
 }
 
+/* Engineering blueprint background grid overlay */
+.bg-grid-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -9;
+  background-image: 
+    linear-gradient(rgba(255, 255, 255, 0.007) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.007) 1px, transparent 1px);
+  background-size: 50px 50px;
+  background-position: center;
+  pointer-events: none;
+  mask-image: radial-gradient(ellipse at center, rgba(0,0,0,1) 10%, rgba(0,0,0,0) 80%);
+  -webkit-mask-image: radial-gradient(ellipse at center, rgba(0,0,0,1) 10%, rgba(0,0,0,0) 80%);
+}
+
 /* Glass Panels — brand kit spec */
 .glass-card {
-  background: rgba(255,255,255,0.042);
+  background: rgba(255,255,255,0.05);
   backdrop-filter: blur(22px) saturate(140%);
   -webkit-backdrop-filter: blur(22px) saturate(140%);
-  border: 1px solid rgba(181,141,255,0.18);
+  border: 1px solid rgba(255,255,255,0.12);
   border-radius: 18px;
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,0.09),
@@ -48,11 +69,41 @@ body {
     0 20px 60px rgba(0,0,0,0.50);
 }
 
+.glass-card-premium {
+  background: rgba(10, 7, 23, 0.55);
+  backdrop-filter: blur(24px) saturate(160%);
+  -webkit-backdrop-filter: blur(24px) saturate(160%);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+  border-left: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 24px;
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.08),
+    0 0 1px rgba(124, 42, 235, 0.15),
+    0 15px 45px rgba(0, 0, 0, 0.65);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.glass-card-premium-glow {
+  background: rgba(15, 12, 50, 0.6);
+  backdrop-filter: blur(24px) saturate(160%);
+  -webkit-backdrop-filter: blur(24px) saturate(160%);
+  border: 1px solid rgba(124, 42, 235, 0.3);
+  border-top: 1px solid rgba(181, 141, 255, 0.4);
+  border-left: 1px solid rgba(181, 141, 255, 0.3);
+  border-radius: 24px;
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.15),
+    0 0 45px rgba(124, 42, 235, 0.45),
+    0 15px 45px rgba(0, 0, 0, 0.65);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
 .glass-nav {
-  background: rgba(0,0,0,0.85);
+  background: rgba(5,3,15,0.85);
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
-  border: 1px solid rgba(181,141,255,0.15);
+  border: 1px solid rgba(255,255,255,0.12);
 }
 
 /* Text gradients */
@@ -74,7 +125,7 @@ body {
 }
 
 .cyan-gradient {
-  background: linear-gradient(135deg, #5E29E8 0%, #78D5FF 100%);
+  background: linear-gradient(135deg, #7C2AEB 0%, #78D5FF 100%);
 }
 
 /* Card hover glow */
@@ -97,8 +148,8 @@ body {
   height: 100%;
   z-index: -10;
   background:
-    radial-gradient(55% 45% at 88% 4%, rgba(124,42,235,0.22), transparent 60%),
-    radial-gradient(40% 35% at 4% 92%, rgba(120,213,255,0.10), transparent 60%),
+    radial-gradient(60% 50% at 85% 6%, rgba(124,42,235,0.18), transparent 70%),
+    radial-gradient(45% 40% at 8% 88%, rgba(120,213,255,0.08), transparent 60%),
     #05030F;
 }
 
@@ -132,3 +183,30 @@ body {
 }
 .admin-input::placeholder { color: rgba(255,255,255,0.3); }
 .admin-input option { background: #05030F; color: #fff; }
+
+/* Spotlight Diagonal sweep reflection */
+.spotlight-sweep {
+  position: relative;
+  overflow: hidden;
+}
+.spotlight-sweep::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -60%;
+  width: 30%;
+  height: 200%;
+  background: linear-gradient(
+    to right,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.08) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  transform: rotate(30deg);
+  transition: all 0.6s ease;
+  pointer-events: none;
+}
+.spotlight-sweep:hover::after {
+  left: 140%;
+}
+
