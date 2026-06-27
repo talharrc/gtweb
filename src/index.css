@@ -7,33 +7,40 @@
   --font-serif: "Playfair Display", Georgia, serif;
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 
-  /* Brand palette — GalaxaTech v2.2 */
-  --color-void:     #05030F;
-  --color-midnight: #0A0717;
-  --color-indigo:   #0A0717;
-  --color-signal:   #7C2AEB;
-  --color-primary:  #7C2AEB;
-  --color-lavender: #B58DFF;
-  --color-cool:     #78D5FF;
+  /* Brand palette — GalaxaTech visual direction theme */
+  --color-void:     var(--void);
+  --color-midnight: var(--void-2);
+  --color-indigo:   var(--void-2);
+  --color-signal:   var(--violet);
+  --color-primary:  var(--violet);
+  --color-lavender: var(--lavender);
+  --color-cool:     var(--blue);
 
   /* Tailwind semantic aliases */
-  --color-secondary: #B58DFF;
-  --color-tertiary:  #78D5FF;
-  --color-dark-bg:   #05030F;
-  --color-text:      #F1EEFB;
-  --color-muted:     #8B86A8;
+  --color-secondary: var(--lavender);
+  --color-tertiary:  var(--blue);
+  --color-dark-bg:   var(--void);
+  --color-text:      var(--text);
+  --color-muted:     var(--muted);
   --color-glass-dark: rgba(255,255,255,0.05);
 }
 
 :root {
   color-scheme: dark;
+  --void: #05030F;
+  --void-2: #0A0717;
+  --violet: #7C2AEB;
   --lavender: #B58DFF;
   --blue: #78D5FF;
+  --text: #F1EEFB;
+  --muted: #8B86A8;
+  --glass: rgba(255, 255, 255, 0.05);
+  --glass-border: rgba(255, 255, 255, 0.12);
 }
 
 body {
-  background-color: #05030F;
-  color: #8B86A8;
+  background-color: var(--void);
+  color: var(--text);
   font-family: var(--font-sans);
   overflow-x: hidden;
   scroll-behavior: smooth;
@@ -134,11 +141,11 @@ body {
 
 /* Button / section gradients */
 .primary-gradient {
-  background: linear-gradient(135deg, #7C2AEB 0%, #B58DFF 100%);
+  background: linear-gradient(135deg, var(--violet) 0%, var(--lavender) 100%);
 }
 
 .cyan-gradient {
-  background: linear-gradient(135deg, #7C2AEB 0%, #78D5FF 100%);
+  background: linear-gradient(135deg, var(--violet) 0%, var(--blue) 100%);
 }
 
 /* Card hover glow */
@@ -161,9 +168,10 @@ body {
   height: 100%;
   z-index: -10;
   background:
-    radial-gradient(60% 50% at 85% 6%, rgba(124,42,235,0.18), transparent 70%),
-    radial-gradient(45% 40% at 8% 88%, rgba(120,213,255,0.08), transparent 60%),
-    #05030F;
+    radial-gradient(circle at 20% 10%, rgba(124,42,235,0.18), transparent 40%),
+    radial-gradient(circle at 85% 25%, rgba(120,213,255,0.12), transparent 45%),
+    radial-gradient(circle at 50% 90%, rgba(181,141,255,0.10), transparent 40%),
+    var(--void);
 }
 
 @keyframes marquee {
