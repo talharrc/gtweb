@@ -79,7 +79,7 @@ export default function PortfolioCaseStudy() {
             <span className="text-3xl">{study.country}</span>
             <p className="text-xs font-mono text-white/35 uppercase tracking-widest">{study.clientType}</p>
           </div>
-          <h1 className="text-5xl md:text-6xl font-bold text-white mb-6" style={{ fontFamily: 'var(--font-display)' }}>{study.name}</h1>
+          <h1 className="text-3xl sm:text-5xl md:text-6xl font-bold text-white mb-6" style={{ fontFamily: 'var(--font-display)' }}>{study.name}</h1>
           <div className="flex flex-wrap gap-2">
             {study.services.map((s) => (
               <span key={s} className="text-xs bg-primary/10 text-primary/80 border border-primary/20 rounded-full px-3 py-1 font-medium">{s}</span>

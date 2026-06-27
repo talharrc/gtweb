@@ -144,7 +144,7 @@ export default function ServicesView() {
           <div
             key={svc.id}
             id={svc.id}
-            className="glass-card rounded-3xl p-8 md:p-12 scroll-mt-32"
+            className="glass-card rounded-3xl p-5 sm:p-8 md:p-12 scroll-mt-32"
           >
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-start">
               {/* Left */}

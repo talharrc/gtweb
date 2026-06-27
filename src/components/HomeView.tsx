@@ -248,7 +248,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
               </span>
             </div>
           </motion.div>
-          <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.1, ease: [0.16,1,0.3,1] }} className="font-display text-[2.75rem] sm:text-[4.5rem] md:text-[5.5rem] font-extrabold tracking-[-0.03em] text-white mb-4 leading-[1.06] drop-shadow-[0_4px_24px_rgba(0,0,0,0.8)]">
+          <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.1, ease: [0.16,1,0.3,1] }} className="font-display text-[2rem] sm:text-[3.25rem] md:text-[5.5rem] font-extrabold tracking-[-0.03em] text-white mb-4 leading-[1.06] drop-shadow-[0_4px_24px_rgba(0,0,0,0.8)]">
             Assure your brand's <br className="hidden md:block" />
             <span className="font-serif italic font-normal typewriter-container block min-h-[1.2em] mt-3 pb-1 overflow-hidden">
               <AnimatePresence mode="wait">
@@ -281,19 +281,19 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
           </motion.div>
 
           {/* Stat proof bar */}
-          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.45, ease: [0.16,1,0.3,1] }} className="flex items-center justify-center gap-6 sm:gap-12 mt-10">
+          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.45, ease: [0.16,1,0.3,1] }} className="flex items-center justify-center gap-4 sm:gap-8 md:gap-12 mt-8 sm:mt-10">
             <div className="text-center">
-              <span className="block text-2xl sm:text-3xl font-bold text-white font-display tracking-tight">50+</span>
+              <span className="block text-xl sm:text-2xl md:text-3xl font-bold text-white font-display tracking-tight">50+</span>
               <span className="block text-[10px] font-mono tracking-[0.2em] text-white/40 uppercase mt-1">Projects</span>
             </div>
             <div className="w-px h-8 bg-white/10 flex-shrink-0" />
             <div className="text-center">
-              <span className="block text-2xl sm:text-3xl font-bold text-white font-display tracking-tight">6</span>
+              <span className="block text-xl sm:text-2xl md:text-3xl font-bold text-white font-display tracking-tight">6</span>
               <span className="block text-[10px] font-mono tracking-[0.2em] text-white/40 uppercase mt-1">Countries</span>
             </div>
             <div className="w-px h-8 bg-white/10 flex-shrink-0" />
             <div className="text-center">
-              <span className="block text-2xl sm:text-3xl font-bold text-white font-display tracking-tight">6</span>
+              <span className="block text-xl sm:text-2xl md:text-3xl font-bold text-white font-display tracking-tight">6</span>
               <span className="block text-[10px] font-mono tracking-[0.2em] text-white/40 uppercase mt-1">Services</span>
             </div>
           </motion.div>
@@ -320,7 +320,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
             </div>
           </div>
           <div className="text-center mb-12">
-            <h2 className="text-4xl md:text-5xl font-bold text-white mb-3" style={{ fontFamily: 'var(--font-display)' }}>
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-3" style={{ fontFamily: 'var(--font-display)' }}>
               Serving clients
               <br />
               <span className="font-serif italic" style={{ color: '#B58DFF' }}>worldwide</span>
@@ -362,7 +362,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
               <CheckCircle className="w-3.5 h-3.5 text-primary/70" />
               <span className="text-[10px] font-mono text-primary/70 tracking-widest uppercase">Why GalaxaTech</span>
             </div>
-            <h2 className="text-4xl md:text-5xl font-bold text-white mb-4" style={{ fontFamily: 'var(--font-display)' }}>
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-4" style={{ fontFamily: 'var(--font-display)' }}>
               Why <span style={{ color: '#B58DFF' }}>Choose Us</span>
             </h2>
             <p className="text-white/50 text-lg">Five reasons clients trust GalaxaTech to build their digital future.</p>
@@ -496,7 +496,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
               <Workflow className="w-3.5 h-3.5 text-primary/70" />
               <span className="text-[10px] font-mono tracking-[0.25em] text-primary/70 uppercase">Service Carousel</span>
             </div>
-            <h2 className="text-4xl md:text-5xl font-bold text-white mb-4" style={{ fontFamily: 'var(--font-display)' }}>
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-4" style={{ fontFamily: 'var(--font-display)' }}>
               What <span style={{ color: '#B58DFF' }}>We Build</span>
             </h2>
             <p className="text-white/50 text-lg max-w-xl mx-auto">Interactive digital systems and growth solutions crafted for modern businesses.</p>
@@ -621,7 +621,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
               <Sparkles className="w-3.5 h-3.5 text-primary/70" />
               <span className="text-[10px] font-mono tracking-[0.25em] text-primary/70 uppercase">Process</span>
             </div>
-            <h2 className="text-4xl md:text-5xl font-bold text-white mb-3" style={{ fontFamily: 'var(--font-display)' }}>
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-3" style={{ fontFamily: 'var(--font-display)' }}>
               How <span style={{ color: '#B58DFF' }}>We Work</span>
             </h2>
             <p className="text-white/50">A clear, collaborative journey from idea to deployed digital systems.</p>
@@ -721,7 +721,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
               <Sparkles className="w-3.5 h-3.5 text-primary/70" />
               <span className="text-[10px] font-mono tracking-[0.25em] text-primary/70 uppercase">Portfolio</span>
             </div>
-            <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-4">
               Selected <span className="text-grad">Work</span>
             </h2>
             <p className="text-white/50 text-lg font-sans">A few projects, systems, and brands we've helped shape.</p>
@@ -989,7 +989,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
               <HelpCircle className="w-3.5 h-3.5 text-primary/70" />
               <span className="text-[10px] font-mono tracking-[0.25em] text-primary/70 uppercase">FAQ</span>
             </div>
-            <h2 className="text-4xl md:text-5xl font-bold text-white mb-3" style={{ fontFamily: 'var(--font-display)' }}>Common <span style={{ color: '#B58DFF' }}>Questions</span></h2>
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-3" style={{ fontFamily: 'var(--font-display)' }}>Common <span style={{ color: '#B58DFF' }}>Questions</span></h2>
             <p className="text-white/40 text-base">Everything you need to know before working with us.</p>
           </motion.div>
 
@@ -1084,7 +1084,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
             </div>
           </div>
 
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-4" style={{ fontFamily: 'var(--font-display)' }}>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-4" style={{ fontFamily: 'var(--font-display)' }}>
             Wanna join the<br /><span style={{ color: '#B58DFF' }}>Galaxa team?</span>
           </h2>
           <p className="text-white/50 text-base mb-10 leading-relaxed max-w-md mx-auto">
@@ -1099,7 +1099,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
               aria-label="Join Galaxa community"
               className="relative flex items-center rounded-full p-1 cursor-pointer select-none hover:scale-[1.02] active:scale-[0.98] transition-transform duration-200"
               style={{
-                width: '280px',
+                width: 'min(280px, calc(100vw - 3rem))',
                 height: '54px',
                 background: 'rgba(10, 8, 37, 0.65)',
                 backdropFilter: 'blur(20px)',
@@ -1148,7 +1148,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
                 transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
                 onClick={e => e.stopPropagation()}
                 className="relative w-full max-w-sm"
-                style={{ ...GLASS_STYLE, borderRadius: '24px', padding: '32px', borderColor: 'rgba(124,42,235,0.45)', boxShadow: '0 0 80px rgba(124,42,235,0.35), inset 0 1px 0 rgba(255,255,255,0.1)' }}
+                style={{ ...GLASS_STYLE, borderRadius: '24px', padding: isMobile ? '20px' : '32px', borderColor: 'rgba(124,42,235,0.45)', boxShadow: '0 0 80px rgba(124,42,235,0.35), inset 0 1px 0 rgba(255,255,255,0.1)' }}
               >
                 <button
                   onClick={() => setCircleModalOpen(false)}

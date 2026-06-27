@@ -80,7 +80,7 @@ export default function Footer({ onPageChange }: FooterProps) {
             </div>
             <div className="flex gap-3">
               <a href="https://www.facebook.com/share/1GJq598Yfm/" target="_blank" rel="noopener noreferrer"
-                className="w-9 h-9 rounded-full flex items-center justify-center transition-all hover:scale-110"
+                className="w-11 h-11 rounded-full flex items-center justify-center transition-all hover:scale-110"
                 style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }}
                 onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.background = 'rgba(59,130,246,0.15)'; (e.currentTarget as HTMLAnchorElement).style.borderColor = 'rgba(59,130,246,0.3)'; }}
                 onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.background = 'rgba(255,255,255,0.05)'; (e.currentTarget as HTMLAnchorElement).style.borderColor = 'rgba(255,255,255,0.1)'; }}
@@ -88,7 +88,7 @@ export default function Footer({ onPageChange }: FooterProps) {
                 <Facebook className="w-4 h-4 text-blue-400" />
               </a>
               <a href="https://x.com/galaxatech" target="_blank" rel="noopener noreferrer"
-                className="w-9 h-9 rounded-full flex items-center justify-center transition-all hover:scale-110"
+                className="w-11 h-11 rounded-full flex items-center justify-center transition-all hover:scale-110"
                 style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }}
                 onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.background = 'rgba(14,165,233,0.15)'; (e.currentTarget as HTMLAnchorElement).style.borderColor = 'rgba(14,165,233,0.3)'; }}
                 onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.background = 'rgba(255,255,255,0.05)'; (e.currentTarget as HTMLAnchorElement).style.borderColor = 'rgba(255,255,255,0.1)'; }}
