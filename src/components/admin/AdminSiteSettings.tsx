@@ -1,6 +1,6 @@
 import { useState, useEffect, FormEvent } from 'react';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
-import { db, auth } from '../../lib/firebase';
+import { db } from '../../lib/firebase';
 import { Loader2, Save, ToggleLeft, ToggleRight, AlertCircle } from 'lucide-react';
 
 interface GBPStatus {
