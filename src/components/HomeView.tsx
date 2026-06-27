@@ -313,19 +313,21 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
         <div className="absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-[#05030F] to-transparent pointer-events-none z-10" />
         <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-[#05030F] to-transparent pointer-events-none z-10" />
         <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.6 }} className="relative z-20">
-          <div className="flex justify-center mb-6">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-primary/25" style={{ background: 'rgba(124,42,235,0.08)' }}>
-              <Globe className="w-3.5 h-3.5 text-primary/70" />
-              <span className="text-[10px] font-mono tracking-[0.25em] text-primary/70 uppercase">Global Presence</span>
+          <div className="max-w-5xl mx-auto mb-12">
+            <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6">
+              <motion.div initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, amount: 0.3 }} transition={{ duration: 0.7 }}>
+                <span className="text-[10px] font-mono text-primary/40 tracking-[0.3em] uppercase block mb-3">00 — Global Reach</span>
+                <h2 className="text-4xl sm:text-5xl font-black text-white leading-[0.9]" style={{ fontFamily: 'var(--font-display)' }}>
+                  Clients<br />
+                  <span style={{ WebkitTextStroke: '1.5px rgba(181,141,255,0.55)', color: 'transparent' }}>Across</span><br />
+                  <span style={{ color: '#B58DFF' }}>6 Nations.</span>
+                </h2>
+              </motion.div>
+              <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ duration: 0.7, delay: 0.2 }} className="flex items-end gap-5 sm:pb-1">
+                <div className="text-[80px] sm:text-[110px] font-black leading-none select-none" style={{ color: 'rgba(255,255,255,0.04)', fontFamily: 'var(--font-display)' }}>6+</div>
+                <p className="text-white/35 text-sm max-w-[150px] leading-relaxed pb-2 border-l border-white/10 pl-4">Delivering real digital systems across global markets.</p>
+              </motion.div>
             </div>
-          </div>
-          <div className="text-center mb-12">
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-3" style={{ fontFamily: 'var(--font-display)' }}>
-              Serving clients
-              <br />
-              <span className="font-serif italic" style={{ color: '#B58DFF' }}>worldwide</span>
-            </h2>
-            <p className="text-white/50 text-lg">Delivering digital solutions across markets</p>
           </div>
           {/* Marquee pills */}
           <div
@@ -357,16 +359,19 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
       {/* ── Why Choose Us ────────────────────────────────────────────────────── */}
       <section className="py-16 px-6" style={{ background: 'linear-gradient(to bottom, #05030F 0%, #0A0717 50%, #05030F 100%)' }}>
         <div className="max-w-7xl mx-auto">
-          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.6 }} className="text-center mb-10">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-primary/20 mb-6" style={{ background: 'rgba(124,42,235,0.08)' }}>
-              <CheckCircle className="w-3.5 h-3.5 text-primary/70" />
-              <span className="text-[10px] font-mono text-primary/70 tracking-widest uppercase">Why GalaxaTech</span>
-            </div>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-4" style={{ fontFamily: 'var(--font-display)' }}>
-              Why <span style={{ color: '#B58DFF' }}>Choose Us</span>
-            </h2>
-            <p className="text-white/50 text-lg">Five reasons clients trust GalaxaTech to build their digital future.</p>
-          </motion.div>
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-12 gap-6">
+            <motion.div initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, amount: 0.3 }} transition={{ duration: 0.7 }}>
+              <span className="text-[10px] font-mono text-primary/40 tracking-[0.3em] uppercase block mb-3">01 — Why GalaxaTech</span>
+              <h2 className="text-4xl sm:text-5xl font-black text-white leading-[0.9]" style={{ fontFamily: 'var(--font-display)' }}>
+                Why<br />
+                <span style={{ WebkitTextStroke: '1.5px rgba(181,141,255,0.55)', color: 'transparent' }}>Choose</span><br />
+                <span style={{ color: '#B58DFF' }}>Us.</span>
+              </h2>
+            </motion.div>
+            <motion.p initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ duration: 0.7, delay: 0.2 }} className="text-white/35 text-sm leading-relaxed max-w-[200px] sm:text-right border-t border-white/10 pt-4 sm:border-t-0 sm:pt-0 sm:border-l sm:border-white/[0.08] sm:pl-6">
+              Five reasons clients trust GalaxaTech to build their digital future.
+            </motion.p>
+          </div>
 
           <div className="grid grid-cols-1 md:grid-cols-6 gap-5">
             {/* Card 1: Systems-First Approach */}
@@ -439,6 +444,12 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
               <div className="mt-4">
                 <h3 className="text-white font-bold text-base mb-2 font-display">Builders Mindset</h3>
                 <p className="text-white/50 text-xs leading-relaxed mb-3">We run our own builder community ecosystem — direct production and fast iteration are in our DNA.</p>
+                <div className="flex flex-wrap gap-[3px] mb-2">
+                  {Array.from({ length: 24 }).map((_, i) => (
+                    <div key={i} className="w-2 h-2 rounded-full" style={{ background: i < 18 ? `hsl(${265 + (i % 6) * 18}, 65%, ${55 + (i % 3) * 12}%)` : 'rgba(255,255,255,0.08)' }} />
+                  ))}
+                  <span className="text-[9px] font-mono text-white/25 self-end ml-0.5">+130</span>
+                </div>
                 <div className="font-mono text-[10px] text-white/30">Active: <span className="text-white font-bold">148+ builders</span></div>
               </div>
             </motion.div>
@@ -457,9 +468,13 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
               <div className="mt-4">
                 <h3 className="text-white font-bold text-base mb-2 font-display">Global Standard</h3>
                 <p className="text-white/50 text-xs leading-relaxed mb-3">Serving clients across 6 countries with enterprise stability and low-latency operational support.</p>
-                <div className="font-mono text-[9px] text-white/35 flex gap-2">
-                  <span>US-East: <span className="text-emerald-400 font-bold">12ms</span></span>
-                  <span>EU-West: <span className="text-emerald-400 font-bold">38ms</span></span>
+                <div className="font-mono text-[9px] flex flex-col gap-1">
+                  <span style={{ color: '#78D5FF' }}>23.685°N 90.356°E</span>
+                  <span className="text-white/25 tracking-widest">DHAKA → WORLD</span>
+                  <div className="flex gap-3 mt-0.5">
+                    <span className="text-white/30">US <span className="text-emerald-400 font-bold">12ms</span></span>
+                    <span className="text-white/30">EU <span className="text-emerald-400 font-bold">38ms</span></span>
+                  </div>
                 </div>
               </div>
             </motion.div>
@@ -478,9 +493,17 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
               <div className="mt-4">
                 <h3 className="text-white font-bold text-base mb-2 font-display">Fast Operations</h3>
                 <p className="text-white/50 text-xs leading-relaxed mb-3">WhatsApp-first, live Client Hub dashboards, and daily updates — you're never left guessing.</p>
-                <div className="bg-white/5 border border-white/5 rounded-xl p-2 flex items-center gap-2">
-                  <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 flex-shrink-0 animate-pulse" />
-                  <span className="font-mono text-[9px] text-white/55">Update: 2 mins ago</span>
+                <div className="rounded-xl overflow-hidden border border-white/[0.07]" style={{ background: 'rgba(255,255,255,0.03)' }}>
+                  <div className="flex items-center gap-2 px-3 py-2 border-b border-white/[0.05]">
+                    <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse flex-shrink-0" />
+                    <span className="font-mono text-[9px] text-white/40">Update sent · just now</span>
+                  </div>
+                  <div className="flex items-center gap-1.5 px-3 py-2">
+                    {[0, 150, 300].map(d => (
+                      <div key={d} className="w-1.5 h-1.5 rounded-full bg-white/25 animate-bounce" style={{ animationDelay: `${d}ms` }} />
+                    ))}
+                    <span className="font-mono text-[9px] text-white/20 ml-1">client typing…</span>
+                  </div>
                 </div>
               </div>
             </motion.div>
@@ -491,16 +514,19 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
       {/* ── What We Build — 3D Service Carousel ──────────────────────────────── */}
       <section className="py-16 px-6" style={{ background: 'linear-gradient(to bottom, #05030F 0%, #0A0717 50%, #05030F 100%)' }}>
         <div className="max-w-7xl mx-auto">
-          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.6 }} className="text-center mb-10">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-primary/25 mb-5" style={{ background: 'rgba(124,42,235,0.08)' }}>
-              <Workflow className="w-3.5 h-3.5 text-primary/70" />
-              <span className="text-[10px] font-mono tracking-[0.25em] text-primary/70 uppercase">Service Carousel</span>
-            </div>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-4" style={{ fontFamily: 'var(--font-display)' }}>
-              What <span style={{ color: '#B58DFF' }}>We Build</span>
-            </h2>
-            <p className="text-white/50 text-lg max-w-xl mx-auto">Interactive digital systems and growth solutions crafted for modern businesses.</p>
-          </motion.div>
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-12 gap-6">
+            <motion.div initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, amount: 0.3 }} transition={{ duration: 0.7 }}>
+              <span className="text-[10px] font-mono text-primary/40 tracking-[0.3em] uppercase block mb-3">02 — Services</span>
+              <h2 className="text-4xl sm:text-5xl font-black text-white leading-[0.9]" style={{ fontFamily: 'var(--font-display)' }}>
+                What<br />
+                <span style={{ WebkitTextStroke: '1.5px rgba(181,141,255,0.55)', color: 'transparent' }}>We</span><br />
+                <span style={{ color: '#B58DFF' }}>Build.</span>
+              </h2>
+            </motion.div>
+            <motion.p initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ duration: 0.7, delay: 0.2 }} className="text-white/35 text-sm leading-relaxed max-w-[200px] sm:text-right border-t border-white/10 pt-4 sm:border-t-0 sm:pt-0 sm:border-l sm:border-white/[0.08] sm:pl-6">
+              Drag or tap the carousel to explore all six service verticals.
+            </motion.p>
+          </div>
 
           {/* 3D Carousel */}
           <div
@@ -615,17 +641,19 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
 
       {/* ── How We Work — vertical timeline ──────────────────────────────────── */}
       <section className="py-16 px-6" style={{ background: 'linear-gradient(to bottom, #05030F 0%, #0A0717 50%, #05030F 100%)' }}>
-        <div className="max-w-2xl mx-auto">
-          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.6 }} className="text-center mb-10">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-primary/25 mb-5" style={{ background: 'rgba(124,42,235,0.08)' }}>
-              <Sparkles className="w-3.5 h-3.5 text-primary/70" />
-              <span className="text-[10px] font-mono tracking-[0.25em] text-primary/70 uppercase">Process</span>
-            </div>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-3" style={{ fontFamily: 'var(--font-display)' }}>
-              How <span style={{ color: '#B58DFF' }}>We Work</span>
-            </h2>
-            <p className="text-white/50">A clear, collaborative journey from idea to deployed digital systems.</p>
-          </motion.div>
+        <div className="max-w-4xl mx-auto">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-12 gap-6">
+            <motion.div initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, amount: 0.3 }} transition={{ duration: 0.7 }}>
+              <span className="text-[10px] font-mono text-primary/40 tracking-[0.3em] uppercase block mb-3">03 — Process</span>
+              <h2 className="text-4xl sm:text-5xl font-black text-white leading-[0.9]" style={{ fontFamily: 'var(--font-display)' }}>
+                How<br />
+                <span style={{ color: '#B58DFF' }}>We Work.</span>
+              </h2>
+            </motion.div>
+            <motion.p initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ duration: 0.7, delay: 0.2 }} className="text-white/35 text-sm leading-relaxed max-w-[200px] sm:text-right border-t border-white/10 pt-4 sm:border-t-0 sm:pt-0 sm:border-l sm:border-white/[0.08] sm:pl-6">
+              A clear, collaborative journey from idea to deployed digital systems.
+            </motion.p>
+          </div>
 
           {/* Timeline */}
           <div className="relative">
@@ -679,7 +707,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
                         <StepIcon className="w-5 h-5" style={{ color: lit ? '#B58DFF' : 'rgba(181,141,255,0.3)', transition: '0.6s' }} />
                       </div>
                     </div>
-                    <div className="flex-1 flex items-center justify-between p-5 rounded-3xl" style={{
+                    <div className="flex-1 flex items-center justify-between p-5 rounded-3xl relative overflow-hidden" style={{
                       background: 'rgba(10, 8, 37, 0.55)',
                       backdropFilter: 'blur(20px) saturate(140%)',
                       border: '1px solid rgba(255, 255, 255, 0.06)',
@@ -687,14 +715,16 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
                       boxShadow: lit ? '0 0 35px rgba(124,42,235,0.18), 0 10px 30px rgba(0,0,0,0.5)' : '0 8px 25px rgba(0,0,0,0.35)',
                       transition: '0.6s cubic-bezier(.2,.7,.2,1)'
                     }}>
-                      <div>
+                      {/* Ghost step number */}
+                      <div className="absolute right-4 top-1/2 -translate-y-1/2 font-black select-none pointer-events-none leading-none" style={{ fontSize: '80px', color: lit ? 'rgba(124,42,235,0.12)' : 'rgba(124,42,235,0.04)', fontFamily: 'var(--font-display)', transition: '0.6s' }}>{step.num}</div>
+                      <div className="relative z-10">
                         <div className="flex items-center gap-2.5 mb-1">
                           <span className="text-[10px] font-mono" style={{ color: lit ? '#7C2AEB' : 'rgba(124,42,235,0.35)' }}>{step.num}</span>
                           <h3 className="font-bold text-base font-display" style={{ color: lit ? '#fff' : 'rgba(255,255,255,0.35)' }}>{step.title}</h3>
                         </div>
                         <p className="text-sm" style={{ color: lit ? 'rgba(255,255,255,0.5)' : 'rgba(255,255,255,0.2)' }}>{step.desc}</p>
                       </div>
-                      <button className="w-8 h-8 rounded-full border flex items-center justify-center flex-shrink-0 ml-4 cursor-pointer" style={{ borderColor: lit ? 'rgba(124,42,235,0.5)' : 'rgba(255,255,255,0.08)', background: lit ? 'rgba(124,42,235,0.15)' : 'transparent' }}>
+                      <button className="w-8 h-8 rounded-full border flex items-center justify-center flex-shrink-0 ml-4 cursor-pointer relative z-10" style={{ borderColor: lit ? 'rgba(124,42,235,0.5)' : 'rgba(255,255,255,0.08)', background: lit ? 'rgba(124,42,235,0.15)' : 'transparent' }}>
                         <ChevronRight className="w-4 h-4" style={{ color: lit ? '#B58DFF' : 'rgba(255,255,255,0.2)' }} />
                       </button>
                     </div>
@@ -716,16 +746,18 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
       {/* ── Selected Work — glassmorphic folder ───────────────────────────────── */}
       <section className="py-16 px-6 overflow-x-hidden" style={{ background: 'linear-gradient(to bottom, #05030F 0%, #0A0717 50%, #05030F 100%)' }}>
         <div className="max-w-5xl mx-auto">
-          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.6 }} className="text-center mb-16">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-primary/25 mb-5" style={{ background: 'rgba(124,42,235,0.08)' }}>
-              <Sparkles className="w-3.5 h-3.5 text-primary/70" />
-              <span className="text-[10px] font-mono tracking-[0.25em] text-primary/70 uppercase">Portfolio</span>
-            </div>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-4">
-              Selected <span className="text-grad">Work</span>
-            </h2>
-            <p className="text-white/50 text-lg font-sans">A few projects, systems, and brands we've helped shape.</p>
-          </motion.div>
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-16 gap-6">
+            <motion.div initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, amount: 0.3 }} transition={{ duration: 0.7 }}>
+              <span className="text-[10px] font-mono text-primary/40 tracking-[0.3em] uppercase block mb-3">05 — Portfolio</span>
+              <h2 className="text-4xl sm:text-5xl font-black text-white leading-[0.9]" style={{ fontFamily: 'var(--font-display)' }}>
+                Selected<br />
+                <span className="text-grad">Work.</span>
+              </h2>
+            </motion.div>
+            <motion.p initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ duration: 0.7, delay: 0.2 }} className="text-white/35 text-sm leading-relaxed max-w-[200px] sm:text-right border-t border-white/10 pt-4 sm:border-t-0 sm:pt-0 sm:border-l sm:border-white/[0.08] sm:pl-6">
+              A few projects, systems, and brands we've helped shape.
+            </motion.p>
+          </div>
 
           {/* 3D Glass Folder Reveal Scene */}
           {(() => {
@@ -984,14 +1016,18 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
       {/* ── FAQ — two-column with icons ───────────────────────────────────────── */}
       <section className="py-16 px-6" style={{ background: 'linear-gradient(to bottom, #05030F 0%, #0A0717 60%, #05030F 100%)' }}>
         <div className="max-w-5xl mx-auto">
-          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.6 }} className="text-center mb-10">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-primary/25 mb-5" style={{ background: 'rgba(124,42,235,0.08)' }}>
-              <HelpCircle className="w-3.5 h-3.5 text-primary/70" />
-              <span className="text-[10px] font-mono tracking-[0.25em] text-primary/70 uppercase">FAQ</span>
-            </div>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-3" style={{ fontFamily: 'var(--font-display)' }}>Common <span style={{ color: '#B58DFF' }}>Questions</span></h2>
-            <p className="text-white/40 text-base">Everything you need to know before working with us.</p>
-          </motion.div>
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-12 gap-6">
+            <motion.div initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, amount: 0.3 }} transition={{ duration: 0.7 }}>
+              <span className="text-[10px] font-mono text-primary/40 tracking-[0.3em] uppercase block mb-3">04 — FAQ</span>
+              <h2 className="text-4xl sm:text-5xl font-black text-white leading-[0.9]" style={{ fontFamily: 'var(--font-display)' }}>
+                Common<br />
+                <span style={{ color: '#B58DFF' }}>Questions.</span>
+              </h2>
+            </motion.div>
+            <motion.p initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ duration: 0.7, delay: 0.2 }} className="text-white/35 text-sm leading-relaxed max-w-[200px] sm:text-right border-t border-white/10 pt-4 sm:border-t-0 sm:pt-0 sm:border-l sm:border-white/[0.08] sm:pl-6">
+              Everything you need to know before working with us.
+            </motion.p>
+          </div>
 
           <div className="flex flex-col lg:flex-row gap-6 items-start">
             {/* Left: question list */}
@@ -1074,21 +1110,43 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
       </section>
 
       {/* ── Closing CTA — toggle + modal ─────────────────────────────────────── */}
-      <section className="py-16 px-6 relative overflow-hidden" style={{ background: 'linear-gradient(to bottom, #05030F 0%, #0A0717 50%, #05030F 100%)' }}>
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[500px] bg-primary/5 blur-[140px] rounded-full pointer-events-none" />
+      <section className="py-24 px-6 relative overflow-hidden" style={{ background: 'linear-gradient(to bottom, #05030F 0%, #0A0717 50%, #05030F 100%)' }}>
+        {/* Deep ambient glow */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[500px] bg-primary/8 blur-[160px] rounded-full pointer-events-none" />
+        {/* Floating geometric rings */}
+        {[
+          { size: 140, left: '5%',  top: '10%', duration: 9,  delay: 0   },
+          { size: 90,  left: '82%', top: '8%',  duration: 11, delay: 1.5 },
+          { size: 70,  left: '8%',  top: '68%', duration: 8,  delay: 3   },
+          { size: 110, left: '78%', top: '62%', duration: 10, delay: 0.8 },
+          { size: 50,  left: '48%', top: '5%',  duration: 7,  delay: 2.2 },
+        ].map((s, i) => (
+          <motion.div
+            key={i}
+            className="absolute rounded-full border border-primary/[0.12] pointer-events-none"
+            style={{ width: s.size, height: s.size, left: s.left, top: s.top, background: 'radial-gradient(circle, rgba(124,42,235,0.06) 0%, transparent 70%)' }}
+            animate={{ y: [0, -18, 0], rotate: [0, 180, 360] }}
+            transition={{ duration: s.duration, delay: s.delay, repeat: Infinity, ease: 'linear' }}
+          />
+        ))}
+        {/* Ghost "JOIN" text decoration */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 font-black select-none pointer-events-none leading-none whitespace-nowrap" style={{ fontSize: 'clamp(80px, 20vw, 180px)', color: 'rgba(124,42,235,0.04)', fontFamily: 'var(--font-display)', letterSpacing: '-0.05em' }}>JOIN</div>
+
         <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.6 }} className="max-w-2xl mx-auto relative z-10 text-center">
-          <div className="flex justify-center mb-10">
+          <div className="flex justify-center mb-8">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-primary/25" style={{ background: 'rgba(124,42,235,0.08)' }}>
               <Sparkles className="w-3.5 h-3.5 text-primary/70" />
               <span className="text-[10px] font-mono tracking-[0.25em] text-primary/70 uppercase">Builders Community</span>
             </div>
           </div>
 
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-4" style={{ fontFamily: 'var(--font-display)' }}>
-            Wanna join the<br /><span style={{ color: '#B58DFF' }}>Galaxa team?</span>
+          <h2 className="font-black text-white mb-5 leading-[0.9]" style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(2.5rem, 7vw, 4.5rem)' }}>
+            Wanna join the<br />
+            <span style={{ WebkitTextStroke: '2px rgba(181,141,255,0.6)', color: 'transparent' }}>Galaxa</span>{' '}
+            <span style={{ color: '#B58DFF' }}>team?</span>
           </h2>
-          <p className="text-white/50 text-base mb-10 leading-relaxed max-w-md mx-auto">
-            Toggle in to join our builders/newsletter community and hear about opportunities first.
+          <p className="text-white/45 text-base mb-10 leading-relaxed max-w-md mx-auto">
+            Toggle in to join our builders / newsletter community and hear about opportunities first.
           </p>
 
           {/* Tactile 3D-effect toggle button */}
