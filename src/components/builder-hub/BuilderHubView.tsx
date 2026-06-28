@@ -5,7 +5,7 @@ import { db } from '../../lib/firebase';
 import { useAuth } from '../../context/AuthContext';
 import { GTProject } from '../../types';
 import { LogOut, Loader2, FolderOpen, Clock, Code2, Users, DollarSign, CheckCircle2, ChevronRight, Send, HelpCircle, Laptop } from 'lucide-react';
-import brandmarkLogo from '../../assets/images/gt-logo-new.svg';
+import brandmarkLogo from '../../assets/images/gt-logo-new.png';
 
 interface SprintTask {
   id: string;

@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { PageType } from '../types';
-import brandmarkLogo from '../assets/images/gt-logo-new.svg';
+import brandmarkLogo from '../assets/images/gt-logo-new.png';
 import { Facebook, Twitter, Mail, Phone, ArrowUpRight, Sparkles } from 'lucide-react';
 
 interface FooterProps {

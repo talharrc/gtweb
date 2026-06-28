@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
-import brandmarkLogo from '../assets/images/gt-logo-new.svg';
+import brandmarkLogo from '../assets/images/gt-logo-new.png';
 import {
   ChevronDown,
   ArrowUpRight,

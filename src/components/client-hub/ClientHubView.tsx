@@ -5,7 +5,7 @@ import { LogOut, Loader2, FolderOpen, Radio, ChevronRight, Clock, FileText, Chec
 import { db } from '../../lib/firebase';
 import { useAuth } from '../../context/AuthContext';
 import { GTProject } from '../../types';
-import brandmarkLogo from '../../assets/images/gt-logo-new.svg';
+import brandmarkLogo from '../../assets/images/gt-logo-new.png';
 
 interface Update {
   id: string;
