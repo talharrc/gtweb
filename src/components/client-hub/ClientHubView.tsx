@@ -5,7 +5,6 @@ import { LogOut, Loader2, FolderOpen, Radio, ChevronRight, Clock, FileText, Chec
 import { db } from '../../lib/firebase';
 import { useAuth } from '../../context/AuthContext';
 import { GTProject } from '../../types';
-import brandmarkLogo from '../../assets/images/gt-logo-new.png';
 
 interface Update {
   id: string;
@@ -104,7 +103,7 @@ export default function ClientHubView() {
       <header className="flex items-center justify-between px-6 py-4 border-b border-white/[0.07] bg-black/40 backdrop-blur-md sticky top-0 z-50">
         <div className="flex items-center gap-2.5">
           <button onClick={() => navigate('/')} className="hover:scale-105 transition-transform flex items-center gap-2">
-            <img src={brandmarkLogo} alt="GalaxaTech" className="w-8 h-8 rounded-lg object-cover" />
+            <img src="/gtnew.jpeg" alt="GalaxaTech" className="w-8 h-8 rounded-lg object-cover" />
             <span className="text-white font-bold text-sm font-display">Client Hub</span>
           </button>
           {isDemo && (

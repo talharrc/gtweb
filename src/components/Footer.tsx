@@ -1,6 +1,5 @@
 import { useNavigate } from 'react-router-dom';
 import { PageType } from '../types';
-import brandmarkLogo from '../assets/images/gt-logo-new.png';
 import { Facebook, Twitter, Mail, Phone, ArrowUpRight, Sparkles } from 'lucide-react';
 
 interface FooterProps {
@@ -43,7 +42,7 @@ export default function Footer({ onPageChange }: FooterProps) {
             <div className="relative">
               <div className="absolute inset-0 rounded-2xl blur-md" style={{ background: 'rgba(236,30,142,0.3)', transform: 'scale(1.2)' }} />
               <div className="relative w-14 h-14 rounded-2xl flex items-center justify-center" style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(236,30,142,0.2)', backdropFilter: 'blur(12px)' }}>
-                <img alt="GalaxaTech" className="w-9 h-9 object-contain" src={brandmarkLogo} referrerPolicy="no-referrer" />
+                <img alt="GalaxaTech" className="w-9 h-9 object-contain" src="/gtnew.jpeg" />
               </div>
             </div>
             <div>

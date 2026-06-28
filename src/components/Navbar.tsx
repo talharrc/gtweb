@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
-import brandmarkLogo from '../assets/images/gt-logo-new.png';
 import {
   ChevronDown,
   ArrowUpRight,
@@ -125,7 +124,7 @@ export default function Navbar({ onPageChange, dhakaTime, isDhakaOpen, currentUs
           {/* Logo */}
           <button onClick={() => navTo('/')} className="flex items-center gap-2.5 group cursor-pointer focus:outline-none">
             <div className="relative">
-              <img alt="GalaxaTech" className="w-10 h-10 rounded-xl object-cover transition-transform duration-500 group-hover:scale-105" src={brandmarkLogo} referrerPolicy="no-referrer" />
+              <img alt="GalaxaTech" className="w-10 h-10 rounded-xl object-cover transition-transform duration-500 group-hover:scale-105" src="/gtnew.jpeg" />
               <span className="absolute -inset-1 rounded-xl bg-primary/20 blur opacity-0 group-hover:opacity-100 transition-opacity" />
             </div>
             <span className="font-display text-lg sm:text-xl font-bold tracking-tight text-white transition-all group-hover:bg-gradient-to-r group-hover:from-secondary group-hover:to-primary group-hover:text-transparent group-hover:bg-clip-text">GalaxaTech</span>

@@ -2,7 +2,6 @@ import { FormEvent, useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Lock, Eye, EyeOff, Loader2, CheckCircle } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
-import brandmarkLogo from '../../assets/images/logo.png';
 
 type InviteState =
   | { status: 'loading' }
@@ -128,7 +127,7 @@ export default function InviteLandingPage() {
     <div className="min-h-screen flex items-center justify-center px-6">
       <div className="glass-card max-w-sm w-full p-8 rounded-2xl">
         <div className="flex items-center gap-2.5 mb-6">
-          <img src={brandmarkLogo} alt="GalaxaTech" className="w-8 h-8 rounded-lg object-contain" />
+          <img src="/gtnew.jpeg" alt="GalaxaTech" className="w-8 h-8 rounded-lg object-contain" />
           <div>
             <p className="text-white font-bold text-sm leading-none">GalaxaTech</p>
             <p className={`text-[10px] font-mono mt-0.5 ${accentColor}`}>{hubLabel}</p>
