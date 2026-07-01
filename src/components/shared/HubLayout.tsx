@@ -20,7 +20,7 @@ interface HubLayoutProps {
 
 export default function HubLayout({ title, navItems, activeSection, onSectionChange, children }: HubLayoutProps) {
   const navigate = useNavigate();
-  const { email, userProfile, signOut } = useAuth();
+  const { email, userProfile, signOut, isDemo } = useAuth();
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const displayName = userProfile?.displayName ?? email?.split('@')[0] ?? null;
@@ -46,7 +46,7 @@ export default function HubLayout({ title, navItems, activeSection, onSectionCha
         lg:translate-x-0 lg:relative lg:z-auto
       `}>
         <div className="flex items-center gap-3 px-5 py-5 border-b border-white/5">
-          <img src="/gtnew.jpeg" alt="GalaxaTech" className="w-7 h-7 rounded-lg object-contain" />
+          <img src="/logo.png" alt="GalaxaTech" className="w-7 h-7 rounded-lg object-contain" />
           <div>
             <p className="text-white font-bold text-sm leading-none">GalaxaTech</p>
             <p className="text-white/40 text-[10px] font-mono mt-0.5">{title}</p>
@@ -122,6 +122,17 @@ export default function HubLayout({ title, navItems, activeSection, onSectionCha
         </div>
 
         <main className="flex-1 p-4 lg:p-8 overflow-y-auto">
+          {isDemo && (
+            <div className="mb-6 p-4 bg-amber-500/10 border border-amber-500/20 rounded-2xl flex items-start gap-3">
+              <span className="text-amber-400 text-base">💡</span>
+              <div>
+                <p className="text-amber-400 text-sm font-semibold">Running in Demo Mode (Local Mock Database)</p>
+                <p className="text-white/60 text-xs mt-0.5">
+                  Firestore database is not provisioned or failed to connect. Actions you perform will persist locally in your browser. Configure Firestore in <code>.env.local</code> to enable real cloud sync.
+                </p>
+              </div>
+            </div>
+          )}
           {children}
         </main>
       </div>

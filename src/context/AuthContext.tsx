@@ -15,12 +15,15 @@ interface AuthContextValue {
   isAdmin: boolean;
   isClient: boolean;
   isBuilder: boolean;
+  isCustomer: boolean;
   isVisitor: boolean;
   isSignedIn: boolean;
   signOut: () => Promise<void>;
   applySession: (session: AuthSession, _firebaseToken?: string | null) => Promise<void>;
   userProfile: { role: UserRole; displayName: string; email: string } | null;
   firebaseUser: null;
+  isDemo: boolean;
+  setIsDemo: (val: boolean) => void;
 }
 
 const AuthContext = createContext<AuthContextValue>({
@@ -31,12 +34,15 @@ const AuthContext = createContext<AuthContextValue>({
   isAdmin: false,
   isClient: false,
   isBuilder: false,
+  isCustomer: false,
   isVisitor: true,
   isSignedIn: false,
   signOut: async () => {},
   applySession: async () => {},
   userProfile: null,
   firebaseUser: null,
+  isDemo: false,
+  setIsDemo: () => {},
 });
 
 export function AuthProvider({ children }: { children: ReactNode }) {
@@ -44,6 +50,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [email, setEmail] = useState<string | null>(null);
   const [projectId, setProjectId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isDemo, setIsDemo] = useState(() => {
+    return new URLSearchParams(window.location.search).get('demo') === 'true';
+  });
 
   useEffect(() => {
     fetch('/api/auth/me', { credentials: 'include' })
@@ -87,12 +96,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       isAdmin: role === 'admin',
       isClient: role === 'client',
       isBuilder: role === 'builder',
+      isCustomer: role === 'customer',
       isVisitor: !isSignedIn || role === 'visitor',
       isSignedIn,
       signOut,
       applySession,
       userProfile,
       firebaseUser: null,
+      isDemo,
+      setIsDemo,
     }}>
       {children}
     </AuthContext.Provider>

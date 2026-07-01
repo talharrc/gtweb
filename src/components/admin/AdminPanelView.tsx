@@ -2,13 +2,15 @@ import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import {
   FolderOpen, Users, CreditCard, FileText, ClipboardList,
   BookOpen, LayoutDashboard, Inbox, GraduationCap, UserSearch,
-  Settings,
+  Settings, Store, ShoppingCart,
 } from 'lucide-react';
 import HubLayout, { NavItem } from '../shared/HubLayout';
 import AdminDashboard from './AdminDashboard';
 import AdminProjectsSection from './AdminProjectsSection';
 import AdminUsersSection from './AdminUsersSection';
 import AdminPaymentsSection from './AdminPaymentsSection';
+import AdminProductsSection from './AdminProductsSection';
+import AdminOrdersSection from './AdminOrdersSection';
 import AdminDocumentsSection from './AdminDocumentsSection';
 import AdminFormsSection from './AdminFormsSection';
 import AdminContentSection from './AdminContentSection';
@@ -22,6 +24,8 @@ const navItems: NavItem[] = [
   { label: 'Projects',     path: 'projects',   icon: <FolderOpen className="w-4 h-4" /> },
   { label: 'Users',        path: 'users',       icon: <Users className="w-4 h-4" /> },
   { label: 'Payments',     path: 'payments',   icon: <CreditCard className="w-4 h-4" /> },
+  { label: 'Store Products', path: 'store-products', icon: <Store className="w-4 h-4" /> },
+  { label: 'Store Orders',   path: 'store-orders',   icon: <ShoppingCart className="w-4 h-4" /> },
   { label: 'Documents',    path: 'documents',  icon: <FileText className="w-4 h-4" /> },
   { label: 'Forms',        path: 'forms',       icon: <ClipboardList className="w-4 h-4" /> },
   { label: 'Content',      path: 'content',    icon: <BookOpen className="w-4 h-4" /> },
@@ -51,6 +55,8 @@ export default function AdminPanelView() {
         <Route path="projects"  element={<AdminProjectsSection />} />
         <Route path="users"     element={<AdminUsersSection />} />
         <Route path="payments"  element={<AdminPaymentsSection />} />
+        <Route path="store-products" element={<AdminProductsSection />} />
+        <Route path="store-orders"   element={<AdminOrdersSection />} />
         <Route path="documents" element={<AdminDocumentsSection />} />
         <Route path="forms"     element={<AdminFormsSection />} />
         <Route path="content"   element={<AdminContentSection />} />

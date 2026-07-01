@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import { collection, onSnapshot, doc, updateDoc, orderBy, query, Timestamp } from 'firebase/firestore';
 import { Loader2, ChevronDown, ChevronUp, X } from 'lucide-react';
 import { db } from '../../lib/firebase';
+import { useAuth } from '../../context/AuthContext';
+import { mockDb } from '../../lib/mockData';
 import StatusBadge from '../shared/StatusBadge';
 import EmptyState from '../shared/EmptyState';
 
@@ -69,27 +71,64 @@ function SubmissionDetail({ sub, onClose }: { sub: AuditSubmission; onClose: () 
 }
 
 export default function AdminAuditSubmissions() {
+  const { isDemo, setIsDemo } = useAuth();
   const [submissions, setSubmissions] = useState<AuditSubmission[]>([]);
   const [loading, setLoading] = useState(true);
   const [selected, setSelected] = useState<AuditSubmission | null>(null);
   const [filterStatus, setFilterStatus] = useState('');
 
   useEffect(() => {
+    if (isDemo) {
+      const mapped = mockDb.getAudits().map(a => ({
+        id: a.id,
+        type: 'SEO/Performance',
+        businessName: a.fullName + ' Store',
+        contactEmail: a.email,
+        contactPhone: a.whatsappNumber,
+        status: a.status === 'pending' ? 'new' : a.status === 'in_progress' ? 'in-progress' : 'sent',
+        submittedAt: a.submittedAt as any,
+        formData: {
+          websiteUrl: a.websiteUrl,
+          fullName: a.fullName,
+          whatsappNumber: a.whatsappNumber,
+        }
+      }));
+      setSubmissions(mapped as any);
+      setLoading(false);
+      return;
+    }
+
+    const handleError = (error: any) => {
+      console.warn("Firestore error in AdminAuditSubmissions, falling back to Demo Mode:", error);
+      setIsDemo(true);
+      setLoading(false);
+    };
+
     const q = query(collection(db, 'audit_submissions'), orderBy('submittedAt', 'desc'));
     const unsub = onSnapshot(q, s => {
       setSubmissions(s.docs.map(d => ({ id: d.id, ...d.data() } as AuditSubmission)));
       setLoading(false);
-    }, () => setLoading(false));
+    }, handleError);
     return () => unsub();
-  }, []);
+  }, [isDemo]);
 
   const filtered = filterStatus ? submissions.filter(s => s.status === filterStatus) : submissions;
 
   const advanceStatus = async (sub: AuditSubmission) => {
-    if (!STATUS_FLOW[sub.status ?? 'new']) return;
-    await updateDoc(doc(db, 'audit_submissions', sub.id), {
-      status: STATUS_FLOW[sub.status ?? 'new'],
-    });
+    const nextStatus = STATUS_FLOW[sub.status ?? 'new'];
+    if (!nextStatus) return;
+
+    if (isDemo) {
+      const mockAudits = mockDb.getAudits();
+      const dbStatus = nextStatus === 'new' ? 'pending' : nextStatus === 'in-progress' ? 'in_progress' : 'completed';
+      const updated = mockAudits.map(a => a.id === sub.id ? { ...a, status: dbStatus as any } : a);
+      mockDb.saveAudits(updated);
+      setSubmissions(subs => subs.map(s => s.id === sub.id ? { ...s, status: nextStatus as any } : s));
+    } else {
+      await updateDoc(doc(db, 'audit_submissions', sub.id), {
+        status: nextStatus,
+      });
+    }
   };
 
   if (loading) return <div className="flex justify-center py-16"><Loader2 className="w-6 h-6 text-primary animate-spin" /></div>;

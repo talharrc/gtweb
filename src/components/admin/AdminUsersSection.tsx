@@ -4,6 +4,8 @@ import { Loader2, Check, X, Users, Clock, Search } from 'lucide-react';
 import { db } from '../../lib/firebase';
 import { UserProfile } from '../../types';
 import { approveUser, rejectUser } from '../../services/userService';
+import { useAuth } from '../../context/AuthContext';
+import { mockDb } from '../../lib/mockData';
 import EmptyState from '../shared/EmptyState';
 
 function timeAgo(ts: Timestamp | null | undefined): string {
@@ -27,6 +29,7 @@ const ROLE_COLORS: Record<string, string> = {
 };
 
 export default function AdminUsersSection() {
+  const { isDemo, setIsDemo } = useAuth();
   const [users, setUsers] = useState<UserProfile[]>([]);
   const [loading, setLoading] = useState(true);
   const [tab, setTab] = useState<'pending' | 'approved'>('pending');
@@ -34,22 +37,49 @@ export default function AdminUsersSection() {
   const [acting, setActing] = useState<string | null>(null);
 
   useEffect(() => {
+    if (isDemo) {
+      setUsers(mockDb.getUsers());
+      setLoading(false);
+      return;
+    }
     const unsub = onSnapshot(collection(db, 'users'), (snap) => {
       setUsers(snap.docs.map(d => ({ uid: d.id, ...d.data() } as UserProfile)));
       setLoading(false);
+    }, (error) => {
+      console.warn("Firestore error in AdminUsersSection, falling back to Demo Mode:", error);
+      setIsDemo(true);
+      setLoading(false);
     });
     return () => unsub();
-  }, []);
+  }, [isDemo]);
 
   const handleApprove = async (uid: string) => {
     setActing(uid);
-    try { await approveUser(uid); } finally { setActing(null); }
+    try {
+      if (isDemo) {
+        const mockUsers = mockDb.getUsers();
+        const updated = mockUsers.map(u => u.uid === uid ? { ...u, status: 'approved' as const } : u);
+        mockDb.saveUsers(updated);
+        setUsers(updated);
+      } else {
+        await approveUser(uid);
+      }
+    } finally { setActing(null); }
   };
 
   const handleReject = async (uid: string, email: string) => {
     if (!window.confirm(`Reject and remove ${email}? Their Firestore account will be deleted.`)) return;
     setActing(uid);
-    try { await rejectUser(uid); } finally { setActing(null); }
+    try {
+      if (isDemo) {
+        const mockUsers = mockDb.getUsers();
+        const filtered = mockUsers.filter(u => u.uid !== uid);
+        mockDb.saveUsers(filtered);
+        setUsers(filtered);
+      } else {
+        await rejectUser(uid);
+      }
+    } finally { setActing(null); }
   };
 
   const pending = users.filter(u => u.status === 'pending');

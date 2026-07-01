@@ -7,11 +7,12 @@ import { createForm } from '../../services/formService';
 import StatusBadge from '../shared/StatusBadge';
 import EmptyState from '../shared/EmptyState';
 import { useAuth } from '../../context/AuthContext';
+import { mockDb } from '../../lib/mockData';
 
 const FIELD_TYPES: FormField['type'][] = ['text', 'textarea', 'select', 'checkbox'];
 
 export default function AdminFormsSection() {
-  const { firebaseUser } = useAuth();
+  const { firebaseUser, isDemo, setIsDemo } = useAuth();
   const [projects, setProjects] = useState<GTProject[]>([]);
   const [forms, setForms] = useState<GTForm[]>([]);
   const [loading, setLoading] = useState(true);
@@ -22,10 +23,33 @@ export default function AdminFormsSection() {
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
-    const u1 = onSnapshot(collection(db, 'projects'), s => { setProjects(s.docs.map(d => ({ id: d.id, ...d.data() } as GTProject))); setLoading(false); });
-    const u2 = onSnapshot(collection(db, 'forms'), s => setForms(s.docs.map(d => ({ id: d.id, ...d.data() } as GTForm))));
-    return () => { u1(); u2(); };
-  }, []);
+    if (isDemo) {
+      setProjects(mockDb.getProjects());
+      setForms(mockDb.getForms() as any);
+      setLoading(false);
+      return;
+    }
+
+    const handleError = (error: any) => {
+      console.warn("Firestore error in AdminFormsSection, falling back to Demo Mode:", error);
+      setIsDemo(true);
+      setLoading(false);
+    };
+
+    const u1 = onSnapshot(collection(db, 'projects'), s => { 
+      setProjects(s.docs.map(d => ({ id: d.id, ...d.data() } as GTProject))); 
+      setLoading(false); 
+    }, handleError);
+
+    const u2 = onSnapshot(collection(db, 'forms'), s => {
+      setForms(s.docs.map(d => ({ id: d.id, ...d.data() } as GTForm)));
+    }, handleError);
+
+    return () => { 
+      try { u1(); } catch {}
+      try { u2(); } catch {}
+    };
+  }, [isDemo]);
 
   const addField = () => {
     if (!newField.label.trim()) return;
@@ -38,12 +62,29 @@ export default function AdminFormsSection() {
 
   const handleCreate = async (e: FormEvent) => {
     e.preventDefault();
-    if (!firebaseUser) return;
     setSaving(true);
     try {
-      await createForm({ ...form, requestedByUid: firebaseUser.uid, status: 'pending' } as GTForm);
-      setShowNew(false);
-      setForm({ projectId: '', title: '', fields: [] });
+      if (isDemo) {
+        const mockForms = mockDb.getForms();
+        const newForm = {
+          id: `form-${Date.now()}`,
+          projectId: form.projectId,
+          projectName: projects.find(p => p.id === form.projectId)?.name ?? 'Unknown Project',
+          title: form.title,
+          fields: form.fields.map(f => ({ label: f.label, value: '' })),
+          submittedAt: { seconds: Math.floor(Date.now() / 1000), nanoseconds: 0 },
+          status: 'pending',
+        };
+        const updated = [...mockForms, newForm];
+        mockDb.saveForms(updated as any);
+        setForms(updated as any);
+        setShowNew(false);
+        setForm({ projectId: '', title: '', fields: [] });
+      } else {
+        await createForm({ ...form, requestedByUid: firebaseUser?.uid ?? 'admin', status: 'pending' } as any);
+        setShowNew(false);
+        setForm({ projectId: '', title: '', fields: [] });
+      }
     } finally { setSaving(false); }
   };
 

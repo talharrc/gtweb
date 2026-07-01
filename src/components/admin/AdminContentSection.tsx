@@ -4,6 +4,8 @@ import { Plus, Edit2, Trash2, X, Loader2, Globe, Lock } from 'lucide-react';
 import { db } from '../../lib/firebase';
 import { ContentItem } from '../../types';
 import { createContent, updateContent, deleteContent } from '../../services/contentService';
+import { useAuth } from '../../context/AuthContext';
+import { mockDb } from '../../lib/mockData';
 import StatusBadge from '../shared/StatusBadge';
 import EmptyState from '../shared/EmptyState';
 
@@ -11,6 +13,7 @@ const TYPES: ContentItem['type'][] = ['blog', 'prompt', 'resource', 'newsletter'
 const EMPTY = { type: 'blog' as ContentItem['type'], title: '', body: '', isPublic: true };
 
 export default function AdminContentSection() {
+  const { isDemo, setIsDemo } = useAuth();
   const [items, setItems] = useState<ContentItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [filterType, setFilterType] = useState<ContentItem['type'] | 'all'>('all');
@@ -20,12 +23,24 @@ export default function AdminContentSection() {
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
+    if (isDemo) {
+      setItems(mockDb.getContent() as any);
+      setLoading(false);
+      return;
+    }
+
+    const handleError = (error: any) => {
+      console.warn("Firestore error in AdminContentSection, falling back to Demo Mode:", error);
+      setIsDemo(true);
+      setLoading(false);
+    };
+
     const unsub = onSnapshot(collection(db, 'content'), s => {
       setItems(s.docs.map(d => ({ id: d.id, ...d.data() } as ContentItem)));
       setLoading(false);
-    });
+    }, handleError);
     return () => unsub();
-  }, []);
+  }, [isDemo]);
 
   const openNew = () => { setForm({ ...EMPTY }); setEditingId(null); setShowForm(true); };
   const openEdit = (item: ContentItem) => { setForm({ type: item.type, title: item.title, body: item.body, isPublic: item.isPublic }); setEditingId(item.id); setShowForm(true); };
@@ -34,10 +49,39 @@ export default function AdminContentSection() {
     e.preventDefault();
     setSaving(true);
     try {
-      if (editingId) await updateContent(editingId, form);
-      else await createContent(form);
-      setShowForm(false);
+      if (isDemo) {
+        const mockContent = mockDb.getContent();
+        if (editingId) {
+          const updated = mockContent.map(c => c.id === editingId ? { ...c, ...form, id: editingId, updatedAt: { seconds: Math.floor(Date.now() / 1000), nanoseconds: 0 } } : c);
+          mockDb.saveContent(updated as any);
+        } else {
+          mockContent.push({ ...form, id: `content-${Date.now()}`, updatedAt: { seconds: Math.floor(Date.now() / 1000), nanoseconds: 0 } } as any);
+          mockDb.saveContent(mockContent);
+        }
+        setItems(mockDb.getContent() as any);
+        setShowForm(false);
+      } else {
+        if (editingId) await updateContent(editingId, form);
+        else await createContent(form);
+        setShowForm(false);
+      }
     } finally { setSaving(false); }
+  };
+
+  const handleDelete = async (id: string) => {
+    if (!window.confirm('Delete this content item? This cannot be undone.')) return;
+    try {
+      if (isDemo) {
+        const mockContent = mockDb.getContent();
+        const filtered = mockContent.filter(c => c.id !== id);
+        mockDb.saveContent(filtered);
+        setItems(filtered as any);
+      } else {
+        await deleteContent(id);
+      }
+    } catch (err) {
+      console.error("Failed to delete content:", err);
+    }
   };
 
   const filtered = filterType === 'all' ? items : items.filter(i => i.type === filterType);
@@ -86,7 +130,7 @@ export default function AdminContentSection() {
                 <button onClick={() => openEdit(item)} className="p-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-white/50 hover:text-white transition-all">
                   <Edit2 className="w-3.5 h-3.5" />
                 </button>
-                <button onClick={() => deleteContent(item.id)} className="p-1.5 rounded-lg bg-white/5 hover:bg-red-500/20 text-white/50 hover:text-red-400 transition-all">
+                 <button onClick={() => handleDelete(item.id)} className="p-1.5 rounded-lg bg-white/5 hover:bg-red-500/20 text-white/50 hover:text-red-400 transition-all">
                   <Trash2 className="w-3.5 h-3.5" />
                 </button>
               </div>

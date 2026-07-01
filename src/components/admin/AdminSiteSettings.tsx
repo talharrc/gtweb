@@ -1,6 +1,8 @@
 import { useState, useEffect, FormEvent } from 'react';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { db } from '../../lib/firebase';
+import { useAuth } from '../../context/AuthContext';
+import { mockDb } from '../../lib/mockData';
 import { Loader2, Save, ToggleLeft, ToggleRight, AlertCircle } from 'lucide-react';
 
 interface GBPStatus {
@@ -15,6 +17,7 @@ interface HomepageStats {
 }
 
 export default function AdminSiteSettings() {
+  const { isDemo, setIsDemo } = useAuth();
   const [gbpStatus, setGbpStatus] = useState<GBPStatus>({ status: 'open', nextBatchDate: null });
   const [stats, setStats] = useState<HomepageStats>({ projectsDelivered: 0, countriesServed: 0, buildersInProgram: 0 });
   const [loading, setLoading] = useState(true);
@@ -23,8 +26,14 @@ export default function AdminSiteSettings() {
   const [gbpSaved, setGbpSaved] = useState(false);
   const [statsSaved, setStatsSaved] = useState(false);
 
-
   useEffect(() => {
+    if (isDemo) {
+      setGbpStatus(mockDb.getGbpStatus() as any);
+      setStats(mockDb.getHomepageStats());
+      setLoading(false);
+      return;
+    }
+
     const load = async () => {
       try {
         const [gbpSnap, statsSnap] = await Promise.all([
@@ -33,27 +42,42 @@ export default function AdminSiteSettings() {
         ]);
         if (gbpSnap.exists()) setGbpStatus(gbpSnap.data() as GBPStatus);
         if (statsSnap.exists()) setStats(statsSnap.data() as HomepageStats);
-      } catch { /* use defaults */ }
+      } catch (err) {
+        console.warn("Firestore error in AdminSiteSettings, falling back to Demo Mode:", err);
+        setIsDemo(true);
+      }
       setLoading(false);
     };
     load();
-  }, []);
+  }, [isDemo]);
 
   const saveGBP = async () => {
     setSavingGBP(true);
     try {
-      await setDoc(doc(db, 'site_config', 'gbp_status'), gbpStatus);
-      setGbpSaved(true);
-      setTimeout(() => setGbpSaved(false), 2000);
+      if (isDemo) {
+        mockDb.saveGbpStatus(gbpStatus);
+        setGbpSaved(true);
+        setTimeout(() => setGbpSaved(false), 2000);
+      } else {
+        await setDoc(doc(db, 'site_config', 'gbp_status'), gbpStatus);
+        setGbpSaved(true);
+        setTimeout(() => setGbpSaved(false), 2000);
+      }
     } finally { setSavingGBP(false); }
   };
 
   const saveStats = async () => {
     setSavingStats(true);
     try {
-      await setDoc(doc(db, 'site_config', 'homepage_stats'), stats);
-      setStatsSaved(true);
-      setTimeout(() => setStatsSaved(false), 2000);
+      if (isDemo) {
+        mockDb.saveHomepageStats(stats);
+        setStatsSaved(true);
+        setTimeout(() => setStatsSaved(false), 2000);
+      } else {
+        await setDoc(doc(db, 'site_config', 'homepage_stats'), stats);
+        setStatsSaved(true);
+        setTimeout(() => setStatsSaved(false), 2000);
+      }
     } finally { setSavingStats(false); }
   };
 

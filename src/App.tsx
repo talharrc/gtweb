@@ -10,7 +10,9 @@ import PortfolioCaseStudy from './components/PortfolioCaseStudy';
 import AboutView from './components/AboutView';
 import ContactView from './components/ContactView';
 import AuditView from './components/AuditView';
-import BrowseView from './components/BrowseView';
+import StoreLayout from './components/store/StoreLayout';
+import StoreHomeView from './pages/store/StoreHomeView';
+import ProductDetailPage from './pages/store/ProductDetailPage';
 import GBPView from './components/GBPView';
 import PrivacyView from './components/PrivacyView';
 import TermsView from './components/TermsView';
@@ -20,8 +22,10 @@ import Footer from './components/Footer';
 import VisitorHubView from './components/visitor-hub/VisitorHubView';
 import ClientHubView from './components/client-hub/ClientHubView';
 import BuilderHubView from './components/builder-hub/BuilderHubView';
+import CustomerHubView from './components/customer-hub/CustomerHubView';
 import AdminPanelView from './components/admin/AdminPanelView';
 import AdminLoginForm from './components/admin/AdminLoginForm';
+import CustomerAuthGate from './components/auth/CustomerAuthGate';
 import InviteLandingPage from './components/auth/InviteLandingPage';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { PageType, UserRole } from './types';
@@ -108,6 +112,12 @@ function RequireRole({ requiredRole, children }: { requiredRole: UserRole | 'adm
     return <>{children}</>;
   }
 
+  // Customer gate: self-serve sign in/up instead of the invite-only screen
+  if (requiredRole === 'customer') {
+    if (!isSignedIn || role !== 'customer') return <CustomerAuthGate />;
+    return <>{children}</>;
+  }
+
   // Admin can access any hub
   if (isSignedIn && role === 'admin') return <>{children}</>;
 
@@ -175,6 +185,7 @@ function AppInner() {
   const navigate = useNavigate();
   const { email, userProfile } = useAuth();
   const isHubRoute = location.pathname.startsWith('/hub') || location.pathname.startsWith('/admin') || location.pathname.startsWith('/space');
+  const isStoreRoute = location.pathname.startsWith('/browse');
 
   const [dhakaTime, setDhakaTime] = useState<string>('Dhaka HQ');
   const [isDhakaOpen, setIsDhakaOpen] = useState<boolean>(true);
@@ -222,6 +233,11 @@ function AppInner() {
               <BuilderHubView />
             </RequireRole>
           } />
+          <Route path="/hub/customer/*" element={
+            <RequireRole requiredRole="customer">
+              <CustomerHubView />
+            </RequireRole>
+          } />
           <Route path="/admin/*" element={
             <RequireRole requiredRole="admin">
               <AdminPanelView />
@@ -229,6 +245,20 @@ function AppInner() {
           } />
         </Routes>
       </div>
+    );
+  }
+
+  if (isStoreRoute) {
+    return (
+      <>
+        <ScrollToTop />
+        <Routes>
+          <Route element={<StoreLayout />}>
+            <Route path="/browse" element={<StoreHomeView />} />
+            <Route path="/browse/product/:slug" element={<ProductDetailPage />} />
+          </Route>
+        </Routes>
+      </>
     );
   }
 
@@ -256,7 +286,6 @@ function AppInner() {
           <Route path="/about"             element={<AboutView />} />
           <Route path="/contact"           element={<ContactView />} />
           <Route path="/audit"             element={<AuditView />} />
-          <Route path="/browse"            element={<BrowseView />} />
           <Route path="/gbp"               element={<GBPView />} />
           <Route path="/builders-program"  element={<Navigate to="/gbp" replace />} />
           <Route path="/privacy"           element={<PrivacyView />} />

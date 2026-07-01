@@ -45,7 +45,7 @@ export interface ServiceDetail {
 
 // ── Firestore / Hub types ──────────────────────────────────────────────────────
 
-export type UserRole = 'admin' | 'client' | 'builder' | 'visitor';
+export type UserRole = 'admin' | 'client' | 'builder' | 'customer' | 'visitor';
 
 export interface UserProfile {
   uid: string;
@@ -77,6 +77,7 @@ export interface GTProject {
   description: string;
   status: 'Discovery' | 'In Progress' | 'Review' | 'Completed' | 'active' | 'completed' | 'paused' | 'archived';
   progressPercent: number;
+  startDate?: Timestamp;
   deadline: Timestamp;
   milestones: Milestone[];
   clientUid: string;
@@ -170,5 +171,80 @@ export interface ContentItem {
   title: string;
   body: string;
   isPublic: boolean;
+  createdAt: Timestamp;
+}
+
+// ── Store types ──────────────────────────────────────────────────────────────
+
+export type ProductCategory =
+  | 'Streaming' | 'Music' | 'AI Tools' | 'Design' | 'Productivity' | 'Gaming' | 'Gift Cards' | 'Other';
+
+export interface ProductPlan {
+  id: string;
+  label: string;
+  durationLabel: string;
+  durationDays: number;
+  priceBDT: number;
+  originalPriceBDT?: number;
+  notes?: string;
+}
+
+export interface Product {
+  id: string;
+  name: string;
+  slug: string;
+  category: ProductCategory;
+  shortDescription: string;
+  longDescription: string;
+  imageUrl: string;
+  plans: ProductPlan[];
+  isActive: boolean;
+  isFeatured?: boolean;
+  createdAt: Timestamp;
+  updatedAt?: Timestamp;
+}
+
+export type PaymentMethod = 'bkash' | 'nagad' | 'rocket';
+
+export type OrderStatus = 'pending_payment' | 'verified' | 'fulfilled' | 'rejected' | 'cancelled';
+
+export interface OrderItem {
+  productId: string;
+  productName: string;
+  planId: string;
+  planLabel: string;
+  priceBDT: number;
+  quantity: number;
+}
+
+export interface DeliveredCredential {
+  label: string;
+  value: string;
+}
+
+export interface Order {
+  id: string;
+  customerUsername: string;
+  customerEmail: string;
+  customerName: string;
+  customerPhone?: string;
+  items: OrderItem[];
+  totalBDT: number;
+  paymentMethod: PaymentMethod;
+  senderNumber: string;
+  trxId: string;
+  status: OrderStatus;
+  adminNote?: string;
+  deliveredCredentials?: DeliveredCredential[];
+  createdAt: Timestamp;
+  verifiedAt?: Timestamp;
+  fulfilledAt?: Timestamp;
+}
+
+export interface CustomerProfile {
+  username: string;
+  email: string;
+  displayName: string;
+  phone?: string;
   createdAt: Timestamp;
 }

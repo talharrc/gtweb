@@ -5,16 +5,17 @@ import cookieParser from "cookie-parser";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import { initializeApp } from "firebase/app";
-import { getFirestore, collection, query, where, getDocs, addDoc } from "firebase/firestore";
+import { getFirestore, collection, query, where, getDocs, addDoc, doc, setDoc, limit } from "firebase/firestore";
 
 dotenv.config();
+dotenv.config({ path: ".env.local" });
 
 // ── Config ─────────────────────────────────────────────────────────────────────
 const JWT_SECRET = process.env.JWT_SECRET ?? "gt-dev-secret-change-in-prod";
 const SESSION_MAX_AGE = 7 * 24 * 60 * 60 * 1000;
 const CRED_MAX_AGE = 365 * 24 * 60 * 60 * 1000;
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL ?? process.env.VITE_ADMIN_EMAIL ?? "mail.galaxatech@gmail.com";
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD ?? "";
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD ?? "admin";
 
 // Initialize Firebase for backend Firestore usage
 const firebaseConfig = {
@@ -34,6 +35,24 @@ try {
   }
 } catch (e) {
   console.error("Firebase init failed in api/index.ts:", e);
+}
+
+// Test database connection on startup to avoid hangs if database is not found or blocked
+if (db) {
+  console.log("[Firebase] Testing connection to Firestore project:", firebaseConfig.projectId);
+  const testConn = async () => {
+    try {
+      const q = query(collection(db, "credentials"), limit(1));
+      const testPromise = getDocs(q);
+      const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error("Timeout")), 2500));
+      await Promise.race([testPromise, timeoutPromise]);
+      console.log("[Firebase] Firestore connection test passed. Firestore is active.");
+    } catch (err: any) {
+      console.warn("[Firebase] Firestore not available or database not found. Falling back to local/cookie mock database. Reason:", err.message);
+      db = null;
+    }
+  };
+  testConn();
 }
 
 // ── Express app ────────────────────────────────────────────────────────────────
@@ -85,6 +104,8 @@ app.post("/api/auth/admin", async (req, res) => {
   const { password } = req.body ?? {};
   if (!password) return res.status(400).json({ error: "Password is required." });
 
+  console.log("[Auth] Admin login attempt. Entered password:", password, "Expected fallback:", ADMIN_PASSWORD);
+
   try {
     let existingHash: string | null = null;
     let docId: string | null = null;
@@ -101,9 +122,12 @@ app.post("/api/auth/admin", async (req, res) => {
           const d = snap.docs[0].data();
           existingHash = d.passwordHash ?? d.password ?? null;
           docId = snap.docs[0].id;
+          console.log("[Auth] Found credentials in Firestore. Hash:", existingHash);
+        } else {
+          console.log("[Auth] No credentials found in Firestore.");
         }
-      } catch (err) {
-        console.error("Error reading credentials from Firestore:", err);
+      } catch (err: any) {
+        console.error("[Auth] Error reading credentials from Firestore:", err?.message);
       }
     }
 
@@ -137,12 +161,39 @@ app.post("/api/auth/admin", async (req, res) => {
     }
 
     // 4. Verify password
-    const match = await bcrypt.compare(password, existingHash);
+    console.log("[Auth] existingHash used for verification:", existingHash);
+    let match = false;
+    try {
+      match = await bcrypt.compare(password, existingHash);
+      console.log("[Auth] Bcrypt comparison result:", match);
+    } catch (err: any) {
+      console.error("[Auth] Bcrypt error:", err?.message);
+    }
     if (!match) {
-      // Fallback: if it matches ADMIN_PASSWORD environment variable
+      console.log("[Auth] Checking fallback logic. ADMIN_PASSWORD:", ADMIN_PASSWORD, "Matches entered password:", password === ADMIN_PASSWORD);
+      // Fallback: if it matches ADMIN_PASSWORD environment variable / default fallback
       if (ADMIN_PASSWORD && password === ADMIN_PASSWORD) {
-        // Correct
+        match = true;
+        console.log("[Auth] Fallback matched! Resetting credentials cookie...");
+        // Synchronize/reset the credentials cookie with the fallback password
+        const hash = await bcrypt.hash(password, 10);
+        setCredCookie(res, ADMIN_EMAIL, hash);
+        
+        // Also attempt to update Firestore if db is active
+        if (db) {
+          try {
+            await addDoc(collection(db, "credentials"), {
+              username: ADMIN_EMAIL.toLowerCase().trim(),
+              passwordHash: hash,
+              role: "admin",
+              createdAt: new Date(),
+            });
+          } catch (err) {
+            console.error("Failed to sync admin credentials in Firestore:", err);
+          }
+        }
       } else {
+        console.log("[Auth] Fallback rejected. Returning 401 Incorrect password.");
         return res.status(401).json({ error: "Incorrect password." });
       }
     }
@@ -155,6 +206,84 @@ app.post("/api/auth/admin", async (req, res) => {
   }
 });
 
+// ── Customer Auth (self-serve signup/login) ────────────────────────────────────
+app.post("/api/auth/signup", async (req, res) => {
+  const { name, email, phone, password } = req.body ?? {};
+  if (!name?.trim() || !email?.trim() || !password) {
+    return res.status(400).json({ error: "Name, email, and password are required." });
+  }
+  if (password.length < 6) return res.status(400).json({ error: "Password must be at least 6 characters." });
+
+  const username = String(email).toLowerCase().trim();
+
+  try {
+    if (db) {
+      const q = query(collection(db, "credentials"), where("username", "==", username));
+      const snap = await getDocs(q);
+      if (!snap.empty) return res.status(409).json({ error: "An account with this email already exists." });
+    }
+
+    const passwordHash = await bcrypt.hash(password, 10);
+
+    if (db) {
+      await addDoc(collection(db, "credentials"), {
+        username,
+        passwordHash,
+        role: "customer",
+        createdAt: new Date(),
+      });
+      await setDoc(doc(db, "customers", username), {
+        username,
+        email: username,
+        displayName: name.trim(),
+        phone: phone?.trim() ?? "",
+        createdAt: new Date(),
+      });
+    } else {
+      setCredCookie(res, username, passwordHash);
+    }
+
+    const token = jwt.sign({ role: "customer", email: username }, JWT_SECRET, { expiresIn: "7d" });
+    setSessionCookie(res, token);
+    res.json({ ok: true, role: "customer", email: username });
+  } catch (e: any) {
+    res.status(500).json({ error: e?.message ?? "Server error creating account." });
+  }
+});
+
+app.post("/api/auth/login", async (req, res) => {
+  const { email, password } = req.body ?? {};
+  if (!email?.trim() || !password) return res.status(400).json({ error: "Email and password are required." });
+
+  const username = String(email).toLowerCase().trim();
+
+  try {
+    let existingHash: string | null = null;
+    let role = "customer";
+
+    if (db) {
+      const q = query(collection(db, "credentials"), where("username", "==", username));
+      const snap = await getDocs(q);
+      if (!snap.empty) {
+        const d = snap.docs[0].data();
+        existingHash = d.passwordHash ?? null;
+        role = d.role ?? "customer";
+      }
+    }
+    if (!existingHash) existingHash = getCredCookie(req, username);
+    if (!existingHash) return res.status(401).json({ error: "Incorrect email or password." });
+
+    const match = await bcrypt.compare(password, existingHash);
+    if (!match) return res.status(401).json({ error: "Incorrect email or password." });
+
+    const token = jwt.sign({ role, email: username }, JWT_SECRET, { expiresIn: "7d" });
+    setSessionCookie(res, token);
+    res.json({ ok: true, role, email: username });
+  } catch (e: any) {
+    res.status(500).json({ error: e?.message ?? "Server error during login." });
+  }
+});
+
 // ── Invite Auth ────────────────────────────────────────────────────────────────
 // Invite tokens are self-contained signed JWTs — no database writes needed.
 
@@ -163,8 +292,21 @@ app.get("/api/auth/invite/:token", (req, res) => {
   try {
     const payload = jwt.verify(token, JWT_SECRET) as { email: string; role: string; projectId: string | null; type?: string };
     if (payload.type !== "invite") return res.status(400).json({ error: "Invalid invite token." });
-    const hash = getCredCookie(req, payload.email);
-    res.json({ email: payload.email, role: payload.role, passwordSet: hash !== null });
+
+    // Auto-authenticate: sign session and set cookie
+    const sessionJwt = jwt.sign(
+      { role: payload.role, email: payload.email, projectId: payload.projectId ?? null },
+      JWT_SECRET,
+      { expiresIn: "7d" }
+    );
+    setSessionCookie(res, sessionJwt);
+
+    res.json({
+      email: payload.email,
+      role: payload.role,
+      projectId: payload.projectId ?? null,
+      autoLogin: true
+    });
   } catch {
     res.status(404).json({ error: "Invite link not found or expired." });
   }
@@ -319,5 +461,57 @@ app.post("/api/newsletter/subscribe", (req, res) => {
 });
 
 app.get("/api/newsletter/count", (_req, res) => res.json({ count: localOfflineQueue.length }));
+
+// ── TEMP: one-time store product seed (safe to re-run, idempotent by fixed doc id) ──
+app.post("/api/dev/seed-products", async (_req, res) => {
+  if (!db) return res.status(500).json({ error: "Firestore not initialized" });
+  const PRODUCTS = [
+    { id: "prod-netflix", name: "Netflix Premium", slug: "netflix-premium", category: "Streaming", isFeatured: true,
+      shortDescription: "Watch on any screen — mobile, laptop, or TV — in Full HD or 4K.",
+      longDescription: "Shared and personal Netflix plans across mobile, laptop/PC, and Smart TV / Android TV / Fire Stick devices.",
+      plans: [
+        { id: "plan-mobile-1m", label: "Mobile / Laptop Screen", durationLabel: "1 Month", durationDays: 30, priceBDT: 349 },
+        { id: "plan-tv-1m", label: "TV Screen (Full HD)", durationLabel: "1 Month", durationDays: 30, priceBDT: 449 },
+        { id: "plan-premium-1m", label: "Premium 4K (2 Screens)", durationLabel: "1 Month", durationDays: 30, priceBDT: 649 },
+      ] },
+    { id: "prod-netflix-prime", name: "Netflix + Prime Video Combo", slug: "netflix-prime-combo", category: "Streaming",
+      shortDescription: "One plan, two of the biggest streaming libraries.",
+      longDescription: "Bundle Netflix and Amazon Prime Video access into a single monthly plan at a discounted combo rate.",
+      plans: [{ id: "plan-combo-1m", label: "Combo Plan", durationLabel: "1 Month", durationDays: 30, priceBDT: 489 }] },
+    { id: "prod-prime", name: "Amazon Prime Video", slug: "prime-video", category: "Streaming",
+      shortDescription: "Prime Originals, movies, and live sports.",
+      longDescription: "Standard Amazon Prime Video access on mobile, laptop, and TV devices.",
+      plans: [{ id: "plan-1m", label: "Standard", durationLabel: "1 Month", durationDays: 30, priceBDT: 249 }] },
+    { id: "prod-spotify", name: "Spotify Premium", slug: "spotify-premium", category: "Music",
+      shortDescription: "Ad-free music, offline downloads, unlimited skips.",
+      longDescription: "Individual Spotify Premium access with no ads and offline listening.",
+      plans: [
+        { id: "plan-1m", label: "Individual", durationLabel: "1 Month", durationDays: 30, priceBDT: 149 },
+        { id: "plan-3m", label: "Individual", durationLabel: "3 Months", durationDays: 90, priceBDT: 399 },
+      ] },
+    { id: "prod-chatgpt", name: "ChatGPT Plus", slug: "chatgpt-plus", category: "AI Tools", isFeatured: true,
+      shortDescription: "GPT-5 access, image generation, web browsing, and file uploads.",
+      longDescription: "Choose a shared login for a lower price, or a personal-email invite so the subscription lives on your own OpenAI account.",
+      plans: [
+        { id: "plan-shared-1m", label: "Shared Account", durationLabel: "1 Month", durationDays: 30, priceBDT: 500 },
+        { id: "plan-personal-1m", label: "Personal Account (Your Email)", durationLabel: "1 Month", durationDays: 30, priceBDT: 2750 },
+      ] },
+    { id: "prod-canva", name: "Canva Pro", slug: "canva-pro", category: "Design",
+      shortDescription: "Premium templates, background remover, and brand kits.",
+      longDescription: "Full-year Canva Pro invite added directly to your existing Canva account.",
+      plans: [{ id: "plan-1y", label: "Full Year Invite", durationLabel: "1 Year", durationDays: 365, priceBDT: 599 }] },
+    { id: "prod-disney", name: "Disney+ Hotstar", slug: "disney-hotstar", category: "Streaming",
+      shortDescription: "Disney, Marvel, Star Wars, and live cricket.",
+      longDescription: "Standard Disney+ Hotstar access across mobile and TV.",
+      plans: [{ id: "plan-1m", label: "Standard", durationLabel: "1 Month", durationDays: 30, priceBDT: 299 }] },
+  ];
+  const results: string[] = [];
+  for (const p of PRODUCTS) {
+    const { id, ...rest } = p;
+    await setDoc(doc(db, "products", id), { ...rest, imageUrl: "", isActive: true, isFeatured: !!(p as any).isFeatured, createdAt: new Date() });
+    results.push(id);
+  }
+  res.json({ ok: true, seeded: results });
+});
 
 export default app;

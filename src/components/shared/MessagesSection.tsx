@@ -16,6 +16,22 @@ function MessageBubble({ msg, myUid }: BubbleProps) {
     ? new Date(msg.createdAt.seconds * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
     : '';
 
+  // Role-based bubble styling (Admin = Purple, Client = Cyan, Builder = Emerald)
+  let bubbleClass = 'bg-white/5 border-white/10 text-white/80 rounded-bl-sm';
+  if (msg.senderRole === 'admin') {
+    bubbleClass = isMe
+      ? 'bg-purple-500/20 border-purple-500/40 text-white rounded-br-sm shadow-[0_0_15px_rgba(139,92,246,0.15)]'
+      : 'bg-purple-500/10 border-purple-500/20 text-purple-300 rounded-bl-sm';
+  } else if (msg.senderRole === 'client') {
+    bubbleClass = isMe
+      ? 'bg-cyan-500/20 border-cyan-500/40 text-white rounded-br-sm shadow-[0_0_15px_rgba(34,211,238,0.15)]'
+      : 'bg-cyan-500/10 border-cyan-500/20 text-cyan-300 rounded-bl-sm';
+  } else if (msg.senderRole === 'builder') {
+    bubbleClass = isMe
+      ? 'bg-emerald-500/20 border-emerald-500/40 text-white rounded-br-sm shadow-[0_0_15px_rgba(16,185,129,0.15)]'
+      : 'bg-emerald-500/10 border-emerald-500/20 text-emerald-300 rounded-bl-sm';
+  }
+
   return (
     <div className={`flex ${isMe ? 'justify-end' : 'justify-start'} mb-3`}>
       <div className={`max-w-[75%] ${isMe ? 'order-last' : ''}`}>
@@ -24,11 +40,7 @@ function MessageBubble({ msg, myUid }: BubbleProps) {
             {msg.senderName} · {msg.senderRole}
           </p>
         )}
-        <div className={`rounded-2xl px-4 py-2.5 text-sm ${
-          isMe
-            ? 'bg-primary/25 border border-primary/30 text-white rounded-br-sm'
-            : 'bg-white/5 border border-white/10 text-white/80 rounded-bl-sm'
-        }`}>
+        <div className={`rounded-2xl px-4 py-2.5 text-sm border transition-all ${bubbleClass}`}>
           {msg.body}
         </div>
         <p className={`text-white/25 text-[10px] mt-1 ${isMe ? 'text-right pr-1' : 'pl-1'}`}>{time}</p>

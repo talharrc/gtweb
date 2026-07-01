@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import { collection, onSnapshot, doc, updateDoc, orderBy, query, Timestamp } from 'firebase/firestore';
 import { Loader2, X, CheckCircle2, XCircle } from 'lucide-react';
 import { db } from '../../lib/firebase';
+import { useAuth } from '../../context/AuthContext';
+import { mockDb } from '../../lib/mockData';
 import StatusBadge from '../shared/StatusBadge';
 import EmptyState from '../shared/EmptyState';
 
@@ -19,14 +21,25 @@ interface GBPApp {
   adminNote?: string;
 }
 
-function AppDetail({ app, onClose }: { app: GBPApp; onClose: () => void }) {
+function AppDetail({ app, onClose, onUpdate }: { app: GBPApp; onClose: () => void; onUpdate?: () => void }) {
+  const { isDemo } = useAuth();
   const [note, setNote] = useState(app.adminNote ?? '');
   const [saving, setSaving] = useState(false);
 
   const updateStatus = async (status: GBPApp['status']) => {
     setSaving(true);
     try {
-      await updateDoc(doc(db, 'gbp_applications', app.id), { status, adminNote: note });
+      if (isDemo) {
+        const mockApps = mockDb.getGbpApps();
+        const dbStatus = status === 'accepted' ? 'approved' : status === 'declined' ? 'declined' : 'pending';
+        const updated = mockApps.map(a => a.id === app.id ? { ...a, status: dbStatus as any } : a);
+        mockDb.saveGbpApps(updated);
+        app.status = status;
+        app.adminNote = note;
+        if (onUpdate) onUpdate();
+      } else {
+        await updateDoc(doc(db, 'gbp_applications', app.id), { status, adminNote: note });
+      }
     } finally { setSaving(false); }
   };
 
@@ -99,19 +112,51 @@ function AppDetail({ app, onClose }: { app: GBPApp; onClose: () => void }) {
 }
 
 export default function AdminGBPApplications() {
+  const { isDemo, setIsDemo } = useAuth();
   const [apps, setApps] = useState<GBPApp[]>([]);
   const [loading, setLoading] = useState(true);
   const [selected, setSelected] = useState<GBPApp | null>(null);
   const [filterStatus, setFilterStatus] = useState('');
 
+  const loadApps = () => {
+    if (isDemo) {
+      const mapped = mockDb.getGbpApps().map(a => ({
+        id: a.id,
+        name: a.fullName,
+        email: a.email,
+        phone: '+8801700000000',
+        institution: 'University of Dhaka',
+        track: a.skills.join(', '),
+        why: 'I want to build premium galactic web experiences.',
+        portfolioUrl: a.portfolioUrl,
+        submittedAt: a.submittedAt as any,
+        status: a.status === 'approved' ? 'accepted' : a.status === 'declined' ? 'declined' : 'new',
+        adminNote: '',
+      }));
+      setApps(mapped as any);
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
+    if (isDemo) {
+      loadApps();
+      return;
+    }
+
+    const handleError = (error: any) => {
+      console.warn("Firestore error in AdminGBPApplications, falling back to Demo Mode:", error);
+      setIsDemo(true);
+      setLoading(false);
+    };
+
     const q = query(collection(db, 'gbp_applications'), orderBy('submittedAt', 'desc'));
     const unsub = onSnapshot(q, s => {
       setApps(s.docs.map(d => ({ id: d.id, ...d.data() } as GBPApp)));
       setLoading(false);
-    }, () => setLoading(false));
+    }, handleError);
     return () => unsub();
-  }, []);
+  }, [isDemo]);
 
   const filtered = filterStatus ? apps.filter(a => a.status === filterStatus) : apps;
 
@@ -166,7 +211,7 @@ export default function AdminGBPApplications() {
         </div>
       )}
 
-      {selected && <AppDetail app={selected} onClose={() => setSelected(null)} />}
+      {selected && <AppDetail app={selected} onClose={() => setSelected(null)} onUpdate={loadApps} />}
     </div>
   );
 }

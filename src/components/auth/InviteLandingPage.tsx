@@ -28,9 +28,15 @@ export default function InviteLandingPage() {
     }
     fetch(`/api/auth/invite/${token}`, { credentials: 'include' })
       .then(r => r.json())
-      .then(data => {
+      .then(async (data) => {
         if (data.error) {
           setState({ status: 'error', message: data.error });
+        } else if (data.autoLogin) {
+          await applySession({ role: data.role, email: data.email, projectId: data.projectId ?? null });
+          setState({ status: 'success' });
+          setTimeout(() => {
+            navigate(data.role === 'client' ? '/hub/client' : '/hub/builder', { replace: true });
+          }, 800);
         } else {
           setState({
             status: data.passwordSet ? 'login' : 'set-password',
@@ -127,7 +133,7 @@ export default function InviteLandingPage() {
     <div className="min-h-screen flex items-center justify-center px-6">
       <div className="glass-card max-w-sm w-full p-8 rounded-2xl">
         <div className="flex items-center gap-2.5 mb-6">
-          <img src="/gtnew.jpeg" alt="GalaxaTech" className="w-8 h-8 rounded-lg object-contain" />
+          <img src="/logo.png" alt="GalaxaTech" className="w-8 h-8 rounded-lg object-contain" />
           <div>
             <p className="text-white font-bold text-sm leading-none">GalaxaTech</p>
             <p className={`text-[10px] font-mono mt-0.5 ${accentColor}`}>{hubLabel}</p>

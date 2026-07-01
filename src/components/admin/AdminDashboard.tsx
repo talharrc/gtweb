@@ -3,6 +3,8 @@ import { collection, onSnapshot, query, where, orderBy, limit, Timestamp } from 
 import { FolderOpen, Users, Clock, Hammer, Loader2, Activity } from 'lucide-react';
 import { db } from '../../lib/firebase';
 import { GTProject } from '../../types';
+import { useAuth } from '../../context/AuthContext';
+import { mockDb } from '../../lib/mockData';
 
 interface StatCard {
   label: string;
@@ -32,6 +34,7 @@ function timeAgo(ts: Timestamp | null): string {
 }
 
 export default function AdminDashboard() {
+  const { isDemo, setIsDemo } = useAuth();
   const [projects, setProjects] = useState<GTProject[]>([]);
   const [pendingCount, setPendingCount] = useState(0);
   const [clientCount, setClientCount] = useState(0);
@@ -40,26 +43,56 @@ export default function AdminDashboard() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    if (isDemo) {
+      const mockProjects = mockDb.getProjects();
+      const mockUsers = mockDb.getUsers();
+      setProjects(mockProjects);
+      setPendingCount(mockUsers.filter(u => u.status === 'pending').length);
+      setClientCount(mockUsers.filter(u => u.role === 'client' && u.status === 'approved').length);
+      setBuilderCount(mockUsers.filter(u => u.role === 'builder' && u.status === 'approved').length);
+      
+      const activity: ActivityItem[] = [];
+      mockProjects.forEach(p => {
+        activity.push({
+          id: `act-p-${p.id}`,
+          type: 'Project updated',
+          summary: `Project "${p.name}" status set to ${p.status}`,
+          createdAt: p.createdAt as any,
+        });
+      });
+      setRecentActivity(activity.slice(0, 10));
+      setLoading(false);
+      return;
+    }
+
+    const handleError = (error: any) => {
+      console.warn("Firestore error in AdminDashboard, falling back to Demo Mode:", error);
+      setIsDemo(true);
+      setLoading(false);
+    };
+
     const unsubs = [
       onSnapshot(collection(db, 'projects'), s => {
         setProjects(s.docs.map(d => ({ id: d.id, ...d.data() } as GTProject)));
         setLoading(false);
-      }),
+      }, handleError),
       onSnapshot(
         query(collection(db, 'users'), where('status', '==', 'pending')),
         s => setPendingCount(s.size),
+        handleError
       ),
       onSnapshot(
         query(collection(db, 'users'), where('role', '==', 'client'), where('status', '==', 'approved')),
         s => setClientCount(s.size),
+        handleError
       ),
       onSnapshot(
         query(collection(db, 'users'), where('role', '==', 'builder'), where('status', '==', 'approved')),
         s => setBuilderCount(s.size),
+        handleError
       ),
     ];
 
-    // Recent activity from top-level updates collection
     const unsubUpdates = onSnapshot(
       query(collection(db, 'updates'), orderBy('date', 'desc'), limit(10)),
       s => {
@@ -70,10 +103,16 @@ export default function AdminDashboard() {
           createdAt: d.data().date ?? null,
         })));
       },
+      handleError
     );
 
-    return () => { unsubs.forEach(u => u()); unsubUpdates(); };
-  }, []);
+    return () => {
+      unsubs.forEach(u => {
+        try { u(); } catch {}
+      });
+      try { unsubUpdates(); } catch {}
+    };
+  }, [isDemo]);
 
   const discoveryCount = projects.filter(p => p.status === 'Discovery').length;
   const inProgressCount = projects.filter(p => p.status === 'In Progress' || p.status === 'active').length;

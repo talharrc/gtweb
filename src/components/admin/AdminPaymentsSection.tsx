@@ -5,9 +5,12 @@ import { db } from '../../lib/firebase';
 import { GTProject, Payment, UserProfile } from '../../types';
 import { recordPayment, updatePayment, calcBuilderEligibility } from '../../services/paymentService';
 import { getAllUsers } from '../../services/userService';
+import { useAuth } from '../../context/AuthContext';
+import { mockDb } from '../../lib/mockData';
 import EmptyState from '../shared/EmptyState';
 
 export default function AdminPaymentsSection() {
+  const { isDemo, setIsDemo } = useAuth();
   const [projects, setProjects] = useState<GTProject[]>([]);
   const [payments, setPayments] = useState<Payment[]>([]);
   const [users, setUsers] = useState<UserProfile[]>([]);
@@ -18,11 +21,38 @@ export default function AdminPaymentsSection() {
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
-    const u1 = onSnapshot(collection(db, 'projects'), s => { setProjects(s.docs.map(d => ({ id: d.id, ...d.data() } as GTProject))); setLoading(false); });
-    const u2 = onSnapshot(collection(db, 'payments'), s => setPayments(s.docs.map(d => ({ id: d.id, ...d.data() } as Payment))));
-    getAllUsers().then(setUsers);
-    return () => { u1(); u2(); };
-  }, []);
+    if (isDemo) {
+      setProjects(mockDb.getProjects());
+      setPayments(mockDb.getPayments() as any);
+      setUsers(mockDb.getUsers());
+      setLoading(false);
+      return;
+    }
+
+    const handleError = (error: any) => {
+      console.warn("Firestore error in AdminPaymentsSection, falling back to Demo Mode:", error);
+      setIsDemo(true);
+      setLoading(false);
+    };
+
+    const u1 = onSnapshot(collection(db, 'projects'), s => { 
+      setProjects(s.docs.map(d => ({ id: d.id, ...d.data() } as GTProject))); 
+      setLoading(false); 
+    }, handleError);
+
+    const u2 = onSnapshot(collection(db, 'payments'), s => {
+      setPayments(s.docs.map(d => ({ id: d.id, ...d.data() } as Payment)));
+    }, handleError);
+
+    getAllUsers()
+      .then(setUsers)
+      .catch(() => {});
+
+    return () => { 
+      try { u1(); } catch {}
+      try { u2(); } catch {}
+    };
+  }, [isDemo]);
 
   const nameFor = (uid: string) => users.find(u => u.uid === uid)?.displayName ?? uid.slice(0, 8) + '…';
 
@@ -31,11 +61,44 @@ export default function AdminPaymentsSection() {
   const handleCreate = async (e: FormEvent) => {
     e.preventDefault();
     setSaving(true);
-    try { await recordPayment(form as any); setShowNew(false); } finally { setSaving(false); }
+    try {
+      if (isDemo) {
+        const mockPayments = mockDb.getPayments();
+        const builder = users.find(u => u.uid === form.builderUid);
+        const newRecord = {
+          id: `pay-${Date.now()}`,
+          projectId: form.projectId,
+          projectName: projects.find(p => p.id === form.projectId)?.name ?? 'Unknown Project',
+          builderUid: form.builderUid,
+          builderName: builder?.displayName ?? 'Unknown Builder',
+          projectValue: Number(form.projectValue),
+          builderSharePercent: Number(form.builderSharePercent),
+          clientPaidAmount: Number(form.clientPaidAmount),
+          builderPaidAmount: Number(form.builderPaidAmount),
+          amount: Number(form.clientPaidAmount),
+          status: 'pending' as const,
+          createdAt: { seconds: Math.floor(Date.now() / 1000), nanoseconds: 0 },
+        };
+        const updated = [...mockPayments, newRecord];
+        mockDb.savePayments(updated as any);
+        setPayments(updated as any);
+        setShowNew(false);
+      } else {
+        await recordPayment(form as any);
+        setShowNew(false);
+      }
+    } finally { setSaving(false); }
   };
 
   const handleUpdate = async (id: string, field: 'clientPaidAmount' | 'builderPaidAmount', value: number) => {
-    await updatePayment(id, { [field]: value });
+    if (isDemo) {
+      const mockPayments = mockDb.getPayments();
+      const updated = mockPayments.map(p => p.id === id ? { ...p, [field]: value } : p);
+      mockDb.savePayments(updated);
+      setPayments(updated as any);
+    } else {
+      await updatePayment(id, { [field]: value });
+    }
   };
 
   if (loading) return <div className="flex justify-center py-16"><Loader2 className="w-6 h-6 text-primary animate-spin" /></div>;

@@ -7,6 +7,8 @@ import {
 import { db } from '../../lib/firebase';
 import { GTProject, Milestone } from '../../types';
 import { createProject, updateProject, deleteProject } from '../../services/projectService';
+import { useAuth } from '../../context/AuthContext';
+import { mockDb } from '../../lib/mockData';
 import StatusBadge from '../shared/StatusBadge';
 import ProgressBar from '../shared/ProgressBar';
 import EmptyState from '../shared/EmptyState';
@@ -28,6 +30,7 @@ const EMPTY_FORM = {
   status: 'Discovery' as ProjectStatus,
   category: 'Web/App Development',
   progressPercent: 0,
+  startDate: '',
   deadline: '',
   whatsappGroupUrl: '',
   projectValue: 0,
@@ -58,29 +61,39 @@ function CopyButton({ text }: { text: string }) {
 }
 
 export default function AdminProjectsSection() {
+  const { isDemo, setIsDemo } = useAuth();
   const [projects, setProjects] = useState<GTProject[]>([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
-  const [editingId, setEditingId] = useState<string | null>(null);
   const [form, setForm] = useState({ ...EMPTY_FORM });
+  const [newMilestone, setNewMilestone] = useState('');
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState('');
-  const [newMilestone, setNewMilestone] = useState('');
+  const [editingId, setEditingId] = useState<string | null>(null);
   const [expandedProject, setExpandedProject] = useState<string | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [inviteResults, setInviteResults] = useState<InviteResult[] | null>(null);
 
   useEffect(() => {
+    if (isDemo) {
+      setProjects(mockDb.getProjects());
+      setLoading(false);
+      return;
+    }
     const unsub = onSnapshot(
       collection(db, 'projects'),
       (snap) => {
         setProjects(snap.docs.map(d => ({ id: d.id, ...d.data() } as GTProject)));
         setLoading(false);
       },
-      () => setLoading(false),
+      (error) => {
+        console.warn("Firestore error in AdminProjectsSection, falling back to Demo Mode:", error);
+        setIsDemo(true);
+        setLoading(false);
+      },
     );
     return () => unsub();
-  }, []);
+  }, [isDemo]);
 
   const openNew = () => {
     setForm({ ...EMPTY_FORM });
@@ -97,6 +110,7 @@ export default function AdminProjectsSection() {
       status: (STATUSES.includes(p.status as ProjectStatus) ? p.status : 'Discovery') as ProjectStatus,
       category: p.category ?? 'Web/App Development',
       progressPercent: p.progressPercent,
+      startDate: (p as any).startDate ? new Date((p as any).startDate.seconds * 1000).toISOString().slice(0, 10) : '',
       deadline: p.deadline ? new Date(p.deadline.seconds * 1000).toISOString().slice(0, 10) : '',
       whatsappGroupUrl: p.whatsappGroupUrl ?? '',
       projectValue: p.projectValue ?? 0,
@@ -129,6 +143,9 @@ export default function AdminProjectsSection() {
     setSaveError('');
 
     try {
+      const startDate = form.startDate
+        ? Timestamp.fromDate(new Date(form.startDate))
+        : Timestamp.now();
       const deadline = form.deadline
         ? Timestamp.fromDate(new Date(form.deadline))
         : Timestamp.now();
@@ -140,6 +157,7 @@ export default function AdminProjectsSection() {
         status: form.status,
         category: form.category,
         progressPercent: Number(form.progressPercent),
+        startDate,
         deadline,
         whatsappGroupUrl: form.whatsappGroupUrl,
         projectValue: Number(form.projectValue),
@@ -151,6 +169,35 @@ export default function AdminProjectsSection() {
         builderUids: [],
         clientInfo: { name: '', email: form.clientEmail.trim().toLowerCase() },
       };
+
+      if (isDemo) {
+        const mockProjects = mockDb.getProjects();
+        const newProjId = editingId || `proj-${Date.now()}`;
+        if (editingId) {
+          const updated = mockProjects.map(p => p.id === editingId ? { ...p, ...data, id: editingId } : p);
+          mockDb.saveProjects(updated as any);
+        } else {
+          mockProjects.push({ ...data, id: newProjId } as any);
+          mockDb.saveProjects(mockProjects);
+        }
+        setProjects(mockDb.getProjects());
+        
+        if (!editingId) {
+          const builderEmails = parseEmails(form.builderEmailsRaw);
+          const results = [];
+          if (form.clientEmail) {
+            results.push({ email: form.clientEmail.trim().toLowerCase(), role: 'client', inviteUrl: `${window.location.origin}/hub/invite/demo-client-token` });
+          }
+          builderEmails.forEach(email => {
+            results.push({ email, role: 'builder', inviteUrl: `${window.location.origin}/hub/invite/demo-builder-token-${email}` });
+          });
+          setInviteResults(results);
+        } else {
+          setShowForm(false);
+        }
+        setSaving(false);
+        return;
+      }
 
       let projectId = editingId;
       if (editingId) {
@@ -196,7 +243,16 @@ export default function AdminProjectsSection() {
   const handleDelete = async (id: string) => {
     if (!window.confirm('Delete this project? This cannot be undone.')) return;
     setDeletingId(id);
-    try { await deleteProject(id); } finally { setDeletingId(null); }
+    try {
+      if (isDemo) {
+        const mockProjects = mockDb.getProjects();
+        const filtered = mockProjects.filter(p => p.id !== id);
+        mockDb.saveProjects(filtered);
+        setProjects(filtered);
+      } else {
+        await deleteProject(id);
+      }
+    } finally { setDeletingId(null); }
   };
 
   const origin = window.location.origin;
@@ -381,6 +437,14 @@ export default function AdminProjectsSection() {
                           type="number" min={0} max={100}
                           value={form.progressPercent}
                           onChange={e => setForm(f => ({ ...f, progressPercent: Number(e.target.value) }))}
+                          className="admin-input w-full"
+                        />
+                      </div>
+                      <div>
+                        <label className="text-white/40 text-xs mb-1 block">Start Date</label>
+                        <input
+                          type="date" value={form.startDate}
+                          onChange={e => setForm(f => ({ ...f, startDate: e.target.value }))}
                           className="admin-input w-full"
                         />
                       </div>

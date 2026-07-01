@@ -4,12 +4,15 @@ import { Upload, FileText, ExternalLink, Loader2 } from 'lucide-react';
 import { db } from '../../lib/firebase';
 import { GTProject, GTDocument } from '../../types';
 import { uploadDocument } from '../../services/documentService';
+import { useAuth } from '../../context/AuthContext';
+import { mockDb } from '../../lib/mockData';
 import StatusBadge from '../shared/StatusBadge';
 import EmptyState from '../shared/EmptyState';
 
 const DOC_TYPES: GTDocument['type'][] = ['agreement', 'proposal', 'invoice', 'deliverable', 'handover'];
 
 export default function AdminDocumentsSection() {
+  const { isDemo, setIsDemo } = useAuth();
   const [projects, setProjects] = useState<GTProject[]>([]);
   const [documents, setDocuments] = useState<GTDocument[]>([]);
   const [loading, setLoading] = useState(true);
@@ -20,10 +23,33 @@ export default function AdminDocumentsSection() {
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
-    const u1 = onSnapshot(collection(db, 'projects'), s => { setProjects(s.docs.map(d => ({ id: d.id, ...d.data() } as GTProject))); setLoading(false); });
-    const u2 = onSnapshot(collection(db, 'documents'), s => setDocuments(s.docs.map(d => ({ id: d.id, ...d.data() } as GTDocument))));
-    return () => { u1(); u2(); };
-  }, []);
+    if (isDemo) {
+      setProjects(mockDb.getProjects());
+      setDocuments(mockDb.getDocuments() as any);
+      setLoading(false);
+      return;
+    }
+
+    const handleError = (error: any) => {
+      console.warn("Firestore error in AdminDocumentsSection, falling back to Demo Mode:", error);
+      setIsDemo(true);
+      setLoading(false);
+    };
+
+    const u1 = onSnapshot(collection(db, 'projects'), s => { 
+      setProjects(s.docs.map(d => ({ id: d.id, ...d.data() } as GTProject))); 
+      setLoading(false); 
+    }, handleError);
+
+    const u2 = onSnapshot(collection(db, 'documents'), s => {
+      setDocuments(s.docs.map(d => ({ id: d.id, ...d.data() } as GTDocument)));
+    }, handleError);
+
+    return () => { 
+      try { u1(); } catch {}
+      try { u2(); } catch {}
+    };
+  }, [isDemo]);
 
   const filtered = selectedProject ? documents.filter(d => d.projectId === selectedProject) : documents;
 
@@ -32,9 +58,28 @@ export default function AdminDocumentsSection() {
     if (!file || !selectedProject) return;
     setUploading(true);
     try {
-      await uploadDocument(selectedProject, file, { ...form, projectId: selectedProject, name: file.name, uploadedBy: 'admin' }, setProgress);
-      setFile(null);
-      setProgress(0);
+      if (isDemo) {
+        const mockDocs = mockDb.getDocuments();
+        const newDoc = {
+          id: `doc-${Date.now()}`,
+          projectId: selectedProject,
+          projectName: projects.find(p => p.id === selectedProject)?.name ?? 'Unknown Project',
+          title: file.name,
+          url: '#demo-download-url',
+          type: form.type,
+          uploadedBy: 'mail.galaxatech@gmail.com',
+          createdAt: { seconds: Math.floor(Date.now() / 1000), nanoseconds: 0 },
+        };
+        const updated = [...mockDocs, newDoc];
+        mockDb.saveDocuments(updated as any);
+        setDocuments(updated as any);
+        setFile(null);
+        setProgress(0);
+      } else {
+        await uploadDocument(selectedProject, file, { ...form, projectId: selectedProject, name: file.name, uploadedBy: 'admin' }, setProgress);
+        setFile(null);
+        setProgress(0);
+      }
     } finally { setUploading(false); }
   };
 

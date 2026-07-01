@@ -24,7 +24,8 @@ import {
   MessageCircle,
   User,
   Home,
-  Phone
+  Phone,
+  Package
 } from 'lucide-react';
 import { PageType } from '../types';
 import { useAuth } from '../context/AuthContext';
@@ -124,7 +125,7 @@ export default function Navbar({ onPageChange, dhakaTime, isDhakaOpen, currentUs
           {/* Logo */}
           <button onClick={() => navTo('/')} className="flex items-center gap-2.5 group cursor-pointer focus:outline-none">
             <div className="relative">
-              <img alt="GalaxaTech" className="w-10 h-10 rounded-xl object-cover transition-transform duration-500 group-hover:scale-105" src="/gtnew.jpeg" />
+              <img alt="GalaxaTech" className="w-10 h-10 rounded-xl object-cover transition-transform duration-500 group-hover:scale-105" src="/logo.png" />
               <span className="absolute -inset-1 rounded-xl bg-primary/20 blur opacity-0 group-hover:opacity-100 transition-opacity" />
             </div>
             <span className="font-display text-lg sm:text-xl font-bold tracking-tight text-white transition-all group-hover:bg-gradient-to-r group-hover:from-secondary group-hover:to-primary group-hover:text-transparent group-hover:bg-clip-text">GalaxaTech</span>
@@ -167,6 +168,10 @@ export default function Navbar({ onPageChange, dhakaTime, isDhakaOpen, currentUs
                       <button onClick={() => goToHub('/hub/builder')} className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-[rgba(181,141,255,0.1)] text-left transition-all group/item">
                         <div className="w-8 h-8 rounded-lg bg-emerald-500/20 flex items-center justify-center text-emerald-400 group-hover/item:scale-110 transition-transform"><BookOpen className="w-4 h-4" /></div>
                         <div><p className="text-xs font-bold text-white mb-0.5">Builder Hub</p><p className="text-[10px] text-white/50">Sprint boards & performance logs</p></div>
+                      </button>
+                      <button onClick={() => goToHub('/hub/customer')} className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-[rgba(181,141,255,0.1)] text-left transition-all group/item">
+                        <div className="w-8 h-8 rounded-lg bg-primary/20 flex items-center justify-center text-primary group-hover/item:scale-110 transition-transform"><Package className="w-4 h-4" /></div>
+                        <div><p className="text-xs font-bold text-white mb-0.5">My Orders</p><p className="text-[10px] text-white/50">Track store purchases & deliveries</p></div>
                       </button>
                     </div>
                     <div className="col-span-2 bg-white/[0.02] p-5 flex flex-col justify-between border-l border-[rgba(181,141,255,0.15)] text-left">
@@ -327,6 +332,7 @@ export default function Navbar({ onPageChange, dhakaTime, isDhakaOpen, currentUs
                           <button onClick={() => goToHub('/space')} className="py-2.5 text-white/75 hover:text-white text-sm font-semibold flex items-center gap-3"><Compass className="w-4 h-4 text-pink-400" /> Galaxa Space</button>
                           <button onClick={() => goToHub('/hub/client')} className="py-2.5 text-white/75 hover:text-white text-sm font-semibold flex items-center gap-3"><Lock className="w-4 h-4 text-cyan-400" /> Client Hub</button>
                           <button onClick={() => goToHub('/hub/builder')} className="py-2.5 text-white/75 hover:text-white text-sm font-semibold flex items-center gap-3"><BookOpen className="w-4 h-4 text-emerald-400" /> Builder Hub</button>
+                          <button onClick={() => goToHub('/hub/customer')} className="py-2.5 text-white/75 hover:text-white text-sm font-semibold flex items-center gap-3"><Package className="w-4 h-4 text-primary" /> My Orders</button>
                         </div>
                       </div>
                       {/* Services */}

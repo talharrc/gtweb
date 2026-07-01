@@ -17,6 +17,11 @@ const colorMap: Record<string, string> = {
   client: 'bg-cyan-500/15 text-cyan-400 border-cyan-500/30',
   builder: 'bg-emerald-500/15 text-emerald-400 border-emerald-500/30',
   visitor: 'bg-white/10 text-white/50 border-white/15',
+  pending_payment: 'bg-amber-500/15 text-amber-400 border-amber-500/30',
+  verified: 'bg-cyan-500/15 text-cyan-400 border-cyan-500/30',
+  fulfilled: 'bg-emerald-500/15 text-emerald-400 border-emerald-500/30',
+  rejected: 'bg-red-500/15 text-red-400 border-red-500/30',
+  cancelled: 'bg-white/10 text-white/40 border-white/15',
 };
 
 export default function StatusBadge({ status, size = 'sm' }: StatusBadgeProps) {

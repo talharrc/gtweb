@@ -8,6 +8,7 @@ import cookieParser from "cookie-parser";
 import apiRouter from "./api/index";
 
 dotenv.config();
+dotenv.config({ path: ".env.local" });
 
 const app = express();
 const PORT = 3000;

@@ -2,6 +2,8 @@ import { useEffect, useState, useMemo } from 'react';
 import { collection, onSnapshot, doc, updateDoc, orderBy, query, Timestamp } from 'firebase/firestore';
 import { Loader2, Download, Search } from 'lucide-react';
 import { db } from '../../lib/firebase';
+import { useAuth } from '../../context/AuthContext';
+import { mockDb } from '../../lib/mockData';
 import EmptyState from '../shared/EmptyState';
 
 interface Lead {
@@ -26,6 +28,7 @@ function toCSV(leads: Lead[]): string {
 }
 
 export default function AdminLeads() {
+  const { isDemo, setIsDemo } = useAuth();
   const [auditLeads, setAuditLeads] = useState<Lead[]>([]);
   const [contactLeads, setContactLeads] = useState<Lead[]>([]);
   const [gbpLeads, setGbpLeads] = useState<Lead[]>([]);
@@ -34,8 +37,49 @@ export default function AdminLeads() {
   const [filterSource, setFilterSource] = useState('');
 
   useEffect(() => {
+    if (isDemo) {
+      setAuditLeads(mockDb.getAudits().map(a => ({
+        id: a.id,
+        source: 'audit',
+        name: a.fullName,
+        email: a.email,
+        phone: a.whatsappNumber,
+        type: 'SEO/Performance Audit',
+        submittedAt: a.submittedAt as any,
+        note: '',
+      })));
+      setContactLeads(mockDb.getContacts().map(c => ({
+        id: c.id,
+        source: 'contact',
+        name: c.name,
+        email: c.email,
+        phone: '',
+        type: 'Contact Form',
+        submittedAt: c.submittedAt as any,
+        note: '',
+      })));
+      setGbpLeads(mockDb.getGbpApps().map(g => ({
+        id: g.id,
+        source: 'gbp',
+        name: g.fullName,
+        email: g.email,
+        phone: '',
+        type: `GBP · ${g.skills.slice(0, 2).join(', ')}`,
+        submittedAt: g.submittedAt as any,
+        note: '',
+      })));
+      setLoading(false);
+      return;
+    }
+
     let loaded = 0;
     const done = () => { if (++loaded === 3) setLoading(false); };
+
+    const handleError = (error: any) => {
+      console.warn("Firestore error in AdminLeads, falling back to Demo Mode:", error);
+      setIsDemo(true);
+      setLoading(false);
+    };
 
     const u1 = onSnapshot(query(collection(db, 'audit_submissions'), orderBy('submittedAt', 'desc')), s => {
       setAuditLeads(s.docs.map(d => {
@@ -51,7 +95,7 @@ export default function AdminLeads() {
         } as Lead;
       }));
       done();
-    }, done);
+    }, handleError);
 
     const u2 = onSnapshot(query(collection(db, 'contact_submissions'), orderBy('submittedAt', 'desc')), s => {
       setContactLeads(s.docs.map(d => {
@@ -63,7 +107,7 @@ export default function AdminLeads() {
         } as Lead;
       }));
       done();
-    }, done);
+    }, handleError);
 
     const u3 = onSnapshot(query(collection(db, 'gbp_applications'), orderBy('submittedAt', 'desc')), s => {
       setGbpLeads(s.docs.map(d => {
@@ -75,10 +119,14 @@ export default function AdminLeads() {
         } as Lead;
       }));
       done();
-    }, done);
+    }, handleError);
 
-    return () => { u1(); u2(); u3(); };
-  }, []);
+    return () => {
+      try { u1(); } catch {}
+      try { u2(); } catch {}
+      try { u3(); } catch {}
+    };
+  }, [isDemo]);
 
   const allLeads = useMemo(() => {
     let leads = [...auditLeads, ...contactLeads, ...gbpLeads];
