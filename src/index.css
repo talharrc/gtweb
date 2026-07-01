@@ -302,3 +302,63 @@ button:not([class*="w-"]):not([class*="h-"]) {
   border-radius: 999px;
   color: #FF7A45;
 }
+
+/* ── Store Custom Styling ──────────────────────────────────────────────────────── */
+
+/* Glassmorphism for store cards */
+.store-card {
+  background: rgba(18, 18, 18, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-radius: 1rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.store-card:hover {
+  border-color: rgba(229, 9, 20, 0.4);
+  box-shadow: 0 0 25px rgba(229, 9, 20, 0.15), 0 15px 35px rgba(0, 0, 0, 0.6);
+  transform: translateY(-4px);
+}
+
+/* Glow button styling */
+.btn-primary-red {
+  background: linear-gradient(135deg, #e50914 0%, #b81d24 100%);
+  box-shadow: 0 4px 15px rgba(229, 9, 20, 0.3);
+  transition: all 0.25s ease;
+}
+.btn-primary-red:hover {
+  box-shadow: 0 6px 20px rgba(229, 9, 20, 0.5);
+  filter: brightness(1.1);
+  transform: translateY(-1px);
+}
+.btn-primary-red:active {
+  transform: translateY(0);
+}
+
+/* Custom scrollbar for horizontal categories */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Styled scrollbar for drawer/modals */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.1);
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 99px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+

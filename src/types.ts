@@ -200,6 +200,8 @@ export interface Product {
   plans: ProductPlan[];
   isActive: boolean;
   isFeatured?: boolean;
+  rating?: number;
+  reviewCount?: number;
   createdAt: Timestamp;
   updatedAt?: Timestamp;
 }

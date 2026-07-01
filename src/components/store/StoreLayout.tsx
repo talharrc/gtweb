@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect, FormEvent } from 'react';
 import { Outlet, useNavigate, useSearchParams } from 'react-router-dom';
-import { ShoppingBag, Search, ArrowLeft, Facebook, Twitter } from 'lucide-react';
+import { ShoppingBag, Search, ArrowLeft, Facebook, Twitter, ShieldAlert, Mail } from 'lucide-react';
 import { ProductCategory } from '../../types';
 import { StoreCartProvider, useStoreCart } from '../../context/StoreCartContext';
 import CartDrawer from './CartDrawer';
@@ -15,6 +15,31 @@ const CATEGORIES: { label: string; value: ProductCategory | 'All' }[] = [
   { label: 'Gaming', value: 'Gaming' },
   { label: 'Gift Cards', value: 'Gift Cards' },
 ];
+
+function AnnouncementBar() {
+  const announcements = [
+    "🚀 Enjoy a Better OTT Experience with Full Control • Support Hours: 11:00 AM – 11:30 PM",
+    "🔔 Please check our Product Details, Terms of Service, and Refund Policy before ordering",
+    "⚡ Fast delivery via WhatsApp / Customer Hub within 15-30 minutes"
+  ];
+  const [index, setIndex] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setIndex(prev => (prev + 1) % announcements.length);
+    }, 5000);
+    return () => clearInterval(timer);
+  }, []);
+
+  return (
+    <div className="bg-[#e50914] text-white py-2 px-4 text-center text-[11px] font-bold uppercase tracking-wider relative h-8 flex items-center justify-center border-b border-[#b81d24]/30 z-50">
+      <div key={index} className="truncate max-w-full animate-fade-in flex items-center gap-1.5">
+        <ShieldAlert className="w-3.5 h-3.5" />
+        {announcements[index]}
+      </div>
+    </div>
+  );
+}
 
 function StoreHeader() {
   const navigate = useNavigate();
@@ -34,36 +59,39 @@ function StoreHeader() {
   };
 
   return (
-    <header className="sticky top-0 z-40 bg-white border-b border-slate-200">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-3 flex items-center gap-4">
-        <button onClick={() => navigate('/')} className="flex items-center gap-1.5 text-slate-400 hover:text-slate-700 text-xs font-medium flex-shrink-0 transition-colors">
-          <ArrowLeft className="w-3.5 h-3.5" /> GalaxaTech
+    <header className="sticky top-0 z-40 bg-[#000000]/80 backdrop-blur-md border-b border-white/5">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-3.5 flex items-center gap-4">
+        <button 
+          onClick={() => navigate('/')} 
+          className="flex items-center gap-1 text-white/40 hover:text-white text-xs font-semibold flex-shrink-0 transition-colors"
+        >
+          <ArrowLeft className="w-3.5 h-3.5" /> Agency
         </button>
 
         <button onClick={() => navigate('/browse')} className="flex items-center gap-2 flex-shrink-0">
-          <ShoppingBag className="w-5 h-5 text-blue-600" />
-          <span className="font-black text-lg tracking-tight text-slate-900">GALAXA STORE</span>
+          <ShoppingBag className="w-5 h-5 text-[#e50914] drop-shadow-[0_0_8px_rgba(229,9,20,0.5)]" />
+          <span className="font-black text-xl tracking-tight text-white">GALAXA<span className="text-[#e50914]">STORE</span></span>
         </button>
 
         <div className="relative flex-1 max-w-sm ml-auto hidden sm:block">
-          <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-300" />
+          <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-white/30" />
           <input
             type="text"
-            placeholder="Search products..."
+            placeholder="Search premium plans..."
             value={searchQuery}
             onChange={e => onSearchChange(e.target.value)}
-            className="w-full bg-slate-50 border border-slate-200 rounded-lg pl-9 pr-3 py-2 text-slate-900 text-sm placeholder-slate-400 focus:outline-none focus:border-blue-400 transition-colors"
+            className="w-full bg-[#121212] border border-white/10 rounded-full pl-9 pr-3 py-2 text-white text-sm placeholder-white/30 focus:outline-none focus:border-[#e50914]/60 transition-colors"
           />
         </div>
 
         <button
           onClick={openCart}
-          className="relative flex items-center gap-2 px-3.5 py-2 rounded-lg border border-slate-200 hover:border-blue-300 text-slate-700 transition-all flex-shrink-0"
+          className="relative flex items-center gap-2 px-4 py-2 rounded-full border border-white/10 hover:border-[#e50914]/40 bg-[#121212] text-white hover:text-[#e50914] transition-all flex-shrink-0"
         >
-          <ShoppingBag className="w-4 h-4 text-blue-600" />
-          <span className="text-xs font-semibold hidden sm:inline">Cart</span>
+          <ShoppingBag className="w-4 h-4" />
+          <span className="text-xs font-bold hidden sm:inline">Cart</span>
           {cartItemCount > 0 && (
-            <span className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-red-600 flex items-center justify-center text-[10px] font-bold text-white">
+            <span className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-[#e50914] flex items-center justify-center text-[10px] font-black text-white shadow-[0_0_8px_rgba(229,9,20,0.5)]">
               {cartItemCount}
             </span>
           )}
@@ -72,13 +100,13 @@ function StoreHeader() {
 
       <div className="sm:hidden px-4 pb-3">
         <div className="relative">
-          <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-300" />
+          <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-white/30" />
           <input
             type="text"
-            placeholder="Search products..."
+            placeholder="Search premium plans..."
             value={searchQuery}
             onChange={e => onSearchChange(e.target.value)}
-            className="w-full bg-slate-50 border border-slate-200 rounded-lg pl-9 pr-3 py-2 text-slate-900 text-sm placeholder-slate-400 focus:outline-none focus:border-blue-400 transition-colors"
+            className="w-full bg-[#121212] border border-white/10 rounded-full pl-9 pr-3 py-2 text-white text-sm placeholder-white/30 focus:outline-none focus:border-[#e50914]/60 transition-colors"
           />
         </div>
       </div>
@@ -88,10 +116,10 @@ function StoreHeader() {
           <button
             key={cat.value}
             onClick={() => goToCategory(cat.value)}
-            className={`px-3.5 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all border ${
+            className={`px-4 py-1.5 rounded-full text-xs font-bold tracking-wide whitespace-nowrap transition-all border ${
               activeCategory === cat.value
-                ? 'bg-blue-600 border-blue-600 text-white'
-                : 'bg-white border-slate-200 text-slate-600 hover:border-blue-300'
+                ? 'bg-[#e50914] border-[#e50914] text-white shadow-[0_0_8px_rgba(229,9,20,0.3)]'
+                : 'bg-[#121212] border-white/5 text-white/60 hover:border-white/20 hover:text-white'
             }`}
           >
             {cat.label}
@@ -103,31 +131,83 @@ function StoreHeader() {
 }
 
 function StoreFooter() {
+  const [newsletterEmail, setNewsletterEmail] = useState('');
+  const [newsletterSubscribed, setNewsletterSubscribed] = useState(false);
+
+  const handleSubscribe = (e: FormEvent) => {
+    e.preventDefault();
+    if (!newsletterEmail || !newsletterEmail.includes('@')) return;
+    setNewsletterSubscribed(true);
+    setNewsletterEmail('');
+  };
+
   return (
-    <footer className="border-t border-slate-200 bg-slate-50 mt-16">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-10 grid grid-cols-1 sm:grid-cols-3 gap-8 text-sm">
-        <div>
-          <p className="font-black text-slate-900 mb-2">GALAXA STORE</p>
-          <p className="text-slate-500 text-xs leading-relaxed">Subscription plans and digital top-ups for Bangladesh, delivered fast and paid for with bKash, Nagad, or Rocket.</p>
-        </div>
-        <div>
-          <p className="font-semibold text-slate-700 mb-2 text-xs uppercase tracking-wider">Policies</p>
-          <div className="flex flex-col gap-1.5 text-xs text-slate-500">
-            <a href="/privacy" className="hover:text-blue-600 transition-colors">Privacy Policy</a>
-            <a href="/terms" className="hover:text-blue-600 transition-colors">Terms of Service</a>
-            <a href="/contact" className="hover:text-blue-600 transition-colors">Refund &amp; Support</a>
+    <footer className="border-t border-white/5 bg-[#000000] mt-24">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-12 grid grid-cols-1 md:grid-cols-4 gap-10 text-sm">
+        <div className="md:col-span-2">
+          <p className="font-black text-xl tracking-tight text-white mb-3">
+            GALAXA<span className="text-[#e50914]">STORE</span>
+          </p>
+          <p className="text-white/50 text-xs leading-relaxed max-w-sm mb-5">
+            Premium subscription plans and digital top-ups for entertainment, design, and developer tools in Bangladesh. Fast WhatsApp/Email delivery, secured checkouts via bKash, Nagad, and Rocket.
+          </p>
+          <div className="flex gap-4">
+            <a 
+              href="https://www.facebook.com/share/1GJq598Yfm/" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="w-8 h-8 rounded-full bg-[#121212] border border-white/5 hover:border-[#e50914] flex items-center justify-center text-white/50 hover:text-white transition-all"
+            >
+              <Facebook className="w-4 h-4" />
+            </a>
+            <a 
+              href="https://x.com/galaxatech" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="w-8 h-8 rounded-full bg-[#121212] border border-white/5 hover:border-[#e50914] flex items-center justify-center text-white/50 hover:text-white transition-all"
+            >
+              <Twitter className="w-4 h-4" />
+            </a>
           </div>
         </div>
+
         <div>
-          <p className="font-semibold text-slate-700 mb-2 text-xs uppercase tracking-wider">Follow Us</p>
-          <div className="flex gap-3">
-            <a href="https://www.facebook.com/share/1GJq598Yfm/" target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:text-blue-600 transition-colors"><Facebook className="w-4 h-4" /></a>
-            <a href="https://x.com/galaxatech" target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:text-blue-600 transition-colors"><Twitter className="w-4 h-4" /></a>
+          <p className="font-bold text-white mb-4 text-xs uppercase tracking-widest text-[#e50914]">Quick Links</p>
+          <div className="flex flex-col gap-2.5 text-xs text-white/50">
+            <a href="/privacy" className="hover:text-white transition-colors">Privacy Policy</a>
+            <a href="/terms" className="hover:text-white transition-colors">Terms of Service</a>
+            <a href="/contact" className="hover:text-white transition-colors">Refund &amp; Support</a>
           </div>
+        </div>
+
+        <div>
+          <p className="font-bold text-white mb-4 text-xs uppercase tracking-widest text-[#e50914]">Newsletter</p>
+          <p className="text-white/50 text-xs leading-relaxed mb-3">Subscribe to be in the know about top streaming deals.</p>
+          
+          {newsletterSubscribed ? (
+            <p className="text-emerald-400 text-xs font-semibold">✓ Thanks for subscribing!</p>
+          ) : (
+            <form onSubmit={handleSubscribe} className="flex gap-2">
+              <input 
+                type="email"
+                placeholder="Your email address"
+                value={newsletterEmail}
+                onChange={e => setNewsletterEmail(e.target.value)}
+                className="bg-[#121212] border border-white/10 rounded-lg px-3 py-2 text-white text-xs placeholder-white/30 focus:outline-none focus:border-[#e50914] flex-1"
+                required
+              />
+              <button 
+                type="submit"
+                className="bg-[#e50914] hover:bg-[#b81d24] text-white p-2 rounded-lg text-xs font-bold transition-all shadow-[0_0_8px_rgba(229,9,20,0.2)]"
+              >
+                <Mail className="w-4 h-4" />
+              </button>
+            </form>
+          )}
         </div>
       </div>
-      <div className="border-t border-slate-200 py-4 text-center text-[11px] text-slate-400">
-        © {new Date().getFullYear()} Galaxa Store, a GalaxaTech brand.
+      <div className="border-t border-white/5 py-5 text-center text-[10px] text-white/30">
+        © {new Date().getFullYear()} Galaxa Store, a GalaxaTech brand. All Site Content is protected.
       </div>
     </footer>
   );
@@ -138,7 +218,8 @@ function StoreLayoutInner() {
   const { closeCart } = useStoreCart();
 
   return (
-    <div className="min-h-screen bg-white text-slate-900 flex flex-col" style={{ colorScheme: 'light' }}>
+    <div className="min-h-screen bg-[#000000] text-white flex flex-col custom-scrollbar" style={{ colorScheme: 'dark' }}>
+      <AnnouncementBar />
       <StoreHeader />
       <main className="flex-1">
         <Outlet />

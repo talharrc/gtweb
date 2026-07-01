@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Sparkles, BookOpen, Globe, Copy, Check, ArrowLeft, Loader2, Cpu, Download, Heart, MessageSquare } from 'lucide-react';
 
