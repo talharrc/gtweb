@@ -1,8 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import {
-  Loader2, ShoppingBag, ShieldCheck, ChevronDown, Star, ChevronLeft, ChevronRight,
+  Loader2, ShoppingBag, ShieldCheck, ChevronDown, Star,
   Tv, Music, Bot, Palette, Gamepad2, Gift, Truck, BadgePercent, Headphones,
 } from 'lucide-react';
 import { ProductCategory } from '../../types';
@@ -21,89 +21,14 @@ const FEATURES = [
   { icon: Headphones, label: 'Customer Support' },
 ];
 
-const HERO_SLIDES = [
-  {
-    slug: 'netflix-premium', badge: 'Best Streaming Deal', image: '/store/netflix.svg',
-    title: 'Netflix Premium', subtitle: 'Watch on any screen — mobile, laptop, or TV — in Full HD or 4K.', priceFrom: 349,
-  },
-  {
-    slug: 'chatgpt-plus', badge: 'Most Popular AI Tool', image: '/store/chatgpt.svg',
-    title: 'ChatGPT Plus', subtitle: 'GPT-5 access, image generation, web browsing, and file uploads.', priceFrom: 500,
-  },
-  {
-    slug: 'netflix-prime-combo', badge: 'Best Value Combo', image: '/store/netflix.svg',
-    title: 'Netflix + Prime Video', subtitle: 'One plan, two of the biggest streaming libraries.', priceFrom: 489,
-  },
-];
-
-function HeroCarousel() {
-  const navigate = useNavigate();
-  const [index, setIndex] = useState(0);
-
-  useEffect(() => {
-    const timer = setInterval(() => setIndex(prev => (prev + 1) % HERO_SLIDES.length), 6000);
-    return () => clearInterval(timer);
-  }, []);
-
-  const slide = HERO_SLIDES[index];
-
+function VideoHero() {
   return (
-    <div className="relative mb-10 rounded-2xl overflow-hidden border border-white/10">
+    <div className="relative mb-10 rounded-2xl overflow-hidden border border-white/10 h-64 sm:h-80 md:h-[420px]">
       <video
         src="/store/GS banner.mp4"
         autoPlay muted loop playsInline
         className="absolute inset-0 w-full h-full object-cover"
       />
-      <div className="absolute inset-0 bg-gradient-to-r from-[#08060A] via-[#08060A]/80 to-[#08060A]/40" />
-
-      <div className="relative grid grid-cols-1 md:grid-cols-2 items-center gap-6 p-8 md:p-12">
-        <div>
-          <span className="inline-block px-3 py-1 rounded-full bg-gradient-to-r from-[#AA1E12] to-[#CD381D] text-white text-[10px] font-bold uppercase tracking-wider mb-4 font-mono">
-            {slide.badge}
-          </span>
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-[#F4F1F8] leading-tight mb-3 tracking-tight font-display">
-            {slide.title}
-          </h2>
-          <p className="text-[#A89EB8] text-sm max-w-sm mb-6 leading-relaxed">{slide.subtitle}</p>
-          <div className="flex items-center gap-4">
-            <button
-              onClick={() => navigate(`/browse/product/${slide.slug}`)}
-              className="px-6 py-3 rounded-lg btn-primary-red text-white font-rajdhani font-bold text-xs uppercase tracking-wider"
-            >
-              Shop Now — from ৳{slide.priceFrom}
-            </button>
-          </div>
-        </div>
-        <div className="flex items-center justify-center">
-          <img src={slide.image} alt={slide.title} className="w-40 h-40 md:w-52 md:h-52 object-contain rounded-2xl shadow-lg" />
-        </div>
-      </div>
-
-      <button
-        onClick={() => setIndex(prev => (prev - 1 + HERO_SLIDES.length) % HERO_SLIDES.length)}
-        aria-label="Previous slide"
-        className="absolute left-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-[#16101E] border border-white/10 shadow flex items-center justify-center text-[#A89EB8] hover:text-[#F4F1F8] transition-colors"
-      >
-        <ChevronLeft className="w-4 h-4" />
-      </button>
-      <button
-        onClick={() => setIndex(prev => (prev + 1) % HERO_SLIDES.length)}
-        aria-label="Next slide"
-        className="absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-[#16101E] border border-white/10 shadow flex items-center justify-center text-[#A89EB8] hover:text-[#F4F1F8] transition-colors"
-      >
-        <ChevronRight className="w-4 h-4" />
-      </button>
-
-      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-1.5">
-        {HERO_SLIDES.map((_, i) => (
-          <button
-            key={i}
-            onClick={() => setIndex(i)}
-            aria-label={`Go to slide ${i + 1}`}
-            className={`h-1.5 rounded-full transition-all ${i === index ? 'w-6 bg-gradient-to-r from-[#AA1E12] to-[#E04420]' : 'w-1.5 bg-white/20'}`}
-          />
-        ))}
-      </div>
     </div>
   );
 }
@@ -141,7 +66,7 @@ export default function StoreHomeView() {
         <meta name="description" content="Buy Netflix, Spotify, ChatGPT Plus, Canva Pro, gift cards, and game top-ups in Bangladesh via bKash & Nagad." />
       </Helmet>
 
-      {showHomeSections && <HeroCarousel />}
+      {showHomeSections && <VideoHero />}
 
       {showHomeSections && (
         <div className="mb-10">
