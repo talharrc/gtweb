@@ -48,20 +48,27 @@ function HeroCarousel() {
   const slide = HERO_SLIDES[index];
 
   return (
-    <div className="relative mb-10 rounded-2xl overflow-hidden border border-slate-200 bg-gradient-to-r from-slate-50 to-white">
-      <div className="grid grid-cols-1 md:grid-cols-2 items-center gap-6 p-8 md:p-12">
+    <div className="relative mb-10 rounded-2xl overflow-hidden border border-white/10">
+      <video
+        src="/store/GS banner.mp4"
+        autoPlay muted loop playsInline
+        className="absolute inset-0 w-full h-full object-cover"
+      />
+      <div className="absolute inset-0 bg-gradient-to-r from-[#08060A] via-[#08060A]/80 to-[#08060A]/40" />
+
+      <div className="relative grid grid-cols-1 md:grid-cols-2 items-center gap-6 p-8 md:p-12">
         <div>
-          <span className="inline-block px-3 py-1 rounded-full bg-[#e50914]/10 text-[#e50914] text-[10px] font-bold uppercase tracking-wider mb-4">
+          <span className="inline-block px-3 py-1 rounded-full bg-gradient-to-r from-[#AA1E12] to-[#CD381D] text-white text-[10px] font-bold uppercase tracking-wider mb-4 font-mono">
             {slide.badge}
           </span>
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-slate-900 leading-tight mb-3 tracking-tight">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-[#F4F1F8] leading-tight mb-3 tracking-tight font-display">
             {slide.title}
           </h2>
-          <p className="text-slate-500 text-sm max-w-sm mb-6 leading-relaxed">{slide.subtitle}</p>
+          <p className="text-[#A89EB8] text-sm max-w-sm mb-6 leading-relaxed">{slide.subtitle}</p>
           <div className="flex items-center gap-4">
             <button
               onClick={() => navigate(`/browse/product/${slide.slug}`)}
-              className="px-6 py-3 rounded-lg bg-[#e50914] hover:bg-[#b81d24] text-white font-bold text-xs uppercase tracking-wider transition-all"
+              className="px-6 py-3 rounded-lg btn-primary-red text-white font-rajdhani font-bold text-xs uppercase tracking-wider"
             >
               Shop Now — from ৳{slide.priceFrom}
             </button>
@@ -75,14 +82,14 @@ function HeroCarousel() {
       <button
         onClick={() => setIndex(prev => (prev - 1 + HERO_SLIDES.length) % HERO_SLIDES.length)}
         aria-label="Previous slide"
-        className="absolute left-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-white border border-slate-200 shadow flex items-center justify-center text-slate-500 hover:text-[#e50914] transition-colors"
+        className="absolute left-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-[#16101E] border border-white/10 shadow flex items-center justify-center text-[#A89EB8] hover:text-[#F4F1F8] transition-colors"
       >
         <ChevronLeft className="w-4 h-4" />
       </button>
       <button
         onClick={() => setIndex(prev => (prev + 1) % HERO_SLIDES.length)}
         aria-label="Next slide"
-        className="absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-white border border-slate-200 shadow flex items-center justify-center text-slate-500 hover:text-[#e50914] transition-colors"
+        className="absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-[#16101E] border border-white/10 shadow flex items-center justify-center text-[#A89EB8] hover:text-[#F4F1F8] transition-colors"
       >
         <ChevronRight className="w-4 h-4" />
       </button>
@@ -93,7 +100,7 @@ function HeroCarousel() {
             key={i}
             onClick={() => setIndex(i)}
             aria-label={`Go to slide ${i + 1}`}
-            className={`h-1.5 rounded-full transition-all ${i === index ? 'w-6 bg-[#e50914]' : 'w-1.5 bg-slate-300'}`}
+            className={`h-1.5 rounded-full transition-all ${i === index ? 'w-6 bg-gradient-to-r from-[#AA1E12] to-[#E04420]' : 'w-1.5 bg-white/20'}`}
           />
         ))}
       </div>
@@ -138,7 +145,7 @@ export default function StoreHomeView() {
 
       {showHomeSections && (
         <div className="mb-10">
-          <h2 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Shop by Category</h2>
+          <h2 className="text-xs font-bold text-[#6E6480] uppercase tracking-widest mb-4 font-mono">Shop by Category</h2>
           <div className="grid grid-cols-3 sm:grid-cols-6 gap-3">
             {(['Streaming', 'Music', 'AI Tools', 'Design', 'Gaming', 'Gift Cards'] as ProductCategory[]).map(cat => {
               const Icon = CATEGORY_ICONS[cat];
@@ -146,12 +153,12 @@ export default function StoreHomeView() {
                 <button
                   key={cat}
                   onClick={() => navigate(`/browse?category=${encodeURIComponent(cat)}`)}
-                  className="flex flex-col items-center gap-2.5 p-4 rounded-xl border border-slate-200 bg-white hover:border-[#e50914]/40 hover:shadow-sm transition-all group"
+                  className="flex flex-col items-center gap-2.5 p-4 rounded-xl border border-white/10 bg-[#16101E] hover:border-[#E04420]/40 hover:shadow-sm transition-all group"
                 >
-                  <div className="w-10 h-10 rounded-lg bg-slate-50 border border-slate-200 flex items-center justify-center text-slate-500 group-hover:text-[#e50914] group-hover:border-[#e50914]/30 transition-colors">
+                  <div className="w-10 h-10 rounded-lg bg-[#1E1428] border border-white/10 flex items-center justify-center text-[#A89EB8] group-hover:text-[#CD381D] group-hover:border-[#E04420]/30 transition-colors">
                     <Icon className="w-5 h-5" />
                   </div>
-                  <span className="text-[10px] font-semibold text-slate-600 group-hover:text-slate-900 text-center leading-tight">{cat}</span>
+                  <span className="text-[10px] font-semibold text-[#A89EB8] group-hover:text-[#F4F1F8] text-center leading-tight">{cat}</span>
                 </button>
               );
             })}
@@ -160,34 +167,34 @@ export default function StoreHomeView() {
       )}
 
       {showHomeSections && (
-        <div className="mb-10 rounded-xl border border-slate-200 bg-slate-50 px-6 py-4 grid grid-cols-2 sm:grid-cols-4 gap-4">
+        <div className="mb-10 rounded-xl border border-white/10 bg-[#16101E] px-6 py-4 grid grid-cols-2 sm:grid-cols-4 gap-4">
           {FEATURES.map(f => (
             <div key={f.label} className="flex items-center gap-2.5 justify-center sm:justify-start">
-              <f.icon className="w-4 h-4 text-[#e50914] flex-shrink-0" />
-              <span className="text-[11px] font-bold text-slate-600 uppercase tracking-wide">{f.label}</span>
+              <f.icon className="w-4 h-4 text-[#E04420] flex-shrink-0" />
+              <span className="text-[11px] font-bold text-[#A89EB8] uppercase tracking-wide font-mono">{f.label}</span>
             </div>
           ))}
         </div>
       )}
 
-      <div className="mb-8 flex items-baseline justify-between border-b border-slate-200 pb-4">
+      <div className="mb-8 flex items-baseline justify-between border-b border-white/10 pb-4">
         <div>
-          <h1 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
+          <h1 className="text-xl sm:text-2xl font-black text-[#F4F1F8] tracking-tight font-display">
             {category === 'All' ? "What Everyone's Watching" : category}
           </h1>
-          <p className="text-slate-400 text-xs mt-1">Instant digital delivery. Payment secured via bKash, Nagad, and Rocket.</p>
+          <p className="text-[#6E6480] text-xs mt-1">Instant digital delivery. Payment secured via bKash, Nagad, and Rocket.</p>
         </div>
       </div>
 
       {loadingProducts ? (
-        <div className="flex justify-center py-20"><Loader2 className="w-8 h-8 text-[#e50914] animate-spin" /></div>
+        <div className="flex justify-center py-20"><Loader2 className="w-8 h-8 text-[#CD381D] animate-spin" /></div>
       ) : filtered.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-20 px-6 text-center border border-slate-200 rounded-2xl bg-slate-50">
-          <div className="w-14 h-14 rounded-2xl bg-white border border-slate-200 flex items-center justify-center text-slate-300 mb-4">
+        <div className="flex flex-col items-center justify-center py-20 px-6 text-center border border-white/10 rounded-2xl bg-[#16101E]">
+          <div className="w-14 h-14 rounded-2xl bg-[#1E1428] border border-white/10 flex items-center justify-center text-[#6E6480] mb-4">
             <ShoppingBag className="w-6 h-6" />
           </div>
-          <p className="text-slate-700 font-semibold text-sm mb-1">No products found</p>
-          <p className="text-slate-400 text-xs max-w-xs">Try searching for Netflix, Spotify, or choose another category.</p>
+          <p className="text-[#A89EB8] font-semibold text-sm mb-1">No products found</p>
+          <p className="text-[#6E6480] text-xs max-w-xs">Try searching for Netflix, Spotify, or choose another category.</p>
         </div>
       ) : (
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-5">
@@ -197,9 +204,9 @@ export default function StoreHomeView() {
 
       {showHomeSections && featured.length > 0 && (
         <div className="mt-14">
-          <div className="mb-6 border-b border-slate-200 pb-4">
-            <h2 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">Featured Collection</h2>
-            <p className="text-slate-400 text-xs mt-1">Our most popular picks this month.</p>
+          <div className="mb-6 border-b border-white/10 pb-4">
+            <h2 className="text-xl sm:text-2xl font-black text-[#F4F1F8] tracking-tight font-display">Featured Collection</h2>
+            <p className="text-[#6E6480] text-xs mt-1">Our most popular picks this month.</p>
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-5">
             {featured.map(p => <ProductCard key={p.id} product={p} />)}
@@ -208,33 +215,33 @@ export default function StoreHomeView() {
       )}
 
       {showHomeSections && (
-        <div className="mt-20 border-t border-slate-200 pt-14 max-w-4xl mx-auto">
+        <div className="mt-20 border-t border-white/10 pt-14 max-w-4xl mx-auto">
           <div className="text-center mb-10">
             <div className="flex justify-center gap-1 text-amber-400 mb-3">
               {[...Array(5)].map((_, i) => <Star key={i} className="w-5 h-5 fill-amber-400 text-amber-400" />)}
             </div>
-            <h3 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight mb-2">Trusted by customers across Bangladesh</h3>
-            <p className="text-slate-500 text-xs">We provide active warranties and instant support for all subscriptions.</p>
+            <h3 className="text-xl sm:text-2xl font-black text-[#F4F1F8] tracking-tight mb-2 font-display">Trusted by customers across Bangladesh</h3>
+            <p className="text-[#A89EB8] text-xs">We provide active warranties and instant support for all subscriptions.</p>
           </div>
 
-          <div className="rounded-2xl border border-slate-200 bg-white p-6 md:p-8">
-            <h3 className="text-lg font-bold text-slate-900 mb-6 flex items-center gap-2">
-              <ShieldCheck className="w-5 h-5 text-[#e50914]" /> FAQs &amp; Support Guide
+          <div className="rounded-2xl border border-white/10 bg-[#16101E] p-6 md:p-8">
+            <h3 className="text-lg font-bold text-[#F4F1F8] mb-6 flex items-center gap-2 font-display">
+              <ShieldCheck className="w-5 h-5 text-[#CD381D]" /> FAQs &amp; Support Guide
             </h3>
 
             <div className="flex flex-col gap-4">
               {FAQS.map((faq, i) => {
                 const isOpen = openFaq === i;
                 return (
-                  <div key={i} className="border-b border-slate-100 pb-4 last:border-0 last:pb-0">
+                  <div key={i} className="border-b border-white/10 pb-4 last:border-0 last:pb-0">
                     <button
                       onClick={() => toggleFaq(i)}
-                      className="w-full flex items-center justify-between text-left text-sm font-bold text-slate-900 hover:text-[#e50914] transition-colors py-2"
+                      className="w-full flex items-center justify-between text-left text-sm font-bold text-[#F4F1F8] hover:text-[#CD381D] transition-colors py-2"
                     >
                       <span>{faq.q}</span>
-                      <ChevronDown className={`w-4 h-4 text-slate-400 transition-transform ${isOpen ? 'rotate-180 text-[#e50914]' : ''}`} />
+                      <ChevronDown className={`w-4 h-4 text-[#6E6480] transition-transform ${isOpen ? 'rotate-180 text-[#CD381D]' : ''}`} />
                     </button>
-                    {isOpen && <p className="text-xs text-slate-500 leading-relaxed mt-2.5 pl-1">{faq.a}</p>}
+                    {isOpen && <p className="text-xs text-[#A89EB8] leading-relaxed mt-2.5 pl-1">{faq.a}</p>}
                   </div>
                 );
               })}

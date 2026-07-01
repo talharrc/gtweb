@@ -5,6 +5,7 @@
   --font-display: "Sora", "Segoe UI", sans-serif;
   --font-serif: "Playfair Display", Georgia, serif;
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --font-rajdhani: "Rajdhani", sans-serif;
 
   /* Brand palette — GalaxaTech pink/coral/purple theme */
   --color-void:     var(--void);
@@ -307,29 +308,27 @@ button:not([class*="w-"]):not([class*="h-"]) {
 
 /* Glassmorphism for store cards */
 .store-card {
-  background: rgba(18, 18, 18, 0.6);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border-radius: 1rem;
+  background: #16101E;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 0.75rem;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .store-card:hover {
-  border-color: rgba(229, 9, 20, 0.4);
-  box-shadow: 0 0 25px rgba(229, 9, 20, 0.15), 0 15px 35px rgba(0, 0, 0, 0.6);
+  border-color: rgba(224, 68, 32, 0.4);
+  box-shadow: 0 0 25px rgba(170, 30, 18, 0.25), 0 15px 35px rgba(0, 0, 0, 0.6);
   transform: translateY(-4px);
 }
 
 /* Glow button styling */
 .btn-primary-red {
-  background: linear-gradient(135deg, #e50914 0%, #b81d24 100%);
-  box-shadow: 0 4px 15px rgba(229, 9, 20, 0.3);
+  background: linear-gradient(135deg, #AA1E12 0%, #E04420 100%);
+  box-shadow: 0 4px 15px rgba(170, 30, 18, 0.35);
   transition: all 0.25s ease;
 }
 .btn-primary-red:hover {
-  box-shadow: 0 6px 20px rgba(229, 9, 20, 0.5);
+  box-shadow: 0 6px 20px rgba(224, 68, 32, 0.5);
   filter: brightness(1.1);
   transform: translateY(-1px);
 }

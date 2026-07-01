@@ -30,7 +30,7 @@ function AnnouncementBar() {
   }, []);
 
   return (
-    <div className="bg-black text-white py-1.5 px-4 text-center text-[11px] font-medium relative h-7 flex items-center justify-center overflow-hidden">
+    <div className="bg-black text-white py-1.5 px-4 text-center text-[11px] font-medium relative h-7 flex items-center justify-center overflow-hidden font-mono uppercase tracking-wider">
       <div key={index} className="truncate max-w-full animate-fade-in">{announcements[index]}</div>
     </div>
   );
@@ -54,42 +54,43 @@ function StoreHeader() {
   };
 
   return (
-    <header className="sticky top-0 z-40 bg-white border-b border-slate-200">
+    <header className="sticky top-0 z-40 bg-[#08060A] border-b border-white/10">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-3.5 flex items-center gap-4">
         <button
           onClick={() => navigate('/')}
-          className="flex items-center gap-1 text-slate-400 hover:text-slate-700 text-xs font-medium flex-shrink-0 transition-colors"
+          className="flex items-center gap-1 text-[#6E6480] hover:text-[#F4F1F8] text-xs font-medium flex-shrink-0 transition-colors"
         >
           <ArrowLeft className="w-3.5 h-3.5" /> Agency
         </button>
 
-        <button onClick={() => navigate('/browse')} className="flex items-center gap-1.5 flex-shrink-0">
-          <span className="font-black text-xl tracking-tight text-[#e50914]">GALAXA<span className="text-slate-900">STORE</span></span>
+        <button onClick={() => navigate('/browse')} className="flex items-center gap-2 flex-shrink-0 group">
+          <img src="/store/gs-logo.png" alt="Galaxa Store" className="w-8 h-8 rounded-lg object-cover transition-transform duration-300 group-hover:scale-105" />
+          <span className="font-rajdhani font-bold text-xl tracking-wide text-[#F4F1F8]">Galaxa<span className="text-[#CD381D]">Store</span></span>
         </button>
 
         <div className="relative flex-1 max-w-sm ml-auto hidden sm:block">
-          <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-300" />
+          <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-[#6E6480]" />
           <input
             type="text"
             placeholder="Search premium plans..."
             value={searchQuery}
             onChange={e => onSearchChange(e.target.value)}
-            className="w-full bg-slate-50 border border-slate-200 rounded-full pl-9 pr-3 py-2 text-slate-900 text-sm placeholder-slate-400 focus:outline-none focus:border-[#e50914]/50 transition-colors"
+            className="w-full bg-[#16101E] border border-white/10 rounded-full pl-9 pr-3 py-2 text-[#F4F1F8] text-sm placeholder-[#6E6480] focus:outline-none focus:border-[#CD381D]/50 transition-colors"
           />
         </div>
 
-        <button className="text-slate-400 hover:text-slate-700 transition-colors flex-shrink-0" aria-label="Account">
+        <button className="text-[#6E6480] hover:text-[#F4F1F8] transition-colors flex-shrink-0" aria-label="Account">
           <User className="w-5 h-5" />
         </button>
 
         <button
           onClick={openCart}
-          className="relative flex items-center gap-2 px-4 py-2 rounded-full border border-slate-200 hover:border-[#e50914]/40 text-slate-700 hover:text-[#e50914] transition-all flex-shrink-0"
+          className="relative flex items-center gap-2 px-4 py-2 rounded-full border border-white/10 hover:border-[#E04420]/40 text-[#A89EB8] hover:text-[#F4F1F8] transition-all flex-shrink-0"
         >
           <ShoppingBag className="w-4 h-4" />
           <span className="text-xs font-semibold hidden sm:inline">Cart</span>
           {cartItemCount > 0 && (
-            <span className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-[#e50914] flex items-center justify-center text-[10px] font-black text-white">
+            <span className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-gradient-to-br from-[#AA1E12] to-[#E04420] flex items-center justify-center text-[10px] font-black text-white">
               {cartItemCount}
             </span>
           )}
@@ -98,13 +99,13 @@ function StoreHeader() {
 
       <div className="sm:hidden px-4 pb-3">
         <div className="relative">
-          <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-300" />
+          <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-[#6E6480]" />
           <input
             type="text"
             placeholder="Search premium plans..."
             value={searchQuery}
             onChange={e => onSearchChange(e.target.value)}
-            className="w-full bg-slate-50 border border-slate-200 rounded-full pl-9 pr-3 py-2 text-slate-900 text-sm placeholder-slate-400 focus:outline-none focus:border-[#e50914]/50 transition-colors"
+            className="w-full bg-[#16101E] border border-white/10 rounded-full pl-9 pr-3 py-2 text-[#F4F1F8] text-sm placeholder-[#6E6480] focus:outline-none focus:border-[#CD381D]/50 transition-colors"
           />
         </div>
       </div>
@@ -116,8 +117,8 @@ function StoreHeader() {
             onClick={() => goToCategory(cat.value)}
             className={`px-4 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all border ${
               activeCategory === cat.value
-                ? 'bg-[#e50914] border-[#e50914] text-white'
-                : 'bg-white border-slate-200 text-slate-600 hover:border-[#e50914]/40 hover:text-[#e50914]'
+                ? 'bg-gradient-to-r from-[#AA1E12] to-[#CD381D] border-[#AA1E12] text-white'
+                : 'bg-[#16101E] border-white/10 text-[#A89EB8] hover:border-[#E04420]/40 hover:text-[#F4F1F8]'
             }`}
           >
             {cat.label}
@@ -140,37 +141,40 @@ function StoreFooter() {
   };
 
   return (
-    <footer className="border-t border-white/10 bg-[#0a0a0a] mt-16">
+    <footer className="border-t border-white/10 bg-[#100C1A] mt-16">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-12 grid grid-cols-1 md:grid-cols-4 gap-10 text-sm">
         <div className="md:col-span-2">
-          <p className="font-black text-xl tracking-tight mb-3">
-            <span className="text-[#e50914]">GALAXA</span><span className="text-white">STORE</span>
-          </p>
-          <p className="text-white/50 text-xs leading-relaxed max-w-sm mb-5">
+          <div className="flex items-center gap-2.5 mb-3">
+            <img src="/store/gs-logo.png" alt="Galaxa Store" className="w-9 h-9 rounded-lg object-cover" />
+            <p className="font-rajdhani font-bold text-xl tracking-wide">
+              <span className="text-[#F4F1F8]">Galaxa</span><span className="text-[#CD381D]">Store</span>
+            </p>
+          </div>
+          <p className="text-[#A89EB8] text-xs leading-relaxed max-w-sm mb-5">
             Premium subscription plans and digital top-ups for entertainment, design, and developer tools in Bangladesh. Fast WhatsApp/Email delivery, secured checkouts via bKash, Nagad, and Rocket.
           </p>
           <div className="flex gap-4">
-            <a href="https://www.facebook.com/share/1GJq598Yfm/" target="_blank" rel="noopener noreferrer" className="w-8 h-8 rounded-full bg-white/5 border border-white/10 hover:border-[#e50914] flex items-center justify-center text-white/50 hover:text-white transition-all">
+            <a href="https://www.facebook.com/share/1GJq598Yfm/" target="_blank" rel="noopener noreferrer" className="w-8 h-8 rounded-full bg-white/5 border border-white/10 hover:border-[#E04420] flex items-center justify-center text-[#A89EB8] hover:text-white transition-all">
               <Facebook className="w-4 h-4" />
             </a>
-            <a href="https://x.com/galaxatech" target="_blank" rel="noopener noreferrer" className="w-8 h-8 rounded-full bg-white/5 border border-white/10 hover:border-[#e50914] flex items-center justify-center text-white/50 hover:text-white transition-all">
+            <a href="https://x.com/galaxatech" target="_blank" rel="noopener noreferrer" className="w-8 h-8 rounded-full bg-white/5 border border-white/10 hover:border-[#E04420] flex items-center justify-center text-[#A89EB8] hover:text-white transition-all">
               <Twitter className="w-4 h-4" />
             </a>
           </div>
         </div>
 
         <div>
-          <p className="font-bold text-white mb-4 text-xs uppercase tracking-widest text-[#e50914]">Quick Links</p>
-          <div className="flex flex-col gap-2.5 text-xs text-white/50">
-            <a href="/privacy" className="hover:text-white transition-colors">Privacy Policy</a>
-            <a href="/terms" className="hover:text-white transition-colors">Terms of Service</a>
-            <a href="/contact" className="hover:text-white transition-colors">Refund &amp; Support</a>
+          <p className="font-bold text-[#F4F1F8] mb-4 text-xs uppercase tracking-widest font-mono text-[#CD381D]">Quick Links</p>
+          <div className="flex flex-col gap-2.5 text-xs text-[#A89EB8]">
+            <a href="/privacy" className="hover:text-[#F4F1F8] transition-colors">Privacy Policy</a>
+            <a href="/terms" className="hover:text-[#F4F1F8] transition-colors">Terms of Service</a>
+            <a href="/contact" className="hover:text-[#F4F1F8] transition-colors">Refund &amp; Support</a>
           </div>
         </div>
 
         <div>
-          <p className="font-bold text-white mb-4 text-xs uppercase tracking-widest text-[#e50914]">Newsletter</p>
-          <p className="text-white/50 text-xs leading-relaxed mb-3">Subscribe to be in the know about top streaming deals.</p>
+          <p className="font-bold text-[#F4F1F8] mb-4 text-xs uppercase tracking-widest font-mono text-[#CD381D]">Newsletter</p>
+          <p className="text-[#A89EB8] text-xs leading-relaxed mb-3">Subscribe to be in the know about top streaming deals.</p>
 
           {newsletterSubscribed ? (
             <p className="text-emerald-400 text-xs font-semibold">✓ Thanks for subscribing!</p>
@@ -181,10 +185,10 @@ function StoreFooter() {
                 placeholder="Your email address"
                 value={newsletterEmail}
                 onChange={e => setNewsletterEmail(e.target.value)}
-                className="bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-xs placeholder-white/30 focus:outline-none focus:border-[#e50914] flex-1"
+                className="bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-[#F4F1F8] text-xs placeholder-white/30 focus:outline-none focus:border-[#E04420] flex-1"
                 required
               />
-              <button type="submit" className="bg-[#e50914] hover:bg-[#b81d24] text-white p-2 rounded-lg text-xs font-bold transition-all">
+              <button type="submit" className="bg-gradient-to-br from-[#AA1E12] to-[#E04420] hover:brightness-110 text-white p-2 rounded-lg text-xs font-bold transition-all">
                 <Mail className="w-4 h-4" />
               </button>
             </form>
@@ -218,7 +222,7 @@ function StoreLayoutInner() {
   const { closeCart } = useStoreCart();
 
   return (
-    <div className="min-h-screen bg-white text-slate-900 flex flex-col" style={{ colorScheme: 'light' }}>
+    <div className="min-h-screen bg-[#08060A] text-[#F4F1F8] flex flex-col" style={{ colorScheme: 'dark' }}>
       <AnnouncementBar />
       <StoreHeader />
       <main className="flex-1">

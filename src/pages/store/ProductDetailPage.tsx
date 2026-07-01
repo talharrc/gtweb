@@ -32,15 +32,15 @@ export default function ProductDetailPage() {
   }, [product, selectedLabel]);
 
   if (loadingProducts) {
-    return <div className="flex justify-center py-24 min-h-screen items-center"><Loader2 className="w-8 h-8 text-[#e50914] animate-spin" /></div>;
+    return <div className="flex justify-center py-24 min-h-screen items-center"><Loader2 className="w-8 h-8 text-[#CD381D] animate-spin" /></div>;
   }
 
   if (!product) {
     return (
       <div className="max-w-xl mx-auto px-4 py-32 text-center min-h-screen flex flex-col justify-center items-center">
-        <p className="text-slate-900 font-bold text-lg mb-2">Product not found</p>
-        <p className="text-slate-500 text-sm mb-6">This item may have been removed or renamed.</p>
-        <button onClick={() => navigate('/browse')} className="px-6 py-2.5 rounded-lg bg-[#e50914] hover:bg-[#b81d24] text-white text-sm font-semibold transition-all">
+        <p className="text-[#F4F1F8] font-bold text-lg mb-2">Product not found</p>
+        <p className="text-[#A89EB8] text-sm mb-6">This item may have been removed or renamed.</p>
+        <button onClick={() => navigate('/browse')} className="px-6 py-2.5 rounded-lg btn-primary-red text-white text-sm font-semibold">
           Back to Store
         </button>
       </div>
@@ -97,55 +97,55 @@ export default function ProductDetailPage() {
         <meta name="description" content={product.shortDescription} />
       </Helmet>
 
-      <nav className="flex items-center gap-1.5 text-[11px] font-medium text-slate-400 mb-8 flex-wrap">
-        <Link to="/browse" className="hover:text-slate-900 transition-colors">Store</Link>
-        <ChevronRight className="w-3.5 h-3.5 text-slate-300" />
-        <Link to={`/browse?category=${encodeURIComponent(product.category)}`} className="hover:text-slate-900 transition-colors">{product.category}</Link>
-        <ChevronRight className="w-3.5 h-3.5 text-slate-300" />
-        <span className="text-slate-700 truncate max-w-[200px]">{product.name}</span>
+      <nav className="flex items-center gap-1.5 text-[11px] font-medium text-[#6E6480] mb-8 flex-wrap">
+        <Link to="/browse" className="hover:text-[#F4F1F8] transition-colors">Store</Link>
+        <ChevronRight className="w-3.5 h-3.5 text-[#6E6480]" />
+        <Link to={`/browse?category=${encodeURIComponent(product.category)}`} className="hover:text-[#F4F1F8] transition-colors">{product.category}</Link>
+        <ChevronRight className="w-3.5 h-3.5 text-[#6E6480]" />
+        <span className="text-[#A89EB8] truncate max-w-[200px]">{product.name}</span>
       </nav>
 
       <div className="grid grid-cols-1 lg:grid-cols-[400px_1fr] gap-12 items-start">
-        <div className="aspect-square bg-slate-50 border border-slate-200 rounded-2xl overflow-hidden flex items-center justify-center p-6">
+        <div className="aspect-square bg-[#16101E] border border-white/10 rounded-2xl overflow-hidden flex items-center justify-center p-6">
           {product.imageUrl ? (
             <img src={product.imageUrl} alt={product.name} className="w-4/5 h-4/5 object-contain rounded-xl" />
           ) : (
-            <ShoppingBag className="w-20 h-20 text-slate-200" />
+            <ShoppingBag className="w-20 h-20 text-[#1E1428]" />
           )}
         </div>
 
         <div className="space-y-6">
           <div>
             <div className="flex items-center gap-2 mb-2">
-              <span className="text-[10px] font-bold uppercase tracking-widest text-[#e50914]">{product.category}</span>
+              <span className="text-[10px] font-bold uppercase tracking-widest text-[#CD381D] font-mono">{product.category}</span>
               {product.rating && (
-                <div className="flex items-center gap-1 text-[11px] font-semibold text-amber-500">
+                <div className="flex items-center gap-1 text-[11px] font-semibold text-amber-400">
                   <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
                   <span>{product.rating.toFixed(2)} ({product.reviewCount ?? 50} reviews)</span>
                 </div>
               )}
             </div>
-            <h1 className="text-2xl sm:text-3xl font-black text-slate-900 leading-tight tracking-tight">{product.name}</h1>
-            <p className="text-slate-500 text-sm mt-2 leading-relaxed">{product.shortDescription}</p>
+            <h1 className="text-2xl sm:text-3xl font-black text-[#F4F1F8] leading-tight tracking-tight font-display">{product.name}</h1>
+            <p className="text-[#A89EB8] text-sm mt-2 leading-relaxed">{product.shortDescription}</p>
           </div>
 
-          <div className="flex items-baseline gap-3">
-            {discount > 0 && <span className="text-[#e50914] text-lg font-bold">-{discount}%</span>}
-            <span className="text-3xl font-black text-slate-900">৳{selectedPlan?.priceBDT.toLocaleString()}</span>
+          <div className="flex items-baseline gap-3 font-rajdhani">
+            {discount > 0 && <span className="text-[#E04420] text-lg font-bold">-{discount}%</span>}
+            <span className="text-3xl font-black text-[#F4F1F8]">৳{selectedPlan?.priceBDT.toLocaleString()}</span>
             {selectedPlan?.originalPriceBDT && (
-              <span className="text-sm text-slate-400 line-through">৳{selectedPlan.originalPriceBDT.toLocaleString()}</span>
+              <span className="text-sm text-[#6E6480] line-through">৳{selectedPlan.originalPriceBDT.toLocaleString()}</span>
             )}
           </div>
 
           <div>
-            <label className="text-xs font-bold text-slate-700 uppercase tracking-wide block mb-2">Options</label>
+            <label className="text-xs font-bold text-[#A89EB8] uppercase tracking-wide block mb-2 font-mono">Options</label>
             <div className="flex flex-wrap gap-2">
               {uniqueLabels.map(label => (
                 <button
                   key={label}
                   onClick={() => selectLabel(label)}
                   className={`px-4 py-2 rounded-lg border text-xs font-semibold transition-all ${
-                    selectedLabel === label ? 'border-[#e50914] bg-[#e50914]/5 text-[#e50914]' : 'border-slate-200 text-slate-600 hover:border-slate-300'
+                    selectedLabel === label ? 'border-[#CD381D] bg-[#AA1E12]/10 text-[#CD381D]' : 'border-white/10 text-[#A89EB8] hover:border-white/20'
                   }`}
                 >
                   {label}
@@ -155,14 +155,14 @@ export default function ProductDetailPage() {
           </div>
 
           <div>
-            <label className="text-xs font-bold text-slate-700 uppercase tracking-wide block mb-2">Duration</label>
+            <label className="text-xs font-bold text-[#A89EB8] uppercase tracking-wide block mb-2 font-mono">Duration</label>
             <div className="flex flex-wrap gap-2">
               {uniqueDurations.map(duration => (
                 <button
                   key={duration}
                   onClick={() => selectDuration(duration)}
                   className={`px-4 py-2 rounded-lg border text-xs font-semibold transition-all ${
-                    selectedDuration === duration ? 'border-[#e50914] bg-[#e50914]/5 text-[#e50914]' : 'border-slate-200 text-slate-600 hover:border-slate-300'
+                    selectedDuration === duration ? 'border-[#CD381D] bg-[#AA1E12]/10 text-[#CD381D]' : 'border-white/10 text-[#A89EB8] hover:border-white/20'
                   }`}
                 >
                   {duration}
@@ -171,23 +171,23 @@ export default function ProductDetailPage() {
             </div>
           </div>
 
-          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 border-t border-slate-200 pt-6">
-            <div className="flex items-center justify-between border border-slate-200 rounded-lg px-4 py-2.5 flex-shrink-0">
-              <button onClick={() => setQuantity(q => Math.max(1, q - 1))} className="text-slate-400 hover:text-slate-800 transition-colors"><Minus className="w-4 h-4" /></button>
-              <span className="text-sm font-bold text-slate-900 w-10 text-center">{quantity}</span>
-              <button onClick={() => setQuantity(q => q + 1)} className="text-slate-400 hover:text-slate-800 transition-colors"><Plus className="w-4 h-4" /></button>
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 border-t border-white/10 pt-6">
+            <div className="flex items-center justify-between border border-white/10 rounded-lg px-4 py-2.5 flex-shrink-0">
+              <button onClick={() => setQuantity(q => Math.max(1, q - 1))} className="text-[#6E6480] hover:text-[#F4F1F8] transition-colors"><Minus className="w-4 h-4" /></button>
+              <span className="text-sm font-bold text-[#F4F1F8] w-10 text-center">{quantity}</span>
+              <button onClick={() => setQuantity(q => q + 1)} className="text-[#6E6480] hover:text-[#F4F1F8] transition-colors"><Plus className="w-4 h-4" /></button>
             </div>
 
-            <button onClick={handleAddToCart} className="flex-1 py-3 px-6 rounded-lg border border-slate-300 hover:border-slate-400 bg-white text-slate-900 text-xs font-bold uppercase tracking-wider transition-all">
+            <button onClick={handleAddToCart} className="flex-1 py-3 px-6 rounded-lg border border-white/15 hover:border-white/25 bg-[#16101E] text-[#F4F1F8] text-xs font-bold uppercase tracking-wider transition-all">
               Add to Cart
             </button>
-            <button onClick={handleBuyNow} className="flex-1 py-3 px-6 rounded-lg bg-slate-900 hover:bg-black text-white text-xs font-bold uppercase tracking-wider transition-all">
+            <button onClick={handleBuyNow} className="flex-1 py-3 px-6 rounded-lg btn-primary-red text-white text-xs font-bold uppercase tracking-wider">
               Buy It Now
             </button>
           </div>
 
-          <div className="flex items-center gap-3 border-t border-slate-200 pt-5">
-            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wide">Pay with</span>
+          <div className="flex items-center gap-3 border-t border-white/10 pt-5">
+            <span className="text-[10px] font-bold text-[#6E6480] uppercase tracking-wide font-mono">Pay with</span>
             {PAYMENT_METHODS.map(m => (
               <span
                 key={m.key}
@@ -199,32 +199,32 @@ export default function ProductDetailPage() {
             ))}
           </div>
 
-          <div className="grid grid-cols-3 gap-3 border-t border-slate-200 pt-6">
+          <div className="grid grid-cols-3 gap-3 border-t border-white/10 pt-6">
             {[
               { icon: ShieldCheck, title: 'Secure Checkout', sub: 'bKash · Nagad · Rocket' },
               { icon: Smartphone, title: 'Instant Delivery', sub: 'WhatsApp & Hub' },
               { icon: RotateCcw, title: 'Active Warranty', sub: 'Full plan duration' },
             ].map(b => (
-              <div key={b.title} className="flex flex-col items-center text-center gap-1.5 p-3 rounded-xl border border-slate-200 bg-slate-50">
-                <b.icon className="w-5 h-5 text-[#e50914]" />
-                <span className="text-[10px] text-slate-800 font-semibold leading-tight">{b.title}</span>
-                <span className="text-[9px] text-slate-400 leading-tight">{b.sub}</span>
+              <div key={b.title} className="flex flex-col items-center text-center gap-1.5 p-3 rounded-xl border border-white/10 bg-[#16101E]">
+                <b.icon className="w-5 h-5 text-[#CD381D]" />
+                <span className="text-[10px] text-[#F4F1F8] font-semibold leading-tight">{b.title}</span>
+                <span className="text-[9px] text-[#6E6480] leading-tight">{b.sub}</span>
               </div>
             ))}
           </div>
 
-          <div className="border-t border-slate-200 pt-4">
+          <div className="border-t border-white/10 pt-4">
             <div className="flex flex-col gap-2">
               {SECTIONS.map(section => (
-                <div key={section.key} className="border border-slate-200 rounded-lg overflow-hidden">
+                <div key={section.key} className="border border-white/10 rounded-lg overflow-hidden">
                   <button
                     onClick={() => toggleSection(section.key)}
-                    className="w-full flex items-center justify-between gap-3 px-4 py-3 text-left text-sm font-semibold text-slate-800 hover:bg-slate-50"
+                    className="w-full flex items-center justify-between gap-3 px-4 py-3 text-left text-sm font-semibold text-[#F4F1F8] hover:bg-[#16101E]"
                   >
                     {section.title}
-                    <ChevronDown className={`w-4 h-4 text-slate-400 flex-shrink-0 transition-transform ${openSection === section.key ? 'rotate-180' : ''}`} />
+                    <ChevronDown className={`w-4 h-4 text-[#6E6480] flex-shrink-0 transition-transform ${openSection === section.key ? 'rotate-180' : ''}`} />
                   </button>
-                  {openSection === section.key && <p className="px-4 pb-3 text-xs text-slate-500 leading-relaxed">{section.body}</p>}
+                  {openSection === section.key && <p className="px-4 pb-3 text-xs text-[#A89EB8] leading-relaxed">{section.body}</p>}
                 </div>
               ))}
             </div>
@@ -234,7 +234,7 @@ export default function ProductDetailPage() {
             href="https://wa.me/8801959209103"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center justify-center gap-2 text-xs text-slate-500 hover:text-[#e50914] transition-colors pt-2"
+            className="flex items-center justify-center gap-2 text-xs text-[#A89EB8] hover:text-[#CD381D] transition-colors pt-2"
           >
             <MessageCircle className="w-3.5 h-3.5" /> Questions? Chat with us on WhatsApp
           </a>
@@ -242,8 +242,8 @@ export default function ProductDetailPage() {
       </div>
 
       {related.length > 0 && (
-        <div className="mt-16 border-t border-slate-200 pt-8">
-          <h2 className="text-lg font-bold text-slate-900 mb-4">You may also like</h2>
+        <div className="mt-16 border-t border-white/10 pt-8">
+          <h2 className="text-lg font-bold text-[#F4F1F8] mb-4 font-display">You may also like</h2>
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-5">
             {related.map(p => <ProductCard key={p.id} product={p} />)}
           </div>
