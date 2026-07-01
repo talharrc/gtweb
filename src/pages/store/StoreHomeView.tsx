@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import {
-  Loader2, ShoppingBag, ShieldCheck, ChevronDown, Award, Star,
+  Loader2, ShoppingBag, ShieldCheck, ChevronDown, Award, Star, Search,
   Tv, Music, Bot, Palette, Gamepad2, Gift, Truck, BadgePercent, Headphones,
 } from 'lucide-react';
 import { ProductCategory } from '../../types';
@@ -24,9 +24,15 @@ const FEATURES = [
 export default function StoreHomeView() {
   const navigate = useNavigate();
   const { products, loadingProducts } = useStoreProducts();
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const category = searchParams.get('category') ?? 'All';
   const query = (searchParams.get('q') ?? '').toLowerCase();
+
+  const onHeroSearch = (value: string) => {
+    const next = new URLSearchParams(searchParams);
+    if (value) next.set('q', value); else next.delete('q');
+    setSearchParams(next, { replace: true });
+  };
 
   const filtered = products.filter(p => {
     const matchesCategory = category === 'All' || p.category === category;
@@ -55,36 +61,45 @@ export default function StoreHomeView() {
 
       {/* Hero Banner Promo */}
       {category === 'All' && !query && (
-        <div className="mb-10 rounded-3xl overflow-hidden relative border border-white/5 bg-gradient-to-r from-red-950/20 via-black to-[#0c0717] p-8 md:p-12 flex flex-col md:flex-row items-center justify-between gap-8 shadow-[inset_0_1px_1px_rgba(255,255,255,0.05),0_15px_45px_rgba(0,0,0,0.5)]">
-          <div className="absolute top-0 right-0 w-80 h-80 bg-red-600/10 rounded-full blur-[100px] pointer-events-none" />
-          <div className="absolute bottom-0 left-10 w-60 h-60 bg-purple-600/5 rounded-full blur-[80px] pointer-events-none" />
-          
-          <div className="flex-1 text-center md:text-left z-10">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#e50914]/15 border border-[#e50914]/30 text-[#e50914] text-[10px] font-black uppercase tracking-wider mb-4">
+        <div className="mb-10 rounded-3xl overflow-hidden relative border border-white/5 bg-black p-10 md:p-16 flex flex-col items-center text-center shadow-[inset_0_1px_1px_rgba(255,255,255,0.05),0_15px_45px_rgba(0,0,0,0.5)]">
+          <div className="absolute -top-24 left-1/4 w-96 h-96 bg-[#e50914]/25 rounded-full blur-[110px] pointer-events-none" />
+          <div className="absolute -top-10 right-1/4 w-80 h-80 bg-teal-500/20 rounded-full blur-[100px] pointer-events-none" />
+          <div className="absolute bottom-0 left-1/3 w-72 h-72 bg-purple-600/15 rounded-full blur-[100px] pointer-events-none" />
+          <img
+            src="/store/netflix.svg"
+            alt=""
+            aria-hidden="true"
+            className="absolute w-72 h-72 object-contain opacity-[0.06] pointer-events-none"
+          />
+
+          <div className="relative z-10 max-w-xl">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#e50914]/15 border border-[#e50914]/30 text-[#e50914] text-[10px] font-black uppercase tracking-wider mb-5">
               <Award className="w-3.5 h-3.5" /> Best Streaming Deals in BD
             </span>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-white leading-tight mb-4 tracking-tight">
-              Enjoy Unlimited <br />
-              <span className="text-[#e50914] drop-shadow-[0_0_15px_rgba(229,9,20,0.3)]">Netflix Premium</span>
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-white leading-tight mb-3 tracking-tight">
+              Premium Subscriptions,<br />
+              <span className="text-[#e50914] drop-shadow-[0_0_15px_rgba(229,9,20,0.3)]">Fast, Secure, Personalized</span>
             </h2>
-            <p className="text-white/60 text-sm max-w-sm mb-6 leading-relaxed">
-              Unlock UHD 4K streaming on mobile, PC, or TV. Shared and private plans starting from just <strong className="text-white">৳349/mo</strong>.
+            <p className="text-white/60 text-sm max-w-md mx-auto mb-7 leading-relaxed">
+              Netflix, Spotify, ChatGPT Plus &amp; more — shared and private plans starting from just <strong className="text-white">৳349/mo</strong>.
             </p>
-            <button 
+
+            <div className="relative max-w-md mx-auto mb-7">
+              <Search className="w-4 h-4 absolute left-4 top-1/2 -translate-y-1/2 text-white/30" />
+              <input
+                type="text"
+                placeholder="Search Netflix, Spotify, ChatGPT Plus..."
+                onChange={e => onHeroSearch(e.target.value)}
+                className="w-full bg-white/5 border border-white/10 rounded-full pl-11 pr-4 py-3 text-white text-sm placeholder-white/30 focus:outline-none focus:border-[#e50914]/60 transition-colors"
+              />
+            </div>
+
+            <button
               onClick={() => navigate('/browse/product/netflix-premium')}
               className="px-6 py-3.5 rounded-xl bg-[#e50914] hover:bg-[#b81d24] text-white font-extrabold text-xs uppercase tracking-wider transition-all shadow-[0_0_15px_rgba(229,9,20,0.3)] hover:scale-105 active:scale-95"
             >
               Get Netflix Now
             </button>
-          </div>
-          <div className="w-64 h-64 md:w-80 md:h-80 flex-shrink-0 flex items-center justify-center relative">
-            <div className="absolute inset-0 bg-[#e50914]/5 rounded-full filter blur-xl animate-pulse" />
-            <img 
-              src="/store/netflix.svg" 
-              alt="Netflix Promo" 
-              className="w-48 h-48 md:w-56 md:h-56 object-contain z-10 drop-shadow-[0_8px_30px_rgba(229,9,20,0.4)] animate-bounce" 
-              style={{ animationDuration: '4s' }}
-            />
           </div>
         </div>
       )}
