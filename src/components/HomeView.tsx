@@ -11,8 +11,10 @@ import {
   HelpCircle, Clock, DollarSign, BookOpen, Monitor, PhoneCall,
   FolderOpen, Lock,
 } from 'lucide-react';
-import { doc, getDoc, collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { doc, getDoc, collection, addDoc, serverTimestamp, query, where, getCountFromServer } from 'firebase/firestore';
 import { db } from '../lib/firebase';
+import { useAuth } from '../context/AuthContext';
+import { mockDb } from '../lib/mockData';
 import GalaxyBackground from './shared/GalaxyBackground';
 import Counter from './shared/Counter';
 import SpotlightCard from './shared/SpotlightCard';
@@ -92,9 +94,11 @@ function getCarouselOffset(i: number, active: number, total: number): number {
 
 export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeViewProps) {
   const navigate = useNavigate();
+  const { isDemo } = useAuth();
 
   const [wordIndex, setWordIndex] = useState(0);
   const [buildMins, setBuildMins] = useState(42);
+  const [activeBuildersCount, setActiveBuildersCount] = useState<number | null>(null);
   const [activeFAQ, setActiveFAQ] = useState<number | null>(0);
   const [activeIndex, setActiveIndex] = useState(0);
   const [hoveredCarouselIndex, setHoveredCarouselIndex] = useState<number | null>(null);
@@ -112,6 +116,24 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
   const [carouselAutoScrollDir, setCarouselAutoScrollDir] = useState<'left' | 'right' | null>(null);
   const autoScrollTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const carouselContainerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        if (isDemo) {
+          const count = mockDb.getGbpApps().filter(a => a.status === 'approved').length;
+          if (!cancelled) setActiveBuildersCount(count);
+        } else {
+          const snap = await getCountFromServer(query(collection(db, 'gbp_applications'), where('status', '==', 'accepted')));
+          if (!cancelled) setActiveBuildersCount(snap.data().count);
+        }
+      } catch {
+        // leave as null — badge is simply omitted
+      }
+    })();
+    return () => { cancelled = true; };
+  }, [isDemo]);
 
   useEffect(() => {
     const m = new Date().getMinutes();
@@ -547,10 +569,12 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
                       <Users className="w-5.5 h-5.5 text-lavender" />
                     </div>
                   </div>
-                  <span className="flex items-center gap-1 text-[8px] font-mono text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20 font-bold uppercase animate-pulse">
-                    <span className="w-1 h-1 rounded-full bg-emerald-400" />
-                    148 Live
-                  </span>
+                  {!!activeBuildersCount && (
+                    <span className="flex items-center gap-1 text-[8px] font-mono text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20 font-bold uppercase animate-pulse">
+                      <span className="w-1 h-1 rounded-full bg-emerald-400" />
+                      {activeBuildersCount} Live
+                    </span>
+                  )}
                 </div>
                 <div className="mt-4">
                   <h3 className="text-white font-bold text-base mb-2 font-display">Builders Mindset</h3>
@@ -562,7 +586,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
                     <span className="px-2 py-0.5 rounded bg-[#FF7A45]/10 text-[#FF7A45] border border-[#FF7A45]/20 font-bold">ARCH</span>
                     <span className="px-2 py-0.5 rounded bg-[#5B23A8]/10 text-[#5B23A8] border border-[#5B23A8]/20 font-bold">AI</span>
                     <span className="px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-bold">PROD</span>
-                    <span className="text-white/30 font-bold ml-1">+130 Active</span>
+                    {!!activeBuildersCount && <span className="text-white/30 font-bold ml-1">+{activeBuildersCount} Active</span>}
                   </div>
                 </div>
               </SpotlightCard>
@@ -797,13 +821,24 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
             </motion.p>
           </div>
 
+          {/* Illuminated progress rail — fills as steps scroll into view */}
+          <div className="relative h-1 rounded-full bg-white/8 mb-8 overflow-hidden">
+            <motion.div
+              className="absolute inset-y-0 left-0 primary-gradient rounded-full"
+              animate={{ width: `${lineProgress}%` }}
+              transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+            />
+          </div>
+
           {/* 2×2 Process card grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
             {PROCESS_STEPS.map((step, i) => {
               const StepIcon = step.Icon;
+              const isIlluminated = illuminatedSteps.has(i);
               return (
                 <motion.div
                   key={step.num}
+                  ref={el => { stepRefs.current[i] = el; }}
                   initial={{ opacity: 0, y: 24 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
@@ -811,7 +846,10 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
                   whileHover={{ y: -4 }}
                   className="relative flex flex-col"
                 >
-                  <SpotlightCard className="w-full h-full p-7 rounded-3xl glass-card-premium border border-white/10 group">
+                  <SpotlightCard
+                    className="w-full h-full p-7 rounded-3xl glass-card-premium border transition-colors duration-500 group"
+                    style={{ borderColor: isIlluminated ? 'rgba(236,30,142,0.4)' : 'rgba(255,255,255,0.1)' }}
+                  >
                     <div className="absolute right-5 bottom-4 font-black select-none pointer-events-none leading-none z-0" style={{ fontSize: '100px', color: 'rgba(236,30,142,0.06)', fontFamily: 'var(--font-display)' }}>{step.num}</div>
                     <div className="flex items-start justify-between mb-6 relative z-10">
                       <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-primary/10 border border-primary/20 group-hover:bg-primary/15 group-hover:border-primary/35 transition-colors duration-300">
