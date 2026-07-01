@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ShoppingBag, Tag, Star } from 'lucide-react';
+import { ShoppingBag, ShoppingCart, Tag, Star, Flame } from 'lucide-react';
 import { Product } from '../../types';
 
 export default function ProductCard({ product }: { key?: React.Key; product: Product }): React.JSX.Element {
@@ -24,6 +24,11 @@ export default function ProductCard({ product }: { key?: React.Key; product: Pro
         {discount > 0 && (
           <span className="absolute top-3 left-3 bg-[#e50914] text-white text-[10px] font-black px-2.5 py-1 rounded-full uppercase tracking-wider shadow-[0_0_8px_rgba(229,9,20,0.5)]">
             -{discount}% OFF
+          </span>
+        )}
+        {product.isFeatured && (
+          <span className="absolute top-3 right-3 bg-white/10 backdrop-blur-sm border border-white/10 text-white text-[9px] font-black px-2.5 py-1 rounded-full uppercase tracking-wider flex items-center gap-1">
+            <Flame className="w-3 h-3 text-[#e50914] fill-[#e50914]" /> Hot Selling
           </span>
         )}
       </div>
@@ -52,8 +57,8 @@ export default function ProductCard({ product }: { key?: React.Key; product: Pro
           {product.plans.length > 1 && <span className="text-[10px] text-white/30 lowercase ml-0.5">from</span>}
         </div>
 
-        <span className="w-full text-center py-2.5 rounded-xl bg-white/5 group-hover:bg-[#e50914] text-white text-xs font-bold transition-all border border-white/5 group-hover:border-[#e50914] shadow-[0_0_12px_rgba(229,9,20,0)] group-hover:shadow-[0_0_12px_rgba(229,9,20,0.3)]">
-          {product.plans.length > 1 ? 'CHOOSE PLAN' : 'BUY NOW'}
+        <span className="w-full flex items-center justify-center gap-1.5 py-2.5 rounded-xl bg-white/5 group-hover:bg-[#e50914] text-white text-xs font-bold transition-all border border-white/5 group-hover:border-[#e50914] shadow-[0_0_12px_rgba(229,9,20,0)] group-hover:shadow-[0_0_12px_rgba(229,9,20,0.3)]">
+          <ShoppingCart className="w-3.5 h-3.5" /> {product.plans.length > 1 ? 'CHOOSE PLAN' : 'BUY NOW'}
         </span>
       </div>
     </button>

@@ -218,7 +218,12 @@ function StoreLayoutInner() {
   const { closeCart } = useStoreCart();
 
   return (
-    <div className="min-h-screen bg-[#000000] text-white flex flex-col custom-scrollbar" style={{ colorScheme: 'dark' }}>
+    <div className="min-h-screen bg-[#000000] text-white flex flex-col custom-scrollbar relative" style={{ colorScheme: 'dark' }}>
+      <div className="fixed inset-0 overflow-hidden pointer-events-none -z-10">
+        <div className="absolute -top-20 -left-20 w-[28rem] h-[28rem] bg-[#e50914]/15 rounded-full blur-[120px]" />
+        <div className="absolute top-1/3 -right-24 w-[24rem] h-[24rem] bg-teal-500/10 rounded-full blur-[120px]" />
+        <div className="absolute bottom-0 left-1/3 w-[26rem] h-[26rem] bg-purple-600/10 rounded-full blur-[120px]" />
+      </div>
       <AnnouncementBar />
       <StoreHeader />
       <main className="flex-1">

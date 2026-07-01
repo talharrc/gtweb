@@ -1,9 +1,25 @@
 import { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useSearchParams, useNavigate } from 'react-router-dom';
-import { Loader2, ShoppingBag, ShieldCheck, ChevronDown, Award, Star } from 'lucide-react';
+import {
+  Loader2, ShoppingBag, ShieldCheck, ChevronDown, Award, Star,
+  Tv, Music, Bot, Palette, Gamepad2, Gift, Truck, BadgePercent, Headphones,
+} from 'lucide-react';
+import { ProductCategory } from '../../types';
 import { useStoreProducts } from '../../hooks/useStoreProducts';
 import ProductCard from '../../components/store/ProductCard';
+
+const CATEGORY_ICONS: Record<ProductCategory, typeof Tv> = {
+  Streaming: Tv, Music: Music, 'AI Tools': Bot, Design: Palette,
+  Productivity: Palette, Gaming: Gamepad2, 'Gift Cards': Gift, Other: ShoppingBag,
+};
+
+const FEATURES = [
+  { icon: Truck, label: 'Fast Delivery' },
+  { icon: BadgePercent, label: 'Discounted Prices' },
+  { icon: ShieldCheck, label: 'Secure Payment' },
+  { icon: Headphones, label: 'Customer Support' },
+];
 
 export default function StoreHomeView() {
   const navigate = useNavigate();
@@ -70,6 +86,42 @@ export default function StoreHomeView() {
               style={{ animationDuration: '4s' }}
             />
           </div>
+        </div>
+      )}
+
+      {/* Shop by Category */}
+      {category === 'All' && !query && (
+        <div className="mb-10">
+          <h2 className="text-xs font-black text-white/50 uppercase tracking-widest mb-4">Shop by Category</h2>
+          <div className="grid grid-cols-3 sm:grid-cols-6 gap-3">
+            {(['Streaming', 'Music', 'AI Tools', 'Design', 'Gaming', 'Gift Cards'] as ProductCategory[]).map(cat => {
+              const Icon = CATEGORY_ICONS[cat];
+              return (
+                <button
+                  key={cat}
+                  onClick={() => navigate(`/browse?category=${encodeURIComponent(cat)}`)}
+                  className="flex flex-col items-center gap-2.5 p-4 rounded-2xl border border-white/5 bg-[#121212]/50 hover:border-[#e50914]/40 hover:bg-[#121212] transition-all group"
+                >
+                  <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/5 flex items-center justify-center text-white/60 group-hover:text-[#e50914] group-hover:border-[#e50914]/30 transition-colors">
+                    <Icon className="w-5 h-5" />
+                  </div>
+                  <span className="text-[10px] font-bold text-white/70 group-hover:text-white text-center leading-tight">{cat}</span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      {/* Feature strip */}
+      {category === 'All' && !query && (
+        <div className="mb-10 rounded-2xl border border-white/5 bg-[#121212]/40 px-6 py-4 grid grid-cols-2 sm:grid-cols-4 gap-4">
+          {FEATURES.map(f => (
+            <div key={f.label} className="flex items-center gap-2.5 justify-center sm:justify-start">
+              <f.icon className="w-4 h-4 text-[#e50914] flex-shrink-0" />
+              <span className="text-[11px] font-bold text-white/70 uppercase tracking-wide">{f.label}</span>
+            </div>
+          ))}
         </div>
       )}
 
