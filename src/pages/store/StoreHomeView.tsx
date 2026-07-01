@@ -59,17 +59,14 @@ export default function StoreHomeView() {
         <meta name="description" content="Buy Netflix, Spotify, ChatGPT Plus, Canva Pro, gift cards, and game top-ups in Bangladesh via bKash & Nagad." />
       </Helmet>
 
-      {/* Hero Banner Promo */}
+      {/* Hero Banner Promo — sits directly on the page's ambient glow, no boxed card */}
       {category === 'All' && !query && (
-        <div className="mb-10 rounded-3xl overflow-hidden relative border border-white/5 bg-black p-10 md:p-16 flex flex-col items-center text-center shadow-[inset_0_1px_1px_rgba(255,255,255,0.05),0_15px_45px_rgba(0,0,0,0.5)]">
-          <div className="absolute -top-24 left-1/4 w-96 h-96 bg-[#e50914]/25 rounded-full blur-[110px] pointer-events-none" />
-          <div className="absolute -top-10 right-1/4 w-80 h-80 bg-teal-500/20 rounded-full blur-[100px] pointer-events-none" />
-          <div className="absolute bottom-0 left-1/3 w-72 h-72 bg-purple-600/15 rounded-full blur-[100px] pointer-events-none" />
+        <div className="mb-10 relative py-10 md:py-14 flex flex-col items-center text-center">
           <img
             src="/store/netflix.svg"
             alt=""
             aria-hidden="true"
-            className="absolute w-72 h-72 object-contain opacity-[0.06] pointer-events-none"
+            className="absolute w-72 h-72 object-contain opacity-[0.05] pointer-events-none"
           />
 
           <div className="relative z-10 max-w-xl">

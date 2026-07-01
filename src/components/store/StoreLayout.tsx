@@ -59,7 +59,7 @@ function StoreHeader() {
   };
 
   return (
-    <header className="sticky top-0 z-40 bg-[#000000]/80 backdrop-blur-md border-b border-white/5">
+    <header className="sticky top-0 z-40 bg-[#000000]/50 backdrop-blur-md border-b border-white/5">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-3.5 flex items-center gap-4">
         <button 
           onClick={() => navigate('/')} 
@@ -220,10 +220,9 @@ function StoreLayoutInner() {
   return (
     <div className="min-h-screen bg-[#000000] text-white flex flex-col custom-scrollbar relative" style={{ colorScheme: 'dark' }}>
       <div className="fixed inset-0 overflow-hidden pointer-events-none -z-10">
-        <div className="absolute top-10 left-1/5 w-[32rem] h-[32rem] bg-[#e50914]/25 rounded-full blur-[110px]" />
-        <div className="absolute top-24 -right-24 w-[28rem] h-[28rem] bg-teal-500/20 rounded-full blur-[110px]" />
-        <div className="absolute top-[70vh] left-1/3 w-[30rem] h-[30rem] bg-purple-600/20 rounded-full blur-[110px]" />
-        <div className="absolute top-[140vh] -right-10 w-[26rem] h-[26rem] bg-[#e50914]/15 rounded-full blur-[110px]" />
+        <div className="absolute top-10 left-1/5 w-[34rem] h-[34rem] bg-[#e50914]/35 rounded-full blur-[110px]" />
+        <div className="absolute top-16 -right-24 w-[30rem] h-[30rem] bg-teal-500/30 rounded-full blur-[110px]" />
+        <div className="absolute bottom-0 left-1/3 w-[30rem] h-[30rem] bg-purple-600/25 rounded-full blur-[110px]" />
       </div>
       <AnnouncementBar />
       <StoreHeader />
