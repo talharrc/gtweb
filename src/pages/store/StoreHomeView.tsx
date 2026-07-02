@@ -3,16 +3,12 @@ import { Helmet } from 'react-helmet-async';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import {
   Loader2, ShoppingBag, ShieldCheck, ChevronDown, Star,
-  Tv, Music, Bot, Palette, Gamepad2, Gift, Truck, BadgePercent, Headphones,
+  Truck, BadgePercent, Headphones,
 } from 'lucide-react';
 import { ProductCategory } from '../../types';
 import { useStoreProducts } from '../../hooks/useStoreProducts';
 import ProductCard from '../../components/store/ProductCard';
 
-const CATEGORY_ICONS: Record<ProductCategory, typeof Tv> = {
-  Streaming: Tv, Music: Music, 'AI Tools': Bot, Design: Palette,
-  Productivity: Palette, Gaming: Gamepad2, 'Gift Cards': Gift, Other: ShoppingBag,
-};
 
 const FEATURES = [
   { icon: Truck, label: 'Fast Delivery' },
@@ -72,21 +68,29 @@ export default function StoreHomeView() {
         <div className="mb-10">
           <h2 className="text-xs font-bold text-[#6E6480] uppercase tracking-widest mb-4 font-mono">Shop by Category</h2>
           <div className="grid grid-cols-3 sm:grid-cols-6 gap-3">
-            {(['Streaming', 'Music', 'AI Tools', 'Design', 'Gaming', 'Gift Cards'] as ProductCategory[]).map(cat => {
-              const Icon = CATEGORY_ICONS[cat];
-              return (
-                <button
-                  key={cat}
-                  onClick={() => navigate(`/browse?category=${encodeURIComponent(cat)}`)}
-                  className="flex flex-col items-center gap-2.5 p-4 rounded-xl border border-white/10 bg-[#16101E] hover:border-[#E04420]/40 hover:shadow-sm transition-all group"
-                >
-                  <div className="w-10 h-10 rounded-lg bg-[#1E1428] border border-white/10 flex items-center justify-center text-[#A89EB8] group-hover:text-[#CD381D] group-hover:border-[#E04420]/30 transition-colors">
-                    <Icon className="w-5 h-5" />
-                  </div>
-                  <span className="text-[10px] font-semibold text-[#A89EB8] group-hover:text-[#F4F1F8] text-center leading-tight">{cat}</span>
-                </button>
-              );
-            })}
+            {([
+              { cat: 'Streaming', img: '/store/cat-streaming.png' },
+              { cat: 'Music', img: '/store/cat-music.png' },
+              { cat: 'AI Tools', img: '/store/cat-ai-tools.png' },
+              { cat: 'Design', img: '/store/cat-design.png' },
+              { cat: 'Gaming', img: '/store/cat-gaming.png' },
+              { cat: 'Gift Cards', img: '/store/cat-gift-cards.png' },
+            ] as { cat: ProductCategory; img: string }[]).map(({ cat, img }) => (
+              <button
+                key={cat}
+                onClick={() => navigate(`/browse?category=${encodeURIComponent(cat)}`)}
+                className="flex flex-col items-center gap-2 rounded-xl border border-white/10 bg-[#16101E] hover:border-[#E04420]/40 hover:shadow-lg transition-all group overflow-hidden"
+              >
+                <div className="w-full aspect-square overflow-hidden rounded-t-xl">
+                  <img
+                    src={img}
+                    alt={cat}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                  />
+                </div>
+                <span className="text-[10px] font-semibold text-[#A89EB8] group-hover:text-[#F4F1F8] text-center leading-tight pb-2 px-1">{cat}</span>
+              </button>
+            ))}
           </div>
         </div>
       )}

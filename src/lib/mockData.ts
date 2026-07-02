@@ -327,7 +327,7 @@ const INITIAL_PRODUCTS: Product[] = [
     id: 'prod-netflix', name: 'Netflix Premium', slug: 'netflix-premium', category: 'Streaming',
     shortDescription: 'Watch on any screen — mobile, laptop, or TV — in Full HD or 4K.',
     longDescription: 'Shared and personal Netflix plans across mobile, laptop/PC, and Smart TV / Android TV / Fire Stick devices. Choose the screen tier that matches how you watch.',
-    imageUrl: '/store/netflix.svg', isActive: true, isFeatured: true,
+    imageUrl: '/store/netflix-banner.png', isActive: true, isFeatured: true,
     rating: 4.88, reviewCount: 142,
     plans: [
       { id: 'plan-mobile-1m', label: 'Mobile / Laptop Screen', durationLabel: '1 Month', durationDays: 30, priceBDT: 349, originalPriceBDT: 399 },
@@ -340,7 +340,7 @@ const INITIAL_PRODUCTS: Product[] = [
     id: 'prod-netflix-prime', name: 'Netflix + Prime Video Combo', slug: 'netflix-prime-combo', category: 'Streaming',
     shortDescription: 'One plan, two of the biggest streaming libraries.',
     longDescription: 'Bundle Netflix and Amazon Prime Video access into a single monthly plan at a discounted combo rate.',
-    imageUrl: '/store/netflix.svg', isActive: true,
+    imageUrl: '/store/netflix-prime-combo-banner.png', isActive: true,
     rating: 4.91, reviewCount: 68,
     plans: [
       { id: 'plan-combo-1m', label: 'Combo Plan', durationLabel: '1 Month', durationDays: 30, priceBDT: 489, originalPriceBDT: 599 },
@@ -351,7 +351,7 @@ const INITIAL_PRODUCTS: Product[] = [
     id: 'prod-prime', name: 'Amazon Prime Video', slug: 'prime-video', category: 'Streaming',
     shortDescription: 'Prime Originals, movies, and live sports.',
     longDescription: 'Standard Amazon Prime Video access on mobile, laptop, and TV devices.',
-    imageUrl: '/store/prime.svg', isActive: true,
+    imageUrl: '/store/prime-banner.png', isActive: true,
     rating: 4.79, reviewCount: 54,
     plans: [
       { id: 'plan-1m', label: 'Standard', durationLabel: '1 Month', durationDays: 30, priceBDT: 249, originalPriceBDT: 299 },
@@ -362,7 +362,7 @@ const INITIAL_PRODUCTS: Product[] = [
     id: 'prod-spotify', name: 'Spotify Premium', slug: 'spotify-premium', category: 'Music',
     shortDescription: 'Ad-free music, offline downloads, unlimited skips.',
     longDescription: 'Individual Spotify Premium access with no ads and offline listening.',
-    imageUrl: '/store/spotify.svg', isActive: true,
+    imageUrl: '/store/spotify-banner.png', isActive: true,
     rating: 4.85, reviewCount: 118,
     plans: [
       { id: 'plan-1m', label: 'Individual', durationLabel: '1 Month', durationDays: 30, priceBDT: 149, originalPriceBDT: 199 },
@@ -374,7 +374,7 @@ const INITIAL_PRODUCTS: Product[] = [
     id: 'prod-chatgpt', name: 'ChatGPT Plus', slug: 'chatgpt-plus', category: 'AI Tools',
     shortDescription: 'GPT-5 access, image generation, web browsing, and file uploads.',
     longDescription: 'Choose a shared login for a lower price, or a personal-email invite so the subscription lives on your own OpenAI account.',
-    imageUrl: '/store/chatgpt.svg', isActive: true, isFeatured: true,
+    imageUrl: '/store/chatgpt-banner.png', isActive: true, isFeatured: true,
     rating: 4.95, reviewCount: 210,
     plans: [
       { id: 'plan-shared-1m', label: 'Shared Account', durationLabel: '1 Month', durationDays: 30, priceBDT: 500, originalPriceBDT: 650 },
@@ -386,7 +386,7 @@ const INITIAL_PRODUCTS: Product[] = [
     id: 'prod-canva', name: 'Canva Pro', slug: 'canva-pro', category: 'Design',
     shortDescription: 'Premium templates, background remover, and brand kits.',
     longDescription: 'Full-year Canva Pro invite added directly to your existing Canva account.',
-    imageUrl: '/store/canva.svg', isActive: true,
+    imageUrl: '/store/canva-banner.png', isActive: true,
     rating: 4.82, reviewCount: 88,
     plans: [
       { id: 'plan-1y', label: 'Full Year Invite', durationLabel: '1 Year', durationDays: 365, priceBDT: 599, originalPriceBDT: 999 },
@@ -397,7 +397,7 @@ const INITIAL_PRODUCTS: Product[] = [
     id: 'prod-disney', name: 'Disney+ Hotstar', slug: 'disney-hotstar', category: 'Streaming',
     shortDescription: 'Disney, Marvel, Star Wars, and live cricket.',
     longDescription: 'Standard Disney+ Hotstar access across mobile and TV.',
-    imageUrl: '/store/disney.svg', isActive: true,
+    imageUrl: '/store/disney-banner.png', isActive: true,
     rating: 4.76, reviewCount: 42,
     plans: [
       { id: 'plan-1m', label: 'Standard', durationLabel: '1 Month', durationDays: 30, priceBDT: 299, originalPriceBDT: 349 },
@@ -408,7 +408,7 @@ const INITIAL_PRODUCTS: Product[] = [
     id: 'prod-itunes', name: 'Apple iTunes Gift Card', slug: 'apple-itunes-gift-card', category: 'Gift Cards',
     shortDescription: 'Redeemable balance for the App Store, iTunes, and Apple services.',
     longDescription: 'Digital Apple/iTunes gift card codes for the Bangladesh or US App Store, delivered by code after payment confirmation.',
-    imageUrl: '/store/apple.svg', isActive: true,
+    imageUrl: '/store/apple-banner.png', isActive: true,
     rating: 4.90, reviewCount: 31,
     plans: [
       { id: 'plan-500', label: '৳500 Balance', durationLabel: 'One-time', durationDays: 0, priceBDT: 550, originalPriceBDT: 600 },
@@ -420,7 +420,7 @@ const INITIAL_PRODUCTS: Product[] = [
     id: 'prod-pubg-uc', name: 'PUBG Mobile UC Top-up', slug: 'pubg-mobile-uc-topup', category: 'Gaming',
     shortDescription: 'Instant UC top-up direct to your PUBG Mobile account.',
     longDescription: 'Unknown Cash (UC) top-up for PUBG Mobile, delivered directly to your in-game ID within minutes of payment confirmation.',
-    imageUrl: '/store/gaming.svg', isActive: true,
+    imageUrl: '/store/pubg-banner.png', isActive: true,
     rating: 4.87, reviewCount: 95,
     plans: [
       { id: 'plan-60uc', label: '60 UC', durationLabel: 'One-time', durationDays: 0, priceBDT: 100, originalPriceBDT: 120 },
