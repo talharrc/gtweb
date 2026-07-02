@@ -2,12 +2,29 @@ import { useNavigate } from 'react-router-dom';
 import { ShoppingBag, Flame, Star } from 'lucide-react';
 import { Product } from '../../types';
 
+// Maps product slugs to locally-hosted banner images.
+// This guarantees rich images even if Firestore still has old SVG paths.
+const BANNER_MAP: Record<string, string> = {
+  'netflix-premium':           '/store/netflix-banner.png',
+  'netflix-prime-combo':       '/store/netflix-prime-combo-banner.png',
+  'prime-video':               '/store/prime-banner.png',
+  'spotify-premium':           '/store/spotify-banner.png',
+  'chatgpt-plus':              '/store/chatgpt-banner.png',
+  'canva-pro':                 '/store/canva-banner.png',
+  'disney-hotstar':            '/store/disney-banner.png',
+  'apple-itunes-gift-card':    '/store/apple-banner.png',
+  'pubg-mobile-uc-topup':      '/store/pubg-banner.png',
+};
+
 export default function ProductCard({ product }: { product: Product }) {
   const navigate = useNavigate();
   const cheapest = product.plans.reduce((min, p) => (p.priceBDT < min.priceBDT ? p : min), product.plans[0]);
   const discount = cheapest?.originalPriceBDT
     ? Math.round(((cheapest.originalPriceBDT - cheapest.priceBDT) / cheapest.originalPriceBDT) * 100)
     : 0;
+
+  // Prefer the banner map, fall back to Firestore imageUrl, then empty
+  const resolvedImage = BANNER_MAP[product.slug] ?? product.imageUrl ?? '';
 
   return (
     <button
@@ -16,8 +33,8 @@ export default function ProductCard({ product }: { product: Product }) {
     >
       <div className="relative aspect-square p-2.5">
         <div className="w-full h-full rounded-lg overflow-hidden">
-          {product.imageUrl ? (
-            <img src={product.imageUrl} alt={product.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+          {resolvedImage ? (
+            <img src={resolvedImage} alt={product.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
           ) : (
             <div className="w-full h-full bg-[#1E1428] flex items-center justify-center">
               <ShoppingBag className="w-10 h-10 text-[#6E6480]" />
