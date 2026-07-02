@@ -22,6 +22,23 @@
   --color-text:      var(--text);
   --color-muted:     var(--muted);
   --color-glass-dark: rgba(255,255,255,0.05);
+
+  /* GalaxaStore Brand Kit Core Palette */
+  --color-gs-void: #08060A;
+  --color-gs-surface: #100C1A;
+  --color-gs-card: #16101E;
+  --color-gs-card-alt: #1E1428;
+  --color-gs-nav: rgba(19, 8, 10, 0.9);
+  
+  --color-gs-red-shadow: #5A160F;
+  --color-gs-red-core: #AA1E12;
+  --color-gs-red-mid: #BB2D19;
+  --color-gs-red-bright: #CD381D;
+  --color-gs-red-orange: #E04420;
+
+  --color-gs-text: #F4F1F8;
+  --color-gs-text-secondary: #A89EB8;
+  --color-gs-text-muted: #6E6480;
 }
 
 :root {
@@ -306,29 +323,43 @@ button:not([class*="w-"]):not([class*="h-"]) {
 
 /* ── Store Custom Styling ──────────────────────────────────────────────────────── */
 
+/* Ambient red/orange background atmosphere — GalaxaStore's own gradient theme */
+.gs-bg-mesh {
+  position: fixed;
+  inset: 0;
+  z-index: -10;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 900px 400px at 50% -5%, rgba(170,30,18,0.20), transparent 70%),
+    radial-gradient(circle at 88% 20%, rgba(224,68,32,0.09), transparent 45%),
+    radial-gradient(circle at 8% 65%, rgba(170,30,18,0.08), transparent 45%),
+    linear-gradient(180deg, #13080A 0%, #08060A 45%, #08060A 100%);
+}
+
 /* Glassmorphism for store cards */
 .store-card {
-  background: #16101E;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 0.75rem;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.015)), #16101E;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-top-color: rgba(255, 255, 255, 0.15);
+  border-radius: 1rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 }
-
+ 
 .store-card:hover {
-  border-color: rgba(224, 68, 32, 0.4);
-  box-shadow: 0 0 25px rgba(170, 30, 18, 0.25), 0 15px 35px rgba(0, 0, 0, 0.6);
+  border-color: rgba(205, 56, 29, 0.35);
+  box-shadow: 0 0 35px rgba(170, 30, 18, 0.22), 0 15px 35px rgba(0, 0, 0, 0.65);
   transform: translateY(-4px);
 }
-
+ 
 /* Glow button styling */
 .btn-primary-red {
   background: linear-gradient(135deg, #AA1E12 0%, #E04420 100%);
   box-shadow: 0 4px 15px rgba(170, 30, 18, 0.35);
-  transition: all 0.25s ease;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .btn-primary-red:hover {
-  box-shadow: 0 6px 20px rgba(224, 68, 32, 0.5);
+  box-shadow: 0 6px 20px rgba(224, 68, 32, 0.55), 0 0 15px rgba(170, 30, 18, 0.3);
   filter: brightness(1.1);
   transform: translateY(-1px);
 }
@@ -336,6 +367,33 @@ button:not([class*="w-"]):not([class*="h-"]) {
   transform: translateY(0);
 }
 
+/* Secondary ghost action buttons for the store */
+.btn-ghost-red {
+  background: transparent;
+  border: 1px solid rgba(170, 30, 18, 0.3);
+  color: #CD381D;
+  transition: all 0.25s ease;
+}
+.btn-ghost-red:hover {
+  background: rgba(170, 30, 18, 0.08);
+  border-color: #AA1E12;
+  color: #F4F1F8;
+}
+
+/* Text gradients */
+.text-gs-gradient {
+  background: linear-gradient(135deg, #AA1E12 0%, #CD381D 50%, #E04420 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+/* Brand logo gradient border/glow effect */
+.gs-glow-glow {
+  box-shadow: 0 0 30px rgba(170, 30, 18, 0.25);
+}
+ 
 /* Custom scrollbar for horizontal categories */
 .no-scrollbar::-webkit-scrollbar {
   display: none;
@@ -344,7 +402,7 @@ button:not([class*="w-"]):not([class*="h-"]) {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
-
+ 
 /* Styled scrollbar for drawer/modals */
 .custom-scrollbar::-webkit-scrollbar {
   width: 6px;
