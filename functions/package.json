@@ -1,0 +1,21 @@
+{
+  "name": "galaxaspace-functions",
+  "private": true,
+  "version": "1.0.0",
+  "description": "GalaxaSpace weekly ritual scheduled Cloud Function — independent of the Vercel deploy.",
+  "main": "lib/index.js",
+  "engines": {
+    "node": "20"
+  },
+  "scripts": {
+    "build": "tsc",
+    "deploy": "npm run build && firebase deploy --only functions"
+  },
+  "dependencies": {
+    "firebase-admin": "^12.7.0",
+    "firebase-functions": "^5.1.1"
+  },
+  "devDependencies": {
+    "typescript": "^5.8.2"
+  }
+}
