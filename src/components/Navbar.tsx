@@ -159,7 +159,7 @@ export default function Navbar({ onPageChange, dhakaTime, isDhakaOpen, currentUs
                       <h4 className="text-[11px] uppercase tracking-wider text-primary font-bold mb-1 px-2.5">Galaxa Hubs</h4>
                       <button onClick={() => goToHub('/space')} className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-[rgba(181,141,255,0.1)] text-left transition-all group/item">
                         <div className="w-8 h-8 rounded-lg bg-pink-500/20 flex items-center justify-center text-pink-400 group-hover/item:scale-110 transition-transform"><Compass className="w-4 h-4" /></div>
-                        <div><p className="text-xs font-bold text-white mb-0.5">Galaxa Space</p><p className="text-[10px] text-white/50">Generative utilities & prompt packs</p></div>
+                        <div><p className="text-xs font-bold text-white mb-0.5">Galaxa Space</p><p className="text-[10px] text-white/50">Community, prompts, tools & builds</p></div>
                       </button>
                       <button onClick={() => goToHub('/hub/client')} className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-[rgba(181,141,255,0.1)] text-left transition-all group/item">
                         <div className="w-8 h-8 rounded-lg bg-cyan-500/20 flex items-center justify-center text-cyan-400 group-hover/item:scale-110 transition-transform"><Lock className="w-4 h-4" /></div>

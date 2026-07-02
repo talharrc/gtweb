@@ -4,5 +4,8 @@
   "rewrites": [
     { "source": "/api/(.*)", "destination": "/api/index" },
     { "source": "/(.*)", "destination": "/index.html" }
+  ],
+  "crons": [
+    { "path": "/api/space/cron/daily-ritual", "schedule": "0 18 * * *" }
   ]
 }

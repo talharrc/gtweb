@@ -20,6 +20,7 @@ import NotFoundView from './components/NotFoundView';
 import CookieBanner from './components/CookieBanner';
 import Footer from './components/Footer';
 import VisitorHubView from './components/visitor-hub/VisitorHubView';
+import SpaceRoutes from './components/space/SpaceRoutes';
 import ClientHubView from './components/client-hub/ClientHubView';
 import BuilderHubView from './components/builder-hub/BuilderHubView';
 import CustomerHubView from './components/customer-hub/CustomerHubView';
@@ -184,8 +185,9 @@ function AppInner() {
   const location = useLocation();
   const navigate = useNavigate();
   const { email, userProfile } = useAuth();
-  const isHubRoute = location.pathname.startsWith('/hub') || location.pathname.startsWith('/admin') || location.pathname.startsWith('/space');
+  const isHubRoute = location.pathname.startsWith('/hub') || location.pathname.startsWith('/admin');
   const isStoreRoute = location.pathname.startsWith('/browse');
+  const isSpaceRoute = location.pathname.startsWith('/space');
 
   const [dhakaTime, setDhakaTime] = useState<string>('Dhaka HQ');
   const [isDhakaOpen, setIsDhakaOpen] = useState<boolean>(true);
@@ -222,7 +224,6 @@ function AppInner() {
         <Routes>
           <Route path="/hub/invite/:token" element={<InviteLandingPage />} />
           <Route path="/hub/visitor/*" element={<VisitorHubView />} />
-          <Route path="/space/*" element={<VisitorHubView />} />
           <Route path="/hub/client/*" element={
             <RequireRole requiredRole="client">
               <ClientHubView />
@@ -258,6 +259,15 @@ function AppInner() {
             <Route path="/browse/product/:slug" element={<ProductDetailPage />} />
           </Route>
         </Routes>
+      </>
+    );
+  }
+
+  if (isSpaceRoute) {
+    return (
+      <>
+        <ScrollToTop />
+        <SpaceRoutes />
       </>
     );
   }
