@@ -12,7 +12,7 @@ export default function CartDrawer({ onCheckout }: { onCheckout: () => void }) {
     <div className="fixed inset-0 z-50 overflow-hidden">
       <div className="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity" onClick={closeCart} />
 
-      <div className="absolute inset-y-0 right-0 max-w-full flex pl-10">
+      <div className="absolute inset-y-0 right-0 max-w-full flex pl-0 sm:pl-10">
         <div className="w-screen max-w-md bg-gs-surface/95 border-l border-white/5 backdrop-blur-md shadow-2xl flex flex-col justify-between">
           <div className="px-6 py-5 border-b border-white/5 flex items-center justify-between">
             <h3 className="text-gs-text font-bold text-lg flex items-center gap-2 font-display">

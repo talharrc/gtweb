@@ -115,7 +115,7 @@ function StoreHeader() {
           <button
             key={cat.value}
             onClick={() => goToCategory(cat.value)}
-            className={`px-4 py-1.5 rounded-full text-[11px] font-bold font-rajdhani uppercase tracking-wider whitespace-nowrap transition-all border duration-300 ${
+            className={`flex-shrink-0 px-4 py-1.5 rounded-full text-[11px] font-bold font-rajdhani uppercase tracking-wider whitespace-nowrap transition-all border duration-300 ${
               activeCategory === cat.value
                 ? 'bg-gradient-to-r from-gs-red-core to-gs-red-bright border-gs-red-core text-white shadow-sm shadow-gs-red-core/25'
                 : 'bg-gs-card/50 border-white/10 text-gs-text-secondary hover:border-gs-red-orange/30 hover:text-gs-text'
