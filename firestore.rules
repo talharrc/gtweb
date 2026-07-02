@@ -56,8 +56,9 @@ service cloud.firestore {
 
     match /space_settings/{settingId} {
       allow read: if true;
-      // Written only by the scheduled Cloud Function via firebase-admin,
-      // which bypasses security rules entirely — clients can never write here.
+      // Written only by the free Vercel Cron Job (POST /api/space/cron/daily-ritual)
+      // via firebase-admin, which bypasses security rules entirely —
+      // clients can never write here.
       allow write: if false;
     }
   }
