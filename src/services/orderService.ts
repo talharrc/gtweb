@@ -1,34 +1,61 @@
-import { collection, doc, addDoc, updateDoc, getDocs, query, where, serverTimestamp } from 'firebase/firestore';
-import { db } from '../lib/firebase';
-import { Order, OrderStatus, DeliveredCredential } from '../types';
+import { Order, OrderStatus, DeliveredCredential, OrderItem } from '../types';
 
-export async function createOrder(data: Omit<Order, 'id' | 'createdAt' | 'status'>): Promise<string> {
-  const ref = await addDoc(collection(db, 'orders'), {
-    ...data,
-    status: 'pending_payment' as OrderStatus,
-    createdAt: serverTimestamp(),
+async function parseJsonOrThrow(res: Response) {
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(data?.error ?? `Request failed (${res.status})`);
+  return data;
+}
+
+export async function createOrder(data: {
+  customerName: string;
+  customerPhone?: string;
+  items: Pick<OrderItem, 'productId' | 'planId' | 'quantity'>[];
+  paymentMethod: Order['paymentMethod'];
+  senderNumber: string;
+  trxId: string;
+}): Promise<string> {
+  const res = await fetch('/api/orders', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    credentials: 'include',
+    body: JSON.stringify(data),
   });
-  return ref.id;
+  const json = await parseJsonOrThrow(res);
+  return json.id;
 }
 
 export async function updateOrderStatus(
   id: string,
   status: OrderStatus,
-  extra?: { adminNote?: string; verifiedAt?: unknown; fulfilledAt?: unknown }
+  extra?: { adminNote?: string }
 ): Promise<void> {
-  await updateDoc(doc(db, 'orders', id), { status, ...extra } as any);
+  const res = await fetch(`/api/admin/orders/${id}/status`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    credentials: 'include',
+    body: JSON.stringify({ status, adminNote: extra?.adminNote }),
+  });
+  await parseJsonOrThrow(res);
 }
 
 export async function deliverCredentials(id: string, credentials: DeliveredCredential[]): Promise<void> {
-  await updateDoc(doc(db, 'orders', id), {
-    deliveredCredentials: credentials,
-    status: 'fulfilled' as OrderStatus,
-    fulfilledAt: serverTimestamp(),
-  } as any);
+  const res = await fetch(`/api/admin/orders/${id}/credentials`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    credentials: 'include',
+    body: JSON.stringify({ credentials }),
+  });
+  await parseJsonOrThrow(res);
 }
 
-export async function getOrdersByCustomer(username: string): Promise<Order[]> {
-  const q = query(collection(db, 'orders'), where('customerUsername', '==', username.toLowerCase()));
-  const snap = await getDocs(q);
-  return snap.docs.map(d => ({ id: d.id, ...d.data() } as Order));
+export async function getOrdersByCustomer(): Promise<Order[]> {
+  const res = await fetch('/api/orders/mine', { credentials: 'include' });
+  const json = await parseJsonOrThrow(res);
+  return json.orders;
+}
+
+export async function getAllOrders(): Promise<Order[]> {
+  const res = await fetch('/api/admin/orders', { credentials: 'include' });
+  const json = await parseJsonOrThrow(res);
+  return json.orders;
 }

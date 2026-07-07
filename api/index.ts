@@ -1,21 +1,60 @@
 import express from "express";
+import cors from "cors";
 import { GoogleGenAI, Type } from "@google/genai";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
+import { initializeApp as initAdminApp, cert, getApps as getAdminApps } from "firebase-admin/app";
+import { getFirestore as getAdminFirestore, FieldValue, type Firestore as AdminFirestore } from "firebase-admin/firestore";
 import { initializeApp } from "firebase/app";
-import { getFirestore, collection, query, where, getDocs, addDoc, doc, setDoc, limit } from "firebase/firestore";
+import { getFirestore, collection, query, where, getDocs, addDoc, limit } from "firebase/firestore";
 
 dotenv.config();
 dotenv.config({ path: ".env.local" });
 
 // ── Config ─────────────────────────────────────────────────────────────────────
-const JWT_SECRET = process.env.JWT_SECRET ?? "gt-dev-secret-change-in-prod";
+const JWT_SECRET = process.env.JWT_SECRET;
+if (!JWT_SECRET) {
+  throw new Error("JWT_SECRET environment variable must be set (no insecure default allowed).");
+}
 const SESSION_MAX_AGE = 7 * 24 * 60 * 60 * 1000;
 const CRED_MAX_AGE = 365 * 24 * 60 * 60 * 1000;
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL ?? process.env.VITE_ADMIN_EMAIL ?? "mail.galaxatech@gmail.com";
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD ?? "admin";
+// Empty (not a guessable default) when unset — the fallback-password branch below then never matches.
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD ?? "";
+if (!ADMIN_PASSWORD) console.warn("[Auth] ADMIN_PASSWORD is not set — admin login fallback is disabled until it is.");
+
+// ── Privileged Firestore access (server-only, bypasses security rules) ─────────
+let adminDb: AdminFirestore | null = null;
+let adminInitError: string | null = null;
+function getAdminDb(): AdminFirestore | null {
+  if (adminDb) return adminDb;
+  if (adminInitError) return null;
+  const raw = process.env.FIREBASE_SERVICE_ACCOUNT_KEY;
+  if (!raw) {
+    adminInitError = "FIREBASE_SERVICE_ACCOUNT_KEY is not set";
+    console.warn(`[Firebase Admin] ${adminInitError} — order/product admin endpoints will return 500 until it is.`);
+    return null;
+  }
+  try {
+    const serviceAccount = JSON.parse(raw);
+    if (!getAdminApps().length) {
+      initAdminApp({ credential: cert(serviceAccount) });
+    }
+    adminDb = getAdminFirestore();
+    return adminDb;
+  } catch (e: any) {
+    adminInitError = `Failed to initialize firebase-admin: ${e?.message}`;
+    console.error(`[Firebase Admin] ${adminInitError}`);
+    return null;
+  }
+}
+function requireAdminDb(res: express.Response): AdminFirestore | null {
+  const d = getAdminDb();
+  if (!d) res.status(500).json({ error: "Server storage is not configured (missing FIREBASE_SERVICE_ACCOUNT_KEY)." });
+  return d;
+}
 
 // Initialize Firebase for backend Firestore usage
 const firebaseConfig = {
@@ -57,9 +96,28 @@ if (db) {
 
 // ── Express app ────────────────────────────────────────────────────────────────
 const app = express();
+
+// Allow the standalone Galaxa Store project (different origin/port) to call this
+// API with credentials (cookies) included.
+const STORE_ORIGINS = [
+  process.env.STORE_DEV_ORIGIN ?? "http://localhost:5174",
+  process.env.STORE_PROD_ORIGIN,
+].filter((origin): origin is string => Boolean(origin));
+
+app.use(cors({
+  origin: STORE_ORIGINS,
+  credentials: true,
+}));
+
 app.use(express.json());
 app.use(cookieParser());
 
+// NOTE: `sameSite: "lax"` below works for the current cross-origin (same-site,
+// different port) setup between the agency and store dev servers. If the store
+// ends up on a fully separate top-level domain (not a subdomain of galaxatech.com),
+// this will need to become `sameSite: "none"` (which requires `secure: true` / HTTPS
+// everywhere) for the cookie to still be sent on cross-site fetches. Revisit once
+// the final domain is chosen.
 function setSessionCookie(res: express.Response, token: string) {
   res.cookie("gt_session", token, {
     httpOnly: true,
@@ -99,12 +157,22 @@ function requireAdmin(req: express.Request, res: express.Response, next: express
   }
 }
 
+function requireAuth(req: express.Request, res: express.Response, next: express.NextFunction) {
+  const raw = req.cookies?.gt_session;
+  if (!raw) return res.status(401).json({ error: "Not authenticated" });
+  try {
+    const payload = jwt.verify(raw, JWT_SECRET) as { role: string; email: string };
+    (req as any).jwtPayload = payload;
+    next();
+  } catch {
+    res.status(401).json({ error: "Invalid session" });
+  }
+}
+
 // ── Admin Auth ────────────────────────────────────────────────────────────────
 app.post("/api/auth/admin", async (req, res) => {
   const { password } = req.body ?? {};
   if (!password) return res.status(400).json({ error: "Password is required." });
-
-  console.log("[Auth] Admin login attempt. Entered password:", password, "Expected fallback:", ADMIN_PASSWORD);
 
   try {
     let existingHash: string | null = null;
@@ -161,16 +229,13 @@ app.post("/api/auth/admin", async (req, res) => {
     }
 
     // 4. Verify password
-    console.log("[Auth] existingHash used for verification:", existingHash);
     let match = false;
     try {
       match = await bcrypt.compare(password, existingHash);
-      console.log("[Auth] Bcrypt comparison result:", match);
     } catch (err: any) {
       console.error("[Auth] Bcrypt error:", err?.message);
     }
     if (!match) {
-      console.log("[Auth] Checking fallback logic. ADMIN_PASSWORD:", ADMIN_PASSWORD, "Matches entered password:", password === ADMIN_PASSWORD);
       // Fallback: if it matches ADMIN_PASSWORD environment variable / default fallback
       if (ADMIN_PASSWORD && password === ADMIN_PASSWORD) {
         match = true;
@@ -232,13 +297,19 @@ app.post("/api/auth/signup", async (req, res) => {
         role: "customer",
         createdAt: new Date(),
       });
-      await setDoc(doc(db, "customers", username), {
-        username,
-        email: username,
-        displayName: name.trim(),
-        phone: phone?.trim() ?? "",
-        createdAt: new Date(),
-      });
+      // `customers` is locked down in firestore.rules — only the privileged admin SDK can write it.
+      const adb = getAdminDb();
+      if (adb) {
+        await adb.collection("customers").doc(username).set({
+          username,
+          email: username,
+          displayName: name.trim(),
+          phone: phone?.trim() ?? "",
+          createdAt: new Date(),
+        });
+      } else {
+        console.warn("[Auth] FIREBASE_SERVICE_ACCOUNT_KEY not set — skipping customers profile write for", username);
+      }
     } else {
       setCredCookie(res, username, passwordHash);
     }
@@ -453,6 +524,155 @@ app.get("/api/feed", async (_req, res) => {
   return res.json({ source: "fallback_on_error", items: fallback });
 });
 
+// ── Store Orders (privileged — server recomputes pricing, never trusts the client) ──
+app.post("/api/orders", requireAuth, async (req, res) => {
+  const adb = requireAdminDb(res);
+  if (!adb) return;
+  const email = (req as any).jwtPayload.email as string;
+  const { customerName, customerPhone, items, paymentMethod, senderNumber, trxId } = req.body ?? {};
+  if (!customerName?.trim() || !Array.isArray(items) || items.length === 0 || !paymentMethod || !senderNumber?.trim() || !trxId?.trim()) {
+    return res.status(400).json({ error: "Missing required order fields." });
+  }
+  try {
+    const resolvedItems: any[] = [];
+    for (const it of items) {
+      const prodSnap = await adb.collection("products").doc(String(it.productId)).get();
+      if (!prodSnap.exists) return res.status(400).json({ error: `Product ${it.productId} not found.` });
+      const product = prodSnap.data() as any;
+      const plan = (product.plans ?? []).find((p: any) => p.id === it.planId);
+      if (!plan) return res.status(400).json({ error: `Plan ${it.planId} not found on product ${it.productId}.` });
+      const quantity = Math.max(1, Number(it.quantity) || 1);
+      resolvedItems.push({
+        productId: it.productId,
+        productName: product.name,
+        planId: plan.id,
+        planLabel: `${plan.label} · ${plan.durationLabel}`,
+        priceBDT: plan.priceBDT,
+        quantity,
+      });
+    }
+    const totalBDT = resolvedItems.reduce((sum, it) => sum + it.priceBDT * it.quantity, 0);
+    const orderRef = await adb.collection("orders").add({
+      customerUsername: email,
+      customerEmail: email,
+      customerName: String(customerName).trim(),
+      customerPhone: customerPhone ? String(customerPhone).trim() : "",
+      items: resolvedItems,
+      totalBDT,
+      paymentMethod,
+      senderNumber: String(senderNumber).trim(),
+      trxId: String(trxId).trim(),
+      status: "pending_payment",
+      createdAt: FieldValue.serverTimestamp(),
+    });
+    res.json({ ok: true, id: orderRef.id });
+  } catch (e: any) {
+    res.status(500).json({ error: e?.message ?? "Failed to create order." });
+  }
+});
+
+app.get("/api/orders/mine", requireAuth, async (req, res) => {
+  const adb = requireAdminDb(res);
+  if (!adb) return;
+  const email = (req as any).jwtPayload.email as string;
+  try {
+    const snap = await adb.collection("orders").where("customerUsername", "==", email).get();
+    res.json({ orders: snap.docs.map((d) => ({ id: d.id, ...d.data() })) });
+  } catch (e: any) {
+    res.status(500).json({ error: e?.message ?? "Failed to load orders." });
+  }
+});
+
+app.get("/api/admin/orders", requireAdmin, async (_req, res) => {
+  const adb = requireAdminDb(res);
+  if (!adb) return;
+  try {
+    const snap = await adb.collection("orders").orderBy("createdAt", "desc").get();
+    res.json({ orders: snap.docs.map((d) => ({ id: d.id, ...d.data() })) });
+  } catch (e: any) {
+    res.status(500).json({ error: e?.message ?? "Failed to load orders." });
+  }
+});
+
+app.patch("/api/admin/orders/:id/status", requireAdmin, async (req, res) => {
+  const adb = requireAdminDb(res);
+  if (!adb) return;
+  const { status, adminNote } = req.body ?? {};
+  const VALID_STATUSES = ["pending_payment", "verified", "fulfilled", "rejected", "cancelled"];
+  if (!VALID_STATUSES.includes(status)) return res.status(400).json({ error: "Invalid status." });
+  try {
+    const update: Record<string, unknown> = { status };
+    if (adminNote !== undefined) update.adminNote = adminNote;
+    if (status === "verified") update.verifiedAt = FieldValue.serverTimestamp();
+    await adb.collection("orders").doc(req.params.id).update(update);
+    res.json({ ok: true });
+  } catch (e: any) {
+    res.status(500).json({ error: e?.message ?? "Failed to update order." });
+  }
+});
+
+app.patch("/api/admin/orders/:id/credentials", requireAdmin, async (req, res) => {
+  const adb = requireAdminDb(res);
+  if (!adb) return;
+  const { credentials } = req.body ?? {};
+  if (!Array.isArray(credentials) || credentials.length === 0) return res.status(400).json({ error: "Credentials required." });
+  try {
+    await adb.collection("orders").doc(req.params.id).update({
+      deliveredCredentials: credentials,
+      status: "fulfilled",
+      fulfilledAt: FieldValue.serverTimestamp(),
+    });
+    res.json({ ok: true });
+  } catch (e: any) {
+    res.status(500).json({ error: e?.message ?? "Failed to deliver credentials." });
+  }
+});
+
+// ── Store Products: admin writes (reads stay public/client-side) ───────────────
+app.post("/api/admin/products", requireAdmin, async (req, res) => {
+  const adb = requireAdminDb(res);
+  if (!adb) return;
+  try {
+    const ref = await adb.collection("products").add({ ...req.body, createdAt: FieldValue.serverTimestamp() });
+    res.json({ ok: true, id: ref.id });
+  } catch (e: any) {
+    res.status(500).json({ error: e?.message ?? "Failed to create product." });
+  }
+});
+
+app.patch("/api/admin/products/:id", requireAdmin, async (req, res) => {
+  const adb = requireAdminDb(res);
+  if (!adb) return;
+  try {
+    await adb.collection("products").doc(req.params.id).update({ ...req.body, updatedAt: FieldValue.serverTimestamp() });
+    res.json({ ok: true });
+  } catch (e: any) {
+    res.status(500).json({ error: e?.message ?? "Failed to update product." });
+  }
+});
+
+app.delete("/api/admin/products/:id", requireAdmin, async (req, res) => {
+  const adb = requireAdminDb(res);
+  if (!adb) return;
+  try {
+    await adb.collection("products").doc(req.params.id).delete();
+    res.json({ ok: true });
+  } catch (e: any) {
+    res.status(500).json({ error: e?.message ?? "Failed to delete product." });
+  }
+});
+
+app.patch("/api/admin/products/:id/active", requireAdmin, async (req, res) => {
+  const adb = requireAdminDb(res);
+  if (!adb) return;
+  try {
+    await adb.collection("products").doc(req.params.id).update({ isActive: !!req.body?.isActive, updatedAt: FieldValue.serverTimestamp() });
+    res.json({ ok: true });
+  } catch (e: any) {
+    res.status(500).json({ error: e?.message ?? "Failed to update product." });
+  }
+});
+
 app.post("/api/newsletter/subscribe", (req, res) => {
   const { email } = req.body;
   if (!email || !email.includes("@")) return res.status(400).json({ error: "Invalid email address" });
@@ -463,8 +683,9 @@ app.post("/api/newsletter/subscribe", (req, res) => {
 app.get("/api/newsletter/count", (_req, res) => res.json({ count: localOfflineQueue.length }));
 
 // ── TEMP: one-time store product seed (safe to re-run, idempotent by fixed doc id) ──
-app.post("/api/dev/seed-products", async (_req, res) => {
-  if (!db) return res.status(500).json({ error: "Firestore not initialized" });
+app.post("/api/dev/seed-products", requireAdmin, async (_req, res) => {
+  const adb = requireAdminDb(res);
+  if (!adb) return;
   const PRODUCTS = [
     { id: "prod-netflix", name: "Netflix Premium", slug: "netflix-premium", category: "Streaming", isFeatured: true,
       shortDescription: "Watch on any screen — mobile, laptop, or TV — in Full HD or 4K.",
@@ -508,7 +729,7 @@ app.post("/api/dev/seed-products", async (_req, res) => {
   const results: string[] = [];
   for (const p of PRODUCTS) {
     const { id, ...rest } = p;
-    await setDoc(doc(db, "products", id), { ...rest, imageUrl: "", isActive: true, isFeatured: !!(p as any).isFeatured, createdAt: new Date() });
+    await adb.collection("products").doc(id).set({ ...rest, imageUrl: "", isActive: true, isFeatured: !!(p as any).isFeatured, createdAt: new Date() });
     results.push(id);
   }
   res.json({ ok: true, seeded: results });

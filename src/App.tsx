@@ -1,7 +1,7 @@
 import { useEffect, useState, ReactNode } from 'react';
 import { Routes, Route, useLocation, useNavigate, Navigate } from 'react-router-dom';
 import { Loader2, ChevronUp, MessageCircle, Link } from 'lucide-react';
-import { motion, AnimatePresence } from 'motion/react';
+import { motion, AnimatePresence, MotionConfig } from 'motion/react';
 import Navbar from './components/Navbar';
 import HomeView from './components/HomeView';
 import ServicesView from './components/ServicesView';
@@ -304,7 +304,9 @@ function AppInner() {
 export default function App() {
   return (
     <AuthProvider>
-      <AppInner />
+      <MotionConfig reducedMotion="user">
+        <AppInner />
+      </MotionConfig>
     </AuthProvider>
   );
 }

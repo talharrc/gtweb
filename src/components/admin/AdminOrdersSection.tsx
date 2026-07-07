@@ -1,9 +1,7 @@
 import { useState, useEffect, FormEvent } from 'react';
-import { collection, onSnapshot, serverTimestamp } from 'firebase/firestore';
 import { Loader2, Plus, Trash2, Copy, Check } from 'lucide-react';
-import { db } from '../../lib/firebase';
 import { Order, OrderStatus, DeliveredCredential } from '../../types';
-import { updateOrderStatus, deliverCredentials } from '../../services/orderService';
+import { updateOrderStatus, deliverCredentials, getAllOrders } from '../../services/orderService';
 import { useAuth } from '../../context/AuthContext';
 import { mockDb } from '../../lib/mockData';
 import EmptyState from '../shared/EmptyState';
@@ -32,42 +30,23 @@ export default function AdminOrdersSection() {
   const [credRows, setCredRows] = useState<DeliveredCredential[]>([{ label: '', value: '' }]);
   const [busyId, setBusyId] = useState<string | null>(null);
 
-  useEffect(() => {
+  const reload = async () => {
     if (isDemo) {
       setOrders(mockDb.getOrders());
       setLoading(false);
       return;
     }
-
-    let active = true;
-    const fallbackTimer = setTimeout(() => {
-      if (active) {
-        console.warn('Firestore load timed out in AdminOrdersSection, falling back to Demo Mode');
-        setIsDemo(true);
-        setLoading(false);
-      }
-    }, 2500);
-
-    const handleError = (error: any) => {
-      console.warn('Firestore error in AdminOrdersSection, falling back to Demo Mode:', error);
-      if (active) {
-        setIsDemo(true);
-        setLoading(false);
-      }
-    };
-
-    const unsub = onSnapshot(collection(db, 'orders'), s => {
-      if (!active) return;
-      setOrders(s.docs.map(d => ({ id: d.id, ...d.data() } as Order)));
+    try {
+      setOrders(await getAllOrders());
+    } catch (error) {
+      console.warn('Failed to load orders in AdminOrdersSection, falling back to Demo Mode:', error);
+      setIsDemo(true);
+    } finally {
       setLoading(false);
-    }, handleError);
+    }
+  };
 
-    return () => {
-      active = false;
-      clearTimeout(fallbackTimer);
-      unsub();
-    };
-  }, [isDemo]);
+  useEffect(() => { reload(); }, [isDemo]);
 
   const applyStatusUpdate = async (id: string, status: OrderStatus, extra?: Partial<Order>) => {
     setBusyId(id);
@@ -77,10 +56,8 @@ export default function AdminOrdersSection() {
         mockDb.saveOrders(updated);
         setOrders(updated);
       } else {
-        await updateOrderStatus(id, status, {
-          adminNote: extra?.adminNote,
-          verifiedAt: status === 'verified' ? serverTimestamp() : undefined,
-        });
+        await updateOrderStatus(id, status, { adminNote: extra?.adminNote });
+        await reload();
       }
     } finally { setBusyId(null); }
   };
@@ -113,6 +90,7 @@ export default function AdminOrdersSection() {
         setOrders(updated);
       } else {
         await deliverCredentials(fulfillingId, rows);
+        await reload();
       }
       setFulfillingId(null);
     } finally { setBusyId(null); }

@@ -1,14 +1,14 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { collection, onSnapshot, query, where } from 'firebase/firestore';
 import { ShoppingBag, Package, Loader2 } from 'lucide-react';
-import { db } from '../../lib/firebase';
 import { Order } from '../../types';
 import { useAuth } from '../../context/AuthContext';
 import { mockDb } from '../../lib/mockData';
+import { getOrdersByCustomer } from '../../services/orderService';
 import HubLayout, { NavItem } from '../shared/HubLayout';
 import StatusBadge from '../shared/StatusBadge';
 import EmptyState from '../shared/EmptyState';
+
+const STORE_URL = import.meta.env.VITE_STORE_URL ?? 'http://localhost:5174';
 
 const navItems: NavItem[] = [
   { label: 'My Orders', path: 'orders', icon: <Package className="w-4 h-4" /> },
@@ -23,7 +23,6 @@ const STATUS_LABELS: Record<Order['status'], string> = {
 };
 
 export default function CustomerHubView() {
-  const navigate = useNavigate();
   const { email, isDemo, setIsDemo } = useAuth();
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
@@ -36,34 +35,15 @@ export default function CustomerHubView() {
     }
 
     let active = true;
-    const fallbackTimer = setTimeout(() => {
-      if (active) {
-        console.warn('Firestore load timed out in CustomerHubView, falling back to Demo Mode');
-        setIsDemo(true);
-        setLoading(false);
-      }
-    }, 2500);
+    getOrdersByCustomer()
+      .then(fetched => { if (active) setOrders(fetched); })
+      .catch(error => {
+        console.warn('Failed to load orders in CustomerHubView, falling back to Demo Mode:', error);
+        if (active) setIsDemo(true);
+      })
+      .finally(() => { if (active) setLoading(false); });
 
-    const handleError = (error: any) => {
-      console.warn('Firestore error in CustomerHubView, falling back to Demo Mode:', error);
-      if (active) {
-        setIsDemo(true);
-        setLoading(false);
-      }
-    };
-
-    const q = query(collection(db, 'orders'), where('customerUsername', '==', email.toLowerCase()));
-    const unsub = onSnapshot(q, s => {
-      if (!active) return;
-      setOrders(s.docs.map(d => ({ id: d.id, ...d.data() } as Order)));
-      setLoading(false);
-    }, handleError);
-
-    return () => {
-      active = false;
-      clearTimeout(fallbackTimer);
-      unsub();
-    };
+    return () => { active = false; };
   }, [email, isDemo]);
 
   return (
@@ -81,9 +61,9 @@ export default function CustomerHubView() {
           title="No orders yet"
           description="Visit the Store to grab your first subscription plan."
           action={
-            <button onClick={() => navigate('/browse')} className="px-5 py-2.5 rounded-full bg-gradient-to-r from-primary to-secondary text-white text-xs font-bold uppercase tracking-wider transition-all">
+            <a href={STORE_URL} className="px-5 py-2.5 rounded-full bg-gradient-to-r from-primary to-secondary text-white text-xs font-bold uppercase tracking-wider transition-all">
               Go to Store
-            </button>
+            </a>
           }
         />
       ) : (

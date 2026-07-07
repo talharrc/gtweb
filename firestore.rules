@@ -1,8 +1,24 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Auth is handled at the application layer via JWT httpOnly cookies.
-    // Firestore rules are fully open for this internal tool.
+    // Store data is store-sensitive (order PII, delivered account credentials) and is
+    // only ever read/written by the server via firebase-admin (api/index.ts), which
+    // bypasses these rules entirely. Direct client access is denied outright.
+    // Products stay publicly readable since the catalog is meant to be public;
+    // product writes also go through the server only.
+    match /products/{id} {
+      allow read: if true;
+      allow write: if false;
+    }
+    match /orders/{id} {
+      allow read, write: if false;
+    }
+    match /customers/{id} {
+      allow read, write: if false;
+    }
+
+    // Everything else (agency hub: projects, users, credentials, etc.) is unchanged
+    // for now — same open-rules issue, but a separate system out of this scope.
     match /{document=**} {
       allow read, write: if true;
     }

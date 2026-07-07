@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
-import { motion, AnimatePresence } from 'motion/react';
+import { motion, AnimatePresence, useScroll, useTransform, useSpring, useReducedMotion, useInView } from 'motion/react';
 import {
   ArrowUpRight, ChevronDown, ChevronLeft, ChevronRight,
   Laptop, Smartphone, TrendingUp, Cpu, Brush, Workflow,
@@ -9,7 +9,7 @@ import {
   Search, Code2, Rocket, Shield, Package, FileText, Mail,
   Zap, Users, CheckCircle, X,
   HelpCircle, Clock, DollarSign, BookOpen, Monitor, PhoneCall,
-  FolderOpen, Lock,
+  FolderOpen, Lock, RefreshCw,
 } from 'lucide-react';
 import { doc, getDoc, collection, addDoc, serverTimestamp, query, where, getCountFromServer } from 'firebase/firestore';
 import { db } from '../lib/firebase';
@@ -29,12 +29,12 @@ interface HomeViewProps {
 const TYPEWRITER_WORDS = ['Website Presence', 'Social Media Engagement', 'Client conversion'];
 
 const SERVICES = [
-  { num: '01', icon: Laptop,         label: 'Web Development',         desc: 'Fast, secure, and scalable websites built for performance and growth.',              anchor: 'web-development',    color: '#FF7A45' },
-  { num: '02', icon: Smartphone,     label: 'App Development',         desc: 'High-performance mobile and web apps tailored to user needs and business goals.',    anchor: 'app-development',    color: '#EC1E8E' },
-  { num: '03', icon: MessageCircle,  label: 'Social Media & Content',  desc: 'Engaging content and social strategies that build brand presence and loyalty.',      anchor: 'social-media',       color: '#5B23A8' },
-  { num: '04', icon: Cpu,            label: 'AI & Automation',         desc: 'Intelligent automation that streamlines workflows and boosts productivity.',          anchor: 'ai-automation',      color: '#EC1E8E' },
-  { num: '05', icon: Brush,          label: 'Brand Identity & Design', desc: 'Distinctive visuals and brand experiences that leave a lasting impression.',         anchor: 'brand-identity',     color: '#FF7A45' },
-  { num: '06', icon: Workflow,       label: 'Systems Consulting',      desc: 'Strategic guidance and system architectures that drive sustainable growth.',         anchor: 'systems-consulting', color: '#5B23A8' },
+  { num: '01', icon: Laptop,         label: 'Web Development',         desc: 'Fast, secure, and scalable websites built for performance and growth.',              anchor: 'web-development',    color: '#fedd00' },
+  { num: '02', icon: Smartphone,     label: 'App Development',         desc: 'High-performance mobile and web apps tailored to user needs and business goals.',    anchor: 'app-development',    color: '#f3f2f2' },
+  { num: '03', icon: MessageCircle,  label: 'Social Media & Content',  desc: 'Engaging content and social strategies that build brand presence and loyalty.',      anchor: 'social-media',       color: '#fedd00' },
+  { num: '04', icon: Cpu,            label: 'AI & Automation',         desc: 'Intelligent automation that streamlines workflows and boosts productivity.',          anchor: 'ai-automation',      color: '#f3f2f2' },
+  { num: '05', icon: Brush,          label: 'Brand Identity & Design', desc: 'Distinctive visuals and brand experiences that leave a lasting impression.',         anchor: 'brand-identity',     color: '#fedd00' },
+  { num: '06', icon: Workflow,       label: 'Systems Consulting',      desc: 'Strategic guidance and system architectures that drive sustainable growth.',         anchor: 'systems-consulting', color: '#f3f2f2' },
 ];
 
 const PROCESS_STEPS = [
@@ -45,9 +45,9 @@ const PROCESS_STEPS = [
 ];
 
 const PROJECTS = [
-  { slug: 'harmans-trading',  num: '01', name: 'Harmans Trading',  type: 'Trading Platform',      color: '#FF7A45', bg: 'linear-gradient(135deg,rgba(255,122,69,0.28) 0%,rgba(236,30,142,0.25) 60%,rgba(0,0,0,0.6) 100%)' },
-  { slug: 'sunnah-grandeur',  num: '02', name: 'Sunnah Grandeur',  type: 'E-Commerce Platform',   color: '#EC1E8E', bg: 'linear-gradient(135deg,rgba(236,30,142,0.3) 0%,rgba(91,35,168,0.25) 60%,rgba(0,0,0,0.6) 100%)' },
-  { slug: 'salfas-bazar',     num: '03', name: 'Salfas Bazar',     type: 'Organic Food Platform', color: '#5B23A8', bg: 'linear-gradient(135deg,rgba(91,35,168,0.3) 0%,rgba(236,30,142,0.2) 60%,rgba(0,0,0,0.6) 100%)' },
+  { slug: 'harmans-trading',  num: '01', name: 'Harmans Trading',  type: 'Trading Platform',      color: '#fedd00', bg: 'linear-gradient(135deg,rgba(254,221,0,0.25) 0%,rgba(120,40,100,0.2) 60%,rgba(13,0,10,0.85) 100%)' },
+  { slug: 'sunnah-grandeur',  num: '02', name: 'Sunnah Grandeur',  type: 'E-Commerce Platform',   color: '#782864', bg: 'linear-gradient(135deg,rgba(120,40,100,0.3) 0%,rgba(13,0,10,0.4) 60%,rgba(13,0,10,0.85) 100%)' },
+  { slug: 'salfas-bazar',     num: '03', name: 'Salfas Bazar',     type: 'Organic Food Platform', color: '#fedd00', bg: 'linear-gradient(135deg,rgba(254,221,0,0.20) 0%,rgba(120,40,100,0.15) 60%,rgba(13,0,10,0.85) 100%)' },
 ];
 
 const FAQS = [
@@ -98,7 +98,6 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
 
   const [wordIndex, setWordIndex] = useState(0);
   const [buildMins, setBuildMins] = useState(42);
-  const [activeBuildersCount, setActiveBuildersCount] = useState<number | null>(null);
   const [activeFAQ, setActiveFAQ] = useState<number | null>(0);
   const [activeIndex, setActiveIndex] = useState(0);
   const [hoveredCarouselIndex, setHoveredCarouselIndex] = useState<number | null>(null);
@@ -117,23 +116,56 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
   const autoScrollTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const carouselContainerRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    let cancelled = false;
-    (async () => {
-      try {
-        if (isDemo) {
-          const count = mockDb.getGbpApps().filter(a => a.status === 'approved').length;
-          if (!cancelled) setActiveBuildersCount(count);
-        } else {
-          const snap = await getCountFromServer(query(collection(db, 'gbp_applications'), where('status', '==', 'accepted')));
-          if (!cancelled) setActiveBuildersCount(snap.data().count);
-        }
-      } catch {
-        // leave as null — badge is simply omitted
-      }
-    })();
-    return () => { cancelled = true; };
-  }, [isDemo]);
+  // Rebrand refs and motion values
+  const heroRef = useRef<HTMLDivElement>(null);
+  const globalPresenceRef = useRef<HTMLDivElement>(null);
+  const processRef = useRef<HTMLDivElement>(null);
+  const portfolioSectionRef = useRef<HTMLDivElement>(null);
+
+  const shouldReduceMotion = useReducedMotion();
+
+  // Hero Parallax Scroll
+  const { scrollYProgress: heroScroll } = useScroll({
+    target: heroRef,
+    offset: ["start start", "end start"]
+  });
+
+  const blob1Range = isMobile ? [0, 45] : [0, 90];
+  const blob2Range = isMobile ? [0, -30] : [0, -60];
+  const yBlob1Transform = useTransform(heroScroll, [0, 1], blob1Range);
+  const yBlob2Transform = useTransform(heroScroll, [0, 1], blob2Range);
+  const yBlob1Spring = useSpring(yBlob1Transform, { stiffness: 100, damping: 30 });
+  const yBlob2Spring = useSpring(yBlob2Transform, { stiffness: 100, damping: 30 });
+
+  const contentOpacityTransform = useTransform(heroScroll, [0, 0.7], [1, 0]);
+  const contentYTransform = useTransform(heroScroll, [0, 0.7], [0, isMobile ? -25 : -50]);
+  const contentOpacitySpring = useSpring(contentOpacityTransform, { stiffness: 100, damping: 30 });
+  const contentYSpring = useSpring(contentYTransform, { stiffness: 100, damping: 30 });
+
+  const yBlob1 = shouldReduceMotion ? 0 : yBlob1Spring;
+  const yBlob2 = shouldReduceMotion ? 0 : yBlob2Spring;
+  const contentY = shouldReduceMotion ? 0 : contentYSpring;
+  const contentOpacity = shouldReduceMotion ? 1 : contentOpacitySpring;
+
+  // Global Presence Parallax
+  const { scrollYProgress: globalPresenceScroll } = useScroll({
+    target: globalPresenceRef,
+    offset: ["start end", "end start"]
+  });
+  const y6PlusTransform = useTransform(globalPresenceScroll, [0, 1], [isMobile ? 15 : 30, isMobile ? -15 : -30]);
+  const y6PlusSpring = useSpring(y6PlusTransform, { stiffness: 100, damping: 30 });
+  const y6Plus = shouldReduceMotion ? 0 : y6PlusSpring;
+
+  // Process scaleX Transform
+  const { scrollYProgress: processScroll } = useScroll({
+    target: processRef,
+    offset: ["start end", "end start"]
+  });
+  const processScaleX = useSpring(processScroll, { stiffness: 100, damping: 30 });
+
+  // Portfolio In View auto-open for Mobile
+  const isPortfolioInView = useInView(portfolioSectionRef, { amount: 0.55, once: false });
+  const isFolderOpen = folderHovered || (isMobile && isPortfolioInView);
 
   useEffect(() => {
     const m = new Date().getMinutes();
@@ -260,7 +292,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
       `}</style>
 
       {/* ── Hero ─────────────────────────────────────────────────────────────── */}
-      <section className="relative min-h-[82vh] sm:min-h-[92vh] flex flex-col items-center justify-center pt-28 pb-4 sm:pb-12 overflow-hidden">
+      <section ref={heroRef} className="relative min-h-[82vh] sm:min-h-[92vh] flex flex-col items-center justify-center pt-28 pb-4 sm:pb-12 overflow-hidden">
         <div className="absolute inset-0 z-0 select-none overflow-hidden bg-[#0B0710]">
           <div
             className="w-full h-full opacity-90 pointer-events-none"
@@ -275,15 +307,15 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
           <div className="absolute inset-0 bg-[#0B0710]/20 pointer-events-none" />
           <div className="absolute inset-0 bg-gradient-to-b from-[#0B0710]/50 via-transparent to-transparent pointer-events-none" />
           <div className="absolute inset-x-0 bottom-0 h-2/5 bg-gradient-to-t from-[#0B0710] via-[#0B0710]/40 to-transparent pointer-events-none" />
-          {/* Atmospheric pink/coral blob glows */}
-          <div className="absolute top-1/3 left-1/4 -translate-y-1/2 -translate-x-1/2 w-[560px] h-[560px] bg-[#EC1E8E]/12 blur-[130px] rounded-full pointer-events-none" />
-          <div className="absolute top-1/2 right-1/4 -translate-y-1/2 translate-x-1/2 w-[420px] h-[420px] bg-[#FF7A45]/10 blur-[110px] rounded-full pointer-events-none" />
-          <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-[#5B23A8]/12 blur-[100px] rounded-full pointer-events-none" />
+          {/* Atmospheric brand/paper/plum blob glows */}
+          <motion.div style={{ y: yBlob1 }} className="absolute top-1/3 left-1/4 -translate-y-1/2 -translate-x-1/2 w-[560px] h-[560px] bg-[#EC1E8E]/10 blur-[130px] rounded-full pointer-events-none" />
+          <motion.div style={{ y: yBlob2 }} className="absolute top-1/2 right-1/4 -translate-y-1/2 translate-x-1/2 w-[420px] h-[420px] bg-[#FF7A45]/10 blur-[110px] rounded-full pointer-events-none" />
+          <motion.div style={{ y: yBlob1 }} className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-[#5B23A8]/12 blur-[100px] rounded-full pointer-events-none" />
           {/* Diagonal spotlight beam */}
           <div className="absolute top-0 right-0 w-[45vw] h-full bg-gradient-to-bl from-white/[0.02] via-transparent to-transparent pointer-events-none" style={{ clipPath: 'polygon(100% 0, 30% 0, 100% 100%)' }} />
         </div>
 
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 text-center relative z-10 pt-8 sm:pt-12">
+        <motion.div style={{ y: contentY, opacity: contentOpacity }} className="max-w-5xl mx-auto px-4 sm:px-6 text-center relative z-10 pt-8 sm:pt-12">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, ease: [0.16,1,0.3,1] }}>
             <div className="eyebrow-badge rounded-full px-4 sm:px-5 py-2 sm:py-2.5 mb-12 border border-red-500/20 shadow-[0_0_15px_rgba(239,68,68,0.1)] max-w-[92vw]">
               <span className="w-2 h-2 rounded-full bg-red-500 dot-pulse-glow flex-shrink-0" />
@@ -294,25 +326,44 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
               </span>
             </div>
           </motion.div>
-          <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.1, ease: [0.16,1,0.3,1] }} className="font-display text-[2rem] sm:text-[3.25rem] md:text-[5.5rem] font-extrabold tracking-[-0.03em] text-white mb-4 leading-[1.06] drop-shadow-[0_4px_24px_rgba(0,0,0,0.8)]">
-            Assure your brand's <br className="hidden md:block" />
-            <span className="font-serif italic font-semibold typewriter-container block min-h-[1.2em] mt-3 pb-1 overflow-hidden" style={{ filter: 'drop-shadow(0 0 18px rgba(236,30,142,0.55))' }}>
+          <h1 className="display-poster text-depth-dark text-[2.4rem] sm:text-[3.6rem] md:text-[5.8rem] mb-4" style={{ fontSize: 'clamp(2.6rem, 8vw, 6.5rem)' }}>
+            {["Assure", "your", "brand's"].map((word, i) => (
+              <span key={i} className="inline-block overflow-hidden mr-[0.25em] last:mr-0">
+                <motion.span
+                  initial={shouldReduceMotion ? { y: 0 } : { y: '110%' }}
+                  animate={{ y: 0 }}
+                  transition={{ duration: 0.65, delay: 0.1 + i * 0.04, ease: [0.16, 1, 0.3, 1] }}
+                  className="inline-block"
+                >
+                  {word}
+                </motion.span>
+              </span>
+            ))}
+            <br className="hidden md:block" />
+            <span className="display-poster typewriter-container block min-h-[1.2em] mt-3 pb-1 overflow-hidden text-[1.4rem] sm:text-[2.8rem] md:text-[4.5rem] whitespace-nowrap" style={{ filter: 'drop-shadow(0 8px 30px rgba(236,30,142,0.25))' }}>
               <AnimatePresence mode="wait">
-                <motion.span key={wordIndex} initial={{ y: 35, opacity: 0, filter: 'blur(5px)' }} animate={{ y: 0, opacity: 1, filter: 'blur(0px)' }} exit={{ y: -35, opacity: 0, filter: 'blur(5px)' }} transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }} className="inline-block text-gradient">
+                <motion.span
+                  key={wordIndex}
+                  initial={shouldReduceMotion ? { opacity: 1, y: 0 } : { y: 35, opacity: 0, filter: 'blur(5px)' }}
+                  animate={{ y: 0, opacity: 1, filter: 'blur(0px)' }}
+                  exit={shouldReduceMotion ? { opacity: 1, y: 0 } : { y: -35, opacity: 0, filter: 'blur(5px)' }}
+                  transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
+                  className="inline-block text-gradient"
+                >
                   {TYPEWRITER_WORDS[wordIndex]}
                 </motion.span>
               </AnimatePresence>
             </span>
-          </motion.h1>
+          </h1>
           <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.2, ease: [0.16,1,0.3,1] }} className="text-base sm:text-lg text-white/70 max-w-2xl mx-auto mb-10 leading-relaxed font-sans">
             Tell us about your business in 5 minutes — we'll map out exactly how to grow your digital presence.
           </motion.p>
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.3, ease: [0.16,1,0.3,1] }} className="flex flex-col sm:flex-row items-center justify-center gap-3 px-4 sm:px-0">
             <button
               onClick={() => navigate('/audit')}
-              className="group flex items-center gap-4 text-white hover:text-white font-bold py-3.5 px-8 rounded-full transition-all duration-500 cursor-pointer hover:scale-[1.03] active:scale-[0.98] w-full sm:w-auto justify-center shadow-xl glass-card-premium spotlight-sweep border border-white/10"
+              className="group flex items-center gap-4 py-3.5 px-8 rounded-full transition-all duration-300 cursor-pointer hover:scale-[1.03] active:scale-[0.98] w-full sm:w-auto justify-center shadow-xl bg-gradient-to-r from-primary to-secondary text-white"
             >
-              <span className="w-9 h-9 primary-gradient text-white rounded-full flex items-center justify-center group-hover:rotate-45 transition-transform duration-500 flex-shrink-0">
+              <span className="w-9 h-9 bg-white/10 text-white rounded-full flex items-center justify-center group-hover:rotate-45 transition-transform duration-500 flex-shrink-0">
                 <ArrowUpRight className="w-4.5 h-4.5" />
               </span>
               <span className="text-sm font-semibold tracking-wider uppercase font-mono">Book an Audit</span>
@@ -329,30 +380,30 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
           {/* Stat proof bar */}
           <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.45, ease: [0.16,1,0.3,1] }} className="flex items-center justify-center gap-4 sm:gap-8 md:gap-12 mt-8 sm:mt-10">
             <div className="text-center">
-              <span className="block text-xl sm:text-2xl md:text-3xl font-bold text-white font-display tracking-tight">
+              <span className="block text-xl sm:text-2xl md:text-3xl font-bold text-primary font-display tracking-tight">
                 <Counter value={50} suffix="+" />
               </span>
               <span className="block text-[10px] font-mono tracking-[0.2em] text-white/40 uppercase mt-1">Projects</span>
             </div>
             <div className="w-px h-8 bg-white/10 flex-shrink-0" />
             <div className="text-center">
-              <span className="block text-xl sm:text-2xl md:text-3xl font-bold text-white font-display tracking-tight">
+              <span className="block text-xl sm:text-2xl md:text-3xl font-bold text-primary font-display tracking-tight">
                 <Counter value={12} suffix="M+" />
               </span>
               <span className="block text-[10px] font-mono tracking-[0.2em] text-white/40 uppercase mt-1">Client Revenue</span>
             </div>
             <div className="w-px h-8 bg-white/10 flex-shrink-0" />
             <div className="text-center">
-              <span className="block text-xl sm:text-2xl md:text-3xl font-bold text-white font-display tracking-tight">
+              <span className="block text-xl sm:text-2xl md:text-3xl font-bold text-primary font-display tracking-tight">
                 <Counter value={99.9} decimals={1} suffix="%" />
               </span>
               <span className="block text-[10px] font-mono tracking-[0.2em] text-white/40 uppercase mt-1">System Uptime</span>
             </div>
           </motion.div>
-        </div>
+        </motion.div>
 
         {/* Scroll indicator */}
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1, delay: 0.9 }} className="absolute bottom-6 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-1.5 pointer-events-none">
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1, delay: 0.9 }} className="hidden sm:flex absolute bottom-6 left-1/2 -translate-x-1/2 z-10 flex-col items-center gap-1.5 pointer-events-none">
           <span className="text-[9px] font-mono tracking-[0.22em] text-white/20 uppercase">Scroll</span>
           <motion.div animate={{ y: [0, 5, 0] }} transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}>
             <ChevronDown className="w-3.5 h-3.5 text-white/20" />
@@ -361,28 +412,33 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
       </section>
 
       {/* ── Global Presence ──────────────────────────────────────────────────── */}
-      <section className="relative py-16 px-6 overflow-hidden" style={{ background: '#100918' }}>
+      <section ref={globalPresenceRef} className="relative py-16 px-6 overflow-hidden" style={{ background: 'var(--void-2)' }}>
         <div className="absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-[#0B0710] to-transparent pointer-events-none z-10" />
         <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-[#0B0710] to-transparent pointer-events-none z-10" />
         {/* Atmospheric blobs */}
-        <div className="absolute top-1/2 right-0 translate-x-1/3 -translate-y-1/2 w-[450px] h-[450px] bg-[#FF7A45]/8 blur-[120px] rounded-full pointer-events-none" />
-        <div className="absolute top-0 left-1/4 -translate-y-1/2 w-[300px] h-[300px] bg-[#EC1E8E]/7 blur-[100px] rounded-full pointer-events-none" />
+        <div className="absolute top-1/2 right-0 translate-x-1/3 -translate-y-1/2 w-[450px] h-[450px] bg-[#EC1E8E]/8 blur-[120px] rounded-full pointer-events-none" />
+        <div className="absolute top-0 left-1/4 -translate-y-1/2 w-[300px] h-[300px] bg-[#5B23A8]/7 blur-[100px] rounded-full pointer-events-none" />
         <div className="max-w-5xl mx-auto relative z-20">
           <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
             {/* Left Content Column */}
             <div className="md:col-span-7 flex flex-col justify-center">
               <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.6 }}>
-                <span className="text-[10px] font-mono text-primary/70 tracking-[0.3em] uppercase block mb-3">00 — Global Reach</span>
+                <span className="text-[10px] font-mono text-primary/75 tracking-[0.3em] uppercase block mb-3">00 — Global Reach</span>
                 <div className="flex items-end justify-between mb-8 gap-6">
                   <div>
-                    <h2 className="text-4xl sm:text-5xl font-black text-white leading-[0.9]" style={{ fontFamily: 'var(--font-display)' }}>
-                      Clients<br />
-                      <span style={{ WebkitTextStroke: '1.5px rgba(236,30,142,0.88)', color: 'transparent' }}>Across</span><br />
-                      <span className="pill-word-coral">Nations.</span>
+                    <h2 className="display-poster text-4xl sm:text-5xl md:text-6xl mb-6">
+                      <span className="block text-white">Clients</span>
+                      <span className="block text-outline-brand my-2" style={{ WebkitTextStroke: '1.5px rgba(236,30,142,0.85)' }}>Across</span>
+                      <span className="pill-word-brand text-white text-2xl sm:text-3xl md:text-4xl mt-2 inline-block" style={{ background: 'linear-gradient(135deg, #EC1E8E, #FF7A45)' }}>Nations.</span>
                     </h2>
                   </div>
                   <div className="flex items-end gap-5">
-                    <div className="text-[60px] sm:text-[80px] font-black leading-none select-none animate-pulse" style={{ color: 'rgba(255,255,255,0.14)', fontFamily: 'var(--font-display)' }}>6+</div>
+                    <motion.div
+                      style={{ y: y6Plus, color: 'rgba(236, 30, 142, 0.14)', fontFamily: 'var(--font-condensed)' }}
+                      className="text-[60px] sm:text-[80px] font-black leading-none select-none display-poster animate-pulse"
+                    >
+                      6+
+                    </motion.div>
                     <p className="text-white/55 text-xs max-w-[130px] leading-relaxed pb-1 border-l border-white/15 pl-4">Delivering real digital systems across global markets.</p>
                   </div>
                 </div>
@@ -411,7 +467,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
                 </div>
 
                 <div className="flex items-center gap-3 mt-4">
-                  <Shield className="w-5 h-5 text-primary/50 flex-shrink-0" />
+                  <Shield className="w-5 h-5 text-primary/55 flex-shrink-0" />
                   <span className="text-white/40 text-xs sm:text-sm">Trusted by businesses worldwide to drive growth and innovation.</span>
                 </div>
               </motion.div>
@@ -435,19 +491,17 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
 
       {/* ── Why Choose Us ────────────────────────────────────────────────────── */}
       <section className="py-16 px-6 relative overflow-hidden" style={{ background: 'linear-gradient(to bottom, #0B0710 0%, #100918 50%, #0B0710 100%)' }}>
-        {/* Atmospheric blobs */}
-        <div className="absolute top-0 left-0 w-[500px] h-[400px] bg-[#EC1E8E]/7 blur-[140px] rounded-full pointer-events-none" />
-        <div className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-[#FF7A45]/6 blur-[120px] rounded-full pointer-events-none" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] bg-[#5B23A8]/10 blur-[150px] rounded-full pointer-events-none" />
+        <div className="absolute top-0 left-0 w-[300px] h-[300px] bg-[#EC1E8E]/8 blur-[120px] rounded-full pointer-events-none" />
+        <div className="absolute bottom-0 right-0 w-[280px] h-[280px] bg-[#FF7A45]/7 blur-[110px] rounded-full pointer-events-none" />
         <div className="max-w-7xl mx-auto relative z-10">
           <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-12 gap-6">
             <motion.div initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, amount: 0.3 }} transition={{ duration: 0.7 }} className="relative">
-              {/* Dotted grid accent */}
-              <div className="absolute -right-8 -top-4 w-20 h-20 dotted-grid opacity-35 rounded-lg" />
-              <span className="text-[10px] font-mono text-primary/70 tracking-[0.3em] uppercase block mb-3">01 — Why GalaxaTech</span>
-              <h2 className="text-4xl sm:text-5xl font-black text-white leading-[0.9]" style={{ fontFamily: 'var(--font-display)' }}>
-                Why<br />
-                <span style={{ WebkitTextStroke: '1.5px rgba(236,30,142,0.85)', color: 'transparent' }}>Choose</span><br />
-                <span className="pill-word">Us.</span>
+              <span className="text-[10px] font-mono text-primary/70 tracking-[0.3em] uppercase block mb-3">01 — Why Choose Us</span>
+              <h2 className="display-poster text-4xl sm:text-5xl md:text-6xl mb-6">
+                <span className="block text-white">Why</span>
+                <span className="block my-2 text-white">Choose</span>
+                <span className="pill-word-brand text-white text-2xl sm:text-3xl md:text-4xl mt-2 inline-block animate-pulse" style={{ background: 'linear-gradient(135deg, #EC1E8E, #FF7A45)' }}>Us.</span>
               </h2>
             </motion.div>
             <motion.p initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ duration: 0.7, delay: 0.2 }} className="text-white/55 text-sm leading-relaxed max-w-[200px] sm:text-right border-t border-white/10 pt-4 sm:border-t-0 sm:pt-0 sm:border-l sm:border-white/[0.08] sm:pl-6">
@@ -456,7 +510,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-6 gap-5">
-            {/* Card 1: Systems-First Approach */}
+            {/* Card 1: Faster Delivery */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -468,81 +522,85 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
               <SpotlightCard className="w-full h-full flex flex-col justify-between p-7 rounded-3xl glass-card-premium border border-white/10 group">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2.5">
-                    <div className="w-7 h-7 rounded-full flex items-center justify-center border border-[#EC1E8E]/30 bg-[#EC1E8E]/10 flex-shrink-0">
-                      <span className="text-[9px] font-mono font-bold text-[#EC1E8E]">01</span>
+                    <div className="w-7 h-7 rounded-full flex items-center justify-center bg-primary/8 text-primary border border-primary/15 flex-shrink-0 font-bold font-mono text-[10px]">
+                      01
                     </div>
-                    <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-primary/10 border border-primary/20">
-                      <Workflow className="w-5.5 h-5.5 text-lavender" />
+                    <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-primary/10 border border-primary/20 text-lavender">
+                      <Zap className="w-5.5 h-5.5" />
                     </div>
                   </div>
-                  {/* Interactive Node Graph Infographic */}
-                  <div className="flex items-center gap-3 bg-white/5 rounded-2xl px-4 py-2.5 border border-white/5 relative overflow-hidden select-none">
-                    <div className="flex items-center gap-2 relative z-10">
-                      <div className="w-3 h-3 rounded-full bg-[#FF7A45] animate-pulse" title="Discover" />
-                      <span className="w-6 h-px border-t border-dashed border-white/20 relative">
-                        <span className="absolute top-[-2px] left-0 w-1.5 h-1.5 rounded-full bg-white animate-flow-right" />
-                      </span>
-                      <div className="w-3 h-3 rounded-full bg-[#EC1E8E]" title="Architect" />
-                      <span className="w-6 h-px border-t border-dashed border-white/20 relative">
-                        <span className="absolute top-[-2px] left-0 w-1.5 h-1.5 rounded-full bg-white animate-flow-right" style={{ animationDelay: '0.6s' }} />
-                      </span>
-                      <div className="w-3 h-3 rounded-full bg-[#5B23A8] animate-pulse" title="Optimize" />
+                  {/* Timeline Infographic */}
+                  <div className="flex items-center gap-3 bg-white/[0.02] border border-white/5 px-4 py-2.5 relative overflow-hidden select-none text-[10px] font-mono text-white/55 rounded-2xl shadow-sm">
+                    <div className="flex items-center gap-1.5">
+                      <div className="flex flex-col items-center">
+                        <span className="font-bold text-white">DAY 1</span>
+                        <span className="text-[8px] text-white/40">Setup</span>
+                      </div>
+                      <ArrowUpRight className="w-3 h-3 text-primary" />
+                      <div className="flex flex-col items-center">
+                        <span className="font-bold text-white">DAY 3</span>
+                        <span className="text-[8px] text-white/40">v1 Live</span>
+                      </div>
+                      <ArrowUpRight className="w-3 h-3 text-primary" />
+                      <div className="flex flex-col items-center">
+                        <span className="font-bold text-white">DAY 5</span>
+                        <span className="text-[8px] text-white/40">Launch</span>
+                      </div>
+                    </div>
+                    <div className="w-px h-8 bg-white/15 mx-2" />
+                    <div className="flex flex-col text-[8px] leading-tight">
+                      <span className="line-through text-white/30">Agency: 4–6 wks</span>
+                      <span className="text-primary font-bold bg-white/10 px-1 py-0.5 rounded mt-0.5" style={{ color: '#FF7A45' }}>GalaxaTech: days</span>
                     </div>
                   </div>
                 </div>
                 <div className="mt-6 flex flex-col sm:flex-row gap-6 items-end justify-between">
                   <div className="max-w-md">
-                    <h3 className="text-white font-bold text-base mb-2 font-display">Systems-First Approach</h3>
-                    <p className="text-white/65 text-xs leading-relaxed">We architect before we build — mapping workflows, infrastructure, and dependencies so strategy is never an afterthought.</p>
+                    <h3 className="text-white font-bold text-base mb-2 font-display">Faster Delivery</h3>
+                    <p className="text-white/60 text-xs leading-relaxed">Most projects go live in days, not weeks. Our AI-assisted workflows cut down turnaround times dramatically.</p>
                   </div>
-                  <div className="flex flex-col gap-1 w-full sm:w-auto font-mono text-[9px] text-primary/70 bg-primary/5 rounded-lg p-2.5 border border-primary/10">
-                    <div className="flex justify-between gap-4"><span>Sys.Map:</span><span className="text-white font-semibold">Active</span></div>
-                    <div className="flex justify-between gap-4"><span>Integrity:</span><span className="text-emerald-400 font-semibold">99.8%</span></div>
+                  <div className="flex flex-col gap-1 w-full sm:w-auto font-mono text-[9px] text-white/55 bg-white/[0.02] border border-white/5 p-2.5 rounded-2xl">
+                    <div className="flex justify-between gap-4"><span>Pipeline:</span><span className="text-white font-bold">Active</span></div>
+                    <div className="flex justify-between gap-4"><span>Launch time:</span><span className="text-white font-bold">Days</span></div>
                   </div>
                 </div>
               </SpotlightCard>
             </motion.div>
 
-            {/* Card 2: End-to-End Delivery */}
+            {/* Card 2: More Affordable */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.1 }}
+              transition={{ duration: 0.5, delay: 0.06 }}
               whileHover={{ y: -5, transition: { duration: 0.2 } }}
               className="md:col-span-2 min-h-[220px]"
             >
               <SpotlightCard className="w-full h-full flex flex-col justify-between p-7 rounded-3xl glass-card-premium border border-white/10 group">
                 <div className="flex items-center gap-2.5">
-                  <div className="w-7 h-7 rounded-full flex items-center justify-center border border-[#EC1E8E]/30 bg-[#EC1E8E]/10 flex-shrink-0">
-                    <span className="text-[9px] font-mono font-bold text-[#EC1E8E]">02</span>
+                  <div className="w-7 h-7 rounded-full flex items-center justify-center bg-primary/8 text-primary border border-primary/15 flex-shrink-0 font-bold font-mono text-[10px]">
+                    02
                   </div>
-                  <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-primary/10 border border-primary/20">
-                    <Rocket className="w-5.5 h-5.5 text-lavender" />
+                  <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-primary/10 border border-primary/20 text-lavender">
+                    <DollarSign className="w-5.5 h-5.5" />
                   </div>
                 </div>
                 <div className="mt-4">
-                  <h3 className="text-white font-bold text-base mb-2 font-display">End-to-End</h3>
-                  <p className="text-white/50 text-xs leading-relaxed mb-4">From roadmap planning through production code deployment, our team owns the entire lifecycle.</p>
+                  <h3 className="text-white font-bold text-base mb-2 font-display">More Affordable</h3>
+                  <p className="text-white/60 text-xs leading-relaxed mb-4">AI cuts development hours, so you pay less for a high-performance system.</p>
                   
-                  {/* Multi-Stage Pipeline Infographic */}
-                  <div className="flex flex-col gap-2.5 w-full bg-white/5 rounded-2xl p-3 border border-white/5 font-mono text-[9px] text-white/50">
+                  {/* Cost Compare Infographic */}
+                  <div className="flex flex-col gap-2.5 w-full bg-white/[0.02] border border-white/5 p-3 font-mono text-[9px] text-white/55 rounded-2xl">
                     <div className="flex items-center justify-between">
-                      <span>PLAN</span>
-                      <div className="w-[60%] bg-white/10 rounded-full h-1 overflow-hidden border border-white/5">
-                        <motion.div initial={{ width: 0 }} whileInView={{ width: '100%' }} transition={{ duration: 1, ease: 'easeOut' }} className="h-full bg-gradient-to-r from-[#FF7A45] to-[#EC1E8E] rounded-full" />
+                      <span>TRADITIONAL</span>
+                      <div className="w-[50%] bg-white/5 rounded-full h-1.5 overflow-hidden">
+                        <motion.div initial={{ scaleX: 0 }} whileInView={{ scaleX: 1 }} viewport={{ once: true }} transition={{ duration: 1 }} style={{ originX: 0 }} className="h-full bg-white/40 rounded-full" />
                       </div>
                     </div>
                     <div className="flex items-center justify-between">
-                      <span>CODE</span>
-                      <div className="w-[60%] bg-white/10 rounded-full h-1 overflow-hidden border border-white/5">
-                        <motion.div initial={{ width: 0 }} whileInView={{ width: '85%' }} transition={{ duration: 1.2, delay: 0.3, ease: 'easeOut' }} className="h-full bg-gradient-to-r from-[#EC1E8E] to-[#5B23A8] rounded-full" />
-                      </div>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span>DEPLOY</span>
-                      <div className="w-[60%] bg-white/10 rounded-full h-1 overflow-hidden border border-white/5">
-                        <motion.div initial={{ width: 0 }} whileInView={{ width: '100%' }} transition={{ duration: 1.5, delay: 0.6, ease: 'easeOut' }} className="h-full bg-gradient-to-r from-[#5B23A8] to-emerald-400 rounded-full" />
+                      <span>WITH GALAXA</span>
+                      <div className="w-[50%] bg-white/5 rounded-full h-1.5 overflow-hidden">
+                        <motion.div initial={{ scaleX: 0 }} whileInView={{ scaleX: 0.6 }} viewport={{ once: true }} transition={{ duration: 1, delay: 0.2 }} style={{ originX: 0 }} className="h-full bg-primary rounded-full" />
                       </div>
                     </div>
                   </div>
@@ -550,122 +608,118 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
               </SpotlightCard>
             </motion.div>
 
-            {/* Card 3: Builders Mindset */}
+            {/* Card 3: Unlimited Revisions */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.2 }}
+              transition={{ duration: 0.5, delay: 0.12 }}
               whileHover={{ y: -5, transition: { duration: 0.2 } }}
               className="md:col-span-2 min-h-[220px]"
             >
               <SpotlightCard className="w-full h-full flex flex-col justify-between p-7 rounded-3xl glass-card-premium border border-white/10 group">
                 <div className="flex items-start justify-between">
                   <div className="flex items-center gap-2.5">
-                    <div className="w-7 h-7 rounded-full flex items-center justify-center border border-[#EC1E8E]/30 bg-[#EC1E8E]/10 flex-shrink-0">
-                      <span className="text-[9px] font-mono font-bold text-[#EC1E8E]">03</span>
+                    <div className="w-7 h-7 rounded-full flex items-center justify-center bg-primary/8 text-primary border border-primary/15 flex-shrink-0 font-bold font-mono text-[10px]">
+                      03
                     </div>
-                    <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-primary/10 border border-primary/20">
-                      <Users className="w-5.5 h-5.5 text-lavender" />
+                    <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-primary/10 border border-primary/20 text-lavender">
+                      <RefreshCw className="w-5.5 h-5.5" />
                     </div>
-                  </div>
-                  {!!activeBuildersCount && (
-                    <span className="flex items-center gap-1 text-[8px] font-mono text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20 font-bold uppercase animate-pulse">
-                      <span className="w-1 h-1 rounded-full bg-emerald-400" />
-                      {activeBuildersCount} Live
-                    </span>
-                  )}
-                </div>
-                <div className="mt-4">
-                  <h3 className="text-white font-bold text-base mb-2 font-display">Builders Mindset</h3>
-                  <p className="text-white/50 text-xs leading-relaxed mb-3">We run our own builder community ecosystem — direct production and fast iteration are in our DNA.</p>
-                  
-                  {/* Builder Tag Cloud Infographic */}
-                  <div className="flex items-center gap-1.5 flex-wrap bg-white/5 rounded-2xl p-2.5 border border-white/5 font-mono text-[8px] select-none">
-                    <span className="px-2 py-0.5 rounded bg-[#EC1E8E]/10 text-[#EC1E8E] border border-[#EC1E8E]/20 font-bold">DEV</span>
-                    <span className="px-2 py-0.5 rounded bg-[#FF7A45]/10 text-[#FF7A45] border border-[#FF7A45]/20 font-bold">ARCH</span>
-                    <span className="px-2 py-0.5 rounded bg-[#5B23A8]/10 text-[#5B23A8] border border-[#5B23A8]/20 font-bold">AI</span>
-                    <span className="px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-bold">PROD</span>
-                    {!!activeBuildersCount && <span className="text-white/30 font-bold ml-1">+{activeBuildersCount} Active</span>}
-                  </div>
-                </div>
-              </SpotlightCard>
-            </motion.div>
-
-            {/* Card 4: Global Standards */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.3 }}
-              whileHover={{ y: -5, transition: { duration: 0.2 } }}
-              className="md:col-span-2 min-h-[220px]"
-            >
-              <SpotlightCard className="w-full h-full flex flex-col justify-between p-7 rounded-3xl glass-card-premium border border-white/10 group">
-                <div className="flex items-center gap-2.5">
-                  <div className="w-7 h-7 rounded-full flex items-center justify-center border border-[#EC1E8E]/30 bg-[#EC1E8E]/10 flex-shrink-0">
-                    <span className="text-[9px] font-mono font-bold text-[#EC1E8E]">04</span>
-                  </div>
-                  <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-primary/10 border border-primary/20">
-                    <Globe className="w-5.5 h-5.5 text-lavender" />
                   </div>
                 </div>
                 <div className="mt-4">
-                  <h3 className="text-white font-bold text-base mb-2 font-display">Global Standard</h3>
-                  <p className="text-white/50 text-xs leading-relaxed mb-3">Serving clients across 6 countries with enterprise stability and low-latency operational support.</p>
+                  <h3 className="text-white font-bold text-base mb-2 font-display">Unlimited Revisions</h3>
+                  <p className="text-white/60 text-xs leading-relaxed mb-3">Request as many changes as you need during development. No hidden fees or limits.</p>
                   
-                  {/* Network Ping Monitor Infographic */}
-                  <div className="flex flex-col gap-1.5 bg-white/5 rounded-2xl p-2.5 border border-white/5 font-mono text-[9px] w-full">
-                    <div className="flex justify-between items-center text-white/40">
-                      <span>DHAKA → USA</span>
-                      <span className="text-emerald-400 font-bold animate-pulse">12ms · stable</span>
-                    </div>
-                    <div className="flex justify-between items-center text-white/40">
-                      <span>DHAKA → EUR</span>
-                      <span className="text-emerald-400 font-bold animate-pulse" style={{ animationDelay: '0.4s' }}>38ms · active</span>
-                    </div>
-                  </div>
-                </div>
-              </SpotlightCard>
-            </motion.div>
-
-            {/* Card 5: Fast Operations */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.4 }}
-              whileHover={{ y: -5, transition: { duration: 0.2 } }}
-              className="md:col-span-2 min-h-[220px]"
-            >
-              <SpotlightCard className="w-full h-full flex flex-col justify-between p-7 rounded-3xl glass-card-premium border border-white/10 group">
-                <div className="flex items-center gap-2.5">
-                  <div className="w-7 h-7 rounded-full flex items-center justify-center border border-[#EC1E8E]/30 bg-[#EC1E8E]/10 flex-shrink-0">
-                    <span className="text-[9px] font-mono font-bold text-[#EC1E8E]">05</span>
-                  </div>
-                  <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-primary/10 border border-primary/20">
-                    <MessageCircle className="w-5.5 h-5.5 text-lavender" />
-                  </div>
-                </div>
-                <div className="mt-4">
-                  <h3 className="text-white font-bold text-base mb-2 font-display">Fast Operations</h3>
-                  <p className="text-white/50 text-xs leading-relaxed mb-3">WhatsApp-first, live Client Hub dashboards, and daily updates — you're never left guessing.</p>
-                  
-                  {/* Live Chat Bubbles Infographic */}
-                  <div className="flex flex-col gap-2 rounded-2xl p-2.5 border border-white/[0.06] select-none text-[9px] font-sans w-full" style={{ background: 'rgba(255,255,255,0.02)' }}>
+                  {/* Chat bubble infographic */}
+                  <div className="flex flex-col gap-2 rounded-2xl p-2.5 bg-white/[0.02] border border-white/5 select-none text-[9px] font-sans w-full">
                     <div className="flex flex-col items-start max-w-[85%]">
-                      <div className="bg-white/5 rounded-2xl rounded-tl-sm px-2.5 py-1 border border-white/5 text-white/70 leading-normal">
-                        Status of build?
+                      <div className="bg-white/5 rounded-2xl rounded-tl-sm px-2.5 py-1 text-white/70 border border-white/10 leading-normal">
+                        Can we adjust the header layout?
                       </div>
                     </div>
                     <div className="flex flex-col items-end w-full">
-                      <div className="primary-gradient rounded-2xl rounded-tr-sm px-2.5 py-1 text-white leading-normal font-medium shadow-md shadow-[#EC1E8E]/10">
-                        Live now. Integrity: 99.8%!
+                      <div className="bg-gradient-to-r from-primary to-secondary rounded-2xl rounded-tr-sm px-2.5 py-1 text-white leading-normal font-semibold shadow-sm">
+                        Done — v14 is live.
                       </div>
-                      <div className="flex items-center gap-1 mt-1 text-[7px] font-mono text-white/35">
-                        <span>delivered</span>
-                        <span className="text-emerald-400 font-bold">✓✓</span>
-                      </div>
+                    </div>
+                  </div>
+                </div>
+              </SpotlightCard>
+            </motion.div>
+
+            {/* Card 4: Built to Convert */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.18 }}
+              whileHover={{ y: -5, transition: { duration: 0.2 } }}
+              className="md:col-span-2 min-h-[220px]"
+            >
+              <SpotlightCard className="w-full h-full flex flex-col justify-between p-7 rounded-3xl glass-card-premium border border-white/10 group">
+                <div className="flex items-center gap-2.5">
+                  <div className="w-7 h-7 rounded-full flex items-center justify-center bg-primary/8 text-primary border border-primary/15 flex-shrink-0 font-bold font-mono text-[10px]">
+                    04
+                  </div>
+                  <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-primary/10 border border-primary/20 text-lavender">
+                    <TrendingUp className="w-5.5 h-5.5" />
+                  </div>
+                </div>
+                <div className="mt-4">
+                  <h3 className="text-white font-bold text-base mb-2 font-display">Built to Convert</h3>
+                  <p className="text-white/60 text-xs leading-relaxed mb-3">We design digital systems optimized to attract customers and generate results, not just look pretty.</p>
+                  
+                  {/* Performance Monitor Infographic */}
+                  <div className="flex flex-col gap-1.5 bg-white/[0.02] border border-white/5 p-2.5 font-mono text-[9px] w-full text-white/55 rounded-2xl">
+                    <div className="flex justify-between items-center">
+                      <span>VISITS → LEADS</span>
+                      <span className="text-white font-bold">+38%</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span>PAGESPEED</span>
+                      <span className="text-primary font-bold bg-white/10 px-1 rounded">98/100</span>
+                    </div>
+                  </div>
+                </div>
+              </SpotlightCard>
+            </motion.div>
+
+            {/* Card 5: Long-Term Support */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.24 }}
+              whileHover={{ y: -5, transition: { duration: 0.2 } }}
+              className="md:col-span-2 min-h-[220px]"
+            >
+              <SpotlightCard className="w-full h-full flex flex-col justify-between p-7 rounded-3xl glass-card-premium border border-white/10 group">
+                <div className="flex items-center gap-2.5">
+                  <div className="w-7 h-7 rounded-full flex items-center justify-center bg-primary/8 text-primary border border-primary/15 flex-shrink-0 font-bold font-mono text-[10px]">
+                    05
+                  </div>
+                  <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-primary/10 border border-primary/20 text-lavender">
+                    <Shield className="w-5.5 h-5.5" />
+                  </div>
+                </div>
+                <div className="mt-4">
+                  <h3 className="text-white font-bold text-base mb-2 font-display">Long-Term Support</h3>
+                  <p className="text-white/60 text-xs leading-relaxed mb-3">We don't disappear after delivery. We offer continuous updates and maintenance.</p>
+                  
+                  {/* Support Monitor Infographic */}
+                  <div className="flex flex-col gap-2 bg-white/[0.02] border border-white/5 p-2.5 font-mono text-[9px] w-full text-white/55 rounded-2xl">
+                    <div className="flex items-center gap-1.5 flex-wrap">
+                      <span className="px-1.5 py-0.5 rounded bg-white/10 text-primary font-bold text-[8px]">MAINTAIN</span>
+                      <span className="px-1.5 py-0.5 rounded bg-white/10 text-primary font-bold text-[8px]">SCALE</span>
+                    </div>
+                    <div className="flex justify-between items-center mt-1">
+                      <span className="text-[8px] text-white/40 uppercase">Support status:</span>
+                      <span className="flex items-center gap-1 text-[8px] font-bold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20 uppercase animate-pulse">
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                        Active
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -676,16 +730,16 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
       </section>
 
       {/* ── What We Build — 3D Service Carousel ──────────────────────────────── */}
-      <section className="py-16 px-6 relative overflow-hidden" style={{ background: 'linear-gradient(to bottom, #0B0710 0%, #100918 50%, #0B0710 100%)' }}>
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] bg-[#5B23A8]/10 blur-[150px] rounded-full pointer-events-none" />
+      <section className="py-16 px-6 relative overflow-hidden" style={{ background: 'linear-gradient(to bottom, #0d000a 0%, #1a0a16 50%, #0d000a 100%)' }}>
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] bg-[#f3f2f2]/10 blur-[150px] rounded-full pointer-events-none" />
         <div className="max-w-7xl mx-auto relative z-10">
           <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-12 gap-6">
             <motion.div initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, amount: 0.3 }} transition={{ duration: 0.7 }}>
-              <span className="text-[10px] font-mono text-primary/70 tracking-[0.3em] uppercase block mb-3">02 — Services</span>
+              <span className="text-[10px] font-mono text-brand/75 tracking-[0.3em] uppercase block mb-3">02 — Services</span>
               <h2 className="text-4xl sm:text-5xl font-black text-white leading-[0.9]" style={{ fontFamily: 'var(--font-display)' }}>
                 What<br />
-                <span style={{ WebkitTextStroke: '1.5px rgba(236,30,142,0.85)', color: 'transparent' }}>We</span><br />
-                <span className="pill-word-coral">Build.</span>
+                <span style={{ WebkitTextStroke: '1.5px rgba(254,221,0,0.85)', color: 'transparent' }}>We</span><br />
+                <span className="pill-word-brand-ghost">Build.</span>
               </h2>
             </motion.div>
             <motion.p initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ duration: 0.7, delay: 0.2 }} className="text-white/55 text-sm leading-relaxed max-w-[320px] sm:text-right border-t border-white/10 pt-4 sm:border-t-0 sm:pt-0 sm:border-l sm:border-white/[0.08] sm:pl-6">
@@ -752,7 +806,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
                     transition: dragOffset !== 0 ? 'none' : 'all 0.35s cubic-bezier(.2,.7,.2,1)',
                     pointerEvents: visible ? 'auto' : 'none', cursor: 'pointer',
                     zIndex: Math.round(10 - absOff * 2), // Keep correct 3D stacking order dynamically
-                    background: 'rgba(10, 8, 37, 0.45)',
+                    background: 'rgba(20, 6, 16, 0.5)',
                     backdropFilter: 'blur(20px) saturate(140%)',
                     WebkitBackdropFilter: 'blur(20px) saturate(140%)',
                     borderRadius: '24px',
@@ -802,7 +856,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
       </section>
 
       {/* ── How We Work ─────────────────────────────────────────────────────────── */}
-      <section className="py-16 px-6 relative overflow-hidden" style={{ background: 'linear-gradient(to bottom, #0B0710 0%, #100918 50%, #0B0710 100%)' }}>
+      <section ref={processRef} className="py-16 px-6 relative overflow-hidden animate-reveal" style={{ background: 'linear-gradient(to bottom, #0B0710 0%, #100918 50%, #0B0710 100%)' }}>
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] bg-[#5B23A8]/10 blur-[150px] rounded-full pointer-events-none" />
         <div className="absolute top-0 left-0 w-[300px] h-[300px] bg-[#EC1E8E]/8 blur-[120px] rounded-full pointer-events-none" />
         <div className="absolute bottom-0 right-0 w-[280px] h-[280px] bg-[#FF7A45]/7 blur-[110px] rounded-full pointer-events-none" />
@@ -810,10 +864,10 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
           <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-12 gap-6">
             <motion.div initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, amount: 0.3 }} transition={{ duration: 0.7 }}>
               <span className="text-[10px] font-mono text-primary/70 tracking-[0.3em] uppercase block mb-3">03 — Process</span>
-              <h2 className="text-4xl sm:text-5xl font-black text-white leading-[0.9]" style={{ fontFamily: 'var(--font-display)' }}>
-                How<br />
-                <span style={{ WebkitTextStroke: '1.5px rgba(236,30,142,0.85)', color: 'transparent' }}>We</span><br />
-                <span className="text-gradient">Work.</span>
+              <h2 className="display-poster text-4xl sm:text-5xl md:text-6xl mb-6">
+                <span className="block text-white">How</span>
+                <span className="block my-2 text-white">We</span>
+                <span className="pill-word-brand text-white text-2xl sm:text-3xl md:text-4xl mt-2 inline-block animate-pulse" style={{ background: 'linear-gradient(135deg, #EC1E8E, #FF7A45)' }}>Work.</span>
               </h2>
             </motion.div>
             <motion.p initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ duration: 0.7, delay: 0.2 }} className="text-white/55 text-sm leading-relaxed max-w-[200px] sm:text-right border-t border-white/10 pt-4 sm:border-t-0 sm:pt-0 sm:border-l sm:border-white/[0.08] sm:pl-6">
@@ -822,11 +876,10 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
           </div>
 
           {/* Illuminated progress rail — fills as steps scroll into view */}
-          <div className="relative h-1 rounded-full bg-white/8 mb-8 overflow-hidden">
+          <div className="relative h-1.5 rounded-full bg-white/10 mb-8 overflow-hidden">
             <motion.div
-              className="absolute inset-y-0 left-0 primary-gradient rounded-full"
-              animate={{ width: `${lineProgress}%` }}
-              transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+              className="absolute inset-y-0 left-0 bg-gradient-to-r from-primary to-secondary rounded-full"
+              style={{ scaleX: processScaleX, originX: 0 }}
             />
           </div>
 
@@ -848,14 +901,14 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
                 >
                   <SpotlightCard
                     className="w-full h-full p-7 rounded-3xl glass-card-premium border transition-colors duration-500 group"
-                    style={{ borderColor: isIlluminated ? 'rgba(236,30,142,0.4)' : 'rgba(255,255,255,0.1)' }}
+                    style={{ borderColor: isIlluminated ? '#EC1E8E' : 'rgba(255,255,255,0.08)' }}
                   >
-                    <div className="absolute right-5 bottom-4 font-black select-none pointer-events-none leading-none z-0" style={{ fontSize: '100px', color: 'rgba(236,30,142,0.06)', fontFamily: 'var(--font-display)' }}>{step.num}</div>
+                    <div className="absolute right-5 bottom-4 font-black select-none pointer-events-none leading-none z-0" style={{ fontSize: '100px', color: 'rgba(255,255,255,0.02)', fontFamily: 'var(--font-display)' }}>{step.num}</div>
                     <div className="flex items-start justify-between mb-6 relative z-10">
-                      <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-primary/10 border border-primary/20 group-hover:bg-primary/15 group-hover:border-primary/35 transition-colors duration-300">
-                        <StepIcon className="w-5 h-5 text-lavender" />
+                      <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-primary/10 border border-primary/20 text-lavender group-hover:scale-105 transition-transform duration-300">
+                        <StepIcon className="w-5 h-5" />
                       </div>
-                      <span className="text-[11px] font-mono text-primary/70 font-semibold bg-primary/8 px-2.5 py-1 rounded-full border border-primary/15">{step.num}</span>
+                      <span className="text-[11px] font-mono text-white font-bold bg-primary/20 px-2.5 py-1 rounded-full">{step.num}</span>
                     </div>
                     <h3 className="text-white font-bold text-lg mb-2 font-display relative z-10">{step.title}</h3>
                     <p className="text-white/60 text-sm leading-relaxed relative z-10">{step.desc}</p>
@@ -867,8 +920,8 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
 
           <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: 0.3 }} className="flex justify-center mt-10">
             <div className="flex items-center gap-2.5">
-              <Sparkles className="w-4 h-4 text-primary/55" />
-              <span className="text-white/45 text-sm">Powered by the <span className="text-primary/80">GalaxaTech</span> intelligence layer</span>
+              <Sparkles className="w-4 h-4 text-white/45" />
+              <span className="text-white/40 text-sm">Powered by the <span className="text-primary font-bold">GalaxaTech</span> intelligence layer</span>
             </div>
           </motion.div>
         </div>
@@ -880,7 +933,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
         <div className="max-w-5xl mx-auto relative z-10">
           <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-6 gap-6">
             <motion.div initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, amount: 0.3 }} transition={{ duration: 0.7 }}>
-              <span className="text-[10px] font-mono text-primary/70 tracking-[0.3em] uppercase block mb-3">05 — Portfolio</span>
+              <span className="text-[10px] font-mono text-primary/75 tracking-[0.3em] uppercase block mb-3">04 — Portfolio</span>
               <h2 className="text-4xl sm:text-5xl font-black text-white leading-[0.9]" style={{ fontFamily: 'var(--font-display)' }}>
                 Selected<br />
                 <span className="text-grad">Work.</span>
@@ -945,7 +998,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
                       height: '100%',
                       position: 'relative',
                       transformStyle: 'preserve-3d',
-                      transform: folderHovered
+                      transform: isFolderOpen
                         ? 'rotateX(6deg) rotateY(-2deg) scale(1.03)'
                         : 'rotateX(0deg) rotateY(0deg) scale(1)',
                       transition: 'transform 0.8s cubic-bezier(0.16, 1, 0.3, 1)',
@@ -956,7 +1009,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
                       className="absolute inset-0 rounded-3xl opacity-35 pointer-events-none transition-all duration-700"
                       style={{
                         background: 'radial-gradient(circle at 50% 50%, #5B23A8 0%, transparent 70%)',
-                        transform: folderHovered ? 'translateZ(-90px) scale(1.3)' : 'translateZ(-90px) scale(0.9)',
+                        transform: isFolderOpen ? 'translateZ(-90px) scale(1.3)' : 'translateZ(-90px) scale(0.9)',
                         filter: 'blur(40px)',
                       }}
                     />
@@ -968,7 +1021,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
                         bottom: isMobile ? '20px' : '30px',
                         width: isMobile ? '320px' : '480px',
                         height: isMobile ? '213px' : '320px', // exact 1.5 ratio
-                        transform: folderHovered ? 'translateZ(-40px)' : 'translateZ(-40px)',
+                        transform: isFolderOpen ? 'translateZ(-40px)' : 'translateZ(-40px)',
                         transformStyle: 'preserve-3d',
                         transition: 'transform 0.8s cubic-bezier(0.16, 1, 0.3, 1)',
                         zIndex: 1,
@@ -1008,7 +1061,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
                       let opacity = i === 1 ? 0.82 : 0.72;
                       let cardBlur = '0px';
 
-                      if (folderHovered) {
+                      if (isFolderOpen) {
                         cardBlur = '0px';
                         opacity = 1;
                         if (isMobile) {
@@ -1053,7 +1106,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
                             overflow: 'hidden',
                             border: '1px solid rgba(255, 255, 255, 0.08)',
                             borderTop: `1px solid ${proj.color}40`,
-                            boxShadow: folderHovered
+                            boxShadow: isFolderOpen
                               ? `0 15px 35px ${proj.color}33, 0 0 15px rgba(0,0,0,0.6)`
                               : '0 6px 15px rgba(0,0,0,0.5)',
                           }}
@@ -1075,8 +1128,8 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
                             style={{ 
                               background: 'rgba(10,8,37,0.92)', 
                               backdropFilter: 'blur(5px)',
-                              opacity: folderHovered ? 1 : 0,
-                              transform: folderHovered ? 'translateY(0)' : 'translateY(12px)',
+                              opacity: isFolderOpen ? 1 : 0,
+                              transform: isFolderOpen ? 'translateY(0)' : 'translateY(12px)',
                             }}
                           >
                             <div>
@@ -1099,7 +1152,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
                         width: isMobile ? '320px' : '480px',
                         height: isMobile ? '213px' : '320px', // exact 1.5 ratio
                         transformOrigin: 'bottom center',
-                        transform: folderHovered
+                        transform: isFolderOpen
                           ? 'translateZ(40px) rotateX(-12deg)'
                           : 'translateZ(40px) rotateX(0deg)',
                         transition: 'transform 0.8s cubic-bezier(0.16, 1, 0.3, 1)',
@@ -1140,8 +1193,8 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
                           </div>
                           <button
                             onClick={e => { e.stopPropagation(); navigate('/portfolio'); }}
-                            className="w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-[1.1] primary-gradient cursor-pointer"
-                            style={{ boxShadow: '0 8px 30px rgba(236,30,142,0.4)' }}
+                            className="w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-[1.1] bg-gradient-to-r from-primary to-secondary text-white cursor-pointer"
+                            style={{ boxShadow: '0 8px 30px rgba(236,30,142,0.3)' }}
                           >
                             <ArrowUpRight className="w-4 h-4 text-white" />
                           </button>
@@ -1160,14 +1213,14 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
 
       {/* ── Common Questions ─────────────────────────────────────────────────────── */}
       <section className="py-10 px-6 relative overflow-hidden" style={{ background: 'linear-gradient(to bottom, #0B0710 0%, #100918 60%, #0B0710 100%)' }}>
-        <div className="absolute top-0 right-1/4 w-[350px] h-[350px] bg-[#EC1E8E]/7 blur-[120px] rounded-full pointer-events-none" />
+        <div className="absolute top-0 right-1/4 w-[350px] h-[350px] bg-[#EC1E8E]/5 blur-[120px] rounded-full pointer-events-none" />
         <div className="max-w-3xl mx-auto relative z-10">
           <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-8 gap-6">
             <motion.div initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, amount: 0.3 }} transition={{ duration: 0.7 }}>
-              <span className="text-[10px] font-mono text-primary/70 tracking-[0.3em] uppercase block mb-3">04 — FAQ</span>
-              <h2 className="text-4xl sm:text-5xl font-black text-white leading-[0.9]" style={{ fontFamily: 'var(--font-display)' }}>
-                Common<br />
-                <span className="pill-word">Questions.</span>
+              <span className="text-[10px] font-mono text-primary/75 tracking-[0.3em] uppercase block mb-3">05 — FAQ</span>
+              <h2 className="display-poster text-4xl sm:text-5xl md:text-6xl mb-6">
+                <span className="block text-white">Common</span>
+                <span className="pill-word-brand text-white text-2xl sm:text-3xl md:text-4xl mt-2 inline-block animate-pulse" style={{ background: 'linear-gradient(135deg, #EC1E8E, #FF7A45)' }}>Questions.</span>
               </h2>
             </motion.div>
             <motion.p initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ duration: 0.7, delay: 0.2 }} className="text-white/55 text-sm leading-relaxed max-w-[200px] sm:text-right border-t border-white/10 pt-4 sm:border-t-0 sm:pt-0 sm:border-l sm:border-white/[0.08] sm:pl-6">
@@ -1201,7 +1254,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
                   >
                     <FaqIcon className="w-4 h-4 flex-shrink-0" style={{ color: isActive ? '#EC1E8E' : 'rgba(236,30,142,0.55)' }} />
                     <span className="text-sm font-semibold flex-1 leading-snug" style={{ color: isActive ? '#fff' : 'rgba(255,255,255,0.75)' }}>{faq.q}</span>
-                    <ChevronRight className="w-4 h-4 flex-shrink-0 transition-transform duration-200" style={{ color: isActive ? '#EC1E8E' : 'rgba(255,255,255,0.25)', transform: isActive ? 'rotate(90deg)' : 'none' }} />
+                    <ChevronRight className="w-4 h-4 flex-shrink-0 transition-transform duration-200" style={{ transform: isActive ? 'rotate(90deg)' : 'none', color: isActive ? '#EC1E8E' : 'rgba(255,255,255,0.25)' }} />
                   </button>
                   <AnimatePresence>
                     {isActive && (
@@ -1226,9 +1279,9 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
       {/* ── Closing CTA — toggle + modal ─────────────────────────────────────── */}
       <section className="py-24 px-6 relative overflow-hidden" style={{ background: 'linear-gradient(to bottom, #0B0710 0%, #100918 50%, #0B0710 100%)' }}>
         {/* Layered atmospheric blob glows */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[500px] bg-[#EC1E8E]/9 blur-[160px] rounded-full pointer-events-none" />
-        <div className="absolute top-0 right-0 w-[350px] h-[350px] bg-[#FF7A45]/7 blur-[130px] rounded-full pointer-events-none" />
-        <div className="absolute bottom-0 left-0 w-[300px] h-[300px] bg-[#5B23A8]/10 blur-[120px] rounded-full pointer-events-none" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[500px] bg-[#5B23A8]/8 blur-[160px] rounded-full pointer-events-none" />
+        <div className="absolute top-0 right-0 w-[350px] h-[350px] bg-[#EC1E8E]/6 blur-[130px] rounded-full pointer-events-none" />
+        <div className="absolute bottom-0 left-0 w-[300px] h-[300px] bg-[#FF7A45]/8 blur-[120px] rounded-full pointer-events-none" />
         {/* Floating geometric rings */}
         {[
           { size: 140, left: '5%',  top: '10%', duration: 9,  delay: 0   },
@@ -1239,68 +1292,76 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
         ].map((s, i) => (
           <motion.div
             key={i}
-            className="absolute rounded-full border border-primary/[0.12] pointer-events-none"
-            style={{ width: s.size, height: s.size, left: s.left, top: s.top, background: 'radial-gradient(circle, rgba(124,42,235,0.06) 0%, transparent 70%)' }}
+            className="absolute rounded-full border border-primary/[0.08] pointer-events-none"
+            style={{ width: s.size, height: s.size, left: s.left, top: s.top, background: 'radial-gradient(circle, rgba(236,30,142,0.02) 0%, transparent 70%)' }}
             animate={{ y: [0, -18, 0], rotate: [0, 180, 360] }}
             transition={{ duration: s.duration, delay: s.delay, repeat: Infinity, ease: 'linear' }}
           />
         ))}
         {/* Ghost "JOIN" text decoration */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 font-black select-none pointer-events-none leading-none whitespace-nowrap" style={{ fontSize: 'clamp(80px, 20vw, 180px)', color: 'rgba(236,30,142,0.05)', fontFamily: 'var(--font-display)', letterSpacing: '-0.05em' }}>JOIN</div>
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 font-black select-none pointer-events-none leading-none whitespace-nowrap" style={{ fontSize: 'clamp(80px, 20vw, 180px)', color: 'rgba(236,30,142,0.025)', fontFamily: 'var(--font-condensed)', letterSpacing: '-0.05em' }}>JOIN</div>
 
-        <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.6 }} className="max-w-2xl mx-auto relative z-10 text-center">
-          <div className="flex justify-center mb-8">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-primary/25" style={{ background: 'rgba(236,30,142,0.08)' }}>
-              <Sparkles className="w-3.5 h-3.5 text-primary/70" />
-              <span className="text-[10px] font-mono tracking-[0.25em] text-primary/70 uppercase">Builders Community</span>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.2 }}
+          transition={{ duration: 0.6 }}
+          className="max-w-4xl mx-auto relative z-10"
+        >
+          <div className="bg-gradient-to-b from-[#1c0a25] via-[#100918] to-[#0B0710] rounded-[36px] p-8 sm:p-14 relative overflow-hidden shadow-2xl border border-primary/20 shadow-primary/10 text-center">
+            {/* Inset top highlight */}
+            <div className="absolute inset-x-0 top-0 h-px bg-white/5 pointer-events-none" />
+
+            <div className="flex justify-center mb-8">
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-primary/25 bg-primary/5">
+                <Sparkles className="w-3.5 h-3.5 text-primary/70" />
+                <span className="text-[10px] font-mono tracking-[0.25em] text-white/80 uppercase font-bold">Builders Community</span>
+              </div>
             </div>
-          </div>
 
-          <h2 className="font-black text-white mb-5 leading-[0.9]" style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(2.5rem, 7vw, 4.5rem)' }}>
-            Wanna join the<br />
-            <span style={{ WebkitTextStroke: '2px rgba(236,30,142,0.88)', color: 'transparent' }}>Galaxa</span>{' '}
-            <span className="pill-word">team?</span>
-          </h2>
-          <p className="text-white/45 text-base mb-10 leading-relaxed max-w-md mx-auto">
-            Flip the switch to join our builders community and be the first to hear about every opportunity.
-          </p>
+            <h2 className="display-poster text-white text-4xl sm:text-5xl md:text-7xl mb-6 leading-none">
+              Wanna join the<br />
+              <span style={{ WebkitTextStroke: '2px var(--color-primary)', color: 'transparent' }}>Galaxa</span>{' '}
+              <span className="pill-word-brand text-white inline-block animate-pulse" style={{ background: 'linear-gradient(135deg, #EC1E8E, #FF7A45)', textShadow: 'none' }}>team?</span>
+            </h2>
+            <p className="text-white/60 text-sm sm:text-base mb-10 leading-relaxed max-w-md mx-auto">
+              Flip the switch to join our builders community and be the first to hear about every opportunity.
+            </p>
 
-          {/* Tactile 3D-effect toggle button */}
-          <div className="flex flex-col items-center gap-4">
-            <div
-              role="switch"
-              aria-checked={toggled}
-              aria-label="Join Galaxa community"
-              className="relative flex items-center rounded-full p-1 cursor-pointer select-none hover:scale-[1.02] active:scale-[0.98] transition-transform duration-200"
-              style={{
-                width: 'min(300px, calc(100vw - 3rem))',
-                height: '56px',
-                background: 'rgba(255, 255, 255, 0.042)',
-                backdropFilter: 'blur(22px) saturate(140%)',
-                WebkitBackdropFilter: 'blur(22px) saturate(140%)',
-                border: '1px solid rgba(181, 141, 255, 0.25)',
-                boxShadow: 'inset 0 1px 0 rgba(255, 255, 255, 0.09), 0 10px 30px rgba(0,0,0,0.5)',
-              }}
-              onClick={handleToggle}
-            >
-              {/* Tactile Glowing Knob */}
+            {/* Tactile 3D-effect toggle button */}
+            <div className="flex flex-col items-center gap-4">
               <div
+                role="switch"
+                aria-checked={toggled}
+                aria-label="Join Galaxa community"
+                className="relative flex items-center rounded-full p-1 cursor-pointer select-none hover:scale-[1.02] active:scale-[0.98] transition-transform duration-200"
                 style={{
-                  position: 'absolute',
-                  top: '5px',
-                  left: '5px',
-                  width: '142px',
-                  height: '44px',
-                  borderRadius: '999px',
-                  background: 'linear-gradient(135deg, rgba(236, 30, 142, 0.25) 0%, rgba(255, 122, 69, 0.25) 100%)',
-                  border: '1px solid rgba(236, 30, 142, 0.6)',
-                  boxShadow: '0 0 24px rgba(236, 30, 142, 0.45), inset 0 1px 0 rgba(255,255,255,0.2)',
-                  transform: toggled ? 'translateX(144px)' : 'translateX(0px)',
-                  transition: '0.4s cubic-bezier(0.16, 1, 0.3, 1)',
+                  width: '280px',
+                  height: '52px',
+                  background: 'rgba(255,255,255,0.04)',
+                  border: '1px solid rgba(236, 30, 142, 0.25)',
+                  boxShadow: 'inset 0 2px 6px rgba(0,0,0,0.8), 0 10px 30px rgba(0,0,0,0.2)',
                 }}
-              />
-              <span className="relative z-10 flex-1 text-center text-xs font-bold uppercase tracking-wider transition-colors duration-300 font-display" style={{ color: toggled ? 'rgba(255,255,255,0.4)' : 'white' }}>Not yet</span>
-              <span className="relative z-10 flex-1 text-center text-xs font-bold uppercase tracking-wider transition-colors duration-300 font-display" style={{ color: toggled ? 'white' : 'rgba(255,255,255,0.4)' }}>Yes, I'm in</span>
+                onClick={handleToggle}
+              >
+                {/* Tactile Raised Pink Knob */}
+                <div
+                  style={{
+                    position: 'absolute',
+                    top: '5px',
+                    left: '5px',
+                    width: '132px',
+                    height: '40px',
+                    borderRadius: '999px',
+                    background: 'linear-gradient(135deg, #EC1E8E, #FF7A45)',
+                    transform: toggled ? 'translateX(138px)' : 'translateX(0px)',
+                    transition: '0.4s cubic-bezier(0.16, 1, 0.3, 1)',
+                    boxShadow: '0 4px 12px rgba(236, 30, 142, 0.3)',
+                  }}
+                />
+                <span className="relative z-10 flex-1 text-center text-xs font-bold uppercase tracking-wider transition-colors duration-300 font-display" style={{ color: toggled ? 'rgba(255,255,255,0.4)' : '#white' }}>Not yet</span>
+                <span className="relative z-10 flex-1 text-center text-xs font-bold uppercase tracking-wider transition-colors duration-300 font-display" style={{ color: toggled ? '#white' : 'rgba(255,255,255,0.4)' }}>Yes, I'm in</span>
+              </div>
             </div>
           </div>
         </motion.div>
@@ -1344,10 +1405,10 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
                 ) : (
                   <>
                     <div className="w-11 h-11 rounded-full border border-primary/20 flex items-center justify-center mb-5" style={{ background: 'rgba(236,30,142,0.08)' }}>
-                      <Mail className="w-5 h-5 text-primary/70" />
+                      <Mail className="w-5 h-5 text-primary" />
                     </div>
                     <h3 className="text-white font-bold text-xl mb-1 font-display">
-                      Join the <span className="text-gradient">Galaxa</span> circle
+                      Join the <span className="pill-word-brand text-white inline-block px-1.5 py-0.5 rounded text-sm sm:text-base font-semibold" style={{ background: 'linear-gradient(135deg, #EC1E8E, #FF7A45)' }}>Galaxa</span> circle
                     </h3>
                     <p className="text-white/45 text-sm mb-5 leading-relaxed">Get early access, opportunities, and builder-only updates.</p>
                     <form onSubmit={handleNewsletterSubmit} className="flex flex-col gap-3">
@@ -1367,7 +1428,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
                         type="submit"
                         disabled={submitting}
                         className="w-full flex items-center justify-center gap-2 py-3 rounded-xl text-white font-bold text-sm transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
-                        style={{ background: submitting ? 'rgba(236,30,142,0.5)' : 'linear-gradient(135deg,#EC1E8E,#FF7A45)', boxShadow: '0 8px 30px rgba(236,30,142,0.35)' }}
+                        style={{ background: submitting ? 'rgba(236,30,142,0.5)' : 'linear-gradient(135deg, #EC1E8E, #FF7A45)', color: '#white', boxShadow: '0 8px 30px rgba(236,30,142,0.35)' }}
                       >
                         {submitting ? 'Sending…' : <>Join the circle <ArrowUpRight className="w-4 h-4" /></>}
                       </button>
