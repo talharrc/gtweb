@@ -41,23 +41,22 @@ export default function GalaxyBackground() {
     const getGalaxyColor = (distRatio: number) => {
       // Core: bright white/cyan/pink
       if (distRatio < 0.08) {
-        return Math.random() > 0.45 ? `255, 235, 245` : `236, 30, 142`; // Pearl white mixed with hot pink
+        return Math.random() > 0.45 ? `240, 244, 255` : `0, 194, 255`; // Pearl icy white mixed with sky cyan
       }
-      // Inner arms: Purple / Hot Pink
+      // Inner arms: Cobalt Blue / Royal Blue
       if (distRatio < 0.45) {
-        // Blended purple (#5B23A8) and hot pink (#EC1E8E)
         const rand = Math.random();
         if (rand < 0.5) {
-          return `236, 30, 142`; // Hot Pink
+          return `0, 82, 255`; // Electric Cobalt Blue
         }
-        return `91, 35, 168`; // Deep Purple
+        return `29, 78, 216`; // Deep Royal Blue
       }
-      // Outer arms: Coral / Dusty Purple
+      // Outer arms: Sky Cyan / Royal Blue
       const rand = Math.random();
       if (rand < 0.6) {
-        return `255, 122, 69`; // Warm Coral
+        return `0, 194, 255`; // Sky Cyan
       }
-      return `91, 35, 168`; // Purple dust
+      return `29, 78, 216`; // Deep Royal Blue dust
     };
 
     for (let i = 0; i < particleCount; i++) {
@@ -145,7 +144,7 @@ export default function GalaxyBackground() {
     // Animation Loop
     const animate = () => {
       // Clear with very slight alpha to create trailing effect (reduced from 0.15 to 0.08 for longer, richer trails)
-      ctx.fillStyle = 'rgba(11, 7, 16, 0.08)'; // Matches theme bg #0B0710
+      ctx.fillStyle = 'rgba(3, 5, 16, 0.08)'; // Matches theme bg #030510
       ctx.fillRect(0, 0, width, height);
 
       const centerX = width / 2;

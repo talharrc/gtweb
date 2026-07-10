@@ -1,4 +1,4 @@
-﻿import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { Laptop, Smartphone, TrendingUp, Cpu, Brush, Workflow, ArrowUpRight, CheckCircle } from 'lucide-react';
 
@@ -44,7 +44,7 @@ const SERVICES = [
   {
     id: 'social-media',
     icon: TrendingUp,
-    iconColor: 'text-pink-400 bg-pink-500/10 border-pink-500/20',
+    iconColor: 'text-cyan-400 bg-cyan-500/10 border-cyan-500/20',
     title: 'Social Media & Content',
     subtitle: 'Strategy, content creation, and growth systems that compound.',
     description: [
@@ -63,7 +63,7 @@ const SERVICES = [
   {
     id: 'ai-automation',
     icon: Cpu,
-    iconColor: 'text-purple-400 bg-purple-500/10 border-purple-500/20',
+    iconColor: 'text-blue-450 bg-blue-500/10 border-blue-500/20',
     title: 'AI & Automation',
     subtitle: 'Intelligent workflows that eliminate manual work at scale.',
     description: [

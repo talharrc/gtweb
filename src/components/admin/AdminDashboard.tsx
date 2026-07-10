@@ -186,7 +186,7 @@ export default function AdminDashboard() {
           </h3>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             {[
-              { label: 'Discovery', count: discoveryCount, color: 'text-purple-400 bg-purple-500/10' },
+              { label: 'Discovery', count: discoveryCount, color: 'text-cyan-400 bg-cyan-500/10' },
               { label: 'In Progress', count: inProgressCount, color: 'text-emerald-400 bg-emerald-500/10' },
               { label: 'Review', count: reviewCount, color: 'text-amber-400 bg-amber-500/10' },
               { label: 'Completed', count: completedCount, color: 'text-primary bg-primary/10' },

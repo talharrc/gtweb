@@ -103,7 +103,7 @@ export default function VisitorHubView() {
               onClick={() => setActiveTab(tab.id)}
               className={`px-4.5 py-2.5 rounded-xl text-xs font-bold transition-all border flex items-center gap-2 whitespace-nowrap ${
                 activeTab === tab.id
-                  ? 'bg-primary/20 border-primary/50 text-white shadow-[0_4px_20px_rgba(236,30,142,0.15)]'
+                  ? 'bg-primary/20 border-primary/50 text-white shadow-[0_4px_20px_rgba(0,82,255,0.15)]'
                   : 'bg-white/5 border-white/10 text-white/50 hover:border-white/20'
               }`}
             >
@@ -174,7 +174,7 @@ export default function VisitorHubView() {
                   <select
                     value={wallpaperTheme}
                     onChange={e => setWallpaperTheme(e.target.value)}
-                    className="w-full bg-[#120E22] border border-white/10 rounded-xl px-4 py-3 text-white text-xs focus:outline-none focus:border-primary/50 cursor-pointer"
+                    className="w-full bg-[#030510] border border-white/10 rounded-xl px-4 py-3 text-white text-xs focus:outline-none focus:border-primary/50 cursor-pointer"
                   >
                     <option value="cosmic">Cosmic Nebulae</option>
                     <option value="cyber">Cyberpunk Dhaka Grid</option>
@@ -186,7 +186,7 @@ export default function VisitorHubView() {
                   <select
                     value={wallpaperRatio}
                     onChange={e => setWallpaperRatio(e.target.value)}
-                    className="w-full bg-[#120E22] border border-white/10 rounded-xl px-4 py-3 text-white text-xs focus:outline-none focus:border-primary/50 cursor-pointer"
+                    className="w-full bg-[#030510] border border-white/10 rounded-xl px-4 py-3 text-white text-xs focus:outline-none focus:border-primary/50 cursor-pointer"
                   >
                     <option value="16:9">Landscape (16:9)</option>
                     <option value="9:16">Portrait mobile (9:16)</option>
@@ -197,7 +197,7 @@ export default function VisitorHubView() {
                   <button
                     onClick={handleGenerateWallpaper}
                     disabled={generating}
-                    className="w-full py-3 bg-gradient-to-r from-primary to-secondary text-white text-xs font-bold uppercase tracking-wider rounded-xl transition-all shadow-[0_4px_15px_rgba(236,30,142,0.2)] hover:scale-[1.02] cursor-pointer min-h-[42px]"
+                    className="w-full py-3 bg-gradient-to-r from-primary to-secondary text-white text-xs font-bold uppercase tracking-wider rounded-xl transition-all shadow-[0_4px_15px_rgba(0,82,255,0.2)] hover:scale-[1.02] cursor-pointer min-h-[42px]"
                   >
                     {generating ? 'Synthesizing...' : 'Synthesize Wallpaper'}
                   </button>

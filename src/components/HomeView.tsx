@@ -82,7 +82,7 @@ const GLASS_STYLE: React.CSSProperties = {
   WebkitBackdropFilter: 'blur(22px) saturate(140%)',
   border: '1px solid rgba(255,255,255,0.15)',
   borderRadius: '20px',
-  boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.10), inset 0 0 28px rgba(236,30,142,0.05), 0 20px 60px rgba(0,0,0,0.50)',
+  boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.10), inset 0 0 28px rgba(0,194,255,0.05), 0 20px 60px rgba(0,0,0,0.50)',
 };
 
 function getCarouselOffset(i: number, active: number, total: number): number {
@@ -95,6 +95,24 @@ function getCarouselOffset(i: number, active: number, total: number): number {
 export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeViewProps) {
   const navigate = useNavigate();
   const { isDemo } = useAuth();
+
+  const [countdown, setCountdown] = useState({ hours: 5, minutes: 47, seconds: 12 });
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCountdown(prev => {
+        if (prev.seconds > 0) {
+          return { ...prev, seconds: prev.seconds - 1 };
+        } else if (prev.minutes > 0) {
+          return { ...prev, minutes: prev.minutes - 1, seconds: 59 };
+        } else if (prev.hours > 0) {
+          return { hours: prev.hours - 1, minutes: 59, seconds: 59 };
+        }
+        return { hours: 5, minutes: 47, seconds: 12 };
+      });
+    }, 1000);
+    return () => clearInterval(timer);
+  }, []);
 
   const [wordIndex, setWordIndex] = useState(0);
   const [buildMins, setBuildMins] = useState(42);
@@ -276,7 +294,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
           50%      { box-shadow: 0 0 14px #ef4444, 0 0 28px rgba(239,68,68,0.65); opacity: 0.6; }
         }
         .dot-pulse-glow { animation: dot-pulse-glow 2s ease-in-out infinite; }
-        .faq-item:hover { box-shadow: 0 0 30px rgba(236,30,142,0.2), inset 0 1px 0 rgba(255,255,255,0.08); }
+        .faq-item:hover { box-shadow: 0 0 30px rgba(0,194,255,0.2), inset 0 1px 0 rgba(255,255,255,0.08); }
         .modal-backdrop { animation: fadeIn 0.2s ease; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         @keyframes slideUp { from { opacity: 0; transform: translateY(24px) scale(0.97); } to { opacity: 1; transform: translateY(0) scale(1); } }
@@ -293,7 +311,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
 
       {/* ── Hero ─────────────────────────────────────────────────────────────── */}
       <section ref={heroRef} className="relative min-h-[82vh] sm:min-h-[92vh] flex flex-col items-center justify-center pt-28 pb-4 sm:pb-12 overflow-hidden">
-        <div className="absolute inset-0 z-0 select-none overflow-hidden bg-[#0B0710]">
+        <div className="absolute inset-0 z-0 select-none overflow-hidden bg-[#030510]">
           <div
             className="w-full h-full opacity-90 pointer-events-none"
             style={{
@@ -303,14 +321,18 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
           >
             <GalaxyBackground />
           </div>
+          {/* 3D scrolling perspective grid horizon floor */}
+          <div className="perspective-container">
+            <div className="perspective-grid" />
+          </div>
           {/* Dark base tint */}
-          <div className="absolute inset-0 bg-[#0B0710]/20 pointer-events-none" />
-          <div className="absolute inset-0 bg-gradient-to-b from-[#0B0710]/50 via-transparent to-transparent pointer-events-none" />
-          <div className="absolute inset-x-0 bottom-0 h-2/5 bg-gradient-to-t from-[#0B0710] via-[#0B0710]/40 to-transparent pointer-events-none" />
+          <div className="absolute inset-0 bg-[#030510]/20 pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-to-b from-[#030510]/50 via-transparent to-transparent pointer-events-none" />
+          <div className="absolute inset-x-0 bottom-0 h-2/5 bg-gradient-to-t from-[#030510] via-[#030510]/40 to-transparent pointer-events-none" />
           {/* Atmospheric brand/paper/plum blob glows */}
-          <motion.div style={{ y: yBlob1 }} className="absolute top-1/3 left-1/4 -translate-y-1/2 -translate-x-1/2 w-[560px] h-[560px] bg-[#EC1E8E]/10 blur-[130px] rounded-full pointer-events-none" />
-          <motion.div style={{ y: yBlob2 }} className="absolute top-1/2 right-1/4 -translate-y-1/2 translate-x-1/2 w-[420px] h-[420px] bg-[#FF7A45]/10 blur-[110px] rounded-full pointer-events-none" />
-          <motion.div style={{ y: yBlob1 }} className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-[#5B23A8]/12 blur-[100px] rounded-full pointer-events-none" />
+          <motion.div style={{ y: yBlob1 }} className="absolute top-1/3 left-1/4 -translate-y-1/2 -translate-x-1/2 w-[560px] h-[560px] bg-[#0052FF]/10 blur-[130px] rounded-full pointer-events-none" />
+          <motion.div style={{ y: yBlob2 }} className="absolute top-1/2 right-1/4 -translate-y-1/2 translate-x-1/2 w-[420px] h-[420px] bg-[#00C2FF]/10 blur-[110px] rounded-full pointer-events-none" />
+          <motion.div style={{ y: yBlob1 }} className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-[#1D4ED8]/12 blur-[100px] rounded-full pointer-events-none" />
           {/* Diagonal spotlight beam */}
           <div className="absolute top-0 right-0 w-[45vw] h-full bg-gradient-to-bl from-white/[0.02] via-transparent to-transparent pointer-events-none" style={{ clipPath: 'polygon(100% 0, 30% 0, 100% 100%)' }} />
         </div>
@@ -340,7 +362,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
               </span>
             ))}
             <br className="hidden md:block" />
-            <span className="display-poster typewriter-container block min-h-[1.2em] mt-3 pb-1 overflow-hidden text-[1.4rem] sm:text-[2.8rem] md:text-[4.5rem] whitespace-nowrap" style={{ filter: 'drop-shadow(0 8px 30px rgba(236,30,142,0.25))' }}>
+            <span className="display-poster typewriter-container block min-h-[1.2em] mt-3 pb-1 overflow-hidden text-[1.4rem] sm:text-[2.8rem] md:text-[4.5rem] whitespace-nowrap" style={{ filter: 'drop-shadow(0 8px 30px rgba(0,82,255,0.25))' }}>
               <AnimatePresence mode="wait">
                 <motion.span
                   key={wordIndex}
@@ -355,9 +377,56 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
               </AnimatePresence>
             </span>
           </h1>
-          <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.2, ease: [0.16,1,0.3,1] }} className="text-base sm:text-lg text-white/70 max-w-2xl mx-auto mb-10 leading-relaxed font-sans">
+          <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.2, ease: [0.16,1,0.3,1] }} className="text-base sm:text-lg text-white/70 max-w-2xl mx-auto mb-6 leading-relaxed font-sans">
             Tell us about your business in 5 minutes — we'll map out exactly how to grow your digital presence.
           </motion.p>
+
+          {/* 3D Flip Clock Countdown Widget — EDU TESLA STYLING */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.6, delay: 0.25 }}
+            className="flex flex-col items-center gap-2 mb-8 relative z-20"
+          >
+            <span className="text-[10px] font-mono tracking-[0.25em] text-cyan-450 uppercase font-bold flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" /> Launch Coordinate Lock: BD-06
+            </span>
+            <div className="flex items-center gap-2.5 sm:gap-3 bg-[#030510]/90 p-3 sm:p-4.5 rounded-2xl border border-cyan-550/20 shadow-[0_0_50px_rgba(0,194,255,0.08)] backdrop-blur-md">
+              {/* Hours */}
+              <div className="flex flex-col items-center">
+                <div className="relative w-11 h-14 sm:w-14 sm:h-18 bg-gradient-to-b from-[#1E2640] to-[#0A0E1A] rounded-lg border border-cyan-500/35 shadow-[inset_0_2px_4px_rgba(0,0,0,0.6)] flex items-center justify-center overflow-hidden">
+                  <div className="absolute inset-x-0 top-1/2 h-[1px] bg-black/40 z-10" />
+                  <span className="text-white font-mono font-bold text-2xl sm:text-3xl tracking-tight">
+                    {String(countdown.hours).padStart(2, '0')}
+                  </span>
+                </div>
+                <span className="text-[8px] font-mono text-white/40 uppercase mt-1">hrs</span>
+              </div>
+              <span className="text-cyan-400/40 font-bold text-xl sm:text-2xl mt-[-8px] sm:mt-[-12px] animate-pulse">:</span>
+              {/* Minutes */}
+              <div className="flex flex-col items-center">
+                <div className="relative w-11 h-14 sm:w-14 sm:h-18 bg-gradient-to-b from-[#1E2640] to-[#0A0E1A] rounded-lg border border-cyan-500/35 shadow-[inset_0_2px_4px_rgba(0,0,0,0.6)] flex items-center justify-center overflow-hidden">
+                  <div className="absolute inset-x-0 top-1/2 h-[1px] bg-black/40 z-10" />
+                  <span className="text-white font-mono font-bold text-2xl sm:text-3xl tracking-tight">
+                    {String(countdown.minutes).padStart(2, '0')}
+                  </span>
+                </div>
+                <span className="text-[8px] font-mono text-white/40 uppercase mt-1">mins</span>
+              </div>
+              <span className="text-cyan-400/40 font-bold text-xl sm:text-2xl mt-[-8px] sm:mt-[-12px] animate-pulse">:</span>
+              {/* Seconds */}
+              <div className="flex flex-col items-center">
+                <div className="relative w-11 h-14 sm:w-14 sm:h-18 bg-gradient-to-b from-[#1E2640] to-[#0A0E1A] rounded-lg border border-cyan-500/35 shadow-[inset_0_2px_4px_rgba(0,0,0,0.6)] flex items-center justify-center overflow-hidden">
+                  <div className="absolute inset-x-0 top-1/2 h-[1px] bg-black/40 z-10" />
+                  <span className="text-white font-mono font-bold text-2xl sm:text-3xl tracking-tight">
+                    {String(countdown.seconds).padStart(2, '0')}
+                  </span>
+                </div>
+                <span className="text-[8px] font-mono text-white/40 uppercase mt-1">secs</span>
+              </div>
+            </div>
+          </motion.div>
+
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.3, ease: [0.16,1,0.3,1] }} className="flex flex-col sm:flex-row items-center justify-center gap-3 px-4 sm:px-0">
             <button
               onClick={() => navigate('/audit')}
@@ -413,11 +482,11 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
 
       {/* ── Global Presence ──────────────────────────────────────────────────── */}
       <section ref={globalPresenceRef} className="relative py-16 px-6 overflow-hidden" style={{ background: 'var(--void-2)' }}>
-        <div className="absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-[#0B0710] to-transparent pointer-events-none z-10" />
-        <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-[#0B0710] to-transparent pointer-events-none z-10" />
+        <div className="absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-[#030510] to-transparent pointer-events-none z-10" />
+        <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-[#030510] to-transparent pointer-events-none z-10" />
         {/* Atmospheric blobs */}
-        <div className="absolute top-1/2 right-0 translate-x-1/3 -translate-y-1/2 w-[450px] h-[450px] bg-[#EC1E8E]/8 blur-[120px] rounded-full pointer-events-none" />
-        <div className="absolute top-0 left-1/4 -translate-y-1/2 w-[300px] h-[300px] bg-[#5B23A8]/7 blur-[100px] rounded-full pointer-events-none" />
+        <div className="absolute top-1/2 right-0 translate-x-1/3 -translate-y-1/2 w-[450px] h-[450px] bg-[#0052FF]/8 blur-[120px] rounded-full pointer-events-none" />
+        <div className="absolute top-0 left-1/4 -translate-y-1/2 w-[300px] h-[300px] bg-[#1D4ED8]/7 blur-[100px] rounded-full pointer-events-none" />
         <div className="max-w-5xl mx-auto relative z-20">
           <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
             {/* Left Content Column */}
@@ -428,13 +497,13 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
                   <div>
                     <h2 className="display-poster text-4xl sm:text-5xl md:text-6xl mb-6">
                       <span className="block text-white">Clients</span>
-                      <span className="block text-outline-brand my-2" style={{ WebkitTextStroke: '1.5px rgba(236,30,142,0.85)' }}>Across</span>
-                      <span className="pill-word-brand text-white text-2xl sm:text-3xl md:text-4xl mt-2 inline-block" style={{ background: 'linear-gradient(135deg, #EC1E8E, #FF7A45)' }}>Nations.</span>
+                      <span className="block text-outline-brand my-2" style={{ WebkitTextStroke: '1.5px rgba(0,194,255,0.85)' }}>Across</span>
+                      <span className="pill-word-brand text-white text-2xl sm:text-3xl md:text-4xl mt-2 inline-block" style={{ background: 'linear-gradient(135deg, #0052FF, #00C2FF)' }}>Nations.</span>
                     </h2>
                   </div>
                   <div className="flex items-end gap-5">
                     <motion.div
-                      style={{ y: y6Plus, color: 'rgba(236, 30, 142, 0.14)', fontFamily: 'var(--font-condensed)' }}
+                      style={{ y: y6Plus, color: 'rgba(0, 82, 255, 0.14)', fontFamily: 'var(--font-condensed)' }}
                       className="text-[60px] sm:text-[80px] font-black leading-none select-none display-poster animate-pulse"
                     >
                       6+
@@ -490,10 +559,10 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
       </section>
 
       {/* ── Why Choose Us ────────────────────────────────────────────────────── */}
-      <section className="py-16 px-6 relative overflow-hidden" style={{ background: 'linear-gradient(to bottom, #0B0710 0%, #100918 50%, #0B0710 100%)' }}>
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] bg-[#5B23A8]/10 blur-[150px] rounded-full pointer-events-none" />
-        <div className="absolute top-0 left-0 w-[300px] h-[300px] bg-[#EC1E8E]/8 blur-[120px] rounded-full pointer-events-none" />
-        <div className="absolute bottom-0 right-0 w-[280px] h-[280px] bg-[#FF7A45]/7 blur-[110px] rounded-full pointer-events-none" />
+      <section className="py-16 px-6 relative overflow-hidden" style={{ background: 'linear-gradient(to bottom, #030510 0%, #070B1F 50%, #030510 100%)' }}>
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] bg-[#1D4ED8]/10 blur-[150px] rounded-full pointer-events-none" />
+        <div className="absolute top-0 left-0 w-[300px] h-[300px] bg-[#0052FF]/8 blur-[120px] rounded-full pointer-events-none" />
+        <div className="absolute bottom-0 right-0 w-[280px] h-[280px] bg-[#00C2FF]/7 blur-[110px] rounded-full pointer-events-none" />
         <div className="max-w-7xl mx-auto relative z-10">
           <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-12 gap-6">
             <motion.div initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, amount: 0.3 }} transition={{ duration: 0.7 }} className="relative">
@@ -501,7 +570,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
               <h2 className="display-poster text-4xl sm:text-5xl md:text-6xl mb-6">
                 <span className="block text-white">Why</span>
                 <span className="block my-2 text-white">Choose</span>
-                <span className="pill-word-brand text-white text-2xl sm:text-3xl md:text-4xl mt-2 inline-block animate-pulse" style={{ background: 'linear-gradient(135deg, #EC1E8E, #FF7A45)' }}>Us.</span>
+                <span className="pill-word-brand text-white text-2xl sm:text-3xl md:text-4xl mt-2 inline-block animate-pulse" style={{ background: 'linear-gradient(135deg, #0052FF, #00C2FF)' }}>Us.</span>
               </h2>
             </motion.div>
             <motion.p initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ duration: 0.7, delay: 0.2 }} className="text-white/55 text-sm leading-relaxed max-w-[200px] sm:text-right border-t border-white/10 pt-4 sm:border-t-0 sm:pt-0 sm:border-l sm:border-white/[0.08] sm:pl-6">
@@ -510,7 +579,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-6 gap-5">
-            {/* Card 1: Faster Delivery */}
+            {/* Card 1: Faster Delivery (Dark Navy Glass) */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -525,9 +594,19 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
                     <div className="w-7 h-7 rounded-full flex items-center justify-center bg-primary/8 text-primary border border-primary/15 flex-shrink-0 font-bold font-mono text-[10px]">
                       01
                     </div>
-                    <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-primary/10 border border-primary/20 text-lavender">
+                    <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-primary/10 border border-primary/20 text-cyan-400">
                       <Zap className="w-5.5 h-5.5" />
                     </div>
+                  </div>
+                  {/* Category Pill */}
+                  <span className="text-[8px] font-mono font-bold text-cyan-400/80 uppercase tracking-widest bg-cyan-500/10 px-2.5 py-0.5 rounded-full border border-cyan-500/20">
+                    Feature Breakdown
+                  </span>
+                </div>
+                <div className="mt-6 flex flex-col sm:flex-row gap-6 items-end justify-between">
+                  <div className="max-w-md">
+                    <h3 className="text-white font-bold text-base mb-2 font-display">Faster Delivery</h3>
+                    <p className="text-white/60 text-xs leading-relaxed">Most projects go live in days, not weeks. Our AI-assisted workflows cut down turnaround times dramatically.</p>
                   </div>
                   {/* Timeline Infographic */}
                   <div className="flex items-center gap-3 bg-white/[0.02] border border-white/5 px-4 py-2.5 relative overflow-hidden select-none text-[10px] font-mono text-white/55 rounded-2xl shadow-sm">
@@ -536,12 +615,12 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
                         <span className="font-bold text-white">DAY 1</span>
                         <span className="text-[8px] text-white/40">Setup</span>
                       </div>
-                      <ArrowUpRight className="w-3 h-3 text-primary" />
+                      <ArrowUpRight className="w-3 h-3 text-cyan-400" />
                       <div className="flex flex-col items-center">
                         <span className="font-bold text-white">DAY 3</span>
                         <span className="text-[8px] text-white/40">v1 Live</span>
                       </div>
-                      <ArrowUpRight className="w-3 h-3 text-primary" />
+                      <ArrowUpRight className="w-3 h-3 text-cyan-400" />
                       <div className="flex flex-col items-center">
                         <span className="font-bold text-white">DAY 5</span>
                         <span className="text-[8px] text-white/40">Launch</span>
@@ -550,24 +629,14 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
                     <div className="w-px h-8 bg-white/15 mx-2" />
                     <div className="flex flex-col text-[8px] leading-tight">
                       <span className="line-through text-white/30">Agency: 4–6 wks</span>
-                      <span className="text-primary font-bold bg-white/10 px-1 py-0.5 rounded mt-0.5" style={{ color: '#FF7A45' }}>GalaxaTech: days</span>
+                      <span className="text-cyan-450 font-bold bg-white/10 px-1 py-0.5 rounded mt-0.5">Galaxa: days</span>
                     </div>
-                  </div>
-                </div>
-                <div className="mt-6 flex flex-col sm:flex-row gap-6 items-end justify-between">
-                  <div className="max-w-md">
-                    <h3 className="text-white font-bold text-base mb-2 font-display">Faster Delivery</h3>
-                    <p className="text-white/60 text-xs leading-relaxed">Most projects go live in days, not weeks. Our AI-assisted workflows cut down turnaround times dramatically.</p>
-                  </div>
-                  <div className="flex flex-col gap-1 w-full sm:w-auto font-mono text-[9px] text-white/55 bg-white/[0.02] border border-white/5 p-2.5 rounded-2xl">
-                    <div className="flex justify-between gap-4"><span>Pipeline:</span><span className="text-white font-bold">Active</span></div>
-                    <div className="flex justify-between gap-4"><span>Launch time:</span><span className="text-white font-bold">Days</span></div>
                   </div>
                 </div>
               </SpotlightCard>
             </motion.div>
 
-            {/* Card 2: More Affordable */}
+            {/* Card 2: More Affordable (Icy White Premium) */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -576,39 +645,44 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
               whileHover={{ y: -5, transition: { duration: 0.2 } }}
               className="md:col-span-2 min-h-[220px]"
             >
-              <SpotlightCard className="w-full h-full flex flex-col justify-between p-7 rounded-3xl glass-card-premium border border-white/10 group">
-                <div className="flex items-center gap-2.5">
-                  <div className="w-7 h-7 rounded-full flex items-center justify-center bg-primary/8 text-primary border border-primary/15 flex-shrink-0 font-bold font-mono text-[10px]">
-                    02
+              <div className="w-full h-full flex flex-col justify-between p-7 rounded-3xl icy-card border border-cyan-550/20 group">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-7 h-7 rounded-full flex items-center justify-center bg-blue-500/10 text-blue-600 border border-blue-500/20 flex-shrink-0 font-bold font-mono text-[10px]">
+                      02
+                    </div>
+                    <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-blue-500/10 border border-blue-500/20 text-blue-600">
+                      <DollarSign className="w-5.5 h-5.5" />
+                    </div>
                   </div>
-                  <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-primary/10 border border-primary/20 text-lavender">
-                    <DollarSign className="w-5.5 h-5.5" />
-                  </div>
+                  <span className="text-[8px] font-mono font-bold text-blue-600/80 uppercase tracking-widest bg-blue-500/10 px-2.5 py-0.5 rounded-full border border-blue-500/20">
+                    Feature Grid
+                  </span>
                 </div>
                 <div className="mt-4">
-                  <h3 className="text-white font-bold text-base mb-2 font-display">More Affordable</h3>
-                  <p className="text-white/60 text-xs leading-relaxed mb-4">AI cuts development hours, so you pay less for a high-performance system.</p>
+                  <h3 className="text-slate-900 font-bold text-base mb-2 font-display">More Affordable</h3>
+                  <p className="text-slate-600 text-xs leading-relaxed mb-4">AI cuts development hours, so you pay less for a high-performance system.</p>
                   
                   {/* Cost Compare Infographic */}
-                  <div className="flex flex-col gap-2.5 w-full bg-white/[0.02] border border-white/5 p-3 font-mono text-[9px] text-white/55 rounded-2xl">
+                  <div className="flex flex-col gap-2 w-full bg-blue-950/5 border border-blue-500/10 p-3 font-mono text-[9px] text-slate-500 rounded-2xl">
                     <div className="flex items-center justify-between">
-                      <span>TRADITIONAL</span>
-                      <div className="w-[50%] bg-white/5 rounded-full h-1.5 overflow-hidden">
-                        <motion.div initial={{ scaleX: 0 }} whileInView={{ scaleX: 1 }} viewport={{ once: true }} transition={{ duration: 1 }} style={{ originX: 0 }} className="h-full bg-white/40 rounded-full" />
+                      <span>TRADITIONAL AGENCY</span>
+                      <div className="w-[40%] bg-slate-200 rounded-full h-1.5 overflow-hidden">
+                        <motion.div initial={{ scaleX: 0 }} whileInView={{ scaleX: 1 }} viewport={{ once: true }} transition={{ duration: 1 }} style={{ originX: 0 }} className="h-full bg-slate-400 rounded-full" />
                       </div>
                     </div>
                     <div className="flex items-center justify-between">
-                      <span>WITH GALAXA</span>
-                      <div className="w-[50%] bg-white/5 rounded-full h-1.5 overflow-hidden">
-                        <motion.div initial={{ scaleX: 0 }} whileInView={{ scaleX: 0.6 }} viewport={{ once: true }} transition={{ duration: 1, delay: 0.2 }} style={{ originX: 0 }} className="h-full bg-primary rounded-full" />
+                      <span className="text-blue-600 font-bold">WITH GALAXATECH</span>
+                      <div className="w-[40%] bg-slate-200 rounded-full h-1.5 overflow-hidden">
+                        <motion.div initial={{ scaleX: 0 }} whileInView={{ scaleX: 0.4 }} viewport={{ once: true }} transition={{ duration: 1, delay: 0.2 }} style={{ originX: 0 }} className="h-full bg-blue-600 rounded-full" />
                       </div>
                     </div>
                   </div>
                 </div>
-              </SpotlightCard>
+              </div>
             </motion.div>
 
-            {/* Card 3: Unlimited Revisions */}
+            {/* Card 3: Unlimited Revisions (Dark Navy Glass) */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -618,15 +692,18 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
               className="md:col-span-2 min-h-[220px]"
             >
               <SpotlightCard className="w-full h-full flex flex-col justify-between p-7 rounded-3xl glass-card-premium border border-white/10 group">
-                <div className="flex items-start justify-between">
+                <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2.5">
                     <div className="w-7 h-7 rounded-full flex items-center justify-center bg-primary/8 text-primary border border-primary/15 flex-shrink-0 font-bold font-mono text-[10px]">
                       03
                     </div>
-                    <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-primary/10 border border-primary/20 text-lavender">
+                    <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-primary/10 border border-primary/20 text-cyan-400">
                       <RefreshCw className="w-5.5 h-5.5" />
                     </div>
                   </div>
+                  <span className="text-[8px] font-mono font-bold text-cyan-400/80 uppercase tracking-widest bg-cyan-500/10 px-2.5 py-0.5 rounded-full border border-cyan-500/20">
+                    Use Case
+                  </span>
                 </div>
                 <div className="mt-4">
                   <h3 className="text-white font-bold text-base mb-2 font-display">Unlimited Revisions</h3>
@@ -649,7 +726,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
               </SpotlightCard>
             </motion.div>
 
-            {/* Card 4: Built to Convert */}
+            {/* Card 4: Built to Convert (Icy White Premium) */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -658,35 +735,40 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
               whileHover={{ y: -5, transition: { duration: 0.2 } }}
               className="md:col-span-2 min-h-[220px]"
             >
-              <SpotlightCard className="w-full h-full flex flex-col justify-between p-7 rounded-3xl glass-card-premium border border-white/10 group">
-                <div className="flex items-center gap-2.5">
-                  <div className="w-7 h-7 rounded-full flex items-center justify-center bg-primary/8 text-primary border border-primary/15 flex-shrink-0 font-bold font-mono text-[10px]">
-                    04
+              <div className="w-full h-full flex flex-col justify-between p-7 rounded-3xl icy-card border border-cyan-550/20 group">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-7 h-7 rounded-full flex items-center justify-center bg-blue-500/10 text-blue-600 border border-blue-500/20 flex-shrink-0 font-bold font-mono text-[10px]">
+                      04
+                    </div>
+                    <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-blue-500/10 border border-blue-500/20 text-blue-600">
+                      <TrendingUp className="w-5.5 h-5.5" />
+                    </div>
                   </div>
-                  <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-primary/10 border border-primary/20 text-lavender">
-                    <TrendingUp className="w-5.5 h-5.5" />
-                  </div>
+                  <span className="text-[8px] font-mono font-bold text-blue-600/80 uppercase tracking-widest bg-blue-500/10 px-2.5 py-0.5 rounded-full border border-blue-500/20">
+                    Stats Style
+                  </span>
                 </div>
                 <div className="mt-4">
-                  <h3 className="text-white font-bold text-base mb-2 font-display">Built to Convert</h3>
-                  <p className="text-white/60 text-xs leading-relaxed mb-3">We design digital systems optimized to attract customers and generate results, not just look pretty.</p>
+                  <h3 className="text-slate-900 font-bold text-base mb-2 font-display">Built to Convert</h3>
+                  <p className="text-slate-600 text-xs leading-relaxed mb-3">We design digital systems optimized to attract customers and generate results.</p>
                   
                   {/* Performance Monitor Infographic */}
-                  <div className="flex flex-col gap-1.5 bg-white/[0.02] border border-white/5 p-2.5 font-mono text-[9px] w-full text-white/55 rounded-2xl">
+                  <div className="flex flex-col gap-1.5 bg-blue-950/5 border border-blue-500/10 p-2.5 font-mono text-[9px] w-full text-slate-500 rounded-2xl">
                     <div className="flex justify-between items-center">
                       <span>VISITS → LEADS</span>
-                      <span className="text-white font-bold">+38%</span>
+                      <span className="text-blue-600 font-bold">+38%</span>
                     </div>
                     <div className="flex justify-between items-center">
                       <span>PAGESPEED</span>
-                      <span className="text-primary font-bold bg-white/10 px-1 rounded">98/100</span>
+                      <span className="text-blue-600 font-bold bg-blue-500/10 px-1.5 py-0.5 rounded">98/100</span>
                     </div>
                   </div>
                 </div>
-              </SpotlightCard>
+              </div>
             </motion.div>
 
-            {/* Card 5: Long-Term Support */}
+            {/* Card 5: Long-Term Support (Dark Navy Glass) */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -696,13 +778,18 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
               className="md:col-span-2 min-h-[220px]"
             >
               <SpotlightCard className="w-full h-full flex flex-col justify-between p-7 rounded-3xl glass-card-premium border border-white/10 group">
-                <div className="flex items-center gap-2.5">
-                  <div className="w-7 h-7 rounded-full flex items-center justify-center bg-primary/8 text-primary border border-primary/15 flex-shrink-0 font-bold font-mono text-[10px]">
-                    05
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-7 h-7 rounded-full flex items-center justify-center bg-primary/8 text-primary border border-primary/15 flex-shrink-0 font-bold font-mono text-[10px]">
+                      05
+                    </div>
+                    <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-primary/10 border border-primary/20 text-cyan-400">
+                      <Shield className="w-5.5 h-5.5" />
+                    </div>
                   </div>
-                  <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-primary/10 border border-primary/20 text-lavender">
-                    <Shield className="w-5.5 h-5.5" />
-                  </div>
+                  <span className="text-[8px] font-mono font-bold text-cyan-400/80 uppercase tracking-widest bg-cyan-500/10 px-2.5 py-0.5 rounded-full border border-cyan-500/20">
+                    Trust Builder
+                  </span>
                 </div>
                 <div className="mt-4">
                   <h3 className="text-white font-bold text-base mb-2 font-display">Long-Term Support</h3>
@@ -711,8 +798,8 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
                   {/* Support Monitor Infographic */}
                   <div className="flex flex-col gap-2 bg-white/[0.02] border border-white/5 p-2.5 font-mono text-[9px] w-full text-white/55 rounded-2xl">
                     <div className="flex items-center gap-1.5 flex-wrap">
-                      <span className="px-1.5 py-0.5 rounded bg-white/10 text-primary font-bold text-[8px]">MAINTAIN</span>
-                      <span className="px-1.5 py-0.5 rounded bg-white/10 text-primary font-bold text-[8px]">SCALE</span>
+                      <span className="px-1.5 py-0.5 rounded bg-white/10 text-cyan-400 font-bold text-[8px]">MAINTAIN</span>
+                      <span className="px-1.5 py-0.5 rounded bg-white/10 text-cyan-400 font-bold text-[8px]">SCALE</span>
                     </div>
                     <div className="flex justify-between items-center mt-1">
                       <span className="text-[8px] text-white/40 uppercase">Support status:</span>
@@ -730,15 +817,15 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
       </section>
 
       {/* ── What We Build — 3D Service Carousel ──────────────────────────────── */}
-      <section className="py-16 px-6 relative overflow-hidden" style={{ background: 'linear-gradient(to bottom, #0d000a 0%, #1a0a16 50%, #0d000a 100%)' }}>
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] bg-[#f3f2f2]/10 blur-[150px] rounded-full pointer-events-none" />
+      <section className="py-16 px-6 relative overflow-hidden" style={{ background: 'linear-gradient(to bottom, #030510 0%, #070B1F 50%, #030510 100%)' }}>
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] bg-[#0052FF]/8 blur-[150px] rounded-full pointer-events-none" />
         <div className="max-w-7xl mx-auto relative z-10">
           <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-12 gap-6">
             <motion.div initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, amount: 0.3 }} transition={{ duration: 0.7 }}>
-              <span className="text-[10px] font-mono text-brand/75 tracking-[0.3em] uppercase block mb-3">02 — Services</span>
+              <span className="text-[10px] font-mono text-cyan-400/75 tracking-[0.3em] uppercase block mb-3">02 — Services</span>
               <h2 className="text-4xl sm:text-5xl font-black text-white leading-[0.9]" style={{ fontFamily: 'var(--font-display)' }}>
                 What<br />
-                <span style={{ WebkitTextStroke: '1.5px rgba(254,221,0,0.85)', color: 'transparent' }}>We</span><br />
+                <span style={{ WebkitTextStroke: '1.5px rgba(0,194,255,0.85)', color: 'transparent' }}>We</span><br />
                 <span className="pill-word-brand-ghost">Build.</span>
               </h2>
             </motion.div>
@@ -839,7 +926,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
                   <h3 className="text-white font-bold text-base mb-2 font-display relative z-10">{svc.label}</h3>
                   <p className="text-white/70 text-sm leading-relaxed relative z-10">{svc.desc}</p>
                   {isActive && (
-                    <div className="flex items-center gap-1.5 mt-5 text-xs font-semibold relative z-10" style={{ color: '#FF7A45' }}>
+                    <div className="flex items-center gap-1.5 mt-5 text-xs font-semibold relative z-10" style={{ color: '#00C2FF' }}>
                       Explore Service <ArrowUpRight className="w-3.5 h-3.5" />
                     </div>
                   )}
@@ -856,10 +943,10 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
       </section>
 
       {/* ── How We Work ─────────────────────────────────────────────────────────── */}
-      <section ref={processRef} className="py-16 px-6 relative overflow-hidden animate-reveal" style={{ background: 'linear-gradient(to bottom, #0B0710 0%, #100918 50%, #0B0710 100%)' }}>
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] bg-[#5B23A8]/10 blur-[150px] rounded-full pointer-events-none" />
-        <div className="absolute top-0 left-0 w-[300px] h-[300px] bg-[#EC1E8E]/8 blur-[120px] rounded-full pointer-events-none" />
-        <div className="absolute bottom-0 right-0 w-[280px] h-[280px] bg-[#FF7A45]/7 blur-[110px] rounded-full pointer-events-none" />
+      <section ref={processRef} className="py-16 px-6 relative overflow-hidden animate-reveal" style={{ background: 'linear-gradient(to bottom, #030510 0%, #070B1F 50%, #030510 100%)' }}>
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] bg-[#1D4ED8]/10 blur-[150px] rounded-full pointer-events-none" />
+        <div className="absolute top-0 left-0 w-[300px] h-[300px] bg-[#0052FF]/8 blur-[120px] rounded-full pointer-events-none" />
+        <div className="absolute bottom-0 right-0 w-[280px] h-[280px] bg-[#00C2FF]/7 blur-[110px] rounded-full pointer-events-none" />
         <div className="max-w-5xl mx-auto relative z-10">
           <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-12 gap-6">
             <motion.div initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, amount: 0.3 }} transition={{ duration: 0.7 }}>
@@ -867,7 +954,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
               <h2 className="display-poster text-4xl sm:text-5xl md:text-6xl mb-6">
                 <span className="block text-white">How</span>
                 <span className="block my-2 text-white">We</span>
-                <span className="pill-word-brand text-white text-2xl sm:text-3xl md:text-4xl mt-2 inline-block animate-pulse" style={{ background: 'linear-gradient(135deg, #EC1E8E, #FF7A45)' }}>Work.</span>
+                <span className="pill-word-brand text-white text-2xl sm:text-3xl md:text-4xl mt-2 inline-block animate-pulse" style={{ background: 'linear-gradient(135deg, #0052FF, #00C2FF)' }}>Work.</span>
               </h2>
             </motion.div>
             <motion.p initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ duration: 0.7, delay: 0.2 }} className="text-white/55 text-sm leading-relaxed max-w-[200px] sm:text-right border-t border-white/10 pt-4 sm:border-t-0 sm:pt-0 sm:border-l sm:border-white/[0.08] sm:pl-6">
@@ -883,11 +970,12 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
             />
           </div>
 
-          {/* 2×2 Process card grid */}
+          {/* 2×2 Process card grid — alternating dark/icy surfaces */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
             {PROCESS_STEPS.map((step, i) => {
               const StepIcon = step.Icon;
               const isIlluminated = illuminatedSteps.has(i);
+              const isIcy = i % 2 === 1;
               return (
                 <motion.div
                   key={step.num}
@@ -899,20 +987,34 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
                   whileHover={{ y: -4 }}
                   className="relative flex flex-col"
                 >
-                  <SpotlightCard
-                    className="w-full h-full p-7 rounded-3xl glass-card-premium border transition-colors duration-500 group"
-                    style={{ borderColor: isIlluminated ? '#EC1E8E' : 'rgba(255,255,255,0.08)' }}
-                  >
-                    <div className="absolute right-5 bottom-4 font-black select-none pointer-events-none leading-none z-0" style={{ fontSize: '100px', color: 'rgba(255,255,255,0.02)', fontFamily: 'var(--font-display)' }}>{step.num}</div>
-                    <div className="flex items-start justify-between mb-6 relative z-10">
-                      <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-primary/10 border border-primary/20 text-lavender group-hover:scale-105 transition-transform duration-300">
-                        <StepIcon className="w-5 h-5" />
+                  {isIcy ? (
+                    <div className="w-full h-full p-7 rounded-3xl icy-card group">
+                      <div className="absolute right-5 bottom-4 font-black select-none pointer-events-none leading-none z-0" style={{ fontSize: '100px', color: 'rgba(0,82,255,0.05)', fontFamily: 'var(--font-display)' }}>{step.num}</div>
+                      <div className="flex items-start justify-between mb-6 relative z-10">
+                        <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-blue-500/10 border border-blue-500/20 text-blue-600 group-hover:scale-105 transition-transform duration-300">
+                          <StepIcon className="w-5 h-5" />
+                        </div>
+                        <span className="text-[11px] font-mono text-blue-700 font-bold bg-blue-500/10 px-2.5 py-1 rounded-full">{step.num}</span>
                       </div>
-                      <span className="text-[11px] font-mono text-white font-bold bg-primary/20 px-2.5 py-1 rounded-full">{step.num}</span>
+                      <h3 className="text-slate-900 font-bold text-lg mb-2 font-display relative z-10">{step.title}</h3>
+                      <p className="text-slate-600 text-sm leading-relaxed relative z-10">{step.desc}</p>
                     </div>
-                    <h3 className="text-white font-bold text-lg mb-2 font-display relative z-10">{step.title}</h3>
-                    <p className="text-white/60 text-sm leading-relaxed relative z-10">{step.desc}</p>
-                  </SpotlightCard>
+                  ) : (
+                    <SpotlightCard
+                      className="w-full h-full p-7 rounded-3xl glass-card-premium border transition-colors duration-500 group"
+                      style={{ borderColor: isIlluminated ? '#00C2FF' : 'rgba(255,255,255,0.08)' }}
+                    >
+                      <div className="absolute right-5 bottom-4 font-black select-none pointer-events-none leading-none z-0" style={{ fontSize: '100px', color: 'rgba(255,255,255,0.02)', fontFamily: 'var(--font-display)' }}>{step.num}</div>
+                      <div className="flex items-start justify-between mb-6 relative z-10">
+                        <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-primary/10 border border-primary/20 text-lavender group-hover:scale-105 transition-transform duration-300">
+                          <StepIcon className="w-5 h-5" />
+                        </div>
+                        <span className="text-[11px] font-mono text-white font-bold bg-primary/20 px-2.5 py-1 rounded-full">{step.num}</span>
+                      </div>
+                      <h3 className="text-white font-bold text-lg mb-2 font-display relative z-10">{step.title}</h3>
+                      <p className="text-white/60 text-sm leading-relaxed relative z-10">{step.desc}</p>
+                    </SpotlightCard>
+                  )}
                 </motion.div>
               );
             })}
@@ -928,8 +1030,8 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
       </section>
 
       {/* ── Selected Work — glassmorphic folder ───────────────────────────────── */}
-      <section className="py-16 px-6 overflow-x-hidden relative" style={{ background: 'linear-gradient(to bottom, #0B0710 0%, #100918 50%, #0B0710 100%)' }}>
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[500px] bg-[#5B23A8]/8 blur-[160px] rounded-full pointer-events-none" />
+      <section className="py-16 px-6 overflow-x-hidden relative" style={{ background: 'linear-gradient(to bottom, #030510 0%, #070B1F 50%, #030510 100%)' }}>
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[500px] bg-[#1D4ED8]/8 blur-[160px] rounded-full pointer-events-none" />
         <div className="max-w-5xl mx-auto relative z-10">
           <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-6 gap-6">
             <motion.div initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, amount: 0.3 }} transition={{ duration: 0.7 }}>
@@ -1008,7 +1110,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
                     <div
                       className="absolute inset-0 rounded-3xl opacity-35 pointer-events-none transition-all duration-700"
                       style={{
-                        background: 'radial-gradient(circle at 50% 50%, #5B23A8 0%, transparent 70%)',
+                        background: 'radial-gradient(circle at 50% 50%, #0052FF 0%, transparent 70%)',
                         transform: isFolderOpen ? 'translateZ(-90px) scale(1.3)' : 'translateZ(-90px) scale(0.9)',
                         filter: 'blur(40px)',
                       }}
@@ -1166,9 +1268,9 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
                       <svg viewBox="0 0 600 400" className="absolute inset-0 w-full h-full pointer-events-none">
                         <defs>
                           <linearGradient id="neonBorderGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" stopColor="#EC1E8E" stopOpacity="0.5" />
-                            <stop offset="50%" stopColor="#FF7A45" stopOpacity="0.35" />
-                            <stop offset="100%" stopColor="#5B23A8" stopOpacity="0.5" />
+                            <stop offset="0%" stopColor="#00C2FF" stopOpacity="0.5" />
+                            <stop offset="50%" stopColor="#0052FF" stopOpacity="0.35" />
+                            <stop offset="100%" stopColor="#1D4ED8" stopOpacity="0.5" />
                           </linearGradient>
                         </defs>
                         <path
@@ -1212,15 +1314,15 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
       </section>
 
       {/* ── Common Questions ─────────────────────────────────────────────────────── */}
-      <section className="py-10 px-6 relative overflow-hidden" style={{ background: 'linear-gradient(to bottom, #0B0710 0%, #100918 60%, #0B0710 100%)' }}>
-        <div className="absolute top-0 right-1/4 w-[350px] h-[350px] bg-[#EC1E8E]/5 blur-[120px] rounded-full pointer-events-none" />
+      <section className="py-10 px-6 relative overflow-hidden" style={{ background: 'linear-gradient(to bottom, #030510 0%, #070B1F 60%, #030510 100%)' }}>
+        <div className="absolute top-0 right-1/4 w-[350px] h-[350px] bg-[#0052FF]/5 blur-[120px] rounded-full pointer-events-none" />
         <div className="max-w-3xl mx-auto relative z-10">
           <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-8 gap-6">
             <motion.div initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, amount: 0.3 }} transition={{ duration: 0.7 }}>
               <span className="text-[10px] font-mono text-primary/75 tracking-[0.3em] uppercase block mb-3">05 — FAQ</span>
               <h2 className="display-poster text-4xl sm:text-5xl md:text-6xl mb-6">
                 <span className="block text-white">Common</span>
-                <span className="pill-word-brand text-white text-2xl sm:text-3xl md:text-4xl mt-2 inline-block animate-pulse" style={{ background: 'linear-gradient(135deg, #EC1E8E, #FF7A45)' }}>Questions.</span>
+                <span className="pill-word-brand text-white text-2xl sm:text-3xl md:text-4xl mt-2 inline-block animate-pulse" style={{ background: 'linear-gradient(135deg, #0052FF, #00C2FF)' }}>Questions.</span>
               </h2>
             </motion.div>
             <motion.p initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ duration: 0.7, delay: 0.2 }} className="text-white/55 text-sm leading-relaxed max-w-[200px] sm:text-right border-t border-white/10 pt-4 sm:border-t-0 sm:pt-0 sm:border-l sm:border-white/[0.08] sm:pl-6">
@@ -1241,10 +1343,9 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
                   transition={{ duration: 0.35, delay: i * 0.05 }}
                   className="rounded-2xl overflow-hidden"
                   style={{
-                    background: 'rgba(255,255,255,0.06)',
-                    backdropFilter: 'blur(20px) saturate(140%)',
-                    WebkitBackdropFilter: 'blur(20px) saturate(140%)',
-                    border: `1px solid ${isActive ? 'rgba(236,30,142,0.45)' : 'rgba(255,255,255,0.10)'}`,
+                    background: 'rgba(240, 244, 255, 0.95)',
+                    boxShadow: 'inset 0 1px 0 rgba(255,255,255,1)',
+                    border: `1px solid ${isActive ? 'rgba(0,82,255,0.55)' : 'rgba(0,194,255,0.22)'}`,
                     transition: 'border-color 0.25s',
                   }}
                 >
@@ -1252,9 +1353,9 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
                     onClick={() => setActiveFAQ(isActive ? null : i)}
                     className="w-full flex items-center gap-3 px-4 py-3.5 text-left cursor-pointer"
                   >
-                    <FaqIcon className="w-4 h-4 flex-shrink-0" style={{ color: isActive ? '#EC1E8E' : 'rgba(236,30,142,0.55)' }} />
-                    <span className="text-sm font-semibold flex-1 leading-snug" style={{ color: isActive ? '#fff' : 'rgba(255,255,255,0.75)' }}>{faq.q}</span>
-                    <ChevronRight className="w-4 h-4 flex-shrink-0 transition-transform duration-200" style={{ transform: isActive ? 'rotate(90deg)' : 'none', color: isActive ? '#EC1E8E' : 'rgba(255,255,255,0.25)' }} />
+                    <FaqIcon className="w-4 h-4 flex-shrink-0 transition-transform duration-200" style={{ color: '#0052FF', transform: isActive ? 'scale(1.15)' : 'scale(1)' }} />
+                    <span className="text-sm font-semibold flex-1 leading-snug" style={{ color: isActive ? '#030510' : '#334155' }}>{faq.q}</span>
+                    <ChevronRight className="w-4 h-4 flex-shrink-0 transition-transform duration-200" style={{ transform: isActive ? 'rotate(90deg)' : 'none', color: isActive ? '#0052FF' : 'rgba(0,82,255,0.35)' }} />
                   </button>
                   <AnimatePresence>
                     {isActive && (
@@ -1265,7 +1366,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
                         transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
                         className="overflow-hidden"
                       >
-                        <p className="text-white/65 text-sm leading-relaxed px-4 pb-4 pl-11">{faq.a}</p>
+                        <p className="text-slate-600 text-sm leading-relaxed px-4 pb-4 pl-11">{faq.a}</p>
                       </motion.div>
                     )}
                   </AnimatePresence>
@@ -1277,11 +1378,11 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
       </section>
 
       {/* ── Closing CTA — toggle + modal ─────────────────────────────────────── */}
-      <section className="py-24 px-6 relative overflow-hidden" style={{ background: 'linear-gradient(to bottom, #0B0710 0%, #100918 50%, #0B0710 100%)' }}>
+      <section className="py-24 px-6 relative overflow-hidden" style={{ background: 'linear-gradient(to bottom, #030510 0%, #070B1F 50%, #030510 100%)' }}>
         {/* Layered atmospheric blob glows */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[500px] bg-[#5B23A8]/8 blur-[160px] rounded-full pointer-events-none" />
-        <div className="absolute top-0 right-0 w-[350px] h-[350px] bg-[#EC1E8E]/6 blur-[130px] rounded-full pointer-events-none" />
-        <div className="absolute bottom-0 left-0 w-[300px] h-[300px] bg-[#FF7A45]/8 blur-[120px] rounded-full pointer-events-none" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[500px] bg-[#1D4ED8]/8 blur-[160px] rounded-full pointer-events-none" />
+        <div className="absolute top-0 right-0 w-[350px] h-[350px] bg-[#0052FF]/6 blur-[130px] rounded-full pointer-events-none" />
+        <div className="absolute bottom-0 left-0 w-[300px] h-[300px] bg-[#00C2FF]/8 blur-[120px] rounded-full pointer-events-none" />
         {/* Floating geometric rings */}
         {[
           { size: 140, left: '5%',  top: '10%', duration: 9,  delay: 0   },
@@ -1293,13 +1394,13 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
           <motion.div
             key={i}
             className="absolute rounded-full border border-primary/[0.08] pointer-events-none"
-            style={{ width: s.size, height: s.size, left: s.left, top: s.top, background: 'radial-gradient(circle, rgba(236,30,142,0.02) 0%, transparent 70%)' }}
+            style={{ width: s.size, height: s.size, left: s.left, top: s.top, background: 'radial-gradient(circle, rgba(0,194,255,0.02) 0%, transparent 70%)' }}
             animate={{ y: [0, -18, 0], rotate: [0, 180, 360] }}
             transition={{ duration: s.duration, delay: s.delay, repeat: Infinity, ease: 'linear' }}
           />
         ))}
         {/* Ghost "JOIN" text decoration */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 font-black select-none pointer-events-none leading-none whitespace-nowrap" style={{ fontSize: 'clamp(80px, 20vw, 180px)', color: 'rgba(236,30,142,0.025)', fontFamily: 'var(--font-condensed)', letterSpacing: '-0.05em' }}>JOIN</div>
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 font-black select-none pointer-events-none leading-none whitespace-nowrap" style={{ fontSize: 'clamp(80px, 20vw, 180px)', color: 'rgba(0,194,255,0.025)', fontFamily: 'var(--font-condensed)', letterSpacing: '-0.05em' }}>JOIN</div>
 
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -1308,7 +1409,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
           transition={{ duration: 0.6 }}
           className="max-w-4xl mx-auto relative z-10"
         >
-          <div className="bg-gradient-to-b from-[#1c0a25] via-[#100918] to-[#0B0710] rounded-[36px] p-8 sm:p-14 relative overflow-hidden shadow-2xl border border-primary/20 shadow-primary/10 text-center">
+          <div className="bg-gradient-to-b from-[#070B1F] via-[#030510] to-[#010208] rounded-[36px] p-8 sm:p-14 relative overflow-hidden shadow-2xl border border-primary/20 shadow-primary/10 text-center">
             {/* Inset top highlight */}
             <div className="absolute inset-x-0 top-0 h-px bg-white/5 pointer-events-none" />
 
@@ -1322,7 +1423,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
             <h2 className="display-poster text-white text-4xl sm:text-5xl md:text-7xl mb-6 leading-none">
               Wanna join the<br />
               <span style={{ WebkitTextStroke: '2px var(--color-primary)', color: 'transparent' }}>Galaxa</span>{' '}
-              <span className="pill-word-brand text-white inline-block animate-pulse" style={{ background: 'linear-gradient(135deg, #EC1E8E, #FF7A45)', textShadow: 'none' }}>team?</span>
+              <span className="pill-word-brand text-white inline-block animate-pulse" style={{ background: 'linear-gradient(135deg, #0052FF, #00C2FF)', textShadow: 'none' }}>team?</span>
             </h2>
             <p className="text-white/60 text-sm sm:text-base mb-10 leading-relaxed max-w-md mx-auto">
               Flip the switch to join our builders community and be the first to hear about every opportunity.
@@ -1339,12 +1440,12 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
                   width: '280px',
                   height: '52px',
                   background: 'rgba(255,255,255,0.04)',
-                  border: '1px solid rgba(236, 30, 142, 0.25)',
+                  border: '1px solid rgba(0, 194, 255, 0.25)',
                   boxShadow: 'inset 0 2px 6px rgba(0,0,0,0.8), 0 10px 30px rgba(0,0,0,0.2)',
                 }}
                 onClick={handleToggle}
               >
-                {/* Tactile Raised Pink Knob */}
+                {/* Tactile Raised Blue Knob */}
                 <div
                   style={{
                     position: 'absolute',
@@ -1353,10 +1454,10 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
                     width: '132px',
                     height: '40px',
                     borderRadius: '999px',
-                    background: 'linear-gradient(135deg, #EC1E8E, #FF7A45)',
+                    background: 'linear-gradient(135deg, #0052FF, #00C2FF)',
                     transform: toggled ? 'translateX(138px)' : 'translateX(0px)',
                     transition: '0.4s cubic-bezier(0.16, 1, 0.3, 1)',
-                    boxShadow: '0 4px 12px rgba(236, 30, 142, 0.3)',
+                    boxShadow: '0 4px 12px rgba(0, 82, 255, 0.3)',
                   }}
                 />
                 <span className="relative z-10 flex-1 text-center text-xs font-bold uppercase tracking-wider transition-colors duration-300 font-display" style={{ color: toggled ? 'rgba(255,255,255,0.4)' : '#white' }}>Not yet</span>
@@ -1385,7 +1486,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
                 transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
                 onClick={e => e.stopPropagation()}
                 className="relative w-full max-w-sm"
-                style={{ ...GLASS_STYLE, borderRadius: '24px', padding: isMobile ? '20px' : '32px', borderColor: 'rgba(236,30,142,0.45)', boxShadow: '0 0 80px rgba(236,30,142,0.30), inset 0 1px 0 rgba(255,255,255,0.1)' }}
+                style={{ ...GLASS_STYLE, borderRadius: '24px', padding: isMobile ? '20px' : '32px', borderColor: 'rgba(0,194,255,0.45)', boxShadow: '0 0 80px rgba(0,82,255,0.30), inset 0 1px 0 rgba(255,255,255,0.1)' }}
               >
                 <button
                   onClick={() => setCircleModalOpen(false)}
@@ -1398,17 +1499,17 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
 
                 {submitted ? (
                   <div className="flex flex-col items-center gap-3 py-6 text-center">
-                    <Sparkles className="w-8 h-8" style={{ color: '#EC1E8E' }} />
+                    <Sparkles className="w-8 h-8" style={{ color: '#0052FF' }} />
                     <p className="text-white font-bold text-lg font-display">You're in the circle.</p>
                     <p className="text-white/40 text-sm">We'll reach out with opportunities first.</p>
                   </div>
                 ) : (
                   <>
-                    <div className="w-11 h-11 rounded-full border border-primary/20 flex items-center justify-center mb-5" style={{ background: 'rgba(236,30,142,0.08)' }}>
+                    <div className="w-11 h-11 rounded-full border border-primary/20 flex items-center justify-center mb-5" style={{ background: 'rgba(0,82,255,0.08)' }}>
                       <Mail className="w-5 h-5 text-primary" />
                     </div>
                     <h3 className="text-white font-bold text-xl mb-1 font-display">
-                      Join the <span className="pill-word-brand text-white inline-block px-1.5 py-0.5 rounded text-sm sm:text-base font-semibold" style={{ background: 'linear-gradient(135deg, #EC1E8E, #FF7A45)' }}>Galaxa</span> circle
+                      Join the <span className="pill-word-brand text-white inline-block px-1.5 py-0.5 rounded text-sm sm:text-base font-semibold" style={{ background: 'linear-gradient(135deg, #0052FF, #00C2FF)' }}>Galaxa</span> circle
                     </h3>
                     <p className="text-white/45 text-sm mb-5 leading-relaxed">Get early access, opportunities, and builder-only updates.</p>
                     <form onSubmit={handleNewsletterSubmit} className="flex flex-col gap-3">
@@ -1428,7 +1529,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
                         type="submit"
                         disabled={submitting}
                         className="w-full flex items-center justify-center gap-2 py-3 rounded-xl text-white font-bold text-sm transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
-                        style={{ background: submitting ? 'rgba(236,30,142,0.5)' : 'linear-gradient(135deg, #EC1E8E, #FF7A45)', color: '#white', boxShadow: '0 8px 30px rgba(236,30,142,0.35)' }}
+                        style={{ background: submitting ? 'rgba(0,82,255,0.5)' : 'linear-gradient(135deg, #0052FF, #00C2FF)', color: '#white', boxShadow: '0 8px 30px rgba(0,82,255,0.35)' }}
                       >
                         {submitting ? 'Sending…' : <>Join the circle <ArrowUpRight className="w-4 h-4" /></>}
                       </button>

@@ -40,8 +40,8 @@ interface NavbarProps {
 const EXPERTISE_ITEMS = [
   { label: 'Web Development', desc: 'Performant, scalable websites and web apps.', icon: Laptop, color: 'orange', anchor: 'web-development' },
   { label: 'App Development', desc: 'Cross-platform mobile applications.', icon: Smartphone, color: 'blue', anchor: 'app-development' },
-  { label: 'Social Media & Content', desc: 'Strategy, content creation, and growth.', icon: TrendingUp, color: 'pink', anchor: 'social-media' },
-  { label: 'AI & Automation', desc: 'Intelligent workflows that eliminate manual work.', icon: Cpu, color: 'purple', anchor: 'ai-automation' },
+  { label: 'Social Media & Content', desc: 'Strategy, content creation, and growth.', icon: TrendingUp, color: 'cyan', anchor: 'social-media' },
+  { label: 'AI & Automation', desc: 'Intelligent workflows that eliminate manual work.', icon: Cpu, color: 'teal', anchor: 'ai-automation' },
   { label: 'Brand Identity & Design', desc: 'Visual systems that make your brand unforgettable.', icon: Brush, color: 'yellow', anchor: 'brand-identity' },
   { label: 'Systems Consulting', desc: 'Notion, process, and operations architecture.', icon: Workflow, color: 'emerald', anchor: 'systems-consulting' },
 ];
@@ -49,9 +49,9 @@ const EXPERTISE_ITEMS = [
 const COLOR_MAP: Record<string, string> = {
   orange: 'bg-orange-500/15 text-orange-400 border-orange-500/20',
   blue:   'bg-blue-500/15 text-blue-400 border-blue-500/20',
-  pink:   'bg-pink-500/15 text-pink-400 border-pink-500/20',
-  purple: 'bg-purple-500/15 text-purple-400 border-purple-500/20',
-  yellow: 'bg-yellow-500/15 text-yellow-400 border-yellow-500/20',
+  cyan:   'bg-cyan-500/15 text-cyan-400 border-cyan-500/20',
+  teal:   'bg-teal-500/15 text-teal-400 border-teal-500/20',
+  yellow: 'bg-yellow-500/15 text-yellow-450 border-yellow-500/20',
   emerald:'bg-emerald-500/15 text-emerald-400 border-emerald-500/20',
 };
 
@@ -238,7 +238,7 @@ export default function Navbar({ onPageChange, dhakaTime, isDhakaOpen, currentUs
             <button
               onClick={() => navTo('/audit')}
               aria-label="Book a free audit"
-              className="relative flex items-center w-10 hover:w-[160px] h-10 bg-gradient-to-r from-primary to-secondary text-white rounded-full transition-all duration-500 overflow-hidden group focus:outline-none cursor-pointer shadow-[0_8px_20px_-6px_rgba(236,30,142,0.4)]"
+              className="relative flex items-center w-10 hover:w-[160px] h-10 bg-gradient-to-r from-primary to-secondary text-white rounded-full transition-all duration-500 overflow-hidden group focus:outline-none cursor-pointer shadow-[0_8px_20px_-6px_rgba(0,82,255,0.4)]"
             >
               <div className="w-10 h-10 flex items-center justify-center flex-shrink-0 group-hover:rotate-45 transition-transform duration-500">
                 <ArrowUpRight className="w-4 h-4 text-white" />
