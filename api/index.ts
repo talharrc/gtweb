@@ -8,7 +8,8 @@ import bcrypt from "bcryptjs";
 import { initializeApp as initAdminApp, cert, getApps as getAdminApps } from "firebase-admin/app";
 import { getFirestore as getAdminFirestore, FieldValue, type Firestore as AdminFirestore } from "firebase-admin/firestore";
 import { initializeApp } from "firebase/app";
-import { getFirestore, collection, query, where, getDocs, addDoc, limit } from "firebase/firestore";
+import { getFirestore, collection, query, where, getDocs, addDoc, doc, setDoc, limit } from "firebase/firestore";
+import { runDailyRitual } from "./spaceCron";
 
 dotenv.config();
 dotenv.config({ path: ".env.local" });
@@ -733,6 +734,21 @@ app.post("/api/dev/seed-products", requireAdmin, async (_req, res) => {
     results.push(id);
   }
   res.json({ ok: true, seeded: results });
+});
+
+// ── GalaxaSpace weekly ritual (free Vercel Cron Job, see vercel.json) ───────────
+app.post("/api/space/cron/daily-ritual", async (req, res) => {
+  const cronSecret = process.env.CRON_SECRET;
+  const authHeader = req.headers.authorization;
+  if (!cronSecret || authHeader !== `Bearer ${cronSecret}`) {
+    return res.status(401).json({ ok: false, error: "Unauthorized" });
+  }
+  try {
+    const result = await runDailyRitual();
+    return res.status(result.ok ? 200 : 500).json(result);
+  } catch (err: any) {
+    return res.status(500).json({ ok: false, error: err?.message ?? "Unknown error" });
+  }
 });
 
 export default app;

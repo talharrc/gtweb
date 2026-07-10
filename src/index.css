@@ -47,6 +47,20 @@
   --color-gs-text: #F4F1F8;
   --color-gs-text-secondary: #A89EB8;
   --color-gs-text-muted: #6E6480;
+
+  /* GalaxaSpace Brand Kit — distinct dark/violet-blue-cyan theme */
+  --color-space-bg: #05030A;
+  --color-space-card: #0F0B1A;
+  --color-space-card-alt: #15102A;
+  --color-space-border: rgba(255, 255, 255, 0.08);
+
+  --color-space-accent-1: #7C3AED;
+  --color-space-accent-2: #2563EB;
+  --color-space-accent-3: #22D3EE;
+
+  --color-space-text: #F4F1F8;
+  --color-space-text-secondary: #A79FC0;
+  --color-space-text-muted: #6B637E;
 }
 
 :root {
@@ -629,5 +643,77 @@ button:not([class*="w-"]):not([class*="h-"]) {
   box-shadow: 
     0 20px 40px rgba(0, 82, 255, 0.12),
     inset 0 1px 0 rgba(255, 255, 255, 1);
+}
+
+/* ── GalaxaSpace Custom Styling ─────────────────────────────────────────────── */
+
+/* Ambient violet/blue/cyan background atmosphere — GalaxaSpace's own gradient theme */
+.space-bg-mesh {
+  position: fixed;
+  inset: 0;
+  z-index: -10;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 900px 500px at 15% -5%, rgba(124, 58, 237, 0.22), transparent 65%),
+    radial-gradient(circle at 90% 15%, rgba(37, 99, 235, 0.14), transparent 45%),
+    radial-gradient(circle at 50% 100%, rgba(34, 211, 238, 0.10), transparent 50%),
+    var(--color-space-bg);
+}
+
+/* Text gradient — violet -> blue -> cyan, used for wordmark/headings */
+.text-space-gradient {
+  background: linear-gradient(90deg, #7C3AED 0%, #2563EB 55%, #22D3EE 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+/* Base card surface */
+.space-card {
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.01)), var(--color-space-card);
+  border: 1px solid var(--color-space-border);
+  border-radius: 1rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.space-card:hover {
+  border-color: rgba(124, 58, 237, 0.35);
+  box-shadow: 0 0 30px rgba(37, 99, 235, 0.18), 0 15px 35px rgba(0, 0, 0, 0.6);
+  transform: translateY(-3px);
+}
+
+/* Primary gradient CTA button */
+.btn-primary-space {
+  background: linear-gradient(135deg, #7C3AED 0%, #2563EB 55%, #22D3EE 100%);
+  box-shadow: 0 4px 15px rgba(37, 99, 235, 0.35);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.btn-primary-space:hover {
+  box-shadow: 0 6px 22px rgba(34, 211, 238, 0.4), 0 0 15px rgba(124, 58, 237, 0.3);
+  filter: brightness(1.08);
+  transform: translateY(-1px);
+}
+.btn-primary-space:active {
+  transform: translateY(0);
+}
+
+/* Active sidebar/nav state */
+.space-nav-active {
+  background: linear-gradient(135deg, rgba(124, 58, 237, 0.18), rgba(34, 211, 238, 0.10));
+  border: 1px solid rgba(124, 58, 237, 0.35);
+  color: #fff;
+}
+
+/* Upvote/like highlighted state */
+.space-upvote-active {
+  background: linear-gradient(135deg, rgba(124, 58, 237, 0.25), rgba(34, 211, 238, 0.18));
+  border: 1px solid rgba(34, 211, 238, 0.4);
+  color: #22D3EE;
+}
+
+/* Soft glow used on hover states */
+.space-glow {
+  box-shadow: 0 0 30px rgba(37, 99, 235, 0.25);
 }
 
