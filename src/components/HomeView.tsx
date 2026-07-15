@@ -29,12 +29,12 @@ interface HomeViewProps {
 const TYPEWRITER_WORDS = ['Website Presence', 'Social Media Engagement', 'Client conversion'];
 
 const SERVICES = [
-  { num: '01', icon: Laptop,         label: 'Web Development',         desc: 'Fast, secure, and scalable websites built for performance and growth.',              anchor: 'web-development',    color: '#fedd00' },
-  { num: '02', icon: Smartphone,     label: 'App Development',         desc: 'High-performance mobile and web apps tailored to user needs and business goals.',    anchor: 'app-development',    color: '#f3f2f2' },
-  { num: '03', icon: MessageCircle,  label: 'Social Media & Content',  desc: 'Engaging content and social strategies that build brand presence and loyalty.',      anchor: 'social-media',       color: '#fedd00' },
-  { num: '04', icon: Cpu,            label: 'AI & Automation',         desc: 'Intelligent automation that streamlines workflows and boosts productivity.',          anchor: 'ai-automation',      color: '#f3f2f2' },
-  { num: '05', icon: Brush,          label: 'Brand Identity & Design', desc: 'Distinctive visuals and brand experiences that leave a lasting impression.',         anchor: 'brand-identity',     color: '#fedd00' },
-  { num: '06', icon: Workflow,       label: 'Systems Consulting',      desc: 'Strategic guidance and system architectures that drive sustainable growth.',         anchor: 'systems-consulting', color: '#f3f2f2' },
+  { num: '01', icon: Laptop,         label: 'Web Development',         desc: 'Fast, secure, and scalable websites built for performance and growth.',              anchor: 'web-development',    color: '#00C2FF' },
+  { num: '02', icon: Smartphone,     label: 'App Development',         desc: 'High-performance mobile and web apps tailored to user needs and business goals.',    anchor: 'app-development',    color: '#F0F4FF' },
+  { num: '03', icon: MessageCircle,  label: 'Social Media & Content',  desc: 'Engaging content and social strategies that build brand presence and loyalty.',      anchor: 'social-media',       color: '#00C2FF' },
+  { num: '04', icon: Cpu,            label: 'AI & Automation',         desc: 'Intelligent automation that streamlines workflows and boosts productivity.',          anchor: 'ai-automation',      color: '#F0F4FF' },
+  { num: '05', icon: Brush,          label: 'Brand Identity & Design', desc: 'Distinctive visuals and brand experiences that leave a lasting impression.',         anchor: 'brand-identity',     color: '#00C2FF' },
+  { num: '06', icon: Workflow,       label: 'Systems Consulting',      desc: 'Strategic guidance and system architectures that drive sustainable growth.',         anchor: 'systems-consulting', color: '#F0F4FF' },
 ];
 
 const PROCESS_STEPS = [
@@ -311,7 +311,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
 
       {/* ── Hero ─────────────────────────────────────────────────────────────── */}
       <section ref={heroRef} className="relative min-h-[82vh] sm:min-h-[92vh] flex flex-col items-center justify-center pt-28 pb-4 sm:pb-12 overflow-hidden">
-        <div className="absolute inset-0 z-0 select-none overflow-hidden bg-[#030510]">
+        <div className="absolute inset-0 z-0 select-none overflow-hidden" style={{ background: 'radial-gradient(ellipse 90% 70% at 50% 78%, #0A3AD6 0%, #062585 32%, #050B24 62%, #030510 100%)' }}>
           <div
             className="w-full h-full opacity-90 pointer-events-none"
             style={{
@@ -325,16 +325,19 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
           <div className="perspective-container">
             <div className="perspective-grid" />
           </div>
-          {/* Dark base tint */}
-          <div className="absolute inset-0 bg-[#030510]/20 pointer-events-none" />
-          <div className="absolute inset-0 bg-gradient-to-b from-[#030510]/50 via-transparent to-transparent pointer-events-none" />
-          <div className="absolute inset-x-0 bottom-0 h-2/5 bg-gradient-to-t from-[#030510] via-[#030510]/40 to-transparent pointer-events-none" />
-          {/* Atmospheric brand/paper/plum blob glows */}
-          <motion.div style={{ y: yBlob1 }} className="absolute top-1/3 left-1/4 -translate-y-1/2 -translate-x-1/2 w-[560px] h-[560px] bg-[#0052FF]/10 blur-[130px] rounded-full pointer-events-none" />
-          <motion.div style={{ y: yBlob2 }} className="absolute top-1/2 right-1/4 -translate-y-1/2 translate-x-1/2 w-[420px] h-[420px] bg-[#00C2FF]/10 blur-[110px] rounded-full pointer-events-none" />
-          <motion.div style={{ y: yBlob1 }} className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-[#1D4ED8]/12 blur-[100px] rounded-full pointer-events-none" />
-          {/* Diagonal spotlight beam */}
-          <div className="absolute top-0 right-0 w-[45vw] h-full bg-gradient-to-bl from-white/[0.02] via-transparent to-transparent pointer-events-none" style={{ clipPath: 'polygon(100% 0, 30% 0, 100% 100%)' }} />
+          {/* Dark vignette top, keeps the bright blue core low/center like the flip-clock reference */}
+          <div className="absolute inset-0 bg-gradient-to-b from-[#030510] via-[#030510]/40 to-transparent pointer-events-none" style={{ height: '55%' }} />
+          <div className="absolute inset-x-0 bottom-0 h-1/4 bg-gradient-to-t from-[#030510] to-transparent pointer-events-none" />
+          {/* Vivid atmospheric brand blob glows */}
+          <motion.div style={{ y: yBlob1 }} className="absolute top-1/3 left-1/4 -translate-y-1/2 -translate-x-1/2 w-[560px] h-[560px] bg-[#0052FF]/25 blur-[130px] rounded-full pointer-events-none" />
+          <motion.div style={{ y: yBlob2 }} className="absolute top-1/2 right-1/4 -translate-y-1/2 translate-x-1/2 w-[420px] h-[420px] bg-[#00C2FF]/22 blur-[110px] rounded-full pointer-events-none" />
+          {/* Bright core glow directly behind the countdown clock, echoing the reference's light-tunnel focal point */}
+          <div className="absolute bottom-[8%] left-1/2 -translate-x-1/2 w-[640px] h-[340px] bg-[#2C7CFF]/35 blur-[90px] rounded-full pointer-events-none" />
+          {/* Icy white counter-glow for tonal balance against the blue */}
+          <motion.div style={{ y: yBlob2 }} className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-white/[0.05] blur-[100px] rounded-full pointer-events-none" />
+          {/* Diagonal specular beams */}
+          <div className="absolute top-0 right-0 w-[45vw] h-full bg-gradient-to-bl from-white/[0.05] via-transparent to-transparent pointer-events-none" style={{ clipPath: 'polygon(100% 0, 30% 0, 100% 100%)' }} />
+          <div className="specular-beam absolute top-0 left-0 w-full h-full rotate-[-4deg]" />
         </div>
 
         <motion.div style={{ y: contentY, opacity: contentOpacity }} className="max-w-5xl mx-auto px-4 sm:px-6 text-center relative z-10 pt-8 sm:pt-12">
@@ -391,38 +394,38 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
             <span className="text-[10px] font-mono tracking-[0.25em] text-cyan-450 uppercase font-bold flex items-center gap-1.5">
               <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" /> Launch Coordinate Lock: BD-06
             </span>
-            <div className="flex items-center gap-2.5 sm:gap-3 bg-[#030510]/90 p-3 sm:p-4.5 rounded-2xl border border-cyan-550/20 shadow-[0_0_50px_rgba(0,194,255,0.08)] backdrop-blur-md">
+            <div className="flex items-center gap-2.5 sm:gap-3 p-3 sm:p-4.5 rounded-2xl backdrop-blur-md" style={{ background: 'linear-gradient(155deg, #1E5CFF 0%, #0A2FA8 55%, #051A5E 100%)', border: '1px solid rgba(150,205,255,0.55)', boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.4), inset 0 -10px 20px rgba(0,20,90,0.5), 0 0 60px rgba(30,110,255,0.45)' }}>
               {/* Hours */}
               <div className="flex flex-col items-center">
-                <div className="relative w-11 h-14 sm:w-14 sm:h-18 bg-gradient-to-b from-[#1E2640] to-[#0A0E1A] rounded-lg border border-cyan-500/35 shadow-[inset_0_2px_4px_rgba(0,0,0,0.6)] flex items-center justify-center overflow-hidden">
-                  <div className="absolute inset-x-0 top-1/2 h-[1px] bg-black/40 z-10" />
-                  <span className="text-white font-mono font-bold text-2xl sm:text-3xl tracking-tight">
+                <div className="relative w-11 h-14 sm:w-14 sm:h-18 bg-gradient-to-b from-white to-[#DCE7FA] rounded-lg shadow-[inset_0_-2px_4px_rgba(0,40,120,0.15),0_4px_10px_rgba(0,10,60,0.35)] flex items-center justify-center overflow-hidden">
+                  <div className="absolute inset-x-0 top-1/2 h-[1.5px] bg-[#0A1E4D]/25 z-10" />
+                  <span className="text-[#0A1E4D] font-mono font-bold text-2xl sm:text-3xl tracking-tight">
                     {String(countdown.hours).padStart(2, '0')}
                   </span>
                 </div>
-                <span className="text-[8px] font-mono text-white/40 uppercase mt-1">hrs</span>
+                <span className="text-[8px] font-mono text-white/70 uppercase mt-1">hrs</span>
               </div>
-              <span className="text-cyan-400/40 font-bold text-xl sm:text-2xl mt-[-8px] sm:mt-[-12px] animate-pulse">:</span>
+              <span className="text-white/70 font-bold text-xl sm:text-2xl mt-[-8px] sm:mt-[-12px] animate-pulse">:</span>
               {/* Minutes */}
               <div className="flex flex-col items-center">
-                <div className="relative w-11 h-14 sm:w-14 sm:h-18 bg-gradient-to-b from-[#1E2640] to-[#0A0E1A] rounded-lg border border-cyan-500/35 shadow-[inset_0_2px_4px_rgba(0,0,0,0.6)] flex items-center justify-center overflow-hidden">
-                  <div className="absolute inset-x-0 top-1/2 h-[1px] bg-black/40 z-10" />
-                  <span className="text-white font-mono font-bold text-2xl sm:text-3xl tracking-tight">
+                <div className="relative w-11 h-14 sm:w-14 sm:h-18 bg-gradient-to-b from-white to-[#DCE7FA] rounded-lg shadow-[inset_0_-2px_4px_rgba(0,40,120,0.15),0_4px_10px_rgba(0,10,60,0.35)] flex items-center justify-center overflow-hidden">
+                  <div className="absolute inset-x-0 top-1/2 h-[1.5px] bg-[#0A1E4D]/25 z-10" />
+                  <span className="text-[#0A1E4D] font-mono font-bold text-2xl sm:text-3xl tracking-tight">
                     {String(countdown.minutes).padStart(2, '0')}
                   </span>
                 </div>
-                <span className="text-[8px] font-mono text-white/40 uppercase mt-1">mins</span>
+                <span className="text-[8px] font-mono text-white/70 uppercase mt-1">mins</span>
               </div>
-              <span className="text-cyan-400/40 font-bold text-xl sm:text-2xl mt-[-8px] sm:mt-[-12px] animate-pulse">:</span>
+              <span className="text-white/70 font-bold text-xl sm:text-2xl mt-[-8px] sm:mt-[-12px] animate-pulse">:</span>
               {/* Seconds */}
               <div className="flex flex-col items-center">
-                <div className="relative w-11 h-14 sm:w-14 sm:h-18 bg-gradient-to-b from-[#1E2640] to-[#0A0E1A] rounded-lg border border-cyan-500/35 shadow-[inset_0_2px_4px_rgba(0,0,0,0.6)] flex items-center justify-center overflow-hidden">
-                  <div className="absolute inset-x-0 top-1/2 h-[1px] bg-black/40 z-10" />
-                  <span className="text-white font-mono font-bold text-2xl sm:text-3xl tracking-tight">
+                <div className="relative w-11 h-14 sm:w-14 sm:h-18 bg-gradient-to-b from-white to-[#DCE7FA] rounded-lg shadow-[inset_0_-2px_4px_rgba(0,40,120,0.15),0_4px_10px_rgba(0,10,60,0.35)] flex items-center justify-center overflow-hidden">
+                  <div className="absolute inset-x-0 top-1/2 h-[1.5px] bg-[#0A1E4D]/25 z-10" />
+                  <span className="text-[#0A1E4D] font-mono font-bold text-2xl sm:text-3xl tracking-tight">
                     {String(countdown.seconds).padStart(2, '0')}
                   </span>
                 </div>
-                <span className="text-[8px] font-mono text-white/40 uppercase mt-1">secs</span>
+                <span className="text-[8px] font-mono text-white/70 uppercase mt-1">secs</span>
               </div>
             </div>
           </motion.div>
@@ -484,9 +487,9 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
       <section ref={globalPresenceRef} className="relative py-16 px-6 overflow-hidden" style={{ background: 'var(--void-2)' }}>
         <div className="absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-[#030510] to-transparent pointer-events-none z-10" />
         <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-[#030510] to-transparent pointer-events-none z-10" />
-        {/* Atmospheric blobs */}
-        <div className="absolute top-1/2 right-0 translate-x-1/3 -translate-y-1/2 w-[450px] h-[450px] bg-[#0052FF]/8 blur-[120px] rounded-full pointer-events-none" />
-        <div className="absolute top-0 left-1/4 -translate-y-1/2 w-[300px] h-[300px] bg-[#1D4ED8]/7 blur-[100px] rounded-full pointer-events-none" />
+        {/* Single restrained atmospheric glow + a diagonal specular beam for icy contrast */}
+        <div className="absolute top-1/2 right-0 translate-x-1/3 -translate-y-1/2 w-[450px] h-[450px] bg-[#0052FF]/6 blur-[130px] rounded-full pointer-events-none" />
+        <div className="specular-beam absolute -top-1/4 left-0 w-full h-[160%] rotate-[-6deg]" />
         <div className="max-w-5xl mx-auto relative z-20">
           <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
             {/* Left Content Column */}
@@ -497,7 +500,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
                   <div>
                     <h2 className="display-poster text-4xl sm:text-5xl md:text-6xl mb-6">
                       <span className="block text-white">Clients</span>
-                      <span className="block text-outline-brand my-2" style={{ WebkitTextStroke: '1.5px rgba(0,194,255,0.85)' }}>Across</span>
+                      <span className="block text-white my-2">Across</span>
                       <span className="pill-word-brand text-white text-2xl sm:text-3xl md:text-4xl mt-2 inline-block" style={{ background: 'linear-gradient(135deg, #0052FF, #00C2FF)' }}>Nations.</span>
                     </h2>
                   </div>
@@ -527,9 +530,9 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
                     style={{ display: 'flex', width: 'max-content', animation: 'marquee-scroll 28s linear infinite', willChange: 'transform' }}
                   >
                     {[...COUNTRIES, ...COUNTRIES].map((c, i) => (
-                      <div key={i} className="flex items-center gap-2.5 mx-2.5 select-none px-4 py-2 rounded-full" style={{ border: '1px solid rgba(255,255,255,0.12)', background: 'rgba(255,255,255,0.06)', minWidth: 'max-content' }}>
+                      <div key={i} className="flex items-center gap-2.5 mx-2.5 select-none px-4 py-2 rounded-full" style={{ border: '1px solid rgba(0,82,255,0.20)', background: 'rgba(240,244,255,0.95)', minWidth: 'max-content' }}>
                         <img src={`https://flagcdn.com/20x15/${c.code}.png`} alt={c.name} width="20" height="15" className="flex-shrink-0 rounded-[2px]" />
-                        <span className="text-white/80 font-semibold text-xs" style={{ fontFamily: 'var(--font-display)' }}>{c.name}</span>
+                        <span className="text-slate-800 font-semibold text-xs" style={{ fontFamily: 'var(--font-display)' }}>{c.name}</span>
                       </div>
                     ))}
                   </div>
@@ -559,10 +562,9 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
       </section>
 
       {/* ── Why Choose Us ────────────────────────────────────────────────────── */}
-      <section className="py-16 px-6 relative overflow-hidden" style={{ background: 'linear-gradient(to bottom, #030510 0%, #070B1F 50%, #030510 100%)' }}>
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] bg-[#1D4ED8]/10 blur-[150px] rounded-full pointer-events-none" />
-        <div className="absolute top-0 left-0 w-[300px] h-[300px] bg-[#0052FF]/8 blur-[120px] rounded-full pointer-events-none" />
-        <div className="absolute bottom-0 right-0 w-[280px] h-[280px] bg-[#00C2FF]/7 blur-[110px] rounded-full pointer-events-none" />
+      <section className="py-16 px-6 relative overflow-hidden" style={{ background: 'linear-gradient(to bottom, #030510 0%, #0C2F8C 50%, #030510 100%)' }}>
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] bg-[#1D4ED8]/7 blur-[150px] rounded-full pointer-events-none" />
+        <div className="specular-beam absolute top-0 right-0 w-full h-[140%] rotate-[8deg]" />
         <div className="max-w-7xl mx-auto relative z-10">
           <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-12 gap-6">
             <motion.div initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, amount: 0.3 }} transition={{ duration: 0.7 }} className="relative">
@@ -570,7 +572,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
               <h2 className="display-poster text-4xl sm:text-5xl md:text-6xl mb-6">
                 <span className="block text-white">Why</span>
                 <span className="block my-2 text-white">Choose</span>
-                <span className="pill-word-brand text-white text-2xl sm:text-3xl md:text-4xl mt-2 inline-block animate-pulse" style={{ background: 'linear-gradient(135deg, #0052FF, #00C2FF)' }}>Us.</span>
+                <span className="pill-word-brand text-white text-2xl sm:text-3xl md:text-4xl mt-2 inline-block" style={{ background: 'linear-gradient(135deg, #0052FF, #00C2FF)' }}>Us.</span>
               </h2>
             </motion.div>
             <motion.p initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ duration: 0.7, delay: 0.2 }} className="text-white/55 text-sm leading-relaxed max-w-[200px] sm:text-right border-t border-white/10 pt-4 sm:border-t-0 sm:pt-0 sm:border-l sm:border-white/[0.08] sm:pl-6">
@@ -594,7 +596,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
                     <div className="w-7 h-7 rounded-full flex items-center justify-center bg-primary/8 text-primary border border-primary/15 flex-shrink-0 font-bold font-mono text-[10px]">
                       01
                     </div>
-                    <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-primary/10 border border-primary/20 text-cyan-400">
+                    <div className="w-12 h-12 rounded-xl flex items-center justify-center glass-icon-3d text-[#E8F4FF] [&>svg]:relative [&>svg]:z-10">
                       <Zap className="w-5.5 h-5.5" />
                     </div>
                   </div>
@@ -651,7 +653,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
                     <div className="w-7 h-7 rounded-full flex items-center justify-center bg-blue-500/10 text-blue-600 border border-blue-500/20 flex-shrink-0 font-bold font-mono text-[10px]">
                       02
                     </div>
-                    <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-blue-500/10 border border-blue-500/20 text-blue-600">
+                    <div className="w-12 h-12 rounded-xl flex items-center justify-center glass-icon-3d-light text-[#0052FF] [&>svg]:relative [&>svg]:z-10">
                       <DollarSign className="w-5.5 h-5.5" />
                     </div>
                   </div>
@@ -682,7 +684,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
               </div>
             </motion.div>
 
-            {/* Card 3: Unlimited Revisions (Dark Navy Glass) */}
+            {/* Card 3: Unlimited Revisions (Icy White Premium) */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -691,28 +693,28 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
               whileHover={{ y: -5, transition: { duration: 0.2 } }}
               className="md:col-span-2 min-h-[220px]"
             >
-              <SpotlightCard className="w-full h-full flex flex-col justify-between p-7 rounded-3xl glass-card-premium border border-white/10 group">
+              <div className="w-full h-full flex flex-col justify-between p-7 rounded-3xl icy-card border border-cyan-550/20 group">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2.5">
-                    <div className="w-7 h-7 rounded-full flex items-center justify-center bg-primary/8 text-primary border border-primary/15 flex-shrink-0 font-bold font-mono text-[10px]">
+                    <div className="w-7 h-7 rounded-full flex items-center justify-center bg-blue-500/10 text-blue-600 border border-blue-500/20 flex-shrink-0 font-bold font-mono text-[10px]">
                       03
                     </div>
-                    <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-primary/10 border border-primary/20 text-cyan-400">
+                    <div className="w-12 h-12 rounded-xl flex items-center justify-center glass-icon-3d-light text-[#0052FF] [&>svg]:relative [&>svg]:z-10">
                       <RefreshCw className="w-5.5 h-5.5" />
                     </div>
                   </div>
-                  <span className="text-[8px] font-mono font-bold text-cyan-400/80 uppercase tracking-widest bg-cyan-500/10 px-2.5 py-0.5 rounded-full border border-cyan-500/20">
+                  <span className="text-[8px] font-mono font-bold text-blue-600/80 uppercase tracking-widest bg-blue-500/10 px-2.5 py-0.5 rounded-full border border-blue-500/20">
                     Use Case
                   </span>
                 </div>
                 <div className="mt-4">
-                  <h3 className="text-white font-bold text-base mb-2 font-display">Unlimited Revisions</h3>
-                  <p className="text-white/60 text-xs leading-relaxed mb-3">Request as many changes as you need during development. No hidden fees or limits.</p>
-                  
+                  <h3 className="text-slate-900 font-bold text-base mb-2 font-display">Unlimited Revisions</h3>
+                  <p className="text-slate-600 text-xs leading-relaxed mb-3">Request as many changes as you need during development. No hidden fees or limits.</p>
+
                   {/* Chat bubble infographic */}
-                  <div className="flex flex-col gap-2 rounded-2xl p-2.5 bg-white/[0.02] border border-white/5 select-none text-[9px] font-sans w-full">
+                  <div className="flex flex-col gap-2 rounded-2xl p-2.5 bg-blue-950/5 border border-blue-500/10 select-none text-[9px] font-sans w-full">
                     <div className="flex flex-col items-start max-w-[85%]">
-                      <div className="bg-white/5 rounded-2xl rounded-tl-sm px-2.5 py-1 text-white/70 border border-white/10 leading-normal">
+                      <div className="bg-white rounded-2xl rounded-tl-sm px-2.5 py-1 text-slate-600 border border-blue-500/15 leading-normal shadow-sm">
                         Can we adjust the header layout?
                       </div>
                     </div>
@@ -723,7 +725,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
                     </div>
                   </div>
                 </div>
-              </SpotlightCard>
+              </div>
             </motion.div>
 
             {/* Card 4: Built to Convert (Icy White Premium) */}
@@ -741,7 +743,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
                     <div className="w-7 h-7 rounded-full flex items-center justify-center bg-blue-500/10 text-blue-600 border border-blue-500/20 flex-shrink-0 font-bold font-mono text-[10px]">
                       04
                     </div>
-                    <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-blue-500/10 border border-blue-500/20 text-blue-600">
+                    <div className="w-12 h-12 rounded-xl flex items-center justify-center glass-icon-3d-light text-[#0052FF] [&>svg]:relative [&>svg]:z-10">
                       <TrendingUp className="w-5.5 h-5.5" />
                     </div>
                   </div>
@@ -783,7 +785,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
                     <div className="w-7 h-7 rounded-full flex items-center justify-center bg-primary/8 text-primary border border-primary/15 flex-shrink-0 font-bold font-mono text-[10px]">
                       05
                     </div>
-                    <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-primary/10 border border-primary/20 text-cyan-400">
+                    <div className="w-12 h-12 rounded-xl flex items-center justify-center glass-icon-3d text-[#E8F4FF] [&>svg]:relative [&>svg]:z-10">
                       <Shield className="w-5.5 h-5.5" />
                     </div>
                   </div>
@@ -817,7 +819,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
       </section>
 
       {/* ── What We Build — 3D Service Carousel ──────────────────────────────── */}
-      <section className="py-16 px-6 relative overflow-hidden" style={{ background: 'linear-gradient(to bottom, #030510 0%, #070B1F 50%, #030510 100%)' }}>
+      <section className="py-16 px-6 relative overflow-hidden" style={{ background: 'linear-gradient(to bottom, #030510 0%, #0C2F8C 50%, #030510 100%)' }}>
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] bg-[#0052FF]/8 blur-[150px] rounded-full pointer-events-none" />
         <div className="max-w-7xl mx-auto relative z-10">
           <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-12 gap-6">
@@ -918,8 +920,8 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
                     }}
                   />
                   <div className="flex items-start justify-between mb-5 relative z-10">
-                    <div className="w-12 h-12 rounded-2xl flex items-center justify-center" style={{ background: `${svc.color}15`, border: `1px solid ${svc.color}25` }}>
-                      <svc.icon className="w-6 h-6" style={{ color: svc.color }} />
+                    <div className={`w-12 h-12 rounded-2xl flex items-center justify-center ${i % 2 === 0 ? 'glass-icon-3d' : 'glass-icon-3d-light'}`}>
+                      <svc.icon className="w-6 h-6 relative z-10" style={{ color: i % 2 === 0 ? '#E8F4FF' : '#0052FF' }} />
                     </div>
                     <span className="text-[11px] font-mono text-white/20 font-semibold">{svc.num}</span>
                   </div>
@@ -943,10 +945,9 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
       </section>
 
       {/* ── How We Work ─────────────────────────────────────────────────────────── */}
-      <section ref={processRef} className="py-16 px-6 relative overflow-hidden animate-reveal" style={{ background: 'linear-gradient(to bottom, #030510 0%, #070B1F 50%, #030510 100%)' }}>
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] bg-[#1D4ED8]/10 blur-[150px] rounded-full pointer-events-none" />
-        <div className="absolute top-0 left-0 w-[300px] h-[300px] bg-[#0052FF]/8 blur-[120px] rounded-full pointer-events-none" />
-        <div className="absolute bottom-0 right-0 w-[280px] h-[280px] bg-[#00C2FF]/7 blur-[110px] rounded-full pointer-events-none" />
+      <section ref={processRef} className="py-16 px-6 relative overflow-hidden animate-reveal" style={{ background: 'linear-gradient(to bottom, #030510 0%, #0C2F8C 50%, #030510 100%)' }}>
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] bg-[#1D4ED8]/7 blur-[150px] rounded-full pointer-events-none" />
+        <div className="specular-beam absolute top-0 left-0 w-full h-[140%] rotate-[-8deg]" />
         <div className="max-w-5xl mx-auto relative z-10">
           <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-12 gap-6">
             <motion.div initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, amount: 0.3 }} transition={{ duration: 0.7 }}>
@@ -954,7 +955,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
               <h2 className="display-poster text-4xl sm:text-5xl md:text-6xl mb-6">
                 <span className="block text-white">How</span>
                 <span className="block my-2 text-white">We</span>
-                <span className="pill-word-brand text-white text-2xl sm:text-3xl md:text-4xl mt-2 inline-block animate-pulse" style={{ background: 'linear-gradient(135deg, #0052FF, #00C2FF)' }}>Work.</span>
+                <span className="pill-word-brand text-white text-2xl sm:text-3xl md:text-4xl mt-2 inline-block" style={{ background: 'linear-gradient(135deg, #0052FF, #00C2FF)' }}>Work.</span>
               </h2>
             </motion.div>
             <motion.p initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ duration: 0.7, delay: 0.2 }} className="text-white/55 text-sm leading-relaxed max-w-[200px] sm:text-right border-t border-white/10 pt-4 sm:border-t-0 sm:pt-0 sm:border-l sm:border-white/[0.08] sm:pl-6">
@@ -991,7 +992,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
                     <div className="w-full h-full p-7 rounded-3xl icy-card group">
                       <div className="absolute right-5 bottom-4 font-black select-none pointer-events-none leading-none z-0" style={{ fontSize: '100px', color: 'rgba(0,82,255,0.05)', fontFamily: 'var(--font-display)' }}>{step.num}</div>
                       <div className="flex items-start justify-between mb-6 relative z-10">
-                        <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-blue-500/10 border border-blue-500/20 text-blue-600 group-hover:scale-105 transition-transform duration-300">
+                        <div className="w-12 h-12 rounded-xl flex items-center justify-center glass-icon-3d-light text-[#0052FF] group-hover:scale-105 transition-transform duration-300 [&>svg]:relative [&>svg]:z-10">
                           <StepIcon className="w-5 h-5" />
                         </div>
                         <span className="text-[11px] font-mono text-blue-700 font-bold bg-blue-500/10 px-2.5 py-1 rounded-full">{step.num}</span>
@@ -1006,7 +1007,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
                     >
                       <div className="absolute right-5 bottom-4 font-black select-none pointer-events-none leading-none z-0" style={{ fontSize: '100px', color: 'rgba(255,255,255,0.02)', fontFamily: 'var(--font-display)' }}>{step.num}</div>
                       <div className="flex items-start justify-between mb-6 relative z-10">
-                        <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-primary/10 border border-primary/20 text-lavender group-hover:scale-105 transition-transform duration-300">
+                        <div className="w-12 h-12 rounded-xl flex items-center justify-center glass-icon-3d text-[#E8F4FF] group-hover:scale-105 transition-transform duration-300 [&>svg]:relative [&>svg]:z-10">
                           <StepIcon className="w-5 h-5" />
                         </div>
                         <span className="text-[11px] font-mono text-white font-bold bg-primary/20 px-2.5 py-1 rounded-full">{step.num}</span>
@@ -1030,7 +1031,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
       </section>
 
       {/* ── Selected Work — glassmorphic folder ───────────────────────────────── */}
-      <section className="py-16 px-6 overflow-x-hidden relative" style={{ background: 'linear-gradient(to bottom, #030510 0%, #070B1F 50%, #030510 100%)' }}>
+      <section className="py-16 px-6 overflow-x-hidden relative" style={{ background: 'linear-gradient(to bottom, #030510 0%, #0C2F8C 50%, #030510 100%)' }}>
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[500px] bg-[#1D4ED8]/8 blur-[160px] rounded-full pointer-events-none" />
         <div className="max-w-5xl mx-auto relative z-10">
           <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-6 gap-6">
@@ -1284,8 +1285,8 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
                       {/* Content */}
                       <div className="flex flex-col justify-between h-full p-6 sm:p-8 relative z-30">
                         <div className="flex items-center">
-                          <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl border border-primary/20 flex items-center justify-center bg-primary/10">
-                            <FolderOpen className="w-4 h-4 sm:w-5 sm:h-5 text-lavender" />
+                          <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center glass-icon-3d">
+                            <FolderOpen className="w-4 h-4 sm:w-5 sm:h-5 text-[#E8F4FF] relative z-10" />
                           </div>
                         </div>
                         <div className="flex items-center justify-between mt-auto">
@@ -1314,7 +1315,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
       </section>
 
       {/* ── Common Questions ─────────────────────────────────────────────────────── */}
-      <section className="py-10 px-6 relative overflow-hidden" style={{ background: 'linear-gradient(to bottom, #030510 0%, #070B1F 60%, #030510 100%)' }}>
+      <section className="py-10 px-6 relative overflow-hidden" style={{ background: 'linear-gradient(to bottom, #030510 0%, #0C2F8C 60%, #030510 100%)' }}>
         <div className="absolute top-0 right-1/4 w-[350px] h-[350px] bg-[#0052FF]/5 blur-[120px] rounded-full pointer-events-none" />
         <div className="max-w-3xl mx-auto relative z-10">
           <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-8 gap-6">
@@ -1322,7 +1323,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
               <span className="text-[10px] font-mono text-primary/75 tracking-[0.3em] uppercase block mb-3">05 — FAQ</span>
               <h2 className="display-poster text-4xl sm:text-5xl md:text-6xl mb-6">
                 <span className="block text-white">Common</span>
-                <span className="pill-word-brand text-white text-2xl sm:text-3xl md:text-4xl mt-2 inline-block animate-pulse" style={{ background: 'linear-gradient(135deg, #0052FF, #00C2FF)' }}>Questions.</span>
+                <span className="pill-word-brand text-white text-2xl sm:text-3xl md:text-4xl mt-2 inline-block" style={{ background: 'linear-gradient(135deg, #0052FF, #00C2FF)' }}>Questions.</span>
               </h2>
             </motion.div>
             <motion.p initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ duration: 0.7, delay: 0.2 }} className="text-white/55 text-sm leading-relaxed max-w-[200px] sm:text-right border-t border-white/10 pt-4 sm:border-t-0 sm:pt-0 sm:border-l sm:border-white/[0.08] sm:pl-6">
@@ -1378,11 +1379,9 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
       </section>
 
       {/* ── Closing CTA — toggle + modal ─────────────────────────────────────── */}
-      <section className="py-24 px-6 relative overflow-hidden" style={{ background: 'linear-gradient(to bottom, #030510 0%, #070B1F 50%, #030510 100%)' }}>
-        {/* Layered atmospheric blob glows */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[500px] bg-[#1D4ED8]/8 blur-[160px] rounded-full pointer-events-none" />
-        <div className="absolute top-0 right-0 w-[350px] h-[350px] bg-[#0052FF]/6 blur-[130px] rounded-full pointer-events-none" />
-        <div className="absolute bottom-0 left-0 w-[300px] h-[300px] bg-[#00C2FF]/8 blur-[120px] rounded-full pointer-events-none" />
+      <section className="py-24 px-6 relative overflow-hidden" style={{ background: 'linear-gradient(to bottom, #030510 0%, #0C2F8C 50%, #030510 100%)' }}>
+        {/* Single restrained atmospheric glow */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[500px] bg-[#1D4ED8]/6 blur-[160px] rounded-full pointer-events-none" />
         {/* Floating geometric rings */}
         {[
           { size: 140, left: '5%',  top: '10%', duration: 9,  delay: 0   },
@@ -1423,7 +1422,7 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
             <h2 className="display-poster text-white text-4xl sm:text-5xl md:text-7xl mb-6 leading-none">
               Wanna join the<br />
               <span style={{ WebkitTextStroke: '2px var(--color-primary)', color: 'transparent' }}>Galaxa</span>{' '}
-              <span className="pill-word-brand text-white inline-block animate-pulse" style={{ background: 'linear-gradient(135deg, #0052FF, #00C2FF)', textShadow: 'none' }}>team?</span>
+              <span className="pill-word-brand text-white inline-block" style={{ background: 'linear-gradient(135deg, #0052FF, #00C2FF)', textShadow: 'none' }}>team?</span>
             </h2>
             <p className="text-white/60 text-sm sm:text-base mb-10 leading-relaxed max-w-md mx-auto">
               Flip the switch to join our builders community and be the first to hear about every opportunity.
@@ -1505,8 +1504,8 @@ export default function HomeView({ isDhakaOpen, dhakaTime, currentUser }: HomeVi
                   </div>
                 ) : (
                   <>
-                    <div className="w-11 h-11 rounded-full border border-primary/20 flex items-center justify-center mb-5" style={{ background: 'rgba(0,82,255,0.08)' }}>
-                      <Mail className="w-5 h-5 text-primary" />
+                    <div className="w-11 h-11 rounded-full flex items-center justify-center mb-5 glass-icon-3d">
+                      <Mail className="w-5 h-5 text-[#E8F4FF] relative z-10" />
                     </div>
                     <h3 className="text-white font-bold text-xl mb-1 font-display">
                       Join the <span className="pill-word-brand text-white inline-block px-1.5 py-0.5 rounded text-sm sm:text-base font-semibold" style={{ background: 'linear-gradient(135deg, #0052FF, #00C2FF)' }}>Galaxa</span> circle
