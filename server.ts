@@ -6,6 +6,7 @@ import { GoogleGenAI, Type } from "@google/genai";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import apiRouter from "./api/index";
+import testAdminHandler from "./api/test-admin";
 
 dotenv.config();
 dotenv.config({ path: ".env.local" });
@@ -15,6 +16,7 @@ const PORT = 3000;
 
 app.use(express.json());
 app.use(cookieParser());
+app.all("/api/test-admin", (req, res) => testAdminHandler(req, res));
 app.use(apiRouter);
 
 // Initialize Gemini Client

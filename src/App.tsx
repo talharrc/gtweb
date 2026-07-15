@@ -26,6 +26,7 @@ import BuilderHubView from './components/builder-hub/BuilderHubView';
 import CustomerHubView from './components/customer-hub/CustomerHubView';
 import AdminPanelView from './components/admin/AdminPanelView';
 import AdminLoginForm from './components/admin/AdminLoginForm';
+import TestAdminPanel from './components/admin/TestAdminPanel';
 import CustomerAuthGate from './components/auth/CustomerAuthGate';
 import InviteLandingPage from './components/auth/InviteLandingPage';
 import { AuthProvider, useAuth } from './context/AuthContext';
@@ -198,6 +199,7 @@ function AppInner() {
   const location = useLocation();
   const navigate = useNavigate();
   const { email, userProfile } = useAuth();
+  const isTestAdminRoute = location.pathname.startsWith('/test-admin');
   const isHubRoute = location.pathname.startsWith('/hub') || location.pathname.startsWith('/admin');
   const isStoreRoute = location.pathname.startsWith('/browse');
   const isSpaceRoute = location.pathname.startsWith('/space');
@@ -227,6 +229,10 @@ function AppInner() {
     navigate(route);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
+
+  if (isTestAdminRoute) {
+    return <TestAdminPanel />;
+  }
 
   if (isHubRoute) {
     return (
