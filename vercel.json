@@ -3,6 +3,9 @@
   "outputDirectory": "dist",
   "rewrites": [
     { "source": "/api/test-admin", "destination": "/api/test-admin" },
+    { "source": "/api/auth/admin", "destination": "/api/auth/admin" },
+    { "source": "/api/auth/me", "destination": "/api/auth/me" },
+    { "source": "/api/auth/logout", "destination": "/api/auth/logout" },
     { "source": "/api/(.*)", "destination": "/api/index" },
     { "source": "/(.*)", "destination": "/index.html" }
   ],
