@@ -76,6 +76,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const signOut = async () => {
     try { await fetch('/api/auth/logout', { method: 'POST', credentials: 'include' }); } catch {}
+    localStorage.removeItem('gt_admin_ui');
     setRole('visitor');
     setEmail(null);
     setProjectId(null);

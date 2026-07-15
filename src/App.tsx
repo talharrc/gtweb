@@ -93,13 +93,15 @@ function RequireRole({ requiredRole, children }: { requiredRole: UserRole | 'adm
   const { isLoading, isSignedIn, role } = useAuth();
   const location = useLocation();
 
-  if (isLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <Loader2 className="w-8 h-8 text-primary animate-spin" />
-      </div>
-    );
-  }
+  const isAdminSignedIn = isSignedIn && role === 'admin';
+
+  // Once auth has settled and it turns out we're not admin, drop the optimistic
+  // hint so a stale/expired session doesn't keep flashing the panel on reload.
+  useEffect(() => {
+    if (requiredRole === 'admin' && !isLoading && !isAdminSignedIn) {
+      localStorage.removeItem('gt_admin_ui');
+    }
+  }, [requiredRole, isLoading, isAdminSignedIn]);
 
   // Allow demo bypass
   const queryParams = new URLSearchParams(location.search);
@@ -107,10 +109,21 @@ function RequireRole({ requiredRole, children }: { requiredRole: UserRole | 'adm
     return <>{children}</>;
   }
 
-  // Admin gate: show login form instead of redirecting
+  // Admin gate: never spins. Renders the panel instantly if already signed in,
+  // or optimistically while a prior login's hint is being silently reconfirmed
+  // in the background; otherwise renders the login form instantly.
   if (requiredRole === 'admin') {
-    if (!isSignedIn || role !== 'admin') return <AdminLoginForm />;
-    return <>{children}</>;
+    const hasAdminHint = localStorage.getItem('gt_admin_ui') === '1';
+    const showPanel = isAdminSignedIn || (isLoading && hasAdminHint);
+    return showPanel ? <>{children}</> : <AdminLoginForm />;
+  }
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <Loader2 className="w-8 h-8 text-primary animate-spin" />
+      </div>
+    );
   }
 
   // Customer gate: self-serve sign in/up instead of the invite-only screen

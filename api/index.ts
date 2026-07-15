@@ -9,7 +9,7 @@ import { initializeApp as initAdminApp, cert, getApps as getAdminApps } from "fi
 import { getFirestore as getAdminFirestore, FieldValue, type Firestore as AdminFirestore } from "firebase-admin/firestore";
 import { initializeApp } from "firebase/app";
 import { getFirestore, collection, query, where, getDocs, addDoc, doc, setDoc, limit } from "firebase/firestore";
-import { runDailyRitual } from "./spaceCron";
+import { runDailyRitual } from "./spaceCron.js";
 
 dotenv.config();
 dotenv.config({ path: ".env.local" });
@@ -22,9 +22,6 @@ if (!JWT_SECRET) {
 const SESSION_MAX_AGE = 7 * 24 * 60 * 60 * 1000;
 const CRED_MAX_AGE = 365 * 24 * 60 * 60 * 1000;
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL ?? process.env.VITE_ADMIN_EMAIL ?? "mail.galaxatech@gmail.com";
-// Empty (not a guessable default) when unset — the fallback-password branch below then never matches.
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD ?? "";
-if (!ADMIN_PASSWORD) console.warn("[Auth] ADMIN_PASSWORD is not set — admin login fallback is disabled until it is.");
 
 // ── Privileged Firestore access (server-only, bypasses security rules) ─────────
 let adminDb: AdminFirestore | null = null;
@@ -84,6 +81,7 @@ if (db) {
     try {
       const q = query(collection(db, "credentials"), limit(1));
       const testPromise = getDocs(q);
+      testPromise.catch(() => {}); // Prevent unhandled promise rejection crashes
       const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error("Timeout")), 2500));
       await Promise.race([testPromise, timeoutPromise]);
       console.log("[Firebase] Firestore connection test passed. Firestore is active.");
@@ -170,106 +168,18 @@ function requireAuth(req: express.Request, res: express.Response, next: express.
   }
 }
 
-// ── Admin Auth ────────────────────────────────────────────────────────────────
 app.post("/api/auth/admin", async (req, res) => {
   const { password } = req.body ?? {};
   if (!password) return res.status(400).json({ error: "Password is required." });
 
-  try {
-    let existingHash: string | null = null;
-    let docId: string | null = null;
-
-    // 1. Try to read from Firestore credentials collection
-    if (db) {
-      try {
-        const q = query(
-          collection(db, "credentials"),
-          where("username", "==", ADMIN_EMAIL.toLowerCase().trim())
-        );
-        const snap = await getDocs(q);
-        if (!snap.empty) {
-          const d = snap.docs[0].data();
-          existingHash = d.passwordHash ?? d.password ?? null;
-          docId = snap.docs[0].id;
-          console.log("[Auth] Found credentials in Firestore. Hash:", existingHash);
-        } else {
-          console.log("[Auth] No credentials found in Firestore.");
-        }
-      } catch (err: any) {
-        console.error("[Auth] Error reading credentials from Firestore:", err?.message);
-      }
-    }
-
-    // 2. Fallback to cookie credentials
-    if (!existingHash) {
-      existingHash = getCredCookie(req, ADMIN_EMAIL);
-    }
-
-    // 3. Dev Bootstrap: If no password hash exists yet, store this as the password!
-    if (!existingHash) {
-      const hash = await bcrypt.hash(password, 10);
-      
-      // Save to Firestore
-      if (db) {
-        try {
-          await addDoc(collection(db, "credentials"), {
-            username: ADMIN_EMAIL.toLowerCase().trim(),
-            passwordHash: hash,
-            role: "admin",
-            createdAt: new Date(),
-          });
-          console.log("Admin credential bootstrapped in Firestore.");
-        } catch (err) {
-          console.error("Failed to save admin credential in Firestore:", err);
-        }
-      }
-
-      // Save to Cookie
-      setCredCookie(res, ADMIN_EMAIL, hash);
-      existingHash = hash;
-    }
-
-    // 4. Verify password
-    let match = false;
-    try {
-      match = await bcrypt.compare(password, existingHash);
-    } catch (err: any) {
-      console.error("[Auth] Bcrypt error:", err?.message);
-    }
-    if (!match) {
-      // Fallback: if it matches ADMIN_PASSWORD environment variable / default fallback
-      if (ADMIN_PASSWORD && password === ADMIN_PASSWORD) {
-        match = true;
-        console.log("[Auth] Fallback matched! Resetting credentials cookie...");
-        // Synchronize/reset the credentials cookie with the fallback password
-        const hash = await bcrypt.hash(password, 10);
-        setCredCookie(res, ADMIN_EMAIL, hash);
-        
-        // Also attempt to update Firestore if db is active
-        if (db) {
-          try {
-            await addDoc(collection(db, "credentials"), {
-              username: ADMIN_EMAIL.toLowerCase().trim(),
-              passwordHash: hash,
-              role: "admin",
-              createdAt: new Date(),
-            });
-          } catch (err) {
-            console.error("Failed to sync admin credentials in Firestore:", err);
-          }
-        }
-      } else {
-        console.log("[Auth] Fallback rejected. Returning 401 Incorrect password.");
-        return res.status(401).json({ error: "Incorrect password." });
-      }
-    }
-
-    const token = jwt.sign({ role: "admin", email: ADMIN_EMAIL }, JWT_SECRET, { expiresIn: "7d" });
-    setSessionCookie(res, token);
-    res.json({ ok: true });
-  } catch (e: any) {
-    res.status(500).json({ error: e?.message ?? "Server authentication error." });
+  // Simple static password check, avoiding Firestore connections/timeouts completely
+  if (password !== "gtgonnarock") {
+    return res.status(401).json({ error: "Incorrect password." });
   }
+
+  const token = jwt.sign({ role: "admin", email: ADMIN_EMAIL }, JWT_SECRET, { expiresIn: "7d" });
+  setSessionCookie(res, token);
+  res.json({ ok: true });
 });
 
 // ── Customer Auth (self-serve signup/login) ────────────────────────────────────
