@@ -33,26 +33,30 @@ export default function HubLayout({ title, navItems, activeSection, onSectionCha
   };
 
   return (
-    <div className="min-h-screen flex">
+    <div className="min-h-screen flex relative">
+      <div className="bg-mesh" />
+      <div className="bg-grid-overlay" />
+
       {sidebarOpen && (
-        <div className="fixed inset-0 bg-black/60 z-30 lg:hidden" onClick={() => setSidebarOpen(false)} />
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-30 lg:hidden" onClick={() => setSidebarOpen(false)} />
       )}
 
       <aside className={`
-        fixed top-0 left-0 h-full w-64 z-40 flex flex-col
-        bg-[#0A0717] border-r border-white/5
+        fixed top-0 left-0 h-full w-72 max-w-[85vw] z-40 flex flex-col
+        bg-[#0A0717]/90 backdrop-blur-xl border-r border-white/10
+        shadow-[8px_0_40px_rgba(0,0,0,0.5)]
         transition-transform duration-300 ease-in-out
         ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
-        lg:translate-x-0 lg:relative lg:z-auto
+        lg:translate-x-0 lg:relative lg:z-auto lg:w-64 lg:max-w-none lg:shadow-none
       `}>
-        <div className="flex items-center gap-3 px-5 py-5 border-b border-white/5">
-          <img src="/logo.png" alt="GalaxaTech" className="w-7 h-7 rounded-lg object-contain" />
+        <div className="flex items-center gap-3 px-5 py-5 border-b border-white/10">
+          <img src="/logo.png" alt="GalaxaTech" className="w-8 h-8 rounded-lg object-contain" />
           <div>
             <p className="text-white font-bold text-sm leading-none">GalaxaTech</p>
-            <p className="text-white/40 text-[10px] font-mono mt-0.5">{title}</p>
+            <p className="text-primary text-[10px] font-mono mt-1">{title}</p>
           </div>
-          <button onClick={() => setSidebarOpen(false)} className="ml-auto lg:hidden text-white/40 hover:text-white">
-            <X className="w-4 h-4" />
+          <button onClick={() => setSidebarOpen(false)} className="ml-auto lg:hidden text-white/40 hover:text-white p-1">
+            <X className="w-5 h-5" />
           </button>
         </div>
 
@@ -64,10 +68,10 @@ export default function HubLayout({ title, navItems, activeSection, onSectionCha
                 key={item.path}
                 onClick={() => { onSectionChange(item.path); setSidebarOpen(false); }}
                 className={`
-                  w-full flex items-center gap-3 px-3 py-2.5 rounded-xl mb-1
+                  w-full flex items-center gap-3 px-3.5 py-3 lg:py-2.5 rounded-xl mb-1
                   text-sm font-medium transition-all text-left
                   ${isActive
-                    ? 'bg-primary/15 text-primary border border-primary/20'
+                    ? 'bg-primary/15 text-primary border border-primary/25 shadow-[0_0_20px_rgba(0,82,255,0.15)]'
                     : 'text-white/55 hover:text-white hover:bg-white/5 border border-transparent'
                   }
                 `}
@@ -79,13 +83,13 @@ export default function HubLayout({ title, navItems, activeSection, onSectionCha
           })}
         </nav>
 
-        <div className="p-4 border-t border-white/5">
+        <div className="p-4 border-t border-white/10">
           {hasUser && (
             <div className="flex items-center gap-2.5 mb-3">
               {photoURL ? (
-                <img src={photoURL} alt="" className="w-7 h-7 rounded-full object-cover" />
+                <img src={photoURL} alt="" className="w-8 h-8 rounded-full object-cover" />
               ) : (
-                <div className="w-7 h-7 rounded-full bg-primary/30 flex items-center justify-center text-primary text-xs font-bold">
+                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary/60 to-secondary/60 flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
                   {displayName?.[0]?.toUpperCase() ?? '?'}
                 </div>
               )}
@@ -98,13 +102,13 @@ export default function HubLayout({ title, navItems, activeSection, onSectionCha
           <div className="flex gap-2">
             <button
               onClick={() => navigate('/')}
-              className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg bg-white/5 hover:bg-white/10 text-white/50 hover:text-white text-xs transition-all"
+              className="flex-1 flex items-center justify-center gap-1.5 py-2.5 lg:py-2 rounded-lg bg-white/5 hover:bg-white/10 text-white/50 hover:text-white text-xs transition-all"
             >
               <Home className="w-3.5 h-3.5" /> Home
             </button>
             <button
               onClick={handleLogout}
-              className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg bg-white/5 hover:bg-red-500/20 text-white/50 hover:text-red-400 text-xs transition-all"
+              className="flex-1 flex items-center justify-center gap-1.5 py-2.5 lg:py-2 rounded-lg bg-white/5 hover:bg-red-500/20 text-white/50 hover:text-red-400 text-xs transition-all"
             >
               <LogOut className="w-3.5 h-3.5" /> Sign out
             </button>
@@ -113,15 +117,16 @@ export default function HubLayout({ title, navItems, activeSection, onSectionCha
       </aside>
 
       <div className="flex-1 flex flex-col min-w-0 lg:ml-0">
-        <div className="lg:hidden flex items-center gap-3 px-4 py-3 border-b border-white/5 bg-[#0A0717]/80 backdrop-blur-sm sticky top-0 z-20">
-          <button onClick={() => setSidebarOpen(true)} className="text-white/60 hover:text-white">
+        <div className="lg:hidden flex items-center gap-3 px-4 py-3.5 border-b border-white/10 bg-[#0A0717]/70 backdrop-blur-md sticky top-0 z-20">
+          <button onClick={() => setSidebarOpen(true)} className="text-white/60 hover:text-white p-1 -ml-1">
             <Menu className="w-5 h-5" />
           </button>
+          <img src="/logo.png" alt="" className="w-5 h-5 rounded object-contain" />
           <p className="text-white font-semibold text-sm">{title}</p>
           {photoURL && <img src={photoURL} alt="" className="w-7 h-7 rounded-full object-cover ml-auto" />}
         </div>
 
-        <main className="flex-1 p-4 lg:p-8 overflow-y-auto">
+        <main className="flex-1 p-4 sm:p-6 lg:p-8 overflow-y-auto overflow-x-hidden">
           {isDemo && (
             <div className="mb-6 p-4 bg-amber-500/10 border border-amber-500/20 rounded-2xl flex items-start gap-3">
               <span className="text-amber-400 text-base">💡</span>

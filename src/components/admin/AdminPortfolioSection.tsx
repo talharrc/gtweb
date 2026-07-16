@@ -161,18 +161,18 @@ export default function AdminPortfolioSection() {
 
       {showForm && (
         <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
-          <div className="glass-card w-full max-w-xl rounded-2xl p-6 max-h-[92vh] overflow-y-auto">
+          <div className="glass-card w-full max-w-xl rounded-2xl p-4 sm:p-6 max-h-[92vh] overflow-y-auto">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-white font-bold">{editingId ? 'Edit Portfolio Item' : 'New Portfolio Item'}</h3>
               <button onClick={() => setShowForm(false)}><X className="w-4 h-4 text-white/50" /></button>
             </div>
             <form onSubmit={handleSubmit} className="flex flex-col gap-3">
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <input required value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} placeholder="Project name" className="admin-input" />
                 <input required value={form.slug} onChange={e => setForm(f => ({ ...f, slug: e.target.value.toLowerCase().replace(/\s+/g, '-') }))} placeholder="url-slug" className="admin-input" disabled={!!editingId} />
               </div>
               <input required value={form.clientType} onChange={e => setForm(f => ({ ...f, clientType: e.target.value }))} placeholder="Client type (e.g. Islamic Lifestyle E-Commerce)" className="admin-input" />
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <input required value={form.country} onChange={e => setForm(f => ({ ...f, country: e.target.value }))} placeholder="Country flag emoji (🇧🇩)" className="admin-input" />
                 <input required value={form.countryName} onChange={e => setForm(f => ({ ...f, countryName: e.target.value }))} placeholder="Country name" className="admin-input" />
               </div>

@@ -358,7 +358,7 @@ export default function AdminProjectsSection() {
       {/* Project Form Modal */}
       {showForm && (
         <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
-          <div className="glass-card w-full max-w-2xl rounded-2xl p-6 max-h-[92vh] overflow-y-auto">
+          <div className="glass-card w-full max-w-2xl rounded-2xl p-4 sm:p-6 max-h-[92vh] overflow-y-auto">
             <div className="flex items-center justify-between mb-5">
               <h3 className="text-white font-bold text-lg">{editingId ? 'Edit Project' : 'New Project'}</h3>
               <button onClick={() => { setShowForm(false); setInviteResults(null); }}><X className="w-4 h-4 text-white/50" /></button>
@@ -415,7 +415,7 @@ export default function AdminProjectsSection() {
                       rows={2}
                       className="admin-input resize-none"
                     />
-                    <div className="grid grid-cols-2 gap-3">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       <select
                         value={form.category}
                         onChange={e => setForm(f => ({ ...f, category: e.target.value }))}
@@ -431,7 +431,7 @@ export default function AdminProjectsSection() {
                         {STATUSES.map(s => <option key={s} value={s}>{s}</option>)}
                       </select>
                     </div>
-                    <div className="grid grid-cols-3 gap-3">
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                       <div>
                         <label className="text-white/40 text-xs mb-1 block">Progress %</label>
                         <input

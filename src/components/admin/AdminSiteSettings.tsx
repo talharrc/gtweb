@@ -130,7 +130,7 @@ export default function AdminSiteSettings() {
       <div className="glass-card rounded-2xl p-6 mb-5">
         <h3 className="text-white font-semibold text-sm mb-4">Homepage Stats</h3>
         <p className="text-white/40 text-xs mb-4">These numbers appear on the homepage hero section in real time.</p>
-        <div className="grid grid-cols-3 gap-3 mb-4">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
           {[
             { key: 'projectsDelivered', label: 'Projects Delivered' },
             { key: 'countriesServed', label: 'Countries Served' },
