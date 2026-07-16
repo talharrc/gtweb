@@ -36,10 +36,10 @@ export default function handler(req: any, res: any) {
   }
 
   try {
-    const payload = jwt.verify(raw, JWT_SECRET) as { role: string; email: string; projectId: string | null };
+    const payload = jwt.verify(raw, JWT_SECRET) as { role: string; email: string; projectId: string | null; projectName?: string | null };
     res.statusCode = 200;
     res.setHeader("Content-Type", "application/json");
-    res.end(JSON.stringify({ role: payload.role, email: payload.email, projectId: payload.projectId ?? null }));
+    res.end(JSON.stringify({ role: payload.role, email: payload.email, projectId: payload.projectId ?? null, projectName: payload.projectName ?? null }));
   } catch {
     res.statusCode = 401;
     res.setHeader("Content-Type", "application/json");

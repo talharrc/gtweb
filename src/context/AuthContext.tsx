@@ -5,12 +5,14 @@ interface AuthSession {
   role: UserRole;
   email: string;
   projectId: string | null;
+  projectName?: string | null;
 }
 
 interface AuthContextValue {
   role: UserRole;
   email: string | null;
   projectId: string | null;
+  projectName: string | null;
   isLoading: boolean;
   isAdmin: boolean;
   isClient: boolean;
@@ -30,6 +32,7 @@ const AuthContext = createContext<AuthContextValue>({
   role: 'visitor',
   email: null,
   projectId: null,
+  projectName: null,
   isLoading: true,
   isAdmin: false,
   isClient: false,
@@ -49,6 +52,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [role, setRole] = useState<UserRole>('visitor');
   const [email, setEmail] = useState<string | null>(null);
   const [projectId, setProjectId] = useState<string | null>(null);
+  const [projectName, setProjectName] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isDemo, setIsDemo] = useState(() => {
     return new URLSearchParams(window.location.search).get('demo') === 'true';
@@ -62,6 +66,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           setRole(data.role as UserRole);
           setEmail(data.email ?? null);
           setProjectId(data.projectId ?? null);
+          setProjectName(data.projectName ?? null);
         }
       })
       .catch(() => {})
@@ -72,14 +77,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setRole(session.role as UserRole);
     setEmail(session.email);
     setProjectId(session.projectId);
+    setProjectName(session.projectName ?? null);
   };
 
   const signOut = async () => {
     try { await fetch('/api/auth/logout', { method: 'POST', credentials: 'include' }); } catch {}
     localStorage.removeItem('gt_admin_ui');
+    localStorage.removeItem('gt_client_ui');
+    localStorage.removeItem('gt_builder_ui');
     setRole('visitor');
     setEmail(null);
     setProjectId(null);
+    setProjectName(null);
   };
 
   const isSignedIn = email !== null;
@@ -93,6 +102,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       role,
       email,
       projectId,
+      projectName,
       isLoading,
       isAdmin: role === 'admin',
       isClient: role === 'client',

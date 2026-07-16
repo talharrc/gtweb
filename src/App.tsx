@@ -1,6 +1,6 @@
 import { useEffect, useState, ReactNode } from 'react';
 import { Routes, Route, useLocation, useNavigate, Navigate } from 'react-router-dom';
-import { Loader2, ChevronUp, MessageCircle, Link } from 'lucide-react';
+import { Loader2, ChevronUp, MessageCircle } from 'lucide-react';
 import { motion, AnimatePresence, MotionConfig } from 'motion/react';
 import Navbar from './components/Navbar';
 import HomeView from './components/HomeView';
@@ -28,7 +28,7 @@ import AdminPanelView from './components/admin/AdminPanelView';
 import AdminLoginForm from './components/admin/AdminLoginForm';
 import TestAdminPanel from './components/admin/TestAdminPanel';
 import CustomerAuthGate from './components/auth/CustomerAuthGate';
-import InviteLandingPage from './components/auth/InviteLandingPage';
+import PassLoginForm from './components/auth/PassLoginForm';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { PageType, UserRole } from './types';
 
@@ -49,60 +49,36 @@ const PAGE_ROUTES: Record<PageType, string> = {
   privacy: '/privacy',
   terms: '/terms',
   'visitor-hub': '/space',
-  'client-hub': '/hub/client',
+  'client-hub': '/client',
   'builders-program': '/gbp',
 };
 
-// Shown when a hub route is accessed without a valid JWT session
-function HubAccessDenied({ hubRole }: { hubRole: 'client' | 'builder' }) {
-  const isClient = hubRole === 'client';
-  const accentColor = isClient ? 'text-cyan-400' : 'text-emerald-400';
-  const accentBg = isClient ? 'bg-cyan-500/15' : 'bg-emerald-500/15';
-  const accentBorder = isClient ? 'border-cyan-500/30' : 'border-emerald-500/30';
-  const navigate = useNavigate();
-
-  return (
-    <div className="min-h-screen flex items-center justify-center px-6">
-      <div className="glass-card max-w-sm w-full p-8 rounded-2xl text-center">
-        <div className={`w-11 h-11 rounded-xl ${accentBg} border ${accentBorder} flex items-center justify-center mx-auto mb-4`}>
-          <Link className={`w-5 h-5 ${accentColor}`} />
-        </div>
-        <h2 className="text-white font-bold text-xl mb-2">Enter your invite link</h2>
-        <p className="text-white/50 text-sm mb-4">
-          Access to the {isClient ? 'Client' : 'Builder'} Hub is by invite only.
-        </p>
-        
-        <div className="flex flex-col gap-2.5 mb-5">
-          <button 
-            onClick={() => navigate(`/hub/${hubRole}?demo=true`)}
-            className="w-full py-2.5 bg-gradient-to-r from-primary to-secondary text-white font-bold text-xs rounded-xl uppercase tracking-wider hover:opacity-90 transition-all cursor-pointer"
-          >
-            View Demo Dashboard
-          </button>
-        </div>
-
-        <p className="text-white/30 text-[10px] leading-relaxed">
-          Check your email for the invite link sent by GalaxaTech, or contact us to request sandbox credentials.
-        </p>
-      </div>
-    </div>
-  );
-}
+// Roles that use the passcode pattern (never show a loading spinner — render
+// the login form or the gated content instantly, using a localStorage hint to
+// optimistically render the content for a returning, still-valid session
+// while /api/auth/me silently reconfirms it in the background).
+const NO_SPIN_HINT_KEYS: Partial<Record<UserRole | 'admin', string>> = {
+  admin: 'gt_admin_ui',
+  client: 'gt_client_ui',
+  builder: 'gt_builder_ui',
+};
 
 // Route guard for hub and admin routes
 function RequireRole({ requiredRole, children }: { requiredRole: UserRole | 'admin'; children: ReactNode }) {
   const { isLoading, isSignedIn, role } = useAuth();
   const location = useLocation();
 
-  const isAdminSignedIn = isSignedIn && role === 'admin';
+  const isRoleSignedIn = isSignedIn && role === requiredRole;
+  const hintKey = NO_SPIN_HINT_KEYS[requiredRole];
 
-  // Once auth has settled and it turns out we're not admin, drop the optimistic
-  // hint so a stale/expired session doesn't keep flashing the panel on reload.
+  // Once auth has settled and it turns out the session doesn't match this
+  // role, drop the optimistic hint so a stale/expired session doesn't keep
+  // flashing the gated content on reload.
   useEffect(() => {
-    if (requiredRole === 'admin' && !isLoading && !isAdminSignedIn) {
-      localStorage.removeItem('gt_admin_ui');
+    if (hintKey && !isLoading && !isRoleSignedIn) {
+      localStorage.removeItem(hintKey);
     }
-  }, [requiredRole, isLoading, isAdminSignedIn]);
+  }, [hintKey, isLoading, isRoleSignedIn]);
 
   // Allow demo bypass
   const queryParams = new URLSearchParams(location.search);
@@ -114,9 +90,26 @@ function RequireRole({ requiredRole, children }: { requiredRole: UserRole | 'adm
   // or optimistically while a prior login's hint is being silently reconfirmed
   // in the background; otherwise renders the login form instantly.
   if (requiredRole === 'admin') {
-    const hasAdminHint = localStorage.getItem('gt_admin_ui') === '1';
-    const showPanel = isAdminSignedIn || (isLoading && hasAdminHint);
+    const hasHint = localStorage.getItem('gt_admin_ui') === '1';
+    const showPanel = isRoleSignedIn || (isLoading && hasHint);
     return showPanel ? <>{children}</> : <AdminLoginForm />;
+  }
+
+  // Client/builder gate: same never-spin passcode pattern as admin. Admin can
+  // also walk straight into any hub once its own session has resolved.
+  if (requiredRole === 'client' || requiredRole === 'builder') {
+    const hasHint = hintKey ? localStorage.getItem(hintKey) === '1' : false;
+    const isAdminOverride = isSignedIn && role === 'admin';
+    const showHub = isRoleSignedIn || isAdminOverride || (isLoading && hasHint);
+    if (showHub) return <>{children}</>;
+    return (
+      <PassLoginForm
+        role={requiredRole}
+        title={requiredRole === 'client' ? 'Client Hub' : 'Builder Hub'}
+        endpoint={`/api/auth/${requiredRole}`}
+        storageHintKey={hintKey!}
+      />
+    );
   }
 
   if (isLoading) {
@@ -131,14 +124,6 @@ function RequireRole({ requiredRole, children }: { requiredRole: UserRole | 'adm
   if (requiredRole === 'customer') {
     if (!isSignedIn || role !== 'customer') return <CustomerAuthGate />;
     return <>{children}</>;
-  }
-
-  // Admin can access any hub
-  if (isSignedIn && role === 'admin') return <>{children}</>;
-
-  if (!isSignedIn || role !== requiredRole) {
-    const hubRole = (requiredRole === 'client' || requiredRole === 'builder') ? requiredRole : 'client';
-    return <HubAccessDenied hubRole={hubRole} />;
   }
 
   return <>{children}</>;
@@ -200,7 +185,8 @@ function AppInner() {
   const navigate = useNavigate();
   const { email, userProfile } = useAuth();
   const isTestAdminRoute = location.pathname.startsWith('/test-admin');
-  const isHubRoute = location.pathname.startsWith('/hub') || location.pathname.startsWith('/admin');
+  const isHubRoute = location.pathname.startsWith('/hub') || location.pathname.startsWith('/admin')
+    || location.pathname.startsWith('/client') || location.pathname.startsWith('/builder');
   const isStoreRoute = location.pathname.startsWith('/browse');
   const isSpaceRoute = location.pathname.startsWith('/space');
 
@@ -241,14 +227,13 @@ function AppInner() {
         <div className="bg-grid-overlay" />
         <ScrollToTop />
         <Routes>
-          <Route path="/hub/invite/:token" element={<InviteLandingPage />} />
           <Route path="/hub/visitor/*" element={<VisitorHubView />} />
-          <Route path="/hub/client/*" element={
+          <Route path="/client/*" element={
             <RequireRole requiredRole="client">
               <ClientHubView />
             </RequireRole>
           } />
-          <Route path="/hub/builder/*" element={
+          <Route path="/builder/*" element={
             <RequireRole requiredRole="builder">
               <BuilderHubView />
             </RequireRole>

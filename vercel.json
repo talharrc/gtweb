@@ -6,6 +6,9 @@
     { "source": "/api/auth/admin", "destination": "/api/auth/admin" },
     { "source": "/api/auth/me", "destination": "/api/auth/me" },
     { "source": "/api/auth/logout", "destination": "/api/auth/logout" },
+    { "source": "/api/auth/client", "destination": "/api/auth/client" },
+    { "source": "/api/auth/builder", "destination": "/api/auth/builder" },
+    { "source": "/api/admin/generate-passes", "destination": "/api/admin/generate-passes" },
     { "source": "/api/(.*)", "destination": "/api/index" },
     { "source": "/(.*)", "destination": "/index.html" }
   ],

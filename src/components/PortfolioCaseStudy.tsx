@@ -1,59 +1,30 @@
-﻿import { useNavigate, useParams, Navigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { useNavigate, useParams, Navigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
-import { ArrowUpRight, ArrowLeft, Globe, Layers, Code, Target } from 'lucide-react';
-
-interface CaseStudy {
-  name: string;
-  clientType: string;
-  country: string;
-  services: string[];
-  challenge: string;
-  solution: string;
-  stack: string[];
-  result: string;
-}
-
-const CASE_STUDIES: Record<string, CaseStudy> = {
-  'harmans-trading': {
-    name: 'Harmans Trading',
-    clientType: 'Manpower Recruitment Firm — Saudi Arabia',
-    country: '🇸🇦',
-    services: ['Web Development', 'Brand Identity'],
-    challenge: 'Harmans Trading needed a professional corporate website to serve clients across multiple regions — specifically Arabic-speaking, Bengali-speaking, and English-speaking markets. Their old presence was non-existent digitally, making it difficult to attract international clients or establish credibility with overseas partners.',
-    solution: 'We built a fully multilingual website with three complete language versions: English, Bengali, and Arabic — including a full RTL (right-to-left) layout for Arabic audiences. The site showcases their services, credibility, and regional reach in a professional format that works across devices and languages.',
-    stack: ['React', 'Multilingual Routing', 'RTL CSS Architecture', 'Tailwind CSS', 'Vercel'],
-    result: 'A professional digital presence that enables Harmans Trading to credibly reach international clients across three language markets simultaneously, with a consistent brand experience in each.',
-    // TODO: owner to provide live URL and screenshots
-  },
-  'sunnah-grandeur': {
-    name: 'Sunnah Grandeur',
-    clientType: 'Islamic Lifestyle E-Commerce — Bangladesh',
-    country: '🇧🇩',
-    services: ['Web Development', 'App Development', 'Systems Integration'],
-    challenge: 'The client needed two products — a full e-commerce website and an Islamic utility mobile app — but managing two separate systems with two separate backends and two admin panels would have been operationally complex and expensive.',
-    solution: 'We built both products — an e-commerce web platform and a Flutter mobile app — on a single shared Supabase backend. One database, one admin panel, two live products. We integrated Stripe for payments and designed the system so that a single admin action updates both the web and app simultaneously.',
-    stack: ['Next.js 14', 'Flutter', 'Supabase', 'Stripe', 'TypeScript', 'Tailwind CSS'],
-    result: 'Two live products — web and app — running on one integrated backend, cutting operational complexity in half and giving the client a single point of control for both products.',
-    // TODO: owner to provide live URL and screenshots
-  },
-  'salfas-bazar': {
-    name: 'Salfas Bazar',
-    clientType: 'Organic Food Business — Bangladesh',
-    country: '🇧🇩',
-    services: ['Brand Identity & Design', 'Web Development'],
-    challenge: 'An organic food brand needed a complete visual identity and a website that communicated natural quality and trust to local consumers. They were operating without any consistent branding, making it difficult to differentiate themselves in a competitive market.',
-    solution: 'We started with a full brand identity system — logo, color palette, typography, and brand guidelines — that captured the organic, trustworthy, and natural essence of their products. We then applied this brand system consistently across a website that highlights their product range and makes it easy for customers to learn about and purchase their products.',
-    stack: ['React', 'Tailwind CSS', 'Brand System Implementation', 'Figma'],
-    result: 'A cohesive brand identity and website that communicates trust and natural quality consistently across all touchpoints — from packaging to digital.',
-    // TODO: owner to provide screenshots and live URL
-  },
-};
+import { collection, onSnapshot } from 'firebase/firestore';
+import { ArrowUpRight, ArrowLeft, Globe, Layers, Code, Target, Loader2 } from 'lucide-react';
+import { db } from '../lib/firebase';
+import { PortfolioItem } from '../types';
 
 export default function PortfolioCaseStudy() {
   const navigate = useNavigate();
   const { slug } = useParams<{ slug: string }>();
-  const study = slug ? CASE_STUDIES[slug] : null;
+  const [items, setItems] = useState<PortfolioItem[]>([]);
+  const [loading, setLoading] = useState(true);
 
+  useEffect(() => {
+    const unsub = onSnapshot(collection(db, 'portfolio'), s => {
+      setItems(s.docs.map(d => ({ id: d.id, ...d.data() } as PortfolioItem)));
+      setLoading(false);
+    }, () => setLoading(false));
+    return () => unsub();
+  }, []);
+
+  if (loading) {
+    return <div className="flex justify-center py-32"><Loader2 className="w-6 h-6 text-primary animate-spin" /></div>;
+  }
+
+  const study = items.find(i => i.slug === slug);
   if (!study) return <Navigate to="/portfolio" replace />;
 
   return (
@@ -87,15 +58,24 @@ export default function PortfolioCaseStudy() {
           </div>
         </div>
 
-        {/* Placeholder visual area */}
-        {/* TODO: owner to provide real screenshots — replace the placeholder below */}
-        <div className="h-64 md:h-80 glass-card rounded-3xl flex items-center justify-center mb-14 relative overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-br from-primary/15 via-transparent to-secondary/15" />
-          <div className="text-center relative z-10">
-            <Globe className="w-16 h-16 text-primary/30 mx-auto mb-3" />
-            <p className="text-white/30 text-sm font-mono">Project screenshots coming soon</p>
+        {/* Visual area — real images if attached, placeholder otherwise */}
+        {study.images?.length > 0 ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-14">
+            {study.images.map((url) => (
+              <div key={url} className="rounded-2xl overflow-hidden glass-card">
+                <img src={url} alt={study.name} className="w-full h-full object-cover" />
+              </div>
+            ))}
           </div>
-        </div>
+        ) : (
+          <div className="h-64 md:h-80 glass-card rounded-3xl flex items-center justify-center mb-14 relative overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-br from-primary/15 via-transparent to-secondary/15" />
+            <div className="text-center relative z-10">
+              <Globe className="w-16 h-16 text-primary/30 mx-auto mb-3" />
+              <p className="text-white/30 text-sm font-mono">Project screenshots coming soon</p>
+            </div>
+          </div>
+        )}
 
         {/* Content sections */}
         <div className="flex flex-col gap-10">

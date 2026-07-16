@@ -161,11 +161,11 @@ export default function Navbar({ onPageChange, dhakaTime, isDhakaOpen, currentUs
                         <div className="w-8 h-8 rounded-lg bg-pink-500/20 flex items-center justify-center text-pink-400 group-hover/item:scale-110 transition-transform"><Compass className="w-4 h-4" /></div>
                         <div><p className="text-xs font-bold text-white mb-0.5">Galaxa Space</p><p className="text-[10px] text-white/50">Community, prompts, tools & builds</p></div>
                       </button>
-                      <button onClick={() => goToHub('/hub/client')} className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-[rgba(181,141,255,0.1)] text-left transition-all group/item">
+                      <button onClick={() => goToHub('/client')} className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-[rgba(181,141,255,0.1)] text-left transition-all group/item">
                         <div className="w-8 h-8 rounded-lg bg-cyan-500/20 flex items-center justify-center text-cyan-400 group-hover/item:scale-110 transition-transform"><Lock className="w-4 h-4" /></div>
                         <div><p className="text-xs font-bold text-white mb-0.5">Client Hub</p><p className="text-[10px] text-white/50">Project roadmap & live systems metrics</p></div>
                       </button>
-                      <button onClick={() => goToHub('/hub/builder')} className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-[rgba(181,141,255,0.1)] text-left transition-all group/item">
+                      <button onClick={() => goToHub('/builder')} className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-[rgba(181,141,255,0.1)] text-left transition-all group/item">
                         <div className="w-8 h-8 rounded-lg bg-emerald-500/20 flex items-center justify-center text-emerald-400 group-hover/item:scale-110 transition-transform"><BookOpen className="w-4 h-4" /></div>
                         <div><p className="text-xs font-bold text-white mb-0.5">Builder Hub</p><p className="text-[10px] text-white/50">Sprint boards & performance logs</p></div>
                       </button>
@@ -330,8 +330,8 @@ export default function Navbar({ onPageChange, dhakaTime, isDhakaOpen, currentUs
                         <span className="text-[9px] font-bold text-primary tracking-widest uppercase font-mono block mb-2">Hubs</span>
                         <div className="flex flex-col gap-1">
                           <button onClick={() => goToHub('/space')} className="py-2.5 text-white/75 hover:text-white text-sm font-semibold flex items-center gap-3"><Compass className="w-4 h-4 text-pink-400" /> Galaxa Space</button>
-                          <button onClick={() => goToHub('/hub/client')} className="py-2.5 text-white/75 hover:text-white text-sm font-semibold flex items-center gap-3"><Lock className="w-4 h-4 text-cyan-400" /> Client Hub</button>
-                          <button onClick={() => goToHub('/hub/builder')} className="py-2.5 text-white/75 hover:text-white text-sm font-semibold flex items-center gap-3"><BookOpen className="w-4 h-4 text-emerald-400" /> Builder Hub</button>
+                          <button onClick={() => goToHub('/client')} className="py-2.5 text-white/75 hover:text-white text-sm font-semibold flex items-center gap-3"><Lock className="w-4 h-4 text-cyan-400" /> Client Hub</button>
+                          <button onClick={() => goToHub('/builder')} className="py-2.5 text-white/75 hover:text-white text-sm font-semibold flex items-center gap-3"><BookOpen className="w-4 h-4 text-emerald-400" /> Builder Hub</button>
                           <button onClick={() => goToHub('/hub/customer')} className="py-2.5 text-white/75 hover:text-white text-sm font-semibold flex items-center gap-3"><Package className="w-4 h-4 text-primary" /> My Orders</button>
                         </div>
                       </div>
