@@ -4,10 +4,9 @@ interface SpotlightCardProps {
   children: React.ReactNode;
   className?: string;
   style?: React.CSSProperties;
-  light?: boolean;
 }
 
-export default function SpotlightCard({ children, className = "", style = {}, light = false }: SpotlightCardProps) {
+export default function SpotlightCard({ children, className = "", style = {} }: SpotlightCardProps) {
   const cardRef = useRef<HTMLDivElement>(null);
   const [coords, setCoords] = useState({ x: 0, y: 0 });
   const [isHovered, setIsHovered] = useState(false);
@@ -39,9 +38,7 @@ export default function SpotlightCard({ children, className = "", style = {}, li
           style={{
             width: '320px',
             height: '320px',
-            background: light
-              ? 'radial-gradient(circle, rgba(254, 221, 0, 0.18) 0%, rgba(254, 221, 0, 0.04) 50%, transparent 100%)'
-              : 'radial-gradient(circle, rgba(0,194,255,0.11) 0%, rgba(0,82,255,0.03) 50%, transparent 100%)',
+            background: 'radial-gradient(circle, rgba(0,194,255,0.11) 0%, rgba(0,82,255,0.03) 50%, transparent 100%)',
             left: `${coords.x - 160}px`,
             top: `${coords.y - 160}px`,
             transform: 'translate3d(0, 0, 0)',
@@ -57,9 +54,7 @@ export default function SpotlightCard({ children, className = "", style = {}, li
           style={{
             zIndex: 2,
             border: '1px solid transparent',
-            backgroundImage: light
-              ? `radial-gradient(circle 140px at ${coords.x}px ${coords.y}px, rgba(254, 221, 0, 0.45), rgba(217, 189, 0, 0.15), transparent 80%)`
-              : `radial-gradient(circle 140px at ${coords.x}px ${coords.y}px, rgba(0, 194, 255, 0.35), rgba(0, 82, 255, 0.15), transparent 80%)`,
+            backgroundImage: `radial-gradient(circle 140px at ${coords.x}px ${coords.y}px, rgba(0, 194, 255, 0.35), rgba(0, 82, 255, 0.15), transparent 80%)`,
             WebkitMask: 'linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0)',
             WebkitMaskComposite: 'destination-out',
             maskComposite: 'exclude',
@@ -74,4 +69,3 @@ export default function SpotlightCard({ children, className = "", style = {}, li
     </div>
   );
 }
-

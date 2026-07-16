@@ -118,8 +118,8 @@ export default function Navbar({ onPageChange, dhakaTime, isDhakaOpen, currentUs
       >
         <div className={`relative border rounded-full max-w-fit px-5 sm:px-6 py-2.5 flex items-center gap-5 sm:gap-8 text-white transition-all duration-300 [backdrop-filter:blur(22px)_saturate(140%)] [-webkit-backdrop-filter:blur(22px)_saturate(140%)] ${
           scrolled
-            ? 'bg-[rgba(12,9,22,0.88)] border-[rgba(181,141,255,0.32)] shadow-[inset_0_1px_0_rgba(255,255,255,0.12),inset_0_0_28px_rgba(124,42,235,0.10),0_20px_60px_rgba(0,0,0,0.45)]'
-            : 'bg-[rgba(12,9,22,0.68)] border-[rgba(181,141,255,0.22)] shadow-[inset_0_1px_0_rgba(255,255,255,0.09),inset_0_0_28px_rgba(124,42,235,0.06),0_15px_45px_rgba(0,0,0,0.35)]'
+            ? 'bg-white/[0.07] border-[rgba(181,141,255,0.32)] shadow-[inset_0_1px_0_rgba(255,255,255,0.12),inset_0_0_28px_rgba(124,42,235,0.08),0_20px_60px_rgba(0,0,0,0.60)]'
+            : 'bg-white/[0.042] border-[rgba(181,141,255,0.20)] shadow-[inset_0_1px_0_rgba(255,255,255,0.09),inset_0_0_28px_rgba(124,42,235,0.05),0_20px_60px_rgba(0,0,0,0.50)]'
         }`}>
 
           {/* Logo */}
@@ -238,7 +238,7 @@ export default function Navbar({ onPageChange, dhakaTime, isDhakaOpen, currentUs
             <button
               onClick={() => navTo('/audit')}
               aria-label="Book a free audit"
-              className="relative flex items-center w-10 hover:w-[160px] h-10 bg-gradient-to-r from-primary to-secondary text-white rounded-full transition-all duration-500 overflow-hidden group focus:outline-none cursor-pointer shadow-[0_8px_20px_-6px_rgba(0,82,255,0.4)]"
+              className="relative flex items-center w-10 hover:w-[160px] h-10 bg-gradient-to-r from-primary to-secondary text-white rounded-full transition-all duration-500 overflow-hidden group focus:outline-none cursor-pointer shadow-[0_8px_20px_-6px_rgba(0,89,255,0.4)]"
             >
               <div className="w-10 h-10 flex items-center justify-center flex-shrink-0 group-hover:rotate-45 transition-transform duration-500">
                 <ArrowUpRight className="w-4 h-4 text-white" />

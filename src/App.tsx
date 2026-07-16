@@ -280,6 +280,7 @@ function AppInner() {
     <div className="min-h-screen relative flex flex-col justify-between">
       <div className="bg-mesh" />
       <div className="bg-grid-overlay" />
+      <div className="grain-overlay" />
       <ScrollToTop />
       <Navbar
         onPageChange={handlePageSelect}

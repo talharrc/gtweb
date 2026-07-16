@@ -185,7 +185,7 @@ export default function AdminUsersSection() {
         filtered.length === 0 ? (
           <EmptyState title="No approved users yet" description="Approve pending sign-ups to see them here." />
         ) : (
-          <div className="glass-card rounded-2xl overflow-x-auto">
+          <div className="glass-card rounded-2xl overflow-hidden">
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-white/5 text-white/40 text-xs uppercase tracking-wider">
