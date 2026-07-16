@@ -238,7 +238,7 @@ export default function Navbar({ onPageChange, dhakaTime, isDhakaOpen, currentUs
             <button
               onClick={() => navTo('/audit')}
               aria-label="Book a free audit"
-              className="relative flex items-center w-10 hover:w-[160px] h-10 bg-gradient-to-r from-primary to-secondary text-white rounded-full transition-all duration-500 overflow-hidden group focus:outline-none cursor-pointer shadow-[0_8px_20px_-6px_rgba(0,89,255,0.4)]"
+              className="relative flex items-center w-10 hover:w-[160px] h-10 bg-gradient-to-r from-primary to-secondary text-white rounded-full transition-all duration-500 overflow-hidden group focus:outline-none cursor-pointer shadow-[0_8px_20px_-6px_rgba(43,255,110,0.4)]"
             >
               <div className="w-10 h-10 flex items-center justify-center flex-shrink-0 group-hover:rotate-45 transition-transform duration-500">
                 <ArrowUpRight className="w-4 h-4 text-white" />

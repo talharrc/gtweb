@@ -47,8 +47,8 @@ export default function SelectedWork({ isMobile }: SelectedWorkProps) {
   };
 
   return (
-    <section ref={portfolioSectionRef} className="py-16 px-6 overflow-x-hidden relative" style={{ background: 'linear-gradient(to bottom, transparent 0%, rgba(11,36,112,0.22) 50%, transparent 100%)' }}>
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[500px] bg-[#0041CC]/8 blur-[160px] rounded-full pointer-events-none" />
+    <section ref={portfolioSectionRef} className="py-16 px-6 overflow-x-hidden relative" style={{ background: 'linear-gradient(to bottom, transparent 0%, rgba(14,31,20,0.22) 50%, transparent 100%)' }}>
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[500px] bg-[#16C95A]/8 blur-[160px] rounded-full pointer-events-none" />
       <div className="max-w-5xl mx-auto relative z-10">
         <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-6 gap-6">
           <motion.div initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, amount: 0.3 }} transition={{ duration: 0.7 }}>
@@ -99,7 +99,7 @@ export default function SelectedWork({ isMobile }: SelectedWorkProps) {
               <div
                 className="absolute inset-0 rounded-3xl opacity-35 pointer-events-none transition-all duration-700"
                 style={{
-                  background: 'radial-gradient(circle at 50% 50%, #0059FF 0%, transparent 70%)',
+                  background: 'radial-gradient(circle at 50% 50%, #2BFF6E 0%, transparent 70%)',
                   transform: isFolderOpen ? 'translateZ(-90px) scale(1.3)' : 'translateZ(-90px) scale(0.9)',
                   filter: 'blur(40px)',
                 }}
@@ -243,9 +243,9 @@ export default function SelectedWork({ isMobile }: SelectedWorkProps) {
                 <svg viewBox="0 0 600 400" className="absolute inset-0 w-full h-full pointer-events-none">
                   <defs>
                     <linearGradient id="neonBorderGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                      <stop offset="0%" stopColor="#00C2FF" stopOpacity="0.5" />
-                      <stop offset="50%" stopColor="#0059FF" stopOpacity="0.35" />
-                      <stop offset="100%" stopColor="#0041CC" stopOpacity="0.5" />
+                      <stop offset="0%" stopColor="#7CFFC2" stopOpacity="0.5" />
+                      <stop offset="50%" stopColor="#2BFF6E" stopOpacity="0.35" />
+                      <stop offset="100%" stopColor="#16C95A" stopOpacity="0.5" />
                     </linearGradient>
                   </defs>
                   <path
@@ -259,7 +259,7 @@ export default function SelectedWork({ isMobile }: SelectedWorkProps) {
                 <div className="flex flex-col justify-between h-full p-6 sm:p-8 relative z-30">
                   <div className="flex items-center">
                     <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center glass-icon-3d-chrome">
-                      <FolderOpen className="w-4 h-4 sm:w-5 sm:h-5 text-[#1B2C57] relative z-10" />
+                      <FolderOpen className="w-4 h-4 sm:w-5 sm:h-5 text-[#123321] relative z-10" />
                     </div>
                   </div>
                   <div className="flex items-center justify-between mt-auto">

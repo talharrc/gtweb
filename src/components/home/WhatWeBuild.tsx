@@ -7,12 +7,12 @@ import {
 } from 'lucide-react';
 
 const SERVICES = [
-  { num: '01', icon: Laptop, label: 'Web Development', desc: 'Fast, secure, and scalable websites built for performance and growth.', anchor: 'web-development', color: '#00C2FF' },
-  { num: '02', icon: Smartphone, label: 'App Development', desc: 'High-performance mobile and web apps tailored to user needs and business goals.', anchor: 'app-development', color: '#7C5CFF' },
-  { num: '03', icon: MessageCircle, label: 'Social Media & Content', desc: 'Engaging content and social strategies that build brand presence and loyalty.', anchor: 'social-media', color: '#FF3DA6' },
-  { num: '04', icon: Cpu, label: 'AI & Automation', desc: 'Intelligent automation that streamlines workflows and boosts productivity.', anchor: 'ai-automation', color: '#0059FF' },
-  { num: '05', icon: Brush, label: 'Brand Identity & Design', desc: 'Distinctive visuals and brand experiences that leave a lasting impression.', anchor: 'brand-identity', color: '#FFB020' },
-  { num: '06', icon: Workflow, label: 'Systems Consulting', desc: 'Strategic guidance and system architectures that drive sustainable growth.', anchor: 'systems-consulting', color: '#7C5CFF' },
+  { num: '01', icon: Laptop, label: 'Web Development', desc: 'Fast, secure, and scalable websites built for performance and growth.', anchor: 'web-development', color: '#7CFFC2' },
+  { num: '02', icon: Smartphone, label: 'App Development', desc: 'High-performance mobile and web apps tailored to user needs and business goals.', anchor: 'app-development', color: '#0FD65E' },
+  { num: '03', icon: MessageCircle, label: 'Social Media & Content', desc: 'Engaging content and social strategies that build brand presence and loyalty.', anchor: 'social-media', color: '#9CFF2E' },
+  { num: '04', icon: Cpu, label: 'AI & Automation', desc: 'Intelligent automation that streamlines workflows and boosts productivity.', anchor: 'ai-automation', color: '#2BFF6E' },
+  { num: '05', icon: Brush, label: 'Brand Identity & Design', desc: 'Distinctive visuals and brand experiences that leave a lasting impression.', anchor: 'brand-identity', color: '#2BFF6E' },
+  { num: '06', icon: Workflow, label: 'Systems Consulting', desc: 'Strategic guidance and system architectures that drive sustainable growth.', anchor: 'systems-consulting', color: '#0FD65E' },
 ];
 
 function getCarouselOffset(i: number, active: number, total: number): number {
@@ -59,16 +59,16 @@ export default function WhatWeBuild({ isMobile }: WhatWeBuildProps) {
   };
 
   return (
-    <section className="py-16 px-6 relative overflow-hidden" style={{ background: 'linear-gradient(to bottom, transparent 0%, rgba(11,36,112,0.26) 50%, transparent 100%)' }}>
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] bg-[#0059FF]/8 blur-[150px] rounded-full pointer-events-none" />
-      <div className="absolute bottom-0 right-0 w-[350px] h-[350px] bg-[#FF3DA6]/[0.05] blur-[130px] rounded-full pointer-events-none" />
+    <section className="py-16 px-6 relative overflow-hidden" style={{ background: 'linear-gradient(to bottom, transparent 0%, rgba(14,31,20,0.26) 50%, transparent 100%)' }}>
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] bg-[#2BFF6E]/8 blur-[150px] rounded-full pointer-events-none" />
+      <div className="absolute bottom-0 right-0 w-[350px] h-[350px] bg-[#9CFF2E]/[0.05] blur-[130px] rounded-full pointer-events-none" />
       <div className="max-w-7xl mx-auto relative z-10">
         <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-12 gap-6">
           <motion.div initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, amount: 0.3 }} transition={{ duration: 0.7 }}>
-            <span className="text-[10px] font-mono text-cyan-400/75 tracking-[0.3em] uppercase block mb-3">02 — Services</span>
+            <span className="text-[10px] font-mono text-[#7CFFC2]/75 tracking-[0.3em] uppercase block mb-3">02 — Services</span>
             <h2 className="text-4xl sm:text-5xl font-black text-white leading-[0.9]" style={{ fontFamily: 'var(--font-display)' }}>
               What<br />
-              <span style={{ WebkitTextStroke: '1.5px rgba(0,194,255,0.85)', color: 'transparent' }}>We</span><br />
+              <span style={{ WebkitTextStroke: '1.5px rgba(124,255,194,0.85)', color: 'transparent' }}>We</span><br />
               <span className="pill-word-brand-ghost">Build.</span>
             </h2>
           </motion.div>
@@ -143,14 +143,14 @@ export default function WhatWeBuild({ isMobile }: WhatWeBuildProps) {
                   />
                   <div className="flex items-start justify-between mb-5 relative z-10">
                     <div className={`w-12 h-12 rounded-2xl flex items-center justify-center ${i % 2 === 0 ? 'glass-icon-3d' : 'glass-icon-3d-light'} ${isActive ? 'float-idle' : ''}`}>
-                      <svc.icon className="w-6 h-6 relative z-10" style={{ color: i % 2 === 0 ? '#E8F4FF' : svc.color }} />
+                      <svc.icon className="w-6 h-6 relative z-10" style={{ color: i % 2 === 0 ? '#EFFFF5' : svc.color }} />
                     </div>
                     <span className="text-[11px] font-mono text-white/20 font-semibold">{svc.num}</span>
                   </div>
                   <h3 className="text-white font-bold text-base mb-2 font-display relative z-10">{svc.label}</h3>
                   <p className="text-white/70 text-sm leading-relaxed relative z-10">{svc.desc}</p>
                   {isActive && (
-                    <div className="flex items-center gap-1.5 mt-5 text-xs font-semibold relative z-10" style={{ color: '#00C2FF' }}>
+                    <div className="flex items-center gap-1.5 mt-5 text-xs font-semibold relative z-10" style={{ color: '#7CFFC2' }}>
                       Explore Service <ArrowUpRight className="w-3.5 h-3.5" />
                     </div>
                   )}
@@ -169,7 +169,7 @@ export default function WhatWeBuild({ isMobile }: WhatWeBuildProps) {
             <button
               onClick={carouselPrev}
               aria-label="Previous service"
-              className="w-11 h-11 rounded-full flex items-center justify-center glass-icon-3d text-[#E8F4FF] hover:scale-105 transition-transform duration-200 [&>svg]:relative [&>svg]:z-10"
+              className="w-11 h-11 rounded-full flex items-center justify-center glass-icon-3d text-[#EFFFF5] hover:scale-105 transition-transform duration-200 [&>svg]:relative [&>svg]:z-10"
             >
               <ChevronLeft className="w-5 h-5" />
             </button>
@@ -180,14 +180,14 @@ export default function WhatWeBuild({ isMobile }: WhatWeBuildProps) {
                   onClick={() => setActiveIndex(i)}
                   aria-label={`Show ${svc.label}`}
                   className="w-1.5 h-1.5 rounded-full transition-all duration-200"
-                  style={{ background: i === activeIndex ? '#00C2FF' : 'rgba(255,255,255,0.2)', width: i === activeIndex ? '18px' : '6px' }}
+                  style={{ background: i === activeIndex ? '#7CFFC2' : 'rgba(255,255,255,0.2)', width: i === activeIndex ? '18px' : '6px' }}
                 />
               ))}
             </div>
             <button
               onClick={carouselNext}
               aria-label="Next service"
-              className="w-11 h-11 rounded-full flex items-center justify-center glass-icon-3d text-[#E8F4FF] hover:scale-105 transition-transform duration-200 [&>svg]:relative [&>svg]:z-10"
+              className="w-11 h-11 rounded-full flex items-center justify-center glass-icon-3d text-[#EFFFF5] hover:scale-105 transition-transform duration-200 [&>svg]:relative [&>svg]:z-10"
             >
               <ChevronRight className="w-5 h-5" />
             </button>

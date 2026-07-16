@@ -22,9 +22,9 @@ export default function ClosingCTA() {
   };
 
   return (
-    <section className="py-24 px-6 relative overflow-hidden" style={{ background: 'linear-gradient(to bottom, transparent 0%, rgba(11,36,112,0.30) 50%, transparent 100%)' }}>
+    <section className="py-24 px-6 relative overflow-hidden" style={{ background: 'linear-gradient(to bottom, transparent 0%, rgba(14,31,20,0.30) 50%, transparent 100%)' }}>
       {/* Single restrained atmospheric glow */}
-      <div className="breathe-slow absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[500px] bg-[#0041CC]/6 blur-[160px] rounded-full pointer-events-none" />
+      <div className="breathe-slow absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[500px] bg-[#16C95A]/6 blur-[160px] rounded-full pointer-events-none" />
 
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -33,7 +33,7 @@ export default function ClosingCTA() {
         transition={{ duration: 0.6 }}
         className="max-w-lg mx-auto relative z-10"
       >
-        <div className="bg-gradient-to-b from-[#070B1F] via-[#030923] to-[#010208] rounded-[36px] p-8 sm:p-14 relative overflow-hidden shadow-2xl border border-primary/20 shadow-primary/10 text-center">
+        <div className="bg-gradient-to-b from-[#070B1F] via-[#050806] to-[#010208] rounded-[36px] p-8 sm:p-14 relative overflow-hidden shadow-2xl border border-primary/20 shadow-primary/10 text-center">
           {/* Inset top highlight */}
           <div className="absolute inset-x-0 top-0 h-px bg-white/5 pointer-events-none" />
 
@@ -46,7 +46,7 @@ export default function ClosingCTA() {
 
           <h2 className="display-sora text-white text-3xl sm:text-4xl md:text-5xl mb-4 leading-tight">
             Join the{' '}
-            <span className="pill-word-accent text-white inline-block" style={{ background: 'linear-gradient(135deg, #0059FF, #00C2FF)' }}>Galaxa</span>{' '}
+            <span className="pill-word-accent text-white inline-block" style={{ background: 'linear-gradient(135deg, #2BFF6E, #7CFFC2)' }}>Galaxa</span>{' '}
             circle
           </h2>
           <p className="text-white/60 text-sm sm:text-base mb-8 leading-relaxed max-w-md mx-auto">
@@ -55,7 +55,7 @@ export default function ClosingCTA() {
 
           {submitted ? (
             <div className="flex flex-col items-center gap-3 py-4">
-              <Sparkles className="w-8 h-8" style={{ color: '#0059FF' }} />
+              <Sparkles className="w-8 h-8" style={{ color: '#2BFF6E' }} />
               <p className="text-white font-bold text-lg font-display">You're in the circle.</p>
               <p className="text-white/40 text-sm">We'll reach out with opportunities first.</p>
             </div>
@@ -77,7 +77,7 @@ export default function ClosingCTA() {
                 type="submit"
                 disabled={submitting}
                 className="btn-shine flex items-center justify-center gap-2 py-3 px-6 rounded-xl text-white font-bold text-sm transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] flex-shrink-0"
-                style={{ background: submitting ? 'rgba(0,89,255,0.5)' : 'linear-gradient(135deg, #0059FF, #00C2FF)', boxShadow: '0 8px 30px rgba(0,89,255,0.35)' }}
+                style={{ background: submitting ? 'rgba(43,255,110,0.5)' : 'linear-gradient(135deg, #2BFF6E, #7CFFC2)', boxShadow: '0 8px 30px rgba(43,255,110,0.35)' }}
               >
                 {submitting ? 'Sending…' : <>Join <ArrowUpRight className="w-4 h-4" /></>}
               </button>

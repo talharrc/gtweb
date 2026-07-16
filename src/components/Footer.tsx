@@ -25,13 +25,13 @@ export default function Footer({ onPageChange }: FooterProps) {
   };
 
   return (
-    <footer className="relative overflow-hidden" style={{ background: '#030923' }}>
+    <footer className="relative overflow-hidden" style={{ background: '#050806' }}>
       {/* Glow accent line at top */}
-      <div className="absolute top-0 left-0 right-0 h-px" style={{ background: 'linear-gradient(to right, transparent, rgba(0,89,255,0.6) 30%, rgba(0,194,255,0.8) 50%, rgba(0,89,255,0.6) 70%, transparent)', boxShadow: '0 0 20px rgba(0,89,255,0.4)' }} />
+      <div className="absolute top-0 left-0 right-0 h-px" style={{ background: 'linear-gradient(to right, transparent, rgba(43,255,110,0.6) 30%, rgba(124,255,194,0.8) 50%, rgba(43,255,110,0.6) 70%, transparent)', boxShadow: '0 0 20px rgba(43,255,110,0.4)' }} />
 
       {/* Ambient glow blobs */}
-      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[700px] h-[350px] rounded-full pointer-events-none" style={{ background: 'radial-gradient(ellipse at center, rgba(0,89,255,0.06) 0%, transparent 70%)' }} />
-      <div className="absolute top-1/2 left-0 w-[300px] h-[300px] rounded-full pointer-events-none" style={{ background: 'radial-gradient(ellipse at center, rgba(0,89,255,0.04) 0%, transparent 70%)' }} />
+      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[700px] h-[350px] rounded-full pointer-events-none" style={{ background: 'radial-gradient(ellipse at center, rgba(43,255,110,0.06) 0%, transparent 70%)' }} />
+      <div className="absolute top-1/2 left-0 w-[300px] h-[300px] rounded-full pointer-events-none" style={{ background: 'radial-gradient(ellipse at center, rgba(43,255,110,0.04) 0%, transparent 70%)' }} />
 
       <div className="max-w-7xl mx-auto px-6 pt-10 pb-6 relative z-10">
 
@@ -40,14 +40,14 @@ export default function Footer({ onPageChange }: FooterProps) {
           {/* Logo + tagline */}
           <div className="flex items-center gap-4">
             <div className="relative">
-              <div className="absolute inset-0 rounded-2xl blur-md" style={{ background: 'rgba(0,89,255,0.3)', transform: 'scale(1.2)' }} />
-              <div className="relative w-14 h-14 rounded-2xl flex items-center justify-center" style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(0,89,255,0.2)', backdropFilter: 'blur(12px)' }}>
+              <div className="absolute inset-0 rounded-2xl blur-md" style={{ background: 'rgba(43,255,110,0.3)', transform: 'scale(1.2)' }} />
+              <div className="relative w-14 h-14 rounded-2xl flex items-center justify-center" style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(43,255,110,0.2)', backdropFilter: 'blur(12px)' }}>
                 <img alt="GalaxaTech" className="w-9 h-9 object-contain" src="/logo.png" />
               </div>
             </div>
             <div>
               <p className="font-display text-2xl font-bold tracking-tight text-white leading-none mb-1">GalaxaTech</p>
-              <p className="text-sm font-mono" style={{ color: '#00C2FF' }}>Ecosystems, Optimized.</p>
+              <p className="text-sm font-mono" style={{ color: '#7CFFC2' }}>Ecosystems, Optimized.</p>
             </div>
           </div>
 
@@ -57,7 +57,7 @@ export default function Footer({ onPageChange }: FooterProps) {
             className="group flex items-center gap-3 text-white font-bold py-3 px-6 rounded-full transition-all duration-300 hover:scale-[1.04] active:scale-[0.98]"
             style={{ background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.15)', backdropFilter: 'blur(12px)' }}
           >
-            <span className="w-8 h-8 rounded-full flex items-center justify-center group-hover:rotate-45 transition-transform duration-500" style={{ background: 'linear-gradient(135deg,#0059FF,#00C2FF)' }}>
+            <span className="w-8 h-8 rounded-full flex items-center justify-center group-hover:rotate-45 transition-transform duration-500" style={{ background: 'linear-gradient(135deg,#2BFF6E,#7CFFC2)' }}>
               <ArrowUpRight className="w-4 h-4 text-white" />
             </span>
             <span className="text-sm">Book a Free Audit</span>
@@ -69,7 +69,7 @@ export default function Footer({ onPageChange }: FooterProps) {
 
           {/* Column 1 — About */}
           <div>
-            <h5 className="text-[10px] font-mono font-bold tracking-[0.2em] uppercase mb-5" style={{ color: '#0059FF' }}>About</h5>
+            <h5 className="text-[10px] font-mono font-bold tracking-[0.2em] uppercase mb-5" style={{ color: '#2BFF6E' }}>About</h5>
             <p className="text-sm leading-relaxed mb-6" style={{ color: 'rgba(255,255,255,0.45)' }}>
               A systems-driven creative tech agency from Dhaka, building digital ecosystems for brands worldwide.
             </p>
@@ -95,7 +95,7 @@ export default function Footer({ onPageChange }: FooterProps) {
 
           {/* Column 2 — Services */}
           <div>
-            <h5 className="text-[10px] font-mono font-bold tracking-[0.2em] uppercase mb-5" style={{ color: '#00C2FF' }}>Services</h5>
+            <h5 className="text-[10px] font-mono font-bold tracking-[0.2em] uppercase mb-5" style={{ color: '#7CFFC2' }}>Services</h5>
             <ul className="space-y-3">
               {SERVICE_LINKS.map(({ label, anchor }) => (
                 <li key={anchor}>
@@ -106,7 +106,7 @@ export default function Footer({ onPageChange }: FooterProps) {
                     onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.color = '#fff'; }}
                     onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.color = 'rgba(255,255,255,0.45)'; }}
                   >
-                    <span className="w-1.5 h-1.5 rounded-full flex-shrink-0 transition-all group-hover:w-2.5" style={{ background: '#0059FF' }} />
+                    <span className="w-1.5 h-1.5 rounded-full flex-shrink-0 transition-all group-hover:w-2.5" style={{ background: '#2BFF6E' }} />
                     {label}
                   </button>
                 </li>
@@ -116,7 +116,7 @@ export default function Footer({ onPageChange }: FooterProps) {
 
           {/* Column 3 — Company */}
           <div>
-            <h5 className="text-[10px] font-mono font-bold tracking-[0.2em] uppercase mb-5" style={{ color: '#0059FF' }}>Company</h5>
+            <h5 className="text-[10px] font-mono font-bold tracking-[0.2em] uppercase mb-5" style={{ color: '#2BFF6E' }}>Company</h5>
             <ul className="space-y-3">
               {[
                 { label: 'About', path: '/about' },
@@ -133,7 +133,7 @@ export default function Footer({ onPageChange }: FooterProps) {
                     onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.color = '#fff'; }}
                     onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.color = 'rgba(255,255,255,0.45)'; }}
                   >
-                    <span className="w-1.5 h-1.5 rounded-full flex-shrink-0 transition-all group-hover:w-2.5" style={{ background: '#00C2FF' }} />
+                    <span className="w-1.5 h-1.5 rounded-full flex-shrink-0 transition-all group-hover:w-2.5" style={{ background: '#7CFFC2' }} />
                     {label}
                   </button>
                 </li>
@@ -165,8 +165,8 @@ export default function Footer({ onPageChange }: FooterProps) {
                   onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.color = '#fff'; }}
                   onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.color = 'rgba(255,255,255,0.45)'; }}
                 >
-                  <div className="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: 'rgba(0,89,255,0.1)', border: '1px solid rgba(0,89,255,0.2)' }}>
-                    <Mail className="w-3.5 h-3.5" style={{ color: '#0059FF' }} />
+                  <div className="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: 'rgba(43,255,110,0.1)', border: '1px solid rgba(43,255,110,0.2)' }}>
+                    <Mail className="w-3.5 h-3.5" style={{ color: '#2BFF6E' }} />
                   </div>
                   mail.galaxatech@gmail.com
                 </a>
@@ -205,7 +205,7 @@ export default function Footer({ onPageChange }: FooterProps) {
         <div className="pt-6 border-t" style={{ borderColor: 'rgba(255,255,255,0.06)' }}>
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-4">
             <div className="flex items-center gap-2">
-              <Sparkles className="w-3.5 h-3.5" style={{ color: '#0059FF' }} />
+              <Sparkles className="w-3.5 h-3.5" style={{ color: '#2BFF6E' }} />
               <span className="text-xs font-mono" style={{ color: 'rgba(255,255,255,0.3)' }}>© 2023–2026 GalaxaTech. All rights reserved.</span>
             </div>
             <div className="flex items-center gap-5 text-xs" style={{ color: 'rgba(255,255,255,0.3)' }}>

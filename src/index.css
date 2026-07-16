@@ -2,7 +2,7 @@
 
 @theme {
   --font-sans: "Inter", "Segoe UI", ui-sans-serif, system-ui, sans-serif;
-  --font-display: "Clash Display", "Sora", "Segoe UI", sans-serif;
+  --font-display: "General Sans", "Segoe UI", sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   --font-rajdhani: "Rajdhani", sans-serif;
   --font-condensed: "Anton", "Arial Narrow", Impact, sans-serif;
@@ -66,25 +66,25 @@
   /* ── GalaxaTech locked design tokens ──────────────────────────────────── */
   --gt-white:#FFFFFF;
   --gt-black:#000000;
-  --gt-void:#030923;         /* primary background */
-  --gt-surface:#041A53;      /* secondary surface — cards, panels */
-  --gt-surface-2:#0B2470;    /* elevated surface, one step up from --gt-surface */
-  --gt-accent:#0059FF;       /* primary accent — electric blue: CTAs, links, active */
-  --gt-accent-hi:#2B7BFF;    /* accent hover */
-  --gt-accent-deep:#0041CC;  /* accent active/pressed */
-  --gt-glow-cyan:#00C2FF;    /* secondary glow accent, used sparingly for highlights */
+  --gt-void:#050806;         /* primary background */
+  --gt-surface:#0A120D;      /* secondary surface — cards, panels */
+  --gt-surface-2:#0E1F14;    /* elevated surface, one step up from --gt-surface */
+  --gt-accent:#2BFF6E;       /* primary accent — electric blue: CTAs, links, active */
+  --gt-accent-hi:#5CFF95;    /* accent hover */
+  --gt-accent-deep:#16C95A;  /* accent active/pressed */
+  --gt-glow-cyan:#7CFFC2;    /* secondary glow accent, used sparingly for highlights */
 
   /* Expanded decorative accent range — ambient/ombient glows, icon variety, card tints.
      Primary CTAs and links stay on --gt-accent; these are for atmosphere/variety only. */
-  --gt-glow-violet:#7C5CFF;  /* cool-violet, sits between blue and magenta on the wheel */
-  --gt-glow-magenta:#FF3DA6; /* warm contrast accent */
+  --gt-glow-violet:#0FD65E;  /* cool-violet, sits between blue and magenta on the wheel */
+  --gt-glow-magenta:#9CFF2E; /* warm contrast accent */
   --gt-glow-amber:var(--gt-warning); /* warm highlight, reuses the warning hue for cohesion */
 
   --gt-gray-100:#8FA2C4;
   --gt-gray-200:#6C7FA3;
   --gt-gray-300:#4E6089;
   --gt-gray-400:#324472;
-  --gt-gray-500:#1B2C57;
+  --gt-gray-500:#123321;
 
   --gt-success:#1FD67A;
   --gt-warning:#FFB800;
@@ -154,11 +154,11 @@
 
   /* Shadows / glows */
   --shadow-card:0 20px 60px rgba(0,0,0,0.50);
-  --shadow-card-inset:inset 0 1px 0 rgba(255,255,255,0.09), inset 0 0 28px rgba(0,89,255,0.05);
+  --shadow-card-inset:inset 0 1px 0 rgba(255,255,255,0.09), inset 0 0 28px rgba(43,255,110,0.05);
   --shadow-elevated:0 15px 45px rgba(0,0,0,0.65);
-  --glow-accent:0 0 40px rgba(0,89,255,0.45);
-  --glow-accent-soft:0 0 40px rgba(0,89,255,0.20);
-  --glow-cyan:0 0 30px rgba(0,194,255,0.35);
+  --glow-accent:0 0 40px rgba(43,255,110,0.45);
+  --glow-accent-soft:0 0 40px rgba(43,255,110,0.20);
+  --glow-cyan:0 0 30px rgba(124,255,194,0.35);
 
   /* Glass */
   --blur-panel:blur(20px) saturate(150%);
@@ -192,7 +192,8 @@ body {
   scroll-behavior: smooth;
 }
 
-/* Engineering blueprint background grid overlay */
+/* Crisp technical grid overlay — visible green hairlines on the void, echoing
+   an engineering-blueprint/cyber-grid aesthetic. */
 .bg-grid-overlay {
   position: fixed;
   top: 0;
@@ -201,13 +202,13 @@ body {
   height: 100%;
   z-index: -9;
   background-image:
-    linear-gradient(rgba(255, 255, 255, 0.007) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.007) 1px, transparent 1px);
-  background-size: 50px 50px;
+    linear-gradient(rgba(43,255,110,0.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(43,255,110,0.07) 1px, transparent 1px);
+  background-size: 44px 44px;
   background-position: center;
   pointer-events: none;
-  mask-image: radial-gradient(ellipse at center, rgba(0,0,0,1) 10%, rgba(0,0,0,0) 80%);
-  -webkit-mask-image: radial-gradient(ellipse at center, rgba(0,0,0,1) 10%, rgba(0,0,0,0) 80%);
+  mask-image: radial-gradient(ellipse at center, rgba(0,0,0,1) 35%, rgba(0,0,0,0) 92%);
+  -webkit-mask-image: radial-gradient(ellipse at center, rgba(0,0,0,1) 35%, rgba(0,0,0,0) 92%);
 }
 
 /* Glass Panels */
@@ -230,7 +231,7 @@ body {
   border-radius: var(--radius-xl);
   box-shadow:
     inset 0 1px 1px rgba(255, 255, 255, 0.08),
-    0 0 1px rgba(0, 89, 255, 0.15),
+    0 0 1px rgba(43,255,110, 0.15),
     var(--shadow-elevated);
   transition: all 0.4s var(--ease-premium);
 }
@@ -239,13 +240,13 @@ body {
   background: rgba(20, 8, 28, 0.6);
   backdrop-filter: blur(24px) saturate(160%);
   -webkit-backdrop-filter: blur(24px) saturate(160%);
-  border: 1px solid rgba(0, 89, 255, 0.35);
-  border-top: 1px solid rgba(0, 194, 255, 0.5);
-  border-left: 1px solid rgba(0, 194, 255, 0.35);
+  border: 1px solid rgba(43,255,110, 0.35);
+  border-top: 1px solid rgba(124,255,194, 0.5);
+  border-left: 1px solid rgba(124,255,194, 0.35);
   border-radius: var(--radius-xl);
   box-shadow:
     inset 0 1px 1px rgba(255, 255, 255, 0.15),
-    0 0 45px rgba(0, 89, 255, 0.45),
+    0 0 45px rgba(43,255,110, 0.45),
     0 15px 45px rgba(0, 0, 0, 0.65);
   transition: all 0.4s var(--ease-premium);
 }
@@ -269,7 +270,7 @@ body {
 
 /* Text gradients */
 .text-grad, .text-gradient {
-  background: linear-gradient(90deg, #0059FF, #00C2FF);
+  background: linear-gradient(90deg, #2BFF6E, #7CFFC2);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -277,18 +278,18 @@ body {
 }
 
 .text-gradient-cyan {
-  background: linear-gradient(135deg, #0059FF 0%, #00C2FF 100%);
+  background: linear-gradient(135deg, #2BFF6E 0%, #7CFFC2 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
 /* Button / section gradients */
 .primary-gradient {
-  background: linear-gradient(135deg, #0059FF 0%, #00C2FF 100%);
+  background: linear-gradient(135deg, #2BFF6E 0%, #7CFFC2 100%);
 }
 
 .cyan-gradient {
-  background: linear-gradient(135deg, #0059FF 0%, #0041CC 100%);
+  background: linear-gradient(135deg, #2BFF6E 0%, #16C95A 100%);
 }
 
 /* Card hover glow */
@@ -316,21 +317,18 @@ body {
   height: 100%;
   z-index: -10;
   background:
-    radial-gradient(circle at 15% 8%,  rgba(0,89,255,0.10), transparent 38%),
-    radial-gradient(circle at 88% 18%, rgba(0,194,255,0.07), transparent 42%),
-    radial-gradient(circle at 78% 78%, rgba(124,92,255,0.09), transparent 40%),
-    radial-gradient(circle at 12% 82%, rgba(255,61,166,0.055), transparent 38%),
-    radial-gradient(circle at 50% 45%, rgba(255,184,0,0.035), transparent 45%),
-    radial-gradient(circle at 50% 95%, rgba(0,65,204,0.12), transparent 40%),
+    radial-gradient(circle at 18% 12%, rgba(43,255,110,0.16), transparent 26%),
+    radial-gradient(circle at 85% 22%, rgba(124,255,194,0.11), transparent 28%),
+    radial-gradient(circle at 55% 92%, rgba(22,201,90,0.16), transparent 30%),
     var(--void);
-  background-size: 180% 180%;
+  background-size: 160% 160%;
   animation: mesh-drift 42s ease-in-out infinite alternate;
 }
 
 @keyframes mesh-drift {
   0%   { background-position: 0% 0%; }
-  50%  { background-position: 30% 12%; }
-  100% { background-position: 8% 22%; }
+  50%  { background-position: 22% 10%; }
+  100% { background-position: 6% 16%; }
 }
 
 @keyframes marquee {
@@ -372,7 +370,7 @@ button:not([class*="w-"]):not([class*="h-"]) {
 
 /* Smooth focus ring on keyboard nav */
 :focus-visible {
-  outline: 2px solid rgba(0, 89, 255, 0.8);
+  outline: 2px solid rgba(43,255,110, 0.8);
   outline-offset: 3px;
   border-radius: 6px;
 }
@@ -403,10 +401,10 @@ button:not([class*="w-"]):not([class*="h-"]) {
 }
 .admin-input:focus {
   outline: none;
-  border-color: rgba(0,194,255,0.5);
+  border-color: rgba(124,255,194,0.5);
 }
 .admin-input::placeholder { color: rgba(255,255,255,0.3); }
-.admin-input option { background: #030923; color: #fff; }
+.admin-input option { background: #050806; color: #fff; }
 
 /* Spotlight Diagonal sweep reflection */
 .spotlight-sweep {
@@ -436,7 +434,7 @@ button:not([class*="w-"]):not([class*="h-"]) {
 
 /* Dotted grid decorative motif — place as small absolute block near headings */
 .dotted-grid {
-  background-image: radial-gradient(circle, rgba(0,89,255,0.25) 1px, transparent 1px);
+  background-image: radial-gradient(circle, rgba(43,255,110,0.25) 1px, transparent 1px);
   background-size: 18px 18px;
   pointer-events: none;
 }
@@ -444,21 +442,21 @@ button:not([class*="w-"]):not([class*="h-"]) {
 /* Pill highlight for key heading words on dark bg */
 .pill-word {
   display: inline-block;
-  background: rgba(0,194,255,0.12);
-  border: 1px solid rgba(0,194,255,0.30);
+  background: rgba(124,255,194,0.12);
+  border: 1px solid rgba(124,255,194,0.30);
   padding: 0.05em 0.45em 0.1em;
   border-radius: 999px;
-  color: #00C2FF;
+  color: #7CFFC2;
 }
 
 /* Pill highlight variant — coral, for secondary accent words */
 .pill-word-coral {
   display: inline-block;
-  background: rgba(0,89,255,0.12);
-  border: 1px solid rgba(0,89,255,0.30);
+  background: rgba(43,255,110,0.12);
+  border: 1px solid rgba(43,255,110,0.30);
   padding: 0.05em 0.45em 0.1em;
   border-radius: 999px;
-  color: #0059FF;
+  color: #2BFF6E;
 }
 
 /* ── Store Custom Styling ──────────────────────────────────────────────────────── */
@@ -599,9 +597,9 @@ button:not([class*="w-"]):not([class*="h-"]) {
 /* Translucent cyan pill for dark backgrounds */
 .pill-word-brand-ghost {
   display: inline-block;
-  background: rgba(0,194,255,0.14);
-  border: 1px solid rgba(0,194,255,0.35);
-  color: #00C2FF;
+  background: rgba(124,255,194,0.14);
+  border: 1px solid rgba(124,255,194,0.35);
+  color: #7CFFC2;
   padding: 0.05em 0.45em 0.1em;
   border-radius: var(--radius-pill);
 }
@@ -625,8 +623,8 @@ button:not([class*="w-"]):not([class*="h-"]) {
   height: 200%;
   margin-left: -50%;
   background-image:
-    linear-gradient(to right, rgba(120, 200, 255, 0.18) 1.5px, transparent 1.5px),
-    linear-gradient(to bottom, rgba(120, 200, 255, 0.18) 1.5px, transparent 1.5px);
+    linear-gradient(to right, rgba(150,255,200, 0.18) 1.5px, transparent 1.5px),
+    linear-gradient(to bottom, rgba(150,255,200, 0.18) 1.5px, transparent 1.5px);
   background-size: 50px 50px;
   transform: rotateX(78deg);
   transform-origin: 50% 0%;
@@ -641,19 +639,19 @@ button:not([class*="w-"]):not([class*="h-"]) {
 
 /* Premium alternating icy-white cards */
 .icy-card {
-  background: rgba(240, 244, 255, 0.95);
-  border: 1px solid rgba(0, 194, 255, 0.25);
+  background: rgba(238,255,246, 0.95);
+  border: 1px solid rgba(124,255,194, 0.25);
   box-shadow:
-    0 10px 30px rgba(0, 89, 255, 0.05),
+    0 10px 30px rgba(43,255,110, 0.05),
     inset 0 1px 0 rgba(255, 255, 255, 1);
-  color: #030923;
+  color: #050806;
   transition: all 0.4s var(--ease-premium);
 }
 .icy-card:hover {
   transform: translateY(-4px);
-  border-color: rgba(0, 194, 255, 0.6);
+  border-color: rgba(124,255,194, 0.6);
   box-shadow:
-    0 20px 40px rgba(0, 89, 255, 0.12),
+    0 20px 40px rgba(43,255,110, 0.12),
     inset 0 1px 0 rgba(255, 255, 255, 1);
 }
 
@@ -666,15 +664,15 @@ button:not([class*="w-"]):not([class*="h-"]) {
   overflow: hidden;
   background:
     radial-gradient(ellipse 60% 50% at 30% 20%, rgba(255,255,255,0.55), transparent 60%),
-    linear-gradient(155deg, rgba(120,190,255,0.28) 0%, rgba(0,89,255,0.14) 55%, rgba(3,9,35,0.6) 100%);
-  border: 1px solid rgba(160,215,255,0.30);
+    linear-gradient(155deg, rgba(140,255,190,0.28) 0%, rgba(43,255,110,0.14) 55%, rgba(5,8,6,0.6) 100%);
+  border: 1px solid rgba(170,255,210,0.30);
   border-top-color: rgba(255,255,255,0.65);
-  border-left-color: rgba(220,240,255,0.45);
+  border-left-color: rgba(220,255,235,0.45);
   box-shadow:
     inset 0 1px 1px rgba(255,255,255,0.5),
-    inset 0 -8px 14px rgba(0,40,120,0.45),
-    0 8px 22px rgba(0,40,150,0.30),
-    0 0 26px rgba(0,170,255,0.18);
+    inset 0 -8px 14px rgba(5,45,25,0.5),
+    0 8px 22px rgba(10,60,35,0.35),
+    0 0 30px rgba(43,255,110,0.28);
 }
 .glass-icon-3d::after {
   content: '';
@@ -695,13 +693,13 @@ button:not([class*="w-"]):not([class*="h-"]) {
   overflow: hidden;
   background:
     radial-gradient(ellipse 60% 50% at 30% 20%, rgba(255,255,255,0.9), transparent 60%),
-    linear-gradient(155deg, rgba(200,230,255,0.9) 0%, rgba(120,180,255,0.35) 60%, rgba(0,89,255,0.14) 100%);
-  border: 1px solid rgba(0,89,255,0.28);
+    linear-gradient(155deg, rgba(210,255,230,0.9) 0%, rgba(60,255,140,0.4) 60%, rgba(22,201,90,0.2) 100%);
+  border: 1px solid rgba(43,255,110,0.28);
   border-top-color: rgba(255,255,255,0.95);
   box-shadow:
     inset 0 1px 1px rgba(255,255,255,0.8),
-    inset 0 -6px 12px rgba(0,89,255,0.16),
-    0 6px 16px rgba(0,89,255,0.14);
+    inset 0 -6px 12px rgba(43,255,110,0.16),
+    0 6px 16px rgba(43,255,110,0.14);
 }
 .glass-icon-3d-light::after {
   content: '';
@@ -719,7 +717,7 @@ button:not([class*="w-"]):not([class*="h-"]) {
 .specular-beam {
   position: absolute;
   pointer-events: none;
-  background: linear-gradient(115deg, transparent 42%, rgba(190,225,255,0.14) 49%, rgba(255,255,255,0.22) 50%, rgba(190,225,255,0.14) 51%, transparent 58%);
+  background: linear-gradient(115deg, transparent 42%, rgba(200,255,225,0.14) 49%, rgba(255,255,255,0.22) 50%, rgba(200,255,225,0.14) 51%, transparent 58%);
 }
 
 /* Chrome variant — brushed-metal ribbon look echoing the GT logo mark.
@@ -757,14 +755,14 @@ button:not([class*="w-"]):not([class*="h-"]) {
   overflow: hidden;
   background:
     radial-gradient(ellipse 60% 50% at 30% 20%, rgba(255,255,255,0.5), transparent 60%),
-    linear-gradient(155deg, rgba(190,170,255,0.30) 0%, rgba(124,92,255,0.16) 55%, rgba(3,9,35,0.6) 100%);
-  border: 1px solid rgba(180,165,255,0.30);
+    linear-gradient(155deg, rgba(160,255,205,0.32) 0%, rgba(15,214,94,0.18) 55%, rgba(5,8,6,0.6) 100%);
+  border: 1px solid rgba(15,214,94,0.35);
   border-top-color: rgba(255,255,255,0.6);
   box-shadow:
     inset 0 1px 1px rgba(255,255,255,0.45),
-    inset 0 -8px 14px rgba(45,20,120,0.45),
-    0 8px 22px rgba(60,20,150,0.30),
-    0 0 26px rgba(124,92,255,0.18);
+    inset 0 -8px 14px rgba(6,50,28,0.5),
+    0 8px 22px rgba(8,70,38,0.35),
+    0 0 28px rgba(15,214,94,0.25);
 }
 .glass-icon-3d-violet::after {
   content: '';
@@ -778,32 +776,20 @@ button:not([class*="w-"]):not([class*="h-"]) {
   overflow: hidden;
   background:
     radial-gradient(ellipse 60% 50% at 30% 20%, rgba(255,255,255,0.5), transparent 60%),
-    linear-gradient(155deg, rgba(255,170,220,0.30) 0%, rgba(255,61,166,0.16) 55%, rgba(35,3,25,0.6) 100%);
-  border: 1px solid rgba(255,160,215,0.30);
+    linear-gradient(155deg, rgba(215,255,150,0.32) 0%, rgba(156,255,46,0.18) 55%, rgba(8,15,5,0.6) 100%);
+  border: 1px solid rgba(156,255,46,0.35);
   border-top-color: rgba(255,255,255,0.6);
   box-shadow:
     inset 0 1px 1px rgba(255,255,255,0.45),
-    inset 0 -8px 14px rgba(120,20,80,0.45),
-    0 8px 22px rgba(150,20,100,0.30),
-    0 0 26px rgba(255,61,166,0.18);
+    inset 0 -8px 14px rgba(35,50,6,0.5),
+    0 8px 22px rgba(50,70,8,0.35),
+    0 0 28px rgba(156,255,46,0.25);
 }
 .glass-icon-3d-magenta::after {
   content: '';
   position: absolute; top: 10%; left: 14%; width: 34%; height: 26%;
   background: radial-gradient(ellipse at 30% 30%, rgba(255,255,255,0.85), transparent 75%);
   border-radius: 50%; pointer-events: none;
-}
-
-/* Subtle film-grain texture overlay for a premium, hyperreal tactile feel.
-   Fixed, full-page, non-interactive, blended so it never washes out content. */
-.grain-overlay {
-  position: fixed;
-  inset: 0;
-  z-index: -8;
-  pointer-events: none;
-  opacity: 0.05;
-  mix-blend-mode: overlay;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
 /* Gentle idle float — for icon badges/decorative elements that should feel alive
