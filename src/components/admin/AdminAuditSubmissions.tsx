@@ -151,7 +151,7 @@ export default function AdminAuditSubmissions() {
       {filtered.length === 0 ? (
         <EmptyState title="No submissions" description="Audit form submissions from the public site will appear here." />
       ) : (
-        <div className="glass-card rounded-2xl overflow-hidden">
+        <div className="glass-card rounded-2xl overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-white/5 text-white/40 text-[10px] uppercase tracking-wider">

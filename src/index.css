@@ -30,6 +30,8 @@
   --color-ink:        var(--brand-ink);
   --color-ink-2:      var(--brand-ink-2);
   --color-paper:      var(--brand-paper);
+  --color-paper-lo:   var(--brand-paper-lo);
+  --color-paper-hi:   var(--brand-paper-hi);
 
   /* GalaxaStore Brand Kit Core Palette */
   --color-gs-void: #08060A;
@@ -781,4 +783,30 @@ button:not([class*="w-"]):not([class*="h-"]) {
 .space-glow {
   box-shadow: 0 0 30px rgba(37, 99, 235, 0.25);
 }
+
+/* ── Cyber-Systems Dashboard Additions ────────────────────────────────────── */
+.cyber-terminal-glow {
+  text-shadow: 0 0 8px rgba(0, 194, 255, 0.5), 0 0 15px rgba(0, 82, 255, 0.25);
+}
+
+.bg-grid-dots {
+  background-image: radial-gradient(rgba(255, 255, 255, 0.045) 1.2px, transparent 1.2px);
+  background-size: 20px 20px;
+}
+
+@keyframes timeline-laser-animation {
+  0% { stroke-dashoffset: 400; }
+  100% { stroke-dashoffset: 0; }
+}
+
+.timeline-laser-beam {
+  stroke-dasharray: 60 140;
+  animation: timeline-laser-animation 6s linear infinite;
+}
+
+.timeline-laser-beam-fast {
+  stroke-dasharray: 40 100;
+  animation: timeline-laser-animation 3.5s linear infinite;
+}
+
 
