@@ -130,7 +130,7 @@ export default function AdminSiteSettings() {
       <div className="glass-card rounded-2xl p-6 mb-5">
         <h3 className="text-white font-semibold text-sm mb-4">Homepage Stats</h3>
         <p className="text-white/40 text-xs mb-4">These numbers appear on the homepage hero section in real time.</p>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
+        <div className="grid grid-cols-3 gap-3 mb-4">
           {[
             { key: 'projectsDelivered', label: 'Projects Delivered' },
             { key: 'countriesServed', label: 'Countries Served' },
@@ -161,10 +161,11 @@ export default function AdminSiteSettings() {
       {/* Admin Password */}
       <div className="glass-card rounded-2xl p-6">
         <h3 className="text-white font-semibold text-sm mb-2">Admin Account</h3>
-        <div className="flex items-start gap-3 p-4 bg-primary/10 border border-primary/20 rounded-xl">
-          <AlertCircle className="w-4 h-4 text-primary flex-shrink-0 mt-0.5" />
-          <p className="text-white/80 text-sm">
-            The admin panel is protected by a fixed passcode checked directly on the server — no external auth provider. To change it, edit the <strong>/api/auth/admin</strong> handler in <strong>api/index.ts</strong>.
+        <div className="flex items-start gap-3 p-4 bg-amber-500/5 border border-amber-500/20 rounded-xl">
+          <AlertCircle className="w-4 h-4 text-amber-400 flex-shrink-0 mt-0.5" />
+          <p className="text-amber-400/80 text-sm">
+            The admin account uses Google Sign-In with <strong>mail.galaxatech@gmail.com</strong>.
+            To change your password, visit <a href="https://myaccount.google.com" target="_blank" rel="noreferrer" className="underline">myaccount.google.com</a>.
           </p>
         </div>
       </div>

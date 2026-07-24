@@ -17,66 +17,10 @@ service cloud.firestore {
       allow read, write: if false;
     }
 
-    // Existing GT collections (agency hub: projects, users, credentials, etc.) — unchanged
-    // behavior, same open-rules issue as before, but a separate system out of this scope.
-    // Auth is handled at the application layer via JWT httpOnly cookies for everything
-    // that is not a store collection above or a GalaxaSpace (space_*) collection below.
-    match /{collection}/{document=**} {
-      allow read, write: if !collection.matches('^space_.*') &&
-        !(collection in ['products', 'orders', 'customers']);
-    }
-
-    // ── GalaxaSpace collections — real Firebase Auth required ────────────────
-    // NOTE: replace the UID below with the real admin's Firebase Auth UID
-    // (obtained after their first sign-in on /space/signup), then redeploy
-    // rules. Must be kept in sync with the VITE_ADMIN_UID env var — Firestore
-    // rules cannot read environment variables.
-    function isSpaceAdmin() {
-      return request.auth != null && request.auth.uid == "REPLACE_WITH_ADMIN_UID";
-    }
-
-    match /space_users/{uid} {
-      allow read: if true;
-      allow write: if request.auth != null && request.auth.uid == uid;
-    }
-
-    match /space_posts/{postId} {
-      allow read: if true;
-      allow create: if request.auth != null;
-      allow update, delete: if request.auth != null &&
-        (resource.data.authorId == request.auth.uid || isSpaceAdmin());
-    }
-
-    match /space_comments/{commentId} {
-      allow read: if true;
-      allow create: if request.auth != null;
-      allow update, delete: if request.auth != null &&
-        (resource.data.authorId == request.auth.uid || isSpaceAdmin());
-    }
-
-    match /space_likes/{likeId} {
-      allow read: if true;
-      allow create: if request.auth != null && request.resource.data.userId == request.auth.uid;
-      allow delete: if request.auth != null && resource.data.userId == request.auth.uid;
-    }
-
-    match /space_bookmarks/{bookmarkId} {
-      allow read: if request.auth != null && resource.data.userId == request.auth.uid;
-      allow create: if request.auth != null && request.resource.data.userId == request.auth.uid;
-      allow delete: if request.auth != null && resource.data.userId == request.auth.uid;
-    }
-
-    match /space_reports/{reportId} {
-      allow create: if request.auth != null;
-      allow read, update: if isSpaceAdmin();
-    }
-
-    match /space_settings/{settingId} {
-      allow read: if true;
-      // Written only by the free Vercel Cron Job (POST /api/space/cron/daily-ritual)
-      // via firebase-admin, which bypasses security rules entirely —
-      // clients can never write here.
-      allow write: if false;
+    // Everything else (agency hub: projects, users, credentials, etc.) is unchanged
+    // for now — same open-rules issue, but a separate system out of this scope.
+    match /{document=**} {
+      allow read, write: if true;
     }
   }
 }

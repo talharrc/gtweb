@@ -2,12 +2,13 @@
 
 @theme {
   --font-sans: "Inter", "Segoe UI", ui-sans-serif, system-ui, sans-serif;
-  --font-display: "General Sans", "Segoe UI", sans-serif;
+  --font-display: "Sora", "Segoe UI", sans-serif;
+  --font-serif: "Playfair Display", Georgia, serif;
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   --font-rajdhani: "Rajdhani", sans-serif;
   --font-condensed: "Anton", "Arial Narrow", Impact, sans-serif;
 
-  /* Brand palette — GalaxaTech locked design system (dark-tech blue/void) */
+  /* Brand palette — GalaxaTech pink/coral/purple theme */
   --color-void:     var(--void);
   --color-midnight: var(--void-2);
   --color-indigo:   var(--void-2);
@@ -23,10 +24,12 @@
   --color-muted:     var(--muted);
   --color-glass-dark: rgba(255,255,255,0.05);
 
-  --color-accent-hi:   var(--gt-accent-hi);
-  --color-accent-deep: var(--gt-accent-deep);
-  --color-surface:     var(--gt-surface);
-  --color-surface-2:   var(--gt-surface-2);
+  /* GalaxaTech 2026 rebrand — yellow / ink / paper (home + chrome only for now) */
+  --color-brand:      var(--brand-yellow);
+  --color-brand-deep: var(--brand-yellow-deep);
+  --color-ink:        var(--brand-ink);
+  --color-ink-2:      var(--brand-ink-2);
+  --color-paper:      var(--brand-paper);
 
   /* GalaxaStore Brand Kit Core Palette */
   --color-gs-void: #08060A;
@@ -34,7 +37,7 @@
   --color-gs-card: #16101E;
   --color-gs-card-alt: #1E1428;
   --color-gs-nav: rgba(19, 8, 10, 0.9);
-
+  
   --color-gs-red-shadow: #5A160F;
   --color-gs-red-core: #AA1E12;
   --color-gs-red-mid: #BB2D19;
@@ -44,144 +47,29 @@
   --color-gs-text: #F4F1F8;
   --color-gs-text-secondary: #A89EB8;
   --color-gs-text-muted: #6E6480;
-
-  /* GalaxaSpace Brand Kit — distinct dark/violet-blue-cyan theme */
-  --color-space-bg: #05030A;
-  --color-space-card: #0F0B1A;
-  --color-space-card-alt: #15102A;
-  --color-space-border: rgba(255, 255, 255, 0.08);
-
-  --color-space-accent-1: #7C3AED;
-  --color-space-accent-2: #2563EB;
-  --color-space-accent-3: #22D3EE;
-
-  --color-space-text: #F4F1F8;
-  --color-space-text-secondary: #A79FC0;
-  --color-space-text-muted: #6B637E;
 }
 
 :root {
   color-scheme: dark;
+  --void: #0B0710;
+  --void-2: #100918;
+  --violet: #EC1E8E;
+  --lavender: #FF7A45;
+  --blue: #5B23A8;
+  --text: #F7F4F8;
+  --muted: #B7AFC2;
+  --glass: rgba(255, 255, 255, 0.05);
+  --glass-border: rgba(255, 255, 255, 0.12);
 
-  /* ── GalaxaTech locked design tokens ──────────────────────────────────── */
-  --gt-white:#FFFFFF;
-  --gt-black:#000000;
-  --gt-void:#050806;         /* primary background */
-  --gt-surface:#0A120D;      /* secondary surface — cards, panels */
-  --gt-surface-2:#0E1F14;    /* elevated surface, one step up from --gt-surface */
-  --gt-accent:#2BFF6E;       /* primary accent — electric blue: CTAs, links, active */
-  --gt-accent-hi:#5CFF95;    /* accent hover */
-  --gt-accent-deep:#16C95A;  /* accent active/pressed */
-  --gt-glow-cyan:#7CFFC2;    /* secondary glow accent, used sparingly for highlights */
-
-  /* Expanded decorative accent range — ambient/ombient glows, icon variety, card tints.
-     Primary CTAs and links stay on --gt-accent; these are for atmosphere/variety only. */
-  --gt-glow-violet:#0FD65E;  /* cool-violet, sits between blue and magenta on the wheel */
-  --gt-glow-magenta:#9CFF2E; /* warm contrast accent */
-  --gt-glow-amber:var(--gt-warning); /* warm highlight, reuses the warning hue for cohesion */
-
-  --gt-gray-100:#8FA2C4;
-  --gt-gray-200:#6C7FA3;
-  --gt-gray-300:#4E6089;
-  --gt-gray-400:#324472;
-  --gt-gray-500:#123321;
-
-  --gt-success:#1FD67A;
-  --gt-warning:#FFB800;
-  --gt-error:#FF4D5E;
-  --gt-info:var(--gt-accent);
-
-  --bg-primary:var(--gt-void);
-  --bg-deepest:var(--gt-black);
-  --surface-card:var(--gt-surface);
-  --surface-card-elevated:var(--gt-surface-2);
-  --surface-glass:rgba(255,255,255,0.05);
-  --border-glass:rgba(255,255,255,0.12);
-  --border-glass-soft:rgba(255,255,255,0.08);
-  --text-primary:var(--gt-white);
-  --text-muted:var(--gt-gray-100);
-  --text-on-accent:var(--gt-white);
-  --link-color:var(--gt-accent);
-  --link-hover:var(--gt-accent-hi);
-
-  /* Type scale */
-  --text-xs:0.75rem;
-  --text-sm:0.875rem;
-  --text-base:1rem;
-  --text-lg:1.125rem;
-  --text-xl:1.25rem;
-  --text-2xl:1.5rem;
-  --text-3xl:1.875rem;
-  --text-4xl:2.25rem;
-  --text-5xl:3rem;
-  --text-6xl:3.75rem;
-  --text-7xl:4.5rem;
-
-  --leading-tight:1.05;
-  --leading-snug:1.25;
-  --leading-normal:1.5;
-  --leading-relaxed:1.7;
-
-  --tracking-tight:-0.02em;
-  --tracking-normal:0em;
-  --tracking-wide:0.08em;
-  --tracking-widest:0.2em;
-
-  /* Spacing */
-  --space-1:4px;
-  --space-2:8px;
-  --space-3:12px;
-  --space-4:16px;
-  --space-5:20px;
-  --space-6:24px;
-  --space-8:32px;
-  --space-10:40px;
-  --space-12:48px;
-  --space-16:64px;
-  --space-20:80px;
-  --space-24:96px;
-  --space-32:128px;
-
-  --container-max:80rem;
-  --container-pad:1.5rem;
-
-  /* Radii */
-  --radius-sm:8px;
-  --radius-md:14px;
-  --radius-lg:18px;
-  --radius-xl:24px;
-  --radius-pill:999px;
-
-  /* Shadows / glows */
-  --shadow-card:0 20px 60px rgba(0,0,0,0.50);
-  --shadow-card-inset:inset 0 1px 0 rgba(255,255,255,0.09), inset 0 0 28px rgba(43,255,110,0.05);
-  --shadow-elevated:0 15px 45px rgba(0,0,0,0.65);
-  --glow-accent:0 0 40px rgba(43,255,110,0.45);
-  --glow-accent-soft:0 0 40px rgba(43,255,110,0.20);
-  --glow-cyan:0 0 30px rgba(124,255,194,0.35);
-
-  /* Glass */
-  --blur-panel:blur(20px) saturate(150%);
-  --blur-nav:blur(24px);
-
-  /* Motion */
-  --ease-premium:cubic-bezier(0.16,1,0.3,1);
-  --ease-standard:cubic-bezier(0.2,0.7,0.2,1);
-  --duration-fast:0.18s;
-  --duration-base:0.3s;
-  --duration-slow:0.5s;
-
-  /* ── Legacy primitive aliases — keep every existing var(--x) reference
-     across the codebase resolving correctly without a mass find/replace ── */
-  --void: var(--gt-void);
-  --void-2: var(--gt-surface-2);
-  --violet: var(--gt-accent);
-  --lavender: var(--gt-glow-cyan);
-  --blue: var(--gt-accent-deep);
-  --text: var(--gt-white);
-  --muted: var(--gt-gray-100);
-  --glass: var(--surface-glass);
-  --glass-border: var(--border-glass);
+  /* 2026 rebrand primitives — yellow / ink / paper */
+  --brand-yellow:      #fedd00;
+  --brand-yellow-hi:   #ffe434;
+  --brand-yellow-deep: #d9bd00;
+  --brand-ink:         #0d000a;
+  --brand-ink-2:       #1a0a16;
+  --brand-paper:       #f3f2f2;
+  --brand-paper-hi:    #ffffff;
+  --brand-paper-lo:    #e9e7e4;
 }
 
 body {
@@ -192,8 +80,7 @@ body {
   scroll-behavior: smooth;
 }
 
-/* Crisp technical grid overlay — visible green hairlines on the void, echoing
-   an engineering-blueprint/cyber-grid aesthetic. */
+/* Engineering blueprint background grid overlay */
 .bg-grid-overlay {
   position: fixed;
   top: 0;
@@ -202,23 +89,26 @@ body {
   height: 100%;
   z-index: -9;
   background-image:
-    linear-gradient(rgba(43,255,110,0.07) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(43,255,110,0.07) 1px, transparent 1px);
-  background-size: 44px 44px;
+    linear-gradient(rgba(255, 255, 255, 0.007) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.007) 1px, transparent 1px);
+  background-size: 50px 50px;
   background-position: center;
   pointer-events: none;
-  mask-image: radial-gradient(ellipse at center, rgba(0,0,0,1) 35%, rgba(0,0,0,0) 92%);
-  -webkit-mask-image: radial-gradient(ellipse at center, rgba(0,0,0,1) 35%, rgba(0,0,0,0) 92%);
+  mask-image: radial-gradient(ellipse at center, rgba(0,0,0,1) 10%, rgba(0,0,0,0) 80%);
+  -webkit-mask-image: radial-gradient(ellipse at center, rgba(0,0,0,1) 10%, rgba(0,0,0,0) 80%);
 }
 
 /* Glass Panels */
 .glass-card {
   background: linear-gradient(160deg, rgba(255,255,255,0.065), rgba(255,255,255,0.018));
-  border: 1px solid var(--border-glass);
-  backdrop-filter: var(--blur-panel);
-  -webkit-backdrop-filter: var(--blur-panel);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-card-inset), var(--shadow-card);
+  border: 1px solid rgba(255,255,255,0.12);
+  backdrop-filter: blur(13px);
+  -webkit-backdrop-filter: blur(13px);
+  border-radius: 18px;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.09),
+    inset 0 0 28px rgba(236,30,142,0.05),
+    0 20px 60px rgba(0,0,0,0.50);
 }
 
 .glass-card-premium {
@@ -228,27 +118,27 @@ body {
   border: 1px solid rgba(255, 255, 255, 0.06);
   border-top: 1px solid rgba(255, 255, 255, 0.15);
   border-left: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: var(--radius-xl);
+  border-radius: 24px;
   box-shadow:
     inset 0 1px 1px rgba(255, 255, 255, 0.08),
-    0 0 1px rgba(43,255,110, 0.15),
-    var(--shadow-elevated);
-  transition: all 0.4s var(--ease-premium);
+    0 0 1px rgba(236, 30, 142, 0.15),
+    0 15px 45px rgba(0, 0, 0, 0.65);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .glass-card-premium-glow {
   background: rgba(20, 8, 28, 0.6);
   backdrop-filter: blur(24px) saturate(160%);
   -webkit-backdrop-filter: blur(24px) saturate(160%);
-  border: 1px solid rgba(43,255,110, 0.35);
-  border-top: 1px solid rgba(124,255,194, 0.5);
-  border-left: 1px solid rgba(124,255,194, 0.35);
-  border-radius: var(--radius-xl);
+  border: 1px solid rgba(236, 30, 142, 0.3);
+  border-top: 1px solid rgba(255, 122, 69, 0.4);
+  border-left: 1px solid rgba(255, 122, 69, 0.3);
+  border-radius: 24px;
   box-shadow:
     inset 0 1px 1px rgba(255, 255, 255, 0.15),
-    0 0 45px rgba(43,255,110, 0.45),
+    0 0 45px rgba(236, 30, 142, 0.45),
     0 15px 45px rgba(0, 0, 0, 0.65);
-  transition: all 0.4s var(--ease-premium);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .glass-nav {
@@ -270,7 +160,7 @@ body {
 
 /* Text gradients */
 .text-grad, .text-gradient {
-  background: linear-gradient(90deg, #2BFF6E, #7CFFC2);
+  background: linear-gradient(90deg, #EC1E8E, #FF7A45);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -278,18 +168,18 @@ body {
 }
 
 .text-gradient-cyan {
-  background: linear-gradient(135deg, #2BFF6E 0%, #7CFFC2 100%);
+  background: linear-gradient(135deg, #EC1E8E 0%, #FF7A45 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
 /* Button / section gradients */
 .primary-gradient {
-  background: linear-gradient(135deg, #2BFF6E 0%, #7CFFC2 100%);
+  background: linear-gradient(135deg, #EC1E8E 0%, #FF7A45 100%);
 }
 
 .cyan-gradient {
-  background: linear-gradient(135deg, #2BFF6E 0%, #16C95A 100%);
+  background: linear-gradient(135deg, #EC1E8E 0%, #5B23A8 100%);
 }
 
 /* Card hover glow */
@@ -297,18 +187,16 @@ body {
   will-change: transform, box-shadow;
 }
 .glow-hover:hover {
-  box-shadow: var(--glow-accent);
+  box-shadow: 0 0 40px rgba(236,30,142,0.45);
   transform: translateY(-5px);
-  transition: all 0.35s var(--ease-standard);
+  transition: all 0.35s cubic-bezier(0.2,0.7,0.2,1);
 }
 
 /* Scrollbar hide */
 .no-scrollbar::-webkit-scrollbar { display: none; }
 .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-/* Ambient background mesh — one continuous, viewport-fixed canvas behind every
-   section. Sections must stay transparent (no opaque per-section fills) so this
-   shows through everywhere with no seams between them. */
+/* Ambient background mesh */
 .bg-mesh {
   position: fixed;
   top: 0;
@@ -317,18 +205,10 @@ body {
   height: 100%;
   z-index: -10;
   background:
-    radial-gradient(circle at 18% 12%, rgba(43,255,110,0.16), transparent 26%),
-    radial-gradient(circle at 85% 22%, rgba(124,255,194,0.11), transparent 28%),
-    radial-gradient(circle at 55% 92%, rgba(22,201,90,0.16), transparent 30%),
+    radial-gradient(circle at 20% 10%, rgba(254,221,0,0.07), transparent 40%),
+    radial-gradient(circle at 85% 25%, rgba(243,242,242,0.04), transparent 45%),
+    radial-gradient(circle at 50% 90%, rgba(120,40,100,0.10), transparent 40%),
     var(--void);
-  background-size: 160% 160%;
-  animation: mesh-drift 42s ease-in-out infinite alternate;
-}
-
-@keyframes mesh-drift {
-  0%   { background-position: 0% 0%; }
-  50%  { background-position: 22% 10%; }
-  100% { background-position: 6% 16%; }
 }
 
 @keyframes marquee {
@@ -370,7 +250,7 @@ button:not([class*="w-"]):not([class*="h-"]) {
 
 /* Smooth focus ring on keyboard nav */
 :focus-visible {
-  outline: 2px solid rgba(43,255,110, 0.8);
+  outline: 2px solid rgba(254, 221, 0, 0.8);
   outline-offset: 3px;
   border-radius: 6px;
 }
@@ -381,9 +261,9 @@ button:not([class*="w-"]):not([class*="h-"]) {
 
 /* Section container utility */
 .section-container {
-  max-width: var(--container-max);
+  max-width: 80rem;
   margin-inline: auto;
-  padding-inline: var(--container-pad);
+  padding-inline: 1.5rem;
 }
 
 /* Marquee performance */
@@ -401,10 +281,10 @@ button:not([class*="w-"]):not([class*="h-"]) {
 }
 .admin-input:focus {
   outline: none;
-  border-color: rgba(124,255,194,0.5);
+  border-color: rgba(236,30,142,0.5);
 }
 .admin-input::placeholder { color: rgba(255,255,255,0.3); }
-.admin-input option { background: #050806; color: #fff; }
+.admin-input option { background: #0B0710; color: #fff; }
 
 /* Spotlight Diagonal sweep reflection */
 .spotlight-sweep {
@@ -434,7 +314,7 @@ button:not([class*="w-"]):not([class*="h-"]) {
 
 /* Dotted grid decorative motif — place as small absolute block near headings */
 .dotted-grid {
-  background-image: radial-gradient(circle, rgba(43,255,110,0.25) 1px, transparent 1px);
+  background-image: radial-gradient(circle, rgba(236,30,142,0.22) 1px, transparent 1px);
   background-size: 18px 18px;
   pointer-events: none;
 }
@@ -442,21 +322,21 @@ button:not([class*="w-"]):not([class*="h-"]) {
 /* Pill highlight for key heading words on dark bg */
 .pill-word {
   display: inline-block;
-  background: rgba(124,255,194,0.12);
-  border: 1px solid rgba(124,255,194,0.30);
+  background: rgba(236,30,142,0.15);
+  border: 1px solid rgba(236,30,142,0.30);
   padding: 0.05em 0.45em 0.1em;
   border-radius: 999px;
-  color: #7CFFC2;
+  color: #EC1E8E;
 }
 
 /* Pill highlight variant — coral, for secondary accent words */
 .pill-word-coral {
   display: inline-block;
-  background: rgba(43,255,110,0.12);
-  border: 1px solid rgba(43,255,110,0.30);
+  background: rgba(255,122,69,0.14);
+  border: 1px solid rgba(255,122,69,0.30);
   padding: 0.05em 0.45em 0.1em;
   border-radius: 999px;
-  color: #2BFF6E;
+  color: #FF7A45;
 }
 
 /* ── Store Custom Styling ──────────────────────────────────────────────────────── */
@@ -483,13 +363,13 @@ button:not([class*="w-"]):not([class*="h-"]) {
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
   transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 }
-
+ 
 .store-card:hover {
   border-color: rgba(205, 56, 29, 0.35);
   box-shadow: 0 0 35px rgba(170, 30, 18, 0.22), 0 15px 35px rgba(0, 0, 0, 0.65);
   transform: translateY(-4px);
 }
-
+ 
 /* Glow button styling */
 .btn-primary-red {
   background: linear-gradient(135deg, #AA1E12 0%, #E04420 100%);
@@ -531,7 +411,7 @@ button:not([class*="w-"]):not([class*="h-"]) {
 .gs-glow-glow {
   box-shadow: 0 0 30px rgba(170, 30, 18, 0.25);
 }
-
+ 
 /* Custom scrollbar for horizontal categories */
 .no-scrollbar::-webkit-scrollbar {
   display: none;
@@ -540,7 +420,7 @@ button:not([class*="w-"]):not([class*="h-"]) {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
-
+ 
 /* Styled scrollbar for drawer/modals */
 .custom-scrollbar::-webkit-scrollbar {
   width: 6px;
@@ -557,9 +437,83 @@ button:not([class*="w-"]):not([class*="h-"]) {
   background: rgba(255, 255, 255, 0.3);
 }
 
-/* ── Poster Type & Icy-Glass Accents ────────────────────────────────────────── */
+/* ── 2026 Rebrand: Yellow / Ink / Paper ─────────────────────────────────────── */
 
-/* Anton condensed poster type — reserved for the Hero H1 signature moment only */
+/* Light editorial section band */
+.section-paper {
+  background: var(--brand-paper);
+  color: var(--brand-ink);
+}
+.section-paper ::selection {
+  background: var(--brand-yellow);
+  color: var(--brand-ink);
+}
+
+/* Realistic dark glass — lit top edge, believable depth */
+.glass-ink {
+  background: linear-gradient(160deg, rgba(255,255,255,0.09), rgba(255,255,255,0.02));
+  backdrop-filter: blur(20px) saturate(150%);
+  -webkit-backdrop-filter: blur(20px) saturate(150%);
+  border: 1px solid rgba(255,255,255,0.10);
+  border-top-color: rgba(255,255,255,0.22);
+  border-radius: 24px;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.15),
+    inset 0 -24px 48px rgba(254,221,0,0.03),
+    0 20px 60px rgba(0,0,0,0.55);
+}
+
+/* Raised neumorphic white card — blur-free, cheap on mobile */
+.card-neu {
+  background: linear-gradient(165deg, #ffffff, #f7f6f4);
+  border: 1px solid rgba(13,0,10,0.06);
+  border-radius: 24px;
+  box-shadow:
+    inset 0 1px 0 #fff,
+    0 1px 2px rgba(13,0,10,0.05),
+    0 12px 32px rgba(13,0,10,0.10),
+    0 32px 72px rgba(13,0,10,0.06);
+}
+
+/* Inset infographic well inside neu cards */
+.card-neu-inset {
+  background: var(--brand-paper-lo);
+  border-radius: 16px;
+  box-shadow:
+    inset 0 2px 6px rgba(13,0,10,0.08),
+    inset 0 -1px 0 #fff;
+}
+
+/* Yellow glow accents */
+.glow-brand { box-shadow: 0 0 40px rgba(254,221,0,0.25); }
+.glow-brand-soft { box-shadow: 0 0 40px rgba(254,221,0,0.12); }
+
+/* Tactile 3D yellow CTA */
+.btn-brand {
+  background: linear-gradient(180deg, var(--brand-yellow-hi), var(--brand-yellow) 45%, #eecd00);
+  color: var(--brand-ink);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.65),
+    0 2px 0 var(--brand-yellow-deep),
+    0 10px 28px rgba(254,221,0,0.30);
+  transition: transform 0.18s cubic-bezier(0.2,0.7,0.2,1), box-shadow 0.18s cubic-bezier(0.2,0.7,0.2,1), filter 0.18s ease;
+}
+.btn-brand:hover {
+  filter: brightness(1.04);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.65),
+    0 2px 0 var(--brand-yellow-deep),
+    0 14px 36px rgba(254,221,0,0.40);
+}
+.btn-brand:active {
+  transform: translateY(1px);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.5),
+    0 0 0 var(--brand-yellow-deep),
+    0 6px 18px rgba(254,221,0,0.25);
+}
+
+/* Anton condensed poster type */
 .display-poster {
   font-family: var(--font-condensed);
   text-transform: uppercase;
@@ -569,333 +523,60 @@ button:not([class*="w-"]):not([class*="h-"]) {
   font-synthesis-weight: none;
 }
 
-/* Sora display type — section headings (locked design-system spec) */
-.display-sora {
-  font-family: var(--font-display);
-  font-weight: 800;
-  letter-spacing: -0.02em;
-  line-height: 1;
-}
-
-/* Poster headline depth — blue extrude on dark background */
+/* Poster headline depth — pink/purple extrude on dark background */
 .text-depth-dark {
   color: #ffffff;
   text-shadow:
-    0 1px 0 var(--gt-accent),
-    0 2px 0 var(--gt-accent-deep),
-    0 3px 0 #002E8F,
+    0 1px 0 #c21372,
+    0 2px 0 #920f54,
+    0 3px 0 #560431,
     0 12px 32px rgba(0,0,0,0.65);
 }
 
-/* Solid accent-blue marker pill for key heading words */
-.pill-word-accent {
-  display: inline-block;
-  padding: 0.05em 0.45em 0.1em;
-  border-radius: var(--radius-pill);
+/* Poster headline depth — ink with yellow offset on paper */
+.text-depth-light {
+  color: var(--brand-ink);
+  text-shadow:
+    3px 3px 0 var(--brand-yellow),
+    5px 5px 0 rgba(13,0,10,0.10);
+}
+@media (max-width: 639px) {
+  .text-depth-light {
+    text-shadow:
+      2px 2px 0 var(--brand-yellow),
+      3px 3px 0 rgba(13,0,10,0.10);
+  }
 }
 
-/* Translucent cyan pill for dark backgrounds */
-.pill-word-brand-ghost {
-  display: inline-block;
-  background: rgba(124,255,194,0.14);
-  border: 1px solid rgba(124,255,194,0.35);
-  color: #7CFFC2;
-  padding: 0.05em 0.45em 0.1em;
-  border-radius: var(--radius-pill);
-}
-
-/* Animated 3D perspective grid and horizon lines */
-.perspective-container {
-  perspective: 300px;
-  perspective-origin: 50% 0%;
-  overflow: hidden;
-  position: absolute;
-  width: 100%;
-  height: 380px;
-  bottom: 0;
-  left: 0;
-  pointer-events: none;
-  z-index: 1;
-}
-.perspective-grid {
-  position: absolute;
-  width: 200%;
-  height: 200%;
-  margin-left: -50%;
-  background-image:
-    linear-gradient(to right, rgba(150,255,200, 0.18) 1.5px, transparent 1.5px),
-    linear-gradient(to bottom, rgba(150,255,200, 0.18) 1.5px, transparent 1.5px);
-  background-size: 50px 50px;
-  transform: rotateX(78deg);
-  transform-origin: 50% 0%;
-  animation: grid-scroll 24s linear infinite;
-  mask-image: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,1) 40%, rgba(0,0,0,0.85) 75%, transparent 100%);
-  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,1) 40%, rgba(0,0,0,0.85) 75%, transparent 100%);
-}
-@keyframes grid-scroll {
-  0% { background-position: 0 0; }
-  100% { background-position: 0 1200px; }
-}
-
-/* Premium alternating icy-white cards */
-.icy-card {
-  background: rgba(238,255,246, 0.95);
-  border: 1px solid rgba(124,255,194, 0.25);
-  box-shadow:
-    0 10px 30px rgba(43,255,110, 0.05),
-    inset 0 1px 0 rgba(255, 255, 255, 1);
-  color: #050806;
-  transition: all 0.4s var(--ease-premium);
-}
-.icy-card:hover {
-  transform: translateY(-4px);
-  border-color: rgba(124,255,194, 0.6);
-  box-shadow:
-    0 20px 40px rgba(43,255,110, 0.12),
-    inset 0 1px 0 rgba(255, 255, 255, 1);
-}
-
-/* ── Icy Glass 3D Icon System ──────────────────────────────────────────────
-   Convex, refractive "glass object" treatment for icon badges — replaces flat
-   tinted squares so accent icons read as hyperreal icy-glass objects rather
-   than flat color chips. Two variants: dark-surface and icy/white-surface. */
-.glass-icon-3d {
-  position: relative;
-  overflow: hidden;
-  background:
-    radial-gradient(ellipse 60% 50% at 30% 20%, rgba(255,255,255,0.55), transparent 60%),
-    linear-gradient(155deg, rgba(140,255,190,0.28) 0%, rgba(43,255,110,0.14) 55%, rgba(5,8,6,0.6) 100%);
-  border: 1px solid rgba(170,255,210,0.30);
-  border-top-color: rgba(255,255,255,0.65);
-  border-left-color: rgba(220,255,235,0.45);
-  box-shadow:
-    inset 0 1px 1px rgba(255,255,255,0.5),
-    inset 0 -8px 14px rgba(5,45,25,0.5),
-    0 8px 22px rgba(10,60,35,0.35),
-    0 0 30px rgba(43,255,110,0.28);
-}
-.glass-icon-3d::after {
-  content: '';
-  position: absolute;
-  top: 10%;
-  left: 14%;
-  width: 34%;
-  height: 26%;
-  background: radial-gradient(ellipse at 30% 30%, rgba(255,255,255,0.9), transparent 75%);
-  border-radius: 50%;
-  filter: blur(0.5px);
-  pointer-events: none;
-}
-
-/* Icy variant — for use on white/icy-card surfaces */
-.glass-icon-3d-light {
-  position: relative;
-  overflow: hidden;
-  background:
-    radial-gradient(ellipse 60% 50% at 30% 20%, rgba(255,255,255,0.9), transparent 60%),
-    linear-gradient(155deg, rgba(210,255,230,0.9) 0%, rgba(60,255,140,0.4) 60%, rgba(22,201,90,0.2) 100%);
-  border: 1px solid rgba(43,255,110,0.28);
-  border-top-color: rgba(255,255,255,0.95);
-  box-shadow:
-    inset 0 1px 1px rgba(255,255,255,0.8),
-    inset 0 -6px 12px rgba(43,255,110,0.16),
-    0 6px 16px rgba(43,255,110,0.14);
-}
-.glass-icon-3d-light::after {
-  content: '';
-  position: absolute;
-  top: 10%;
-  left: 14%;
-  width: 34%;
-  height: 26%;
-  background: radial-gradient(ellipse at 30% 30%, rgba(255,255,255,1), transparent 75%);
-  border-radius: 50%;
-  pointer-events: none;
-}
-
-/* Thin diagonal specular light beam — decorative, echoes icy-glass photography */
-.specular-beam {
-  position: absolute;
-  pointer-events: none;
-  background: linear-gradient(115deg, transparent 42%, rgba(200,255,225,0.14) 49%, rgba(255,255,255,0.22) 50%, rgba(200,255,225,0.14) 51%, transparent 58%);
-}
-
-/* Chrome variant — brushed-metal ribbon look echoing the GT logo mark.
-   Use sparingly for a hero-tier icon or two, not as a blanket replacement. */
-.glass-icon-3d-chrome {
-  position: relative;
-  overflow: hidden;
-  background:
-    radial-gradient(ellipse 60% 50% at 30% 15%, rgba(255,255,255,0.85), transparent 55%),
-    linear-gradient(155deg, #F3F6FB 0%, #C7D2E3 35%, #7C8AA8 55%, #E8EDF7 75%, #9AA6C2 100%);
-  border: 1px solid rgba(255,255,255,0.55);
-  border-top-color: #fff;
-  box-shadow:
-    inset 0 1px 1px rgba(255,255,255,0.9),
-    inset 0 -8px 14px rgba(20,30,60,0.35),
-    0 8px 22px rgba(0,0,0,0.35);
-}
-.glass-icon-3d-chrome::after {
-  content: '';
-  position: absolute;
-  top: 8%;
-  left: 12%;
-  width: 30%;
-  height: 22%;
-  background: radial-gradient(ellipse at 30% 30%, rgba(255,255,255,0.95), transparent 75%);
-  border-radius: 50%;
-  pointer-events: none;
-}
-
-/* Tinted convex glass variants — same hyperreal-glass construction as
-   .glass-icon-3d, different hue, for color variety across sections without
-   touching primary CTA/brand blue. */
-.glass-icon-3d-violet {
-  position: relative;
-  overflow: hidden;
-  background:
-    radial-gradient(ellipse 60% 50% at 30% 20%, rgba(255,255,255,0.5), transparent 60%),
-    linear-gradient(155deg, rgba(160,255,205,0.32) 0%, rgba(15,214,94,0.18) 55%, rgba(5,8,6,0.6) 100%);
-  border: 1px solid rgba(15,214,94,0.35);
-  border-top-color: rgba(255,255,255,0.6);
-  box-shadow:
-    inset 0 1px 1px rgba(255,255,255,0.45),
-    inset 0 -8px 14px rgba(6,50,28,0.5),
-    0 8px 22px rgba(8,70,38,0.35),
-    0 0 28px rgba(15,214,94,0.25);
-}
-.glass-icon-3d-violet::after {
-  content: '';
-  position: absolute; top: 10%; left: 14%; width: 34%; height: 26%;
-  background: radial-gradient(ellipse at 30% 30%, rgba(255,255,255,0.85), transparent 75%);
-  border-radius: 50%; pointer-events: none;
-}
-
-.glass-icon-3d-magenta {
-  position: relative;
-  overflow: hidden;
-  background:
-    radial-gradient(ellipse 60% 50% at 30% 20%, rgba(255,255,255,0.5), transparent 60%),
-    linear-gradient(155deg, rgba(215,255,150,0.32) 0%, rgba(156,255,46,0.18) 55%, rgba(8,15,5,0.6) 100%);
-  border: 1px solid rgba(156,255,46,0.35);
-  border-top-color: rgba(255,255,255,0.6);
-  box-shadow:
-    inset 0 1px 1px rgba(255,255,255,0.45),
-    inset 0 -8px 14px rgba(35,50,6,0.5),
-    0 8px 22px rgba(50,70,8,0.35),
-    0 0 28px rgba(156,255,46,0.25);
-}
-.glass-icon-3d-magenta::after {
-  content: '';
-  position: absolute; top: 10%; left: 14%; width: 34%; height: 26%;
-  background: radial-gradient(ellipse at 30% 30%, rgba(255,255,255,0.85), transparent 75%);
-  border-radius: 50%; pointer-events: none;
-}
-
-/* Gentle idle float — for icon badges/decorative elements that should feel alive
-   without narrating anything (purely atmospheric, not a status indicator). */
-@keyframes float-idle {
-  0%, 100% { transform: translateY(0); }
-  50%      { transform: translateY(-6px); }
-}
-.float-idle { animation: float-idle 5s ease-in-out infinite; }
-.float-idle-slow { animation: float-idle 7.5s ease-in-out infinite; }
-
-/* Barely-perceptible opacity breathing for ambient glow blobs — signals life
-   without narrating anything (no fake counters/status). */
-@keyframes breathe-slow {
-  0%, 100% { opacity: 0.75; }
-  50%      { opacity: 1; }
-}
-.breathe-slow { animation: breathe-slow 8s ease-in-out infinite; }
-
-/* Shine-sweep hover — a diagonal light sweep across primary buttons on hover. */
-.btn-shine {
-  position: relative;
-  overflow: hidden;
-}
-.btn-shine::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -60%;
-  width: 40%;
-  height: 100%;
-  background: linear-gradient(115deg, transparent 0%, rgba(255,255,255,0.35) 50%, transparent 100%);
-  transform: skewX(-20deg);
-  transition: left 0.65s cubic-bezier(0.2,0.7,0.2,1);
-  pointer-events: none;
-}
-.btn-shine:hover::after { left: 130%; }
-
-/* ── GalaxaSpace Custom Styling ─────────────────────────────────────────────── */
-
-/* Ambient violet/blue/cyan background atmosphere — GalaxaSpace's own gradient theme */
-.space-bg-mesh {
-  position: fixed;
-  inset: 0;
-  z-index: -10;
-  pointer-events: none;
-  background:
-    radial-gradient(ellipse 900px 500px at 15% -5%, rgba(124, 58, 237, 0.22), transparent 65%),
-    radial-gradient(circle at 90% 15%, rgba(37, 99, 235, 0.14), transparent 45%),
-    radial-gradient(circle at 50% 100%, rgba(34, 211, 238, 0.10), transparent 50%),
-    var(--color-space-bg);
-}
-
-/* Text gradient — violet -> blue -> cyan, used for wordmark/headings */
-.text-space-gradient {
-  background: linear-gradient(90deg, #7C3AED 0%, #2563EB 55%, #22D3EE 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
+/* Hollow outline word for poster stacks */
+.text-outline-brand {
+  -webkit-text-stroke: 1.5px rgba(236,30,142,0.85);
   color: transparent;
 }
 
-/* Base card surface */
-.space-card {
-  background: linear-gradient(160deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.01)), var(--color-space-card);
-  border: 1px solid var(--color-space-border);
-  border-radius: 1rem;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-}
-.space-card:hover {
-  border-color: rgba(124, 58, 237, 0.35);
-  box-shadow: 0 0 30px rgba(37, 99, 235, 0.18), 0 15px 35px rgba(0, 0, 0, 0.6);
-  transform: translateY(-3px);
+/* Solid yellow marker pill for key heading words */
+.pill-word-brand {
+  display: inline-block;
+  background: var(--brand-yellow);
+  color: var(--brand-ink);
+  padding: 0.05em 0.45em 0.1em;
+  border-radius: 999px;
 }
 
-/* Primary gradient CTA button */
-.btn-primary-space {
-  background: linear-gradient(135deg, #7C3AED 0%, #2563EB 55%, #22D3EE 100%);
-  box-shadow: 0 4px 15px rgba(37, 99, 235, 0.35);
-  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-}
-.btn-primary-space:hover {
-  box-shadow: 0 6px 22px rgba(34, 211, 238, 0.4), 0 0 15px rgba(124, 58, 237, 0.3);
-  filter: brightness(1.08);
-  transform: translateY(-1px);
-}
-.btn-primary-space:active {
-  transform: translateY(0);
+/* Translucent yellow pill for dark backgrounds */
+.pill-word-brand-ghost {
+  display: inline-block;
+  background: rgba(254,221,0,0.14);
+  border: 1px solid rgba(254,221,0,0.35);
+  color: var(--brand-yellow);
+  padding: 0.05em 0.45em 0.1em;
+  border-radius: 999px;
 }
 
-/* Active sidebar/nav state */
-.space-nav-active {
-  background: linear-gradient(135deg, rgba(124, 58, 237, 0.18), rgba(34, 211, 238, 0.10));
-  border: 1px solid rgba(124, 58, 237, 0.35);
-  color: #fff;
+/* Dotted grid motif for paper sections */
+.dotted-grid-ink {
+  background-image: radial-gradient(circle, rgba(13,0,10,0.18) 1px, transparent 1px);
+  background-size: 18px 18px;
+  pointer-events: none;
 }
 
-/* Upvote/like highlighted state */
-.space-upvote-active {
-  background: linear-gradient(135deg, rgba(124, 58, 237, 0.25), rgba(34, 211, 238, 0.18));
-  border: 1px solid rgba(34, 211, 238, 0.4);
-  color: #22D3EE;
-}
-
-/* Soft glow used on hover states */
-.space-glow {
-  box-shadow: 0 0 30px rgba(37, 99, 235, 0.25);
-}

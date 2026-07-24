@@ -163,7 +163,7 @@ export default function AuditView() {
               </div>
 
               {/* Paid Tier */}
-              <div className="glass-card-premium p-8 rounded-3xl border border-primary/30 flex flex-col justify-between hover:border-primary/50 transition-all duration-300 relative overflow-hidden bg-gradient-to-b from-[#070B1F]/90 to-[#030510]/95">
+              <div className="glass-card-premium p-8 rounded-3xl border border-primary/30 flex flex-col justify-between hover:border-primary/50 transition-all duration-300 relative overflow-hidden bg-gradient-to-b from-[#120E22]/90 to-[#0A0717]/95">
                 <div className="absolute top-0 right-0 w-24 h-24 bg-primary/10 blur-xl rounded-full pointer-events-none" />
                 <div>
                   <div className="flex items-center justify-between mb-6">
@@ -201,7 +201,7 @@ export default function AuditView() {
 
                 <button
                   onClick={() => { setTier('paid'); setStep(1); }}
-                  className="w-full py-3 bg-gradient-to-r from-primary to-secondary text-white rounded-xl text-xs font-bold uppercase tracking-widest transition-all cursor-pointer shadow-[0_8px_30px_rgba(0,82,255,0.25)] hover:scale-[1.02]"
+                  className="w-full py-3 bg-gradient-to-r from-primary to-secondary text-white rounded-xl text-xs font-bold uppercase tracking-widest transition-all cursor-pointer shadow-[0_8px_30px_rgba(236,30,142,0.25)] hover:scale-[1.02]"
                 >
                   Book Paid Deep-Dive
                 </button>
@@ -320,7 +320,7 @@ export default function AuditView() {
 
               {(tier === 'paid' || (tier === 'free' && focus === 'funnel')) && (
                 <div className="border-t border-white/5 pt-6 flex flex-col gap-4">
-                  <h4 className="text-[11px] font-mono text-cyan-400 uppercase font-bold tracking-wider">Sales Funnel Audit Details</h4>
+                  <h4 className="text-[11px] font-mono text-purple-400 uppercase font-bold tracking-wider">Sales Funnel Audit Details</h4>
                   <div>
                     <label className={labelClass()}>Briefly describe your client acquisition funnel *</label>
                     <textarea value={funnelDescription} onChange={e => setFunnelDescription(e.target.value)} rows={3} placeholder="How do clients find you and buy? (e.g. Facebook Ads to Landing Page to WhatsApp chat)" className={inputClass() + ' resize-none'} required={tier === 'free' || focus === 'funnel'} />
@@ -337,7 +337,7 @@ export default function AuditView() {
               <button
                 type="submit"
                 disabled={submitting}
-                className="w-full py-4 bg-gradient-to-r from-primary to-secondary text-white font-bold rounded-xl transition-all duration-300 shadow-[0_8px_30px_rgba(0,82,255,0.25)] min-h-[52px] text-sm uppercase tracking-wider cursor-pointer"
+                className="w-full py-4 bg-gradient-to-r from-primary to-secondary text-white font-bold rounded-xl transition-all duration-300 shadow-[0_8px_30px_rgba(236,30,142,0.25)] min-h-[52px] text-sm uppercase tracking-wider cursor-pointer"
               >
                 {submitting ? 'Submitting Coordinate Logs...' : 'Launch Audit Request'}
               </button>

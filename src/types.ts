@@ -174,23 +174,6 @@ export interface ContentItem {
   createdAt: Timestamp;
 }
 
-export interface PortfolioItem {
-  id: string;
-  slug: string;
-  name: string;
-  clientType: string;
-  country: string;
-  countryName: string;
-  services: string[];
-  desc: string;
-  challenge: string;
-  solution: string;
-  stack: string[];
-  result: string;
-  images: string[];
-  createdAt: Timestamp;
-}
-
 // ── Store types ──────────────────────────────────────────────────────────────
 
 export type ProductCategory =

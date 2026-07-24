@@ -38,7 +38,7 @@ export default function SpotlightCard({ children, className = "", style = {} }: 
           style={{
             width: '320px',
             height: '320px',
-            background: 'radial-gradient(circle, rgba(124,255,194,0.11) 0%, rgba(43,255,110,0.03) 50%, transparent 100%)',
+            background: 'radial-gradient(circle, rgba(236,30,142,0.11) 0%, rgba(255,122,69,0.03) 50%, transparent 100%)',
             left: `${coords.x - 160}px`,
             top: `${coords.y - 160}px`,
             transform: 'translate3d(0, 0, 0)',
@@ -54,7 +54,7 @@ export default function SpotlightCard({ children, className = "", style = {} }: 
           style={{
             zIndex: 2,
             border: '1px solid transparent',
-            backgroundImage: `radial-gradient(circle 140px at ${coords.x}px ${coords.y}px, rgba(124,255,194, 0.35), rgba(43,255,110, 0.15), transparent 80%)`,
+            backgroundImage: `radial-gradient(circle 140px at ${coords.x}px ${coords.y}px, rgba(236, 30, 142, 0.35), rgba(255, 122, 69, 0.15), transparent 80%)`,
             WebkitMask: 'linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0)',
             WebkitMaskComposite: 'destination-out',
             maskComposite: 'exclude',

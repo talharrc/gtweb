@@ -27,8 +27,10 @@ export default function AdminLoginForm() {
         setError(data.error ?? 'Login failed.');
         return;
       }
-      localStorage.setItem('gt_admin_ui', '1');
-      await applySession({ role: 'admin', email: data.email ?? 'mail.galaxatech@gmail.com', projectId: null });
+      await applySession(
+        { role: 'admin', email: data.email ?? 'mail.galaxatech@gmail.com', projectId: null },
+        data.firebaseToken ?? null,
+      );
     } catch {
       setError('Network error. Please check your connection.');
     } finally {

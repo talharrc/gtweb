@@ -6,29 +6,15 @@ import { GoogleGenAI, Type } from "@google/genai";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import apiRouter from "./api/index";
-import testAdminHandler from "./api/test-admin";
-import adminAuthHandler from "./api/auth/admin";
-import meAuthHandler from "./api/auth/me";
-import logoutAuthHandler from "./api/auth/logout";
-import clientAuthHandler from "./api/auth/client";
-import builderAuthHandler from "./api/auth/builder";
-import generatePassesHandler from "./api/admin/generate-passes";
 
 dotenv.config();
 dotenv.config({ path: ".env.local" });
 
 const app = express();
-const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;
+const PORT = 3000;
 
 app.use(express.json());
 app.use(cookieParser());
-app.all("/api/test-admin", (req, res) => testAdminHandler(req, res));
-app.all("/api/auth/admin", (req, res) => adminAuthHandler(req, res));
-app.all("/api/auth/me", (req, res) => meAuthHandler(req, res));
-app.all("/api/auth/logout", (req, res) => logoutAuthHandler(req, res));
-app.all("/api/auth/client", (req, res) => clientAuthHandler(req, res));
-app.all("/api/auth/builder", (req, res) => builderAuthHandler(req, res));
-app.all("/api/admin/generate-passes", (req, res) => generatePassesHandler(req, res));
 app.use(apiRouter);
 
 // Initialize Gemini Client

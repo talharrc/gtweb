@@ -2,7 +2,7 @@ import { useState, useEffect, FormEvent } from 'react';
 import { collection, onSnapshot, Timestamp } from 'firebase/firestore';
 import {
   Plus, Edit2, Trash2, X, Loader2, Calendar, ChevronDown, ChevronUp,
-  Mail, ToggleLeft, ToggleRight, Key, Copy, CheckCheck,
+  Mail, ToggleLeft, ToggleRight, Link, Copy, CheckCheck,
 } from 'lucide-react';
 import { db } from '../../lib/firebase';
 import { GTProject, Milestone } from '../../types';
@@ -18,7 +18,7 @@ const STATUSES: ProjectStatus[] = ['Discovery', 'In Progress', 'Review', 'Comple
 const CATEGORIES = ['Web/App Development', 'Digital Marketing', 'AI Automation', 'Digital Finance', 'Other'];
 
 const STATUS_COLORS: Record<string, string> = {
-  Discovery: 'text-cyan-400 bg-cyan-500/10 border-cyan-500/20',
+  Discovery: 'text-purple-400 bg-purple-500/10 border-purple-500/20',
   'In Progress': 'text-emerald-400 bg-emerald-500/10 border-emerald-500/20',
   Review: 'text-amber-400 bg-amber-500/10 border-amber-500/20',
   Completed: 'text-primary bg-primary/10 border-primary/20',
@@ -40,10 +40,10 @@ const EMPTY_FORM = {
   milestones: [] as Milestone[],
 };
 
-interface PassResult {
+interface InviteResult {
   email: string;
   role: string;
-  pass: string;
+  inviteUrl: string;
 }
 
 function CopyButton({ text }: { text: string }) {
@@ -72,7 +72,7 @@ export default function AdminProjectsSection() {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [expandedProject, setExpandedProject] = useState<string | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
-  const [inviteResults, setInviteResults] = useState<PassResult[] | null>(null);
+  const [inviteResults, setInviteResults] = useState<InviteResult[] | null>(null);
 
   useEffect(() => {
     if (isDemo) {
@@ -184,12 +184,12 @@ export default function AdminProjectsSection() {
         
         if (!editingId) {
           const builderEmails = parseEmails(form.builderEmailsRaw);
-          const results: PassResult[] = [];
+          const results = [];
           if (form.clientEmail) {
-            results.push({ email: form.clientEmail.trim().toLowerCase(), role: 'client', pass: 'demo-client-pass-token' });
+            results.push({ email: form.clientEmail.trim().toLowerCase(), role: 'client', inviteUrl: `${window.location.origin}/hub/invite/demo-client-token` });
           }
           builderEmails.forEach(email => {
-            results.push({ email, role: 'builder', pass: `demo-builder-pass-token-${email}` });
+            results.push({ email, role: 'builder', inviteUrl: `${window.location.origin}/hub/invite/demo-builder-token-${email}` });
           });
           setInviteResults(results);
         } else {
@@ -206,10 +206,10 @@ export default function AdminProjectsSection() {
         projectId = await createProject(data as any);
       }
 
-      // Generate access passes for new projects with client/builder emails
+      // Generate invite links for new projects with client/builder emails
       if (!editingId && projectId) {
         try {
-          const res = await fetch('/api/admin/generate-passes', {
+          const res = await fetch('/api/admin/generate-invites', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             credentials: 'include',
@@ -220,13 +220,13 @@ export default function AdminProjectsSection() {
               builderEmails: builderEmails.length > 0 ? builderEmails : undefined,
             }),
           });
-          const passData = await res.json();
-          if (passData.ok && passData.passes?.length > 0) {
-            setInviteResults(passData.passes);
-            return; // keep modal open to show passes
+          const invData = await res.json();
+          if (invData.ok && invData.invites?.length > 0) {
+            setInviteResults(invData.invites);
+            return; // keep modal open to show links
           }
         } catch {
-          // Non-fatal — project was created, pass generation failed
+          // Non-fatal — project was created, invites failed
         }
       }
 
@@ -358,18 +358,18 @@ export default function AdminProjectsSection() {
       {/* Project Form Modal */}
       {showForm && (
         <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
-          <div className="glass-card w-full max-w-2xl rounded-2xl p-4 sm:p-6 max-h-[92vh] overflow-y-auto">
+          <div className="glass-card w-full max-w-2xl rounded-2xl p-6 max-h-[92vh] overflow-y-auto">
             <div className="flex items-center justify-between mb-5">
               <h3 className="text-white font-bold text-lg">{editingId ? 'Edit Project' : 'New Project'}</h3>
               <button onClick={() => { setShowForm(false); setInviteResults(null); }}><X className="w-4 h-4 text-white/50" /></button>
             </div>
 
-            {/* Access passes panel — shown after successful project creation */}
+            {/* Invite links panel — shown after successful project creation */}
             {inviteResults ? (
               <div className="flex flex-col gap-4">
                 <div className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20">
                   <p className="text-emerald-400 font-semibold text-sm mb-1">Project created!</p>
-                  <p className="text-white/50 text-xs">Give each person their pass below. They enter it at {origin}/client or {origin}/builder to sign in.</p>
+                  <p className="text-white/50 text-xs">Send these invite links to the respective people. Each link can only be used to set one password.</p>
                 </div>
                 {inviteResults.map(inv => (
                   <div key={inv.email} className="rounded-xl bg-white/[0.03] border border-white/[0.08] p-4">
@@ -378,12 +378,11 @@ export default function AdminProjectsSection() {
                         {inv.role}
                       </span>
                       <span className="text-white/60 text-xs font-mono">{inv.email}</span>
-                      <span className="text-white/30 text-[10px] font-mono">→ {origin}/{inv.role}</span>
                     </div>
                     <div className="flex items-center gap-2 bg-white/5 rounded-lg px-3 py-2">
-                      <Key className="w-3.5 h-3.5 text-white/30 flex-shrink-0" />
-                      <span className="text-white/70 text-xs font-mono flex-1 truncate">{inv.pass}</span>
-                      <CopyButton text={inv.pass} />
+                      <Link className="w-3.5 h-3.5 text-white/30 flex-shrink-0" />
+                      <span className="text-white/70 text-xs font-mono flex-1 truncate">{origin}{inv.inviteUrl}</span>
+                      <CopyButton text={`${origin}${inv.inviteUrl}`} />
                     </div>
                   </div>
                 ))}
@@ -415,7 +414,7 @@ export default function AdminProjectsSection() {
                       rows={2}
                       className="admin-input resize-none"
                     />
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div className="grid grid-cols-2 gap-3">
                       <select
                         value={form.category}
                         onChange={e => setForm(f => ({ ...f, category: e.target.value }))}
@@ -431,7 +430,7 @@ export default function AdminProjectsSection() {
                         {STATUSES.map(s => <option key={s} value={s}>{s}</option>)}
                       </select>
                     </div>
-                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                    <div className="grid grid-cols-3 gap-3">
                       <div>
                         <label className="text-white/40 text-xs mb-1 block">Progress %</label>
                         <input
@@ -507,7 +506,7 @@ export default function AdminProjectsSection() {
                         className="admin-input"
                       />
                       {!editingId && (
-                        <p className="text-white/25 text-[10px] mt-1 font-mono">An access pass will be generated and shown after saving.</p>
+                        <p className="text-white/25 text-[10px] mt-1 font-mono">An invite link will be generated and shown after saving.</p>
                       )}
                     </div>
                     <div>
@@ -520,7 +519,7 @@ export default function AdminProjectsSection() {
                         className="admin-input resize-none"
                       />
                       {!editingId && (
-                        <p className="text-white/25 text-[10px] mt-1 font-mono">Comma-separated. An access pass is generated for each.</p>
+                        <p className="text-white/25 text-[10px] mt-1 font-mono">Comma-separated. Invite links generated for each.</p>
                       )}
                     </div>
                   </div>
@@ -559,7 +558,7 @@ export default function AdminProjectsSection() {
                   className="py-2.5 rounded-xl bg-primary/80 hover:bg-primary text-white text-sm font-semibold transition-all disabled:opacity-60 flex items-center justify-center gap-2"
                 >
                   {saving && <Loader2 className="w-4 h-4 animate-spin" />}
-                  {editingId ? 'Save Changes' : 'Create Project & Generate Passes'}
+                  {editingId ? 'Save Changes' : 'Create Project & Generate Invites'}
                 </button>
               </form>
             )}

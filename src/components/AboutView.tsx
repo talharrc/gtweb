@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom';
+﻿import { useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { ArrowUpRight, MessageCircle, Cpu, Layers, Hammer } from 'lucide-react';
 
@@ -43,7 +43,7 @@ export default function AboutView() {
             {[
               {
                 icon: Cpu,
-                iconColor: 'text-cyan-400 bg-cyan-500/10 border-cyan-500/20',
+                iconColor: 'text-purple-400 bg-purple-500/10 border-purple-500/20',
                 title: 'Systems First',
                 desc: 'We architect before we build. Every decision is made within the context of how it fits into the whole — your full digital ecosystem, not just the single deliverable in front of us.',
               },

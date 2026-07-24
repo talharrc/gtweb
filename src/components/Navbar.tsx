@@ -40,8 +40,8 @@ interface NavbarProps {
 const EXPERTISE_ITEMS = [
   { label: 'Web Development', desc: 'Performant, scalable websites and web apps.', icon: Laptop, color: 'orange', anchor: 'web-development' },
   { label: 'App Development', desc: 'Cross-platform mobile applications.', icon: Smartphone, color: 'blue', anchor: 'app-development' },
-  { label: 'Social Media & Content', desc: 'Strategy, content creation, and growth.', icon: TrendingUp, color: 'cyan', anchor: 'social-media' },
-  { label: 'AI & Automation', desc: 'Intelligent workflows that eliminate manual work.', icon: Cpu, color: 'teal', anchor: 'ai-automation' },
+  { label: 'Social Media & Content', desc: 'Strategy, content creation, and growth.', icon: TrendingUp, color: 'pink', anchor: 'social-media' },
+  { label: 'AI & Automation', desc: 'Intelligent workflows that eliminate manual work.', icon: Cpu, color: 'purple', anchor: 'ai-automation' },
   { label: 'Brand Identity & Design', desc: 'Visual systems that make your brand unforgettable.', icon: Brush, color: 'yellow', anchor: 'brand-identity' },
   { label: 'Systems Consulting', desc: 'Notion, process, and operations architecture.', icon: Workflow, color: 'emerald', anchor: 'systems-consulting' },
 ];
@@ -49,9 +49,9 @@ const EXPERTISE_ITEMS = [
 const COLOR_MAP: Record<string, string> = {
   orange: 'bg-orange-500/15 text-orange-400 border-orange-500/20',
   blue:   'bg-blue-500/15 text-blue-400 border-blue-500/20',
-  cyan:   'bg-cyan-500/15 text-cyan-400 border-cyan-500/20',
-  teal:   'bg-teal-500/15 text-teal-400 border-teal-500/20',
-  yellow: 'bg-yellow-500/15 text-yellow-450 border-yellow-500/20',
+  pink:   'bg-pink-500/15 text-pink-400 border-pink-500/20',
+  purple: 'bg-purple-500/15 text-purple-400 border-purple-500/20',
+  yellow: 'bg-yellow-500/15 text-yellow-400 border-yellow-500/20',
   emerald:'bg-emerald-500/15 text-emerald-400 border-emerald-500/20',
 };
 
@@ -159,13 +159,13 @@ export default function Navbar({ onPageChange, dhakaTime, isDhakaOpen, currentUs
                       <h4 className="text-[11px] uppercase tracking-wider text-primary font-bold mb-1 px-2.5">Galaxa Hubs</h4>
                       <button onClick={() => goToHub('/space')} className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-[rgba(181,141,255,0.1)] text-left transition-all group/item">
                         <div className="w-8 h-8 rounded-lg bg-pink-500/20 flex items-center justify-center text-pink-400 group-hover/item:scale-110 transition-transform"><Compass className="w-4 h-4" /></div>
-                        <div><p className="text-xs font-bold text-white mb-0.5">Galaxa Space</p><p className="text-[10px] text-white/50">Community, prompts, tools & builds</p></div>
+                        <div><p className="text-xs font-bold text-white mb-0.5">Galaxa Space</p><p className="text-[10px] text-white/50">Generative utilities & prompt packs</p></div>
                       </button>
-                      <button onClick={() => goToHub('/client')} className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-[rgba(181,141,255,0.1)] text-left transition-all group/item">
+                      <button onClick={() => goToHub('/hub/client')} className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-[rgba(181,141,255,0.1)] text-left transition-all group/item">
                         <div className="w-8 h-8 rounded-lg bg-cyan-500/20 flex items-center justify-center text-cyan-400 group-hover/item:scale-110 transition-transform"><Lock className="w-4 h-4" /></div>
                         <div><p className="text-xs font-bold text-white mb-0.5">Client Hub</p><p className="text-[10px] text-white/50">Project roadmap & live systems metrics</p></div>
                       </button>
-                      <button onClick={() => goToHub('/builder')} className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-[rgba(181,141,255,0.1)] text-left transition-all group/item">
+                      <button onClick={() => goToHub('/hub/builder')} className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-[rgba(181,141,255,0.1)] text-left transition-all group/item">
                         <div className="w-8 h-8 rounded-lg bg-emerald-500/20 flex items-center justify-center text-emerald-400 group-hover/item:scale-110 transition-transform"><BookOpen className="w-4 h-4" /></div>
                         <div><p className="text-xs font-bold text-white mb-0.5">Builder Hub</p><p className="text-[10px] text-white/50">Sprint boards & performance logs</p></div>
                       </button>
@@ -238,7 +238,7 @@ export default function Navbar({ onPageChange, dhakaTime, isDhakaOpen, currentUs
             <button
               onClick={() => navTo('/audit')}
               aria-label="Book a free audit"
-              className="relative flex items-center w-10 hover:w-[160px] h-10 bg-gradient-to-r from-primary to-secondary text-white rounded-full transition-all duration-500 overflow-hidden group focus:outline-none cursor-pointer shadow-[0_8px_20px_-6px_rgba(43,255,110,0.4)]"
+              className="relative flex items-center w-10 hover:w-[160px] h-10 bg-gradient-to-r from-primary to-secondary text-white rounded-full transition-all duration-500 overflow-hidden group focus:outline-none cursor-pointer shadow-[0_8px_20px_-6px_rgba(236,30,142,0.4)]"
             >
               <div className="w-10 h-10 flex items-center justify-center flex-shrink-0 group-hover:rotate-45 transition-transform duration-500">
                 <ArrowUpRight className="w-4 h-4 text-white" />
@@ -330,8 +330,8 @@ export default function Navbar({ onPageChange, dhakaTime, isDhakaOpen, currentUs
                         <span className="text-[9px] font-bold text-primary tracking-widest uppercase font-mono block mb-2">Hubs</span>
                         <div className="flex flex-col gap-1">
                           <button onClick={() => goToHub('/space')} className="py-2.5 text-white/75 hover:text-white text-sm font-semibold flex items-center gap-3"><Compass className="w-4 h-4 text-pink-400" /> Galaxa Space</button>
-                          <button onClick={() => goToHub('/client')} className="py-2.5 text-white/75 hover:text-white text-sm font-semibold flex items-center gap-3"><Lock className="w-4 h-4 text-cyan-400" /> Client Hub</button>
-                          <button onClick={() => goToHub('/builder')} className="py-2.5 text-white/75 hover:text-white text-sm font-semibold flex items-center gap-3"><BookOpen className="w-4 h-4 text-emerald-400" /> Builder Hub</button>
+                          <button onClick={() => goToHub('/hub/client')} className="py-2.5 text-white/75 hover:text-white text-sm font-semibold flex items-center gap-3"><Lock className="w-4 h-4 text-cyan-400" /> Client Hub</button>
+                          <button onClick={() => goToHub('/hub/builder')} className="py-2.5 text-white/75 hover:text-white text-sm font-semibold flex items-center gap-3"><BookOpen className="w-4 h-4 text-emerald-400" /> Builder Hub</button>
                           <button onClick={() => goToHub('/hub/customer')} className="py-2.5 text-white/75 hover:text-white text-sm font-semibold flex items-center gap-3"><Package className="w-4 h-4 text-primary" /> My Orders</button>
                         </div>
                       </div>

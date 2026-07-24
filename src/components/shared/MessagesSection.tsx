@@ -16,12 +16,12 @@ function MessageBubble({ msg, myUid }: BubbleProps) {
     ? new Date(msg.createdAt.seconds * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
     : '';
 
-  // Role-based bubble styling (Admin = Blue, Client = Cyan, Builder = Emerald)
+  // Role-based bubble styling (Admin = Purple, Client = Cyan, Builder = Emerald)
   let bubbleClass = 'bg-white/5 border-white/10 text-white/80 rounded-bl-sm';
   if (msg.senderRole === 'admin') {
     bubbleClass = isMe
-      ? 'bg-primary/20 border-primary/40 text-white rounded-br-sm shadow-[0_0_15px_rgba(0,82,255,0.15)]'
-      : 'bg-primary/10 border-primary/20 text-blue-300 rounded-bl-sm';
+      ? 'bg-purple-500/20 border-purple-500/40 text-white rounded-br-sm shadow-[0_0_15px_rgba(139,92,246,0.15)]'
+      : 'bg-purple-500/10 border-purple-500/20 text-purple-300 rounded-bl-sm';
   } else if (msg.senderRole === 'client') {
     bubbleClass = isMe
       ? 'bg-cyan-500/20 border-cyan-500/40 text-white rounded-br-sm shadow-[0_0_15px_rgba(34,211,238,0.15)]'
