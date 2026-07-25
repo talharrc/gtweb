@@ -8,7 +8,6 @@ export default function ClosingCTASection() {
 
   return (
     <section className="py-24 sm:py-32 px-6 relative overflow-hidden bg-[#F2ECE6] text-center">
-      <div className="absolute inset-0 bg-grid-overlay opacity-30 pointer-events-none" />
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[480px] h-[480px] bg-[#FF4D06]/4 blur-[110px] rounded-full pointer-events-none" />
 
       <motion.div
@@ -19,9 +18,8 @@ export default function ClosingCTASection() {
         className="max-w-3xl mx-auto relative z-10"
       >
         <span className="text-[10px] font-mono text-[#FF4D06] tracking-[0.3em] uppercase block mb-4">08 — Let's Build</span>
-        <h2 className="display-poster text-[#0B0B0B] text-4xl sm:text-5xl md:text-7xl mb-6 leading-none">
-          Ready to<br />
-          <span className="pill-word-brand text-white inline-block" style={{ background: '#FF4D06' }}>start?</span>
+        <h2 className="text-[#0B0B0B] text-4xl sm:text-5xl font-bold tracking-tight mb-6">
+          Ready to <span className="text-[#FF4D06]">start?</span>
         </h2>
         <p className="text-zinc-600 text-base sm:text-lg max-w-md mx-auto mb-10 leading-relaxed">
           Tell us about your business in 5 minutes — we'll map out exactly how to grow your digital presence.

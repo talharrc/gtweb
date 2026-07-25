@@ -1,7 +1,7 @@
 import {
   Workflow, Rocket, Users, Globe, MessageCircle,
   Clock, DollarSign, BookOpen, Monitor, PhoneCall,
-  Package, ShoppingBasket, Zap, FolderOpen, Lock,
+  Package, ShoppingBasket,
 } from 'lucide-react';
 
 // ── Lifted near-verbatim from the dormant src/components/HomeView.tsx ──────────
@@ -44,16 +44,4 @@ export const SERVICES_STATS = [
   { value: 10, suffix: 'X', decimals: 0, label: 'Faster' },
   { value: 3, suffix: '', decimals: 0, label: 'The Cost', display: '1/3' },
   { value: 100, suffix: '%', decimals: 0, label: 'Focus On Ideas' },
-];
-
-export const PROCESS_FEATURES = [
-  { icon: Zap,           title: 'Real-Time Tracking',   desc: 'Track progress. Stay ahead. Always in the loop.' },
-  { icon: FolderOpen,    title: 'Asset Access',         desc: 'All files. All assets. One click away.' },
-  { icon: MessageCircle, title: 'Direct Communication', desc: 'Talk to your team. Get answers. Fast.' },
-  { icon: Lock,          title: 'Secure & Private',     desc: 'Your data. Protected. Always.' },
-];
-
-export const BILLBOARD_FRAMES = [
-  { headline: "POSTING ISN'T", accent: 'MARKETING THEN?', tint: 'dusk' as const },
-  { headline: 'WE CURATE', accent: 'BRANDS!', tint: 'night' as const },
 ];

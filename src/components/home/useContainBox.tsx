@@ -38,3 +38,40 @@ export function BlurredBackdrop({ src, tint }: { src: string; tint: string }) {
     </>
   );
 }
+
+export type ContainBoxRect = { width: number; height: number; left: number; top: number };
+
+/** Patches a rectangular region of the artwork (given as fractions of the contain-box) with
+ * a flat fill, feathered on one edge, so a real DOM element can be overlaid in that exact
+ * spot in place of whatever was baked flat into the image there (a stat number, a progress
+ * bar, a toggle switch). Positioned against the measured contain-box, not the viewport, so
+ * it stays pixel-aligned with the artwork at any window size. */
+export function ImagePatch({
+  box, left = 0, top, width = 1, height, color, feather = 'bottom',
+}: {
+  box: ContainBoxRect;
+  left?: number;
+  top: number;
+  width?: number;
+  height: number;
+  color: string;
+  feather?: 'top' | 'bottom' | 'left' | 'right' | 'none';
+}) {
+  if (!box.width) return null;
+  const gradientDir = { top: 'to top', bottom: 'to bottom', left: 'to left', right: 'to right', none: null }[feather];
+  const mask = gradientDir ? `linear-gradient(${gradientDir}, black 90%, transparent 100%)` : undefined;
+  return (
+    <div
+      style={{
+        position: 'absolute',
+        left: box.left + box.width * left,
+        top: box.top + box.height * top,
+        width: box.width * width,
+        height: box.height * height,
+        background: color,
+        WebkitMaskImage: mask,
+        maskImage: mask,
+      }}
+    />
+  );
+}
