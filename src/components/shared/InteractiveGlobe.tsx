@@ -16,14 +16,14 @@ interface CountryNode {
 }
 
 const CLIENT_COUNTRIES: CountryNode[] = [
-  { name: 'USA', lat: 37.0902, lon: -95.7129, color: '#FF7A45' }, // Center of USA
-  { name: 'UK', lat: 55.3781, lon: -3.4360, color: '#EC1E8E' },
-  { name: 'Pakistan', lat: 29.9490, lon: 69.3451, color: '#FF7A45' },
-  { name: 'Saudi Arabia', lat: 23.8859, lon: 45.0792, color: '#5B23A8' },
-  { name: 'India', lat: 20.5937, lon: 78.9629, color: '#FF7A45' },
+  { name: 'USA', lat: 37.0902, lon: -95.7129, color: '#FF8A50' }, // Center of USA
+  { name: 'UK', lat: 55.3781, lon: -3.4360, color: '#FF8A50' },
+  { name: 'Pakistan', lat: 29.9490, lon: 69.3451, color: '#FF8A50' },
+  { name: 'Saudi Arabia', lat: 23.8859, lon: 45.0792, color: '#FF8A50' },
+  { name: 'India', lat: 20.5937, lon: 78.9629, color: '#FF8A50' },
 ];
 
-const DHAKA: CountryNode = { name: 'Dhaka', lat: 23.6850, lon: 90.3563, color: '#EC1E8E' };
+const DHAKA: CountryNode = { name: 'Dhaka', lat: 23.6850, lon: 90.3563, color: '#FF4D06' };
 
 // Simple mathematical function to approximate Earth's continents
 function isLand(lat: number, lon: number): boolean {
@@ -239,12 +239,13 @@ export default function InteractiveGlobe() {
     window.addEventListener('resize', handleResize);
 
     // Render loop
+    const reducedMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
     const animate = () => {
       ctx.clearRect(0, 0, width, height);
 
       const r = rotationRef.current;
-      if (!r.isDragging) {
-        r.angleY += 0.003; // Constant slow spin
+      if (!r.isDragging && !reducedMotionQuery.matches) {
+        r.angleY += 0.003; // Constant slow spin — frozen when the user prefers reduced motion
       }
 
       const angleX = r.angleX;
@@ -260,9 +261,9 @@ export default function InteractiveGlobe() {
       // Draw faint atmosphere glow circle
       ctx.beginPath();
       const glowGrad = ctx.createRadialGradient(centerX, centerY, radius * 0.9, centerX, centerY, radius * 1.15);
-      glowGrad.addColorStop(0, 'rgba(236, 30, 142, 0.08)');
-      glowGrad.addColorStop(0.5, 'rgba(91, 35, 168, 0.04)');
-      glowGrad.addColorStop(1, 'rgba(11, 7, 16, 0)');
+      glowGrad.addColorStop(0, 'rgba(255, 77, 6, 0.08)');
+      glowGrad.addColorStop(0.5, 'rgba(255, 77, 6, 0.04)');
+      glowGrad.addColorStop(1, 'rgba(11, 11, 11, 0)');
       ctx.fillStyle = glowGrad;
       ctx.arc(centerX, centerY, radius * 1.15, 0, Math.PI * 2);
       ctx.fill();
@@ -354,7 +355,7 @@ export default function InteractiveGlobe() {
           const avgZ = (dRotZ2 + cRotZ2) / 2;
           const arcAlpha = Math.max(0.04, Math.min(0.4, (avgZ + radius) / (2 * radius)));
 
-          ctx.strokeStyle = `rgba(236, 30, 142, ${arcAlpha})`;
+          ctx.strokeStyle = `rgba(255, 77, 6, ${arcAlpha})`;
           ctx.lineWidth = 1.2;
           ctx.stroke();
 
@@ -372,13 +373,13 @@ export default function InteractiveGlobe() {
           const py2d = centerY - ptRotY * ptScale;
 
           if (ptRotZ > 0) {
-            ctx.fillStyle = `rgba(255, 122, 69, ${(1 - t) * 0.95})`; // Coral signal particles fading out as they arrive
+            ctx.fillStyle = `rgba(255, 138, 80, ${(1 - t) * 0.95})`; // Light-orange signal particles fading out as they arrive
             ctx.beginPath();
             ctx.arc(px2d, py2d, 2.5, 0, Math.PI * 2);
             ctx.fill();
 
             // Glow flare
-            ctx.fillStyle = `rgba(255, 122, 69, ${(1 - t) * 0.25})`;
+            ctx.fillStyle = `rgba(255, 138, 80, ${(1 - t) * 0.25})`;
             ctx.beginPath();
             ctx.arc(px2d, py2d, 6, 0, Math.PI * 2);
             ctx.fill();
@@ -399,19 +400,19 @@ export default function InteractiveGlobe() {
 
         // Pulses
         const pulseSize = 4 + (Math.sin(Date.now() / 200) * 2.5);
-        ctx.fillStyle = 'rgba(236, 30, 142, 0.2)';
+        ctx.fillStyle = 'rgba(255, 77, 6, 0.2)';
         ctx.beginPath();
         ctx.arc(dx2d, dy2d, pulseSize + 4, 0, Math.PI * 2);
         ctx.fill();
 
-        ctx.fillStyle = '#EC1E8E'; // Core
+        ctx.fillStyle = '#FF4D06'; // Core
         ctx.beginPath();
         ctx.arc(dx2d, dy2d, 3.5, 0, Math.PI * 2);
         ctx.fill();
 
         // Label
         ctx.font = 'bold 9px monospace';
-        ctx.fillStyle = '#EC1E8E';
+        ctx.fillStyle = '#FF4D06';
         ctx.textAlign = 'center';
         ctx.fillText('Dhaka (Base)', dx2d, dy2d - 12);
       }
@@ -434,12 +435,12 @@ export default function InteractiveGlobe() {
             ? 7 + (Math.sin(Date.now() / 120) * 3) 
             : 3 + (Math.sin(Date.now() / 300) * 1.5);
           
-          ctx.fillStyle = isHovered ? 'rgba(255, 122, 69, 0.4)' : 'rgba(255, 122, 69, 0.25)';
+          ctx.fillStyle = isHovered ? 'rgba(255, 138, 80, 0.4)' : 'rgba(255, 138, 80, 0.25)';
           ctx.beginPath();
           ctx.arc(cx2d, cy2d, pulseSize + 3, 0, Math.PI * 2);
           ctx.fill();
 
-          ctx.fillStyle = '#FF7A45'; // Core
+          ctx.fillStyle = '#FF8A50'; // Core — lighter orange, differentiates client nodes from the Dhaka base
           ctx.beginPath();
           ctx.arc(cx2d, cy2d, 3, 0, Math.PI * 2);
           ctx.fill();
@@ -480,7 +481,7 @@ export default function InteractiveGlobe() {
       />
       {hoveredNode && (
         <div className="absolute bottom-4 bg-[#161421]/90 backdrop-blur-md px-4 py-2 rounded-xl border border-white/10 text-xs font-mono font-semibold text-white pointer-events-none shadow-lg animate-fadeIn">
-          Connected Node: <span className="text-[#FF7A45]">{hoveredNode}</span>
+          Connected Node: <span className="text-[#FF8A50]">{hoveredNode}</span>
         </div>
       )}
     </div>

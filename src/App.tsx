@@ -3,7 +3,7 @@ import { Routes, Route, useLocation, useNavigate, Navigate } from 'react-router-
 import { Loader2, ChevronUp, MessageCircle, Link } from 'lucide-react';
 import { motion, AnimatePresence, MotionConfig } from 'motion/react';
 import Navbar from './components/Navbar';
-import HomeView from './components/HomeView';
+import HomeView from './components/home/HomeView';
 import ServicesView from './components/ServicesView';
 import PortfolioView from './components/PortfolioView';
 import PortfolioCaseStudy from './components/PortfolioCaseStudy';
@@ -168,10 +168,10 @@ function WhatsAppButton() {
       target="_blank"
       rel="noopener noreferrer"
       aria-label="Chat on WhatsApp"
-      className="fixed bottom-6 right-4 sm:right-6 z-40 flex items-center gap-2 px-4 py-2.5 rounded-full text-white font-semibold text-sm transition-all hover:scale-105 active:scale-95"
+      className="fixed bottom-6 right-4 sm:right-6 z-40 flex items-center gap-2 px-4 py-2.5 rounded-full text-white font-semibold text-sm transition-all hover:scale-105 active:scale-95 border border-white/25"
       style={{
-        background: 'linear-gradient(135deg, #25d366 0%, #128c48 100%)',
-        boxShadow: '0 4px 20px rgba(37,211,102,0.35)',
+        background: 'radial-gradient(circle at 32% 28%, #FF8A50 0%, #FF4D06 55%, #D93F00 100%)',
+        boxShadow: '0 10px 28px rgba(255,77,6,0.45), inset 0 1px 1px rgba(255,255,255,0.35), inset 0 -6px 10px rgba(0,0,0,0.15)',
       }}
     >
       <MessageCircle className="w-4 h-4 flex-shrink-0" />
