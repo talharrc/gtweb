@@ -4,6 +4,7 @@ import { Loader2, ChevronUp, MessageCircle, Link } from 'lucide-react';
 import { motion, AnimatePresence, MotionConfig } from 'motion/react';
 import Navbar from './components/Navbar';
 import HomeView from './components/home/HomeView';
+import RedesignedHomeView from './components/RedesignedHomeView';
 import ServicesView from './components/ServicesView';
 import PortfolioView from './components/PortfolioView';
 import PortfolioCaseStudy from './components/PortfolioCaseStudy';
@@ -280,6 +281,7 @@ function AppInner() {
       <main className="flex-grow">
         <Routes>
           <Route path="/" element={<HomeView isDhakaOpen={isDhakaOpen} dhakaTime={dhakaTime} currentUser={null} />} />
+          <Route path="/redesign" element={<RedesignedHomeView isDhakaOpen={isDhakaOpen} dhakaTime={dhakaTime} currentUser={null} />} />
           <Route path="/services"          element={<ServicesView />} />
           <Route path="/portfolio"         element={<PortfolioView />} />
           <Route path="/portfolio/:slug"   element={<PortfolioCaseStudy />} />
@@ -293,7 +295,7 @@ function AppInner() {
           <Route path="*"                  element={<NotFoundView />} />
         </Routes>
       </main>
-      <Footer onPageChange={handlePageSelect} dhakaTime={dhakaTime} />
+      {location.pathname !== '/' && <Footer onPageChange={handlePageSelect} dhakaTime={dhakaTime} />}
       <CookieBanner />
       <ScrollToTopButton />
       <WhatsAppButton />

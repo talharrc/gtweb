@@ -9,3 +9,5 @@ coverage/
 
 .vercel
 firebase-applet-config.json
+scratch/
+*.zip

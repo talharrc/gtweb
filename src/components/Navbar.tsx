@@ -116,10 +116,20 @@ export default function Navbar({ onPageChange, dhakaTime, isDhakaOpen, currentUs
           {/* Logo */}
           <button onClick={() => navTo('/')} className="flex items-center gap-2.5 group cursor-pointer focus:outline-none">
             <div className="relative">
-              <img alt="GalaxaTech" className="w-10 h-10 object-contain transition-transform duration-500 group-hover:scale-105" src="/logo-dark.png" />
+              <motion.img
+                layoutId="app-logo-image"
+                alt="GalaxaTech"
+                className="w-10 h-10 object-contain transition-transform duration-500 group-hover:scale-105"
+                src="/logo-dark.png"
+              />
               <span className="absolute -inset-1 bg-primary/20 blur opacity-0 group-hover:opacity-100 transition-opacity" />
             </div>
-            <span className="font-display text-xl tracking-wide uppercase text-[#0B0B0B] transition-all group-hover:text-[#FF4D06]">GalaxaTech</span>
+            <motion.span
+              layoutId="app-logo-text"
+              className="font-display text-xl tracking-wide uppercase text-[#0B0B0B] transition-all group-hover:text-[#FF4D06]"
+            >
+              GalaxaTech
+            </motion.span>
           </button>
 
           {/* Desktop Nav */}

@@ -1,0 +1,1294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GalaxaTech — AI Digital Agency Redesign</title>
+<link rel="icon" href="galaxatech-mark-dark.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black: #0B0B0B;
+    --sand: #F2ECE6;
+    --orange: #FF4D06;
+    --bone: #E5DDD4;
+    --hair: #C9C1B8;
+  }
+  
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  body {
+    background: var(--sand);
+    color: var(--black);
+    font-family: 'Inter', sans-serif;
+    overflow-x: hidden;
+    line-height: 1.5;
+  }
+
+  .mono {
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    font-size: 11px;
+  }
+  
+  .display {
+    font-family: 'Anton', sans-serif;
+    text-transform: uppercase;
+    line-height: .92;
+    letter-spacing: -.02em;
+    font-weight: 400;
+  }
+
+  /* ---------- global styling rules ---------- */
+  .btn-orange {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--orange);
+    color: var(--black);
+    padding: 16px 32px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    text-decoration: none;
+    font-size: 14px;
+    text-transform: uppercase;
+    transition: background 0.2s ease-out;
+  }
+  .btn-orange:hover {
+    background: #e64100;
+  }
+
+  .btn-outline {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    color: var(--black);
+    padding: 16px 32px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    text-decoration: none;
+    font-size: 14px;
+    text-transform: uppercase;
+    transition: border 0.2s ease-out;
+  }
+  .btn-outline:hover {
+    border-color: var(--black);
+  }
+
+  .btn-outline-white {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: var(--sand);
+    padding: 16px 32px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    text-decoration: none;
+    font-size: 14px;
+    text-transform: uppercase;
+    transition: border 0.2s ease-out;
+  }
+  .btn-outline-white:hover {
+    border-color: var(--sand);
+  }
+
+  /* ---------- layout ---------- */
+  .section-container {
+    max-width: 1240px;
+    margin: 0 auto;
+    padding: 0 40px;
+    width: 100%;
+  }
+
+  section {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    position: relative;
+    padding: 120px 0;
+  }
+
+  .split-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: center;
+    width: 100%;
+  }
+
+  .dark-bg {
+    background: var(--black);
+    color: var(--sand);
+  }
+
+  /* ---------- nav ---------- */
+  nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 100;
+    background: rgba(11, 11, 11, 0.95);
+    color: var(--sand);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 40px;
+  }
+  
+  .lockup {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .lockup img {
+    height: 34px;
+  }
+  .lockup .word {
+    font-family: 'Anton', sans-serif;
+    font-size: 19px;
+    letter-spacing: .01em;
+    line-height: 1;
+  }
+  .lockup .desc {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9.5px;
+    letter-spacing: .16em;
+    color: var(--orange);
+    margin-top: 2px;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 28px;
+    list-style: none;
+    font-size: 13px;
+  }
+  .nav-links a {
+    color: var(--sand);
+    text-decoration: none;
+    opacity: 0.7;
+    transition: opacity 0.2s ease-out;
+  }
+  .nav-links a:hover {
+    opacity: 1;
+    color: var(--orange);
+  }
+
+  /* ---------- 01. hero ---------- */
+  .hero-section {
+    position: relative;
+    padding-top: 140px;
+    padding-bottom: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    overflow: hidden;
+  }
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background: url('hero_mockup.jpg') no-repeat right 30% center / cover;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .hero-overlay {
+    position: absolute;
+    inset: 0;
+    right: auto;
+    width: 65%;
+    background: var(--sand);
+    z-index: 1;
+  }
+  .hero-gradient {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 65%;
+    width: 200px;
+    background: linear-gradient(to right, var(--sand), transparent);
+    z-index: 1;
+    pointer-events: none;
+  }
+  .hero-title {
+    font-size: clamp(2.8rem, 6vw, 5.5rem);
+  }
+  .hero-subtitle {
+    margin-top: 16px;
+    font-size: 15px;
+    color: rgba(0, 0, 0, 0.7);
+    max-width: 480px;
+    font-weight: 500;
+  }
+  .hero-ctas {
+    margin-top: 32px;
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .spec-grid {
+    width: 100%;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    background: rgba(242, 236, 230, 0.9);
+    backdrop-filter: blur(2px);
+    margin-top: 60px;
+    position: relative;
+    z-index: 2;
+  }
+  .spec-grid-in {
+    max-width: 1240px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .spec-cell {
+    border-right: 1px solid rgba(0, 0, 0, 0.1);
+    padding: 20px 40px;
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+  }
+  .spec-cell:last-child {
+    border-right: none;
+  }
+  .spec-cell strong {
+    font-size: 28px;
+    color: var(--orange);
+  }
+  .spec-cell span {
+    color: rgba(0, 0, 0, 0.55);
+  }
+
+
+  /* ---------- 02. services ---------- */
+  .services-title {
+    font-size: clamp(2.4rem, 5vw, 4.5rem);
+  }
+  .services-list {
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+  }
+  .service-item {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    padding: 24px 0;
+  }
+  .service-trigger {
+    width: 100%;
+    background: none;
+    border: none;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    text-align: left;
+    color: var(--black);
+  }
+  .service-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.2s ease-out;
+  }
+  .service-item.active .service-content {
+    max-height: 180px;
+    margin-top: 16px;
+  }
+  .service-item.active .service-trigger span {
+    color: var(--orange);
+  }
+  .tag-container {
+    display: flex;
+    gap: 8px;
+    margin-top: 16px;
+    flex-wrap: wrap;
+  }
+  .service-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    text-transform: uppercase;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    padding: 3px 8px;
+    background: rgba(0, 0, 0, 0.03);
+    color: rgba(0, 0, 0, 0.6);
+  }
+
+  /* ---------- 03. ecosystems ---------- */
+  .orbit-viewport {
+    position: relative;
+    width: 100%;
+    max-width: 480px;
+    aspect-ratio: 1;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .orbit-ring-outer {
+    position: absolute;
+    width: 85%;
+    height: 85%;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 50%;
+  }
+  .orbit-ring-mid {
+    position: absolute;
+    width: 60%;
+    height: 60%;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 50%;
+  }
+  .center-node {
+    position: absolute;
+    width: 110px;
+    height: 110px;
+    border: 1px solid var(--orange);
+    background: var(--black);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
+    text-align: center;
+  }
+  .orbit-node {
+    position: absolute;
+    width: 90px;
+    height: 90px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: var(--black);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.2s ease-out, background-color 0.2s ease-out;
+  }
+  .orbit-node:hover {
+    border-color: var(--orange);
+    background: rgba(255, 255, 255, 0.04);
+  }
+  .node-top-center {
+    top: 2%;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  .node-top-right {
+    top: 12%;
+    right: 12%;
+  }
+  .node-bottom-right {
+    bottom: 12%;
+    right: 12%;
+  }
+  .node-bottom-left {
+    bottom: 12%;
+    left: 12%;
+  }
+  .node-top-left {
+    top: 12%;
+    left: 12%;
+  }
+  
+  .node-detail-panel {
+    margin-top: 32px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.02);
+    padding: 24px;
+    min-height: 130px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  /* ---------- 04. state machine ---------- */
+  .flow-container {
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.01);
+    padding: 32px;
+    max-width: 500px;
+    margin: 0 auto;
+    width: 100%;
+    position: relative;
+  }
+  .flow-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    padding-bottom: 16px;
+    margin-bottom: 24px;
+  }
+  .flow-status {
+    background: rgba(255, 77, 6, 0.1);
+    color: var(--orange);
+    padding: 2px 8px;
+    font-size: 9px;
+  }
+  .flow-line {
+    position: absolute;
+    left: 55px;
+    top: 80px;
+    bottom: 80px;
+    width: 1px;
+    background: rgba(255, 255, 255, 0.1);
+    z-index: 0;
+  }
+  .flow-step {
+    display: flex;
+    gap: 24px;
+    margin-bottom: 24px;
+    position: relative;
+    z-index: 5;
+  }
+  .flow-step:last-child {
+    margin-bottom: 0;
+  }
+  .flow-icon {
+    width: 48px;
+    height: 48px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    background: var(--black);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--orange);
+    font-weight: 700;
+  }
+  .flow-text h4 {
+    color: var(--sand);
+    font-size: 13px;
+    margin-bottom: 4px;
+  }
+  .flow-text p {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 11px;
+  }
+  .flow-code {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 1px 4px;
+    font-family: monospace;
+  }
+
+  /* ---------- 05. media pipeline ---------- */
+  .pipeline-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 12px;
+    width: 100%;
+    max-width: 520px;
+    margin: 0 auto;
+  }
+  .pipeline-card {
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.02);
+    padding: 12px;
+    min-height: 140px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    text-align: center;
+  }
+  .pipeline-card.active {
+    border-color: var(--orange);
+    background: rgba(255, 77, 6, 0.05);
+  }
+  .pipeline-card span:first-child {
+    color: rgba(255, 255, 255, 0.4);
+    font-size: 9px;
+  }
+  .pipeline-card span:last-child {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 9px;
+    font-weight: 700;
+    line-height: 1.1;
+  }
+  .pipeline-svg {
+    width: 16px;
+    height: 16px;
+    margin: 0 auto;
+    fill: var(--orange);
+  }
+
+  /* ---------- 06. process ---------- */
+  .timeline-container {
+    position: relative;
+    border-left: 1px solid rgba(0, 0, 0, 0.1);
+    padding-left: 32px;
+    margin-left: 8px;
+  }
+  .timeline-step {
+    position: relative;
+    margin-bottom: 48px;
+  }
+  .timeline-step:last-child {
+    margin-bottom: 0;
+  }
+  .timeline-dot {
+    position: absolute;
+    left: -40px;
+    top: 6px;
+    width: 15px;
+    height: 15px;
+    background: var(--black);
+    border: 3px solid var(--sand);
+    border-radius: 50%;
+  }
+  .timeline-step.active .timeline-dot {
+    background: var(--orange);
+  }
+  .timeline-step h4 {
+    margin-top: 4px;
+    font-size: 14px;
+  }
+  .timeline-step p {
+    font-size: 12px;
+    color: rgba(0, 0, 0, 0.6);
+    margin-top: 4px;
+    max-width: 440px;
+  }
+
+  /* ---------- 07. work ---------- */
+  .work-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-top: 48px;
+  }
+  .work-card {
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: var(--black);
+    padding: 24px;
+    min-height: 250px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    text-align: left;
+    text-decoration: none;
+    color: var(--sand);
+    transition: border-color 0.2s ease-out, background 0.2s ease-out;
+  }
+  .work-card:hover {
+    border-color: var(--orange);
+    background: rgba(255, 255, 255, 0.04);
+  }
+  .work-card h3 {
+    margin-top: 60px;
+    font-size: 24px;
+  }
+  .work-card p {
+    font-size: 12px;
+    opacity: 0.6;
+    margin-top: 4px;
+  }
+  .work-tags {
+    display: flex;
+    gap: 6px;
+    margin-top: 20px;
+  }
+  .work-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8px;
+    text-transform: uppercase;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 2px 6px;
+    opacity: 0.6;
+  }
+
+  /* ---------- 08. contact ---------- */
+  .channels {
+    margin-top: 48px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .channel-row {
+    display: flex;
+    gap: 12px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    padding-bottom: 12px;
+    font-size: 11px;
+  }
+  .channel-row:last-child {
+    border-bottom: none;
+  }
+  .channel-label {
+    opacity: 0.5;
+  }
+  .channel-val {
+    font-weight: 700;
+  }
+  .form-panel {
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    background: rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(10px);
+    padding: 32px;
+    width: 100%;
+    max-width: 480px;
+    margin: 0 auto;
+  }
+  .form-group {
+    margin-bottom: 16px;
+  }
+  .form-label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 9px;
+    color: rgba(0, 0, 0, 0.6);
+  }
+  .form-input {
+    width: 100%;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    background: rgba(255, 255, 255, 0.2);
+    padding: 12px;
+    font-size: 13px;
+    color: var(--black);
+  }
+  .form-input:focus {
+    outline: none;
+    border-color: var(--orange);
+  }
+  .form-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 20px 0;
+    font-size: 9px;
+    color: rgba(0, 0, 0, 0.8);
+    cursor: pointer;
+  }
+  .btn-submit {
+    width: 100%;
+    background: var(--black);
+    color: var(--sand);
+    border: none;
+    padding: 16px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    cursor: pointer;
+    font-size: 13px;
+    transition: background 0.2s ease-out;
+  }
+  .btn-submit:hover {
+    background: var(--orange);
+    color: var(--black);
+  }
+  .success-panel {
+    display: none;
+    text-align: center;
+    padding: 40px 0;
+  }
+  .success-panel strong {
+    display: block;
+    margin-top: 16px;
+    font-size: 16px;
+  }
+
+  /* ---------- responsive ---------- */
+  @media (max-width: 900px) {
+    .split-grid {
+      grid-template-columns: 1fr;
+      gap: 40px;
+    }
+    nav {
+      padding: 18px 20px;
+    }
+    .nav-links {
+      display: none; /* simple mobile version */
+    }
+    .section-container {
+      padding: 0 20px;
+    }
+    section {
+      padding: 80px 0;
+    }
+    .spec-grid-in {
+      grid-template-columns: 1fr;
+    }
+    .spec-cell {
+      border-right: none;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .spec-cell:last-child {
+      border-bottom: none;
+    }
+    .work-grid {
+      grid-template-columns: 1fr;
+    }
+    .pipeline-grid {
+      grid-template-columns: 1fr;
+      gap: 8px;
+    }
+  }
+</style>
+</head>
+<body>
+
+<!-- nav -->
+<nav>
+  <div class="lockup">
+    <img src="galaxatech-mark-light.png" alt="GalaxaTech mark">
+    <div>
+      <div class="word">GALAXATECH</div>
+      <div class="desc">AI Digital Agency</div>
+    </div>
+  </div>
+  <ul class="nav-links">
+    <li><a href="#hero">Home</a></li>
+    <li><a href="#services">Services</a></li>
+    <li><a href="#ecosystem">Ecosystems</a></li>
+    <li><a href="#process">Process</a></li>
+    <li><a href="#work">Work</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- 01. hero -->
+<section id="hero" class="hero-section">
+  <!-- Mockup Background Image -->
+  <div class="hero-bg"></div>
+  
+  <!-- Solid Sand Beige overlay on the left to cover mockup text/fake logo -->
+  <div class="hero-overlay"></div>
+  
+  <!-- Smooth gradient transition -->
+  <div class="hero-gradient"></div>
+
+  <div class="section-container flex-grow flex items-center w-full" style="position: relative; z-index: 2;">
+    <div style="max-width: 640px; width: 100%; padding: 20px; background: rgba(242, 236, 230, 0.9); backdrop-filter: blur(4px); border: 1px solid rgba(0, 0, 0, 0.05);">
+      <div class="mono" style="color: var(--orange); margin-bottom: 16px; font-weight: bold;">
+        <span style="display:inline-block; width:6px; height:6px; background:var(--orange); border-radius:50%; margin-right:6px; vertical-align:middle;"></span>
+        SYSTEMS-CREATIVE-TECH / DHAKA → WORLD
+      </div>
+      <h1 class="display hero-title" style="color: var(--black);">
+        WE&apos;RE NOT<br>YOUR <span style="background: var(--orange); color: var(--sand); padding: 0 0.1em;">TYPICAL</span><br>
+        <span style="color: var(--orange);">AGENCY.</span>
+      </h1>
+      <p class="hero-subtitle">
+        STRATEGY THAT DRIVES GROWTH.<br>
+        <span style="color: var(--orange); font-size: 11px; font-family: 'JetBrains Mono', monospace; font-weight: bold;">BUILT DIFFERENT. DELIVERED LOUD.</span>
+      </p>
+      <div class="hero-ctas">
+        <a href="#contact" class="btn-orange">Are you typical? Claim a free audit →</a>
+        <a href="#contact" class="btn-outline" style="border-color: rgba(0, 0, 0, 0.35);">Book an audit →</a>
+        <a href="#services" class="mono" style="color: rgba(0, 0, 0, 0.6); text-decoration: none; font-weight: bold; font-size: 10px;">Why audit? <span style="width: 16px; height: 16px; border: 1px solid rgba(0, 0, 0, 0.35); border-radius: 50%; display: inline-flex; items-center; justify-content: center; font-family: serif; font-style: italic; font-size: 10px; margin-left: 2px;">i</span></a>
+      </div>
+    </div>
+  </div>
+  
+  <div class="spec-grid">
+    <div class="spec-grid-in font-mono">
+      <div class="spec-cell">
+        <strong>50+</strong>
+        <span>Projects Delivered</span>
+      </div>
+      <div class="spec-cell">
+        <strong>12M+</strong>
+        <span>Client Revenue</span>
+      </div>
+      <div class="spec-cell">
+        <strong>99.9%</strong>
+        <span>System Uptime</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 02. services -->
+<section id="services" style="background: var(--sand); border-bottom: 1px solid rgba(0, 0, 0, 0.1);">
+  <div class="section-container">
+    <div class="split-grid">
+      <div>
+        <div class="mono" style="color: var(--orange); margin-bottom: 12px;">02 / SERVICES</div>
+        <h2 class="display services-title">
+          WE DO THREE THINGS.<br>
+          AND WE DO THEM <span style="color: var(--orange);">BEST.</span>
+        </h2>
+        <p style="margin-top: 20px; max-width: 380px; color: rgba(0,0,0,0.65);">
+          We focus on building modular, high-impact systems. We do not dilute our expertise with fluff or side projects.
+        </p>
+      </div>
+      <div class="services-list">
+        <!-- item 1 -->
+        <div class="service-item active" onclick="toggleService(0)">
+          <button class="service-trigger">
+            <span>01 / BRAND IDENTITY</span>
+            <span class="arrow">↓</span>
+          </button>
+          <div class="service-content">
+            <p style="margin-top: 12px; font-size: 13.5px; opacity: 0.75; max-width: 420px;">
+              Crafting strategic positioning and visual guidelines. We produce vector masters, lockups, and core brand books.
+            </p>
+            <div class="tag-container">
+              <span class="service-tag">Positioning</span>
+              <span class="service-tag">Visual System</span>
+              <span class="service-tag">Guidelines</span>
+              <span class="service-tag">Assets</span>
+            </div>
+          </div>
+        </div>
+        <!-- item 2 -->
+        <div class="service-item" onclick="toggleService(1)">
+          <button class="service-trigger">
+            <span>02 / WEBSITES & PRODUCTS</span>
+            <span class="arrow">↓</span>
+          </button>
+          <div class="service-content">
+            <p style="margin-top: 12px; font-size: 13.5px; opacity: 0.75; max-width: 420px;">
+              Engineering high-performance web spaces with React, Next.js, and raw CSS variables for ultimate token integration.
+            </p>
+            <div class="tag-container">
+              <span class="service-tag">UI/UX Design</span>
+              <span class="service-tag">React / Next.js</span>
+              <span class="service-tag">WebGL / Spline</span>
+              <span class="service-tag">Performance</span>
+            </div>
+          </div>
+        </div>
+        <!-- item 3 -->
+        <div class="service-item" onclick="toggleService(2)">
+          <button class="service-trigger">
+            <span>03 / GROWTH & MARKETING</span>
+            <span class="arrow">↓</span>
+          </button>
+          <div class="service-content">
+            <p style="margin-top: 12px; font-size: 13.5px; opacity: 0.75; max-width: 420px;">
+              Implementing SEO systems, conversion rate optimization, and asset publication pipelines that generate business growth.
+            </p>
+            <div class="tag-container">
+              <span class="service-tag">SEO Systems</span>
+              <span class="service-tag">CRO Auditing</span>
+              <span class="service-tag">Content Pipelines</span>
+              <span class="service-tag">Analytics</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 03. ecosystems -->
+<section id="ecosystem" class="dark-bg">
+  <div class="section-container">
+    <div class="split-grid">
+      <div>
+        <div class="mono" style="color: var(--orange); margin-bottom: 12px;">03 / ECOSYSTEMS</div>
+        <h2 class="display services-title">
+          SYSTEMS THAT SCALE<br>
+          WITHOUT <span style="color: var(--orange);">FRICTION.</span>
+        </h2>
+        <p style="margin-top: 20px; max-width: 380px; color: rgba(255,255,255,0.75);">
+          Our core engine is built on interconnected execution orbits. Hover over any node in the diagram to explore the layers of our engineering system.
+        </p>
+        
+        <div class="node-detail-panel">
+          <div id="node-info-title" class="mono" style="color: var(--orange); font-weight: 700; margin-bottom: 8px;">Explore Our Engine</div>
+          <div id="node-info-desc" style="font-size: 12px; opacity: 0.6;">Hover over or click nodes in the diagram to view technical specifications.</div>
+        </div>
+      </div>
+      <div>
+        <div class="orbit-viewport">
+          <div class="orbit-ring-outer"></div>
+          <div class="orbit-ring-mid"></div>
+          <div class="center-node mono">
+            <span style="font-size: 9px; opacity: 0.5;">ENGINE</span>
+            <strong style="font-size: 11px; color: var(--orange); margin-top: 2px;">GALAXA</strong>
+          </div>
+          
+          <div class="orbit-node node-top-left mono" onmouseover="showNodeInfo('brand')" onclick="document.getElementById('process').scrollIntoView({behavior:'smooth'})">
+            <span style="font-size: 8px; color: var(--orange);">01 / BRAND</span>
+            <span style="font-size: 9px; margin-top: 2px;">IDENTITY</span>
+          </div>
+          <div class="orbit-node node-top-right mono" onmouseover="showNodeInfo('dev')" onclick="document.getElementById('work').scrollIntoView({behavior:'smooth'})">
+            <span style="font-size: 8px; color: var(--orange);">02 / RUNTIME</span>
+            <span style="font-size: 9px; margin-top: 2px;">DEVELOP</span>
+          </div>
+          <div class="orbit-node node-bottom-right mono" onmouseover="showNodeInfo('intel')" onclick="document.getElementById('intel-detail').scrollIntoView({behavior:'smooth'})">
+            <span style="font-size: 8px; color: var(--orange);">03 / AGENTS</span>
+            <span style="font-size: 9px; margin-top: 2px;">INTELLIGENT</span>
+          </div>
+          <div class="orbit-node node-bottom-left mono" onmouseover="showNodeInfo('seo')" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">
+            <span style="font-size: 8px; color: var(--orange);">04 / CRO & SEO</span>
+            <span style="font-size: 9px; margin-top: 2px;">OPTIMIZE</span>
+          </div>
+          <div class="orbit-node node-top-center mono" onmouseover="showNodeInfo('media')" onclick="document.getElementById('media-detail').scrollIntoView({behavior:'smooth'})">
+            <span style="font-size: 8px; color: var(--orange);">05 / FLOWS</span>
+            <span style="font-size: 9px; margin-top: 2px;">MEDIA</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 04. state machine -->
+<section id="intel-detail" class="dark-bg" style="border-top: 1px solid rgba(255,255,255,0.05);">
+  <div class="section-container">
+    <div class="split-grid">
+      <div>
+        <div class="mono" style="color: var(--orange); margin-bottom: 12px;">04 / INTELLIGENCE</div>
+        <h2 class="display services-title">
+          AI AGENTS THAT<br>
+          ACTUALLY <span style="color: var(--orange);">CONVERT.</span>
+        </h2>
+        <p style="margin-top: 20px; max-width: 380px; color: rgba(255,255,255,0.75);">
+          We design stateful conversation systems using Dialogflow CX. These agents execute session-based routing and secure fulfillment transactions to convert prospects into pipeline clients.
+        </p>
+      </div>
+      <div>
+        <div class="flow-container">
+          <div class="flow-header font-mono">
+            <span style="font-size: 9px; opacity: 0.5;">Dialogflow CX State Machine</span>
+            <span class="flow-status font-mono">Active</span>
+          </div>
+          <div class="flow-line"></div>
+          
+          <div class="flow-step">
+            <div class="flow-icon">💬</div>
+            <div class="flow-text">
+              <h4 class="mono">Start Page</h4>
+              <p>Routes on intent: <span class="flow-code">book.appointment</span></p>
+            </div>
+          </div>
+          
+          <div class="flow-step">
+            <div class="flow-icon">💻</div>
+            <div class="flow-text">
+              <h4 class="mono">Webhook Validation</h4>
+              <p>Call function: <span class="flow-code" style="color: var(--orange);">validate_session()</span></p>
+            </div>
+          </div>
+          
+          <div class="flow-step">
+            <div class="flow-icon">🧠</div>
+            <div class="flow-text">
+              <h4 class="mono">Parameter Collection</h4>
+              <p>Extract slot fields: <span class="flow-code">user_name</span>, <span class="flow-code">email</span></p>
+            </div>
+          </div>
+          
+          <div class="flow-step">
+            <div class="flow-icon">💾</div>
+            <div class="flow-text">
+              <h4 class="mono">Secure Confirmation</h4>
+              <p>Saves slot values to CRM & triggers fulfillment agent payload</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 05. media pipeline -->
+<section id="media-detail" class="dark-bg" style="border-top: 1px solid rgba(255,255,255,0.05);">
+  <div class="section-container">
+    <div class="split-grid">
+      <div>
+        <div class="mono" style="color: var(--orange); margin-bottom: 12px;">05 / MEDIA PIPELINES</div>
+        <h2 class="display services-title">
+          AUTOMATED CREATIVE<br>
+          <span style="color: var(--orange);">ORCHESTRATION.</span>
+        </h2>
+        <p style="margin-top: 20px; max-width: 380px; color: rgba(255,255,255,0.75);">
+          We coordinate image, video, and vector creation on autopilot using Google Flow. The pipeline manages assets dynamically, upscales for publication, and pushes to CDN edge servers.
+        </p>
+      </div>
+      <div>
+        <div class="flow-container">
+          <div class="flow-header font-mono">
+            <span style="font-size: 9px; opacity: 0.5;">Google Flow Asset Timeline</span>
+            <span style="font-size: 9px; color: var(--orange);">CDN PUSHED</span>
+          </div>
+          <div class="pipeline-grid font-mono">
+            <div class="pipeline-card">
+              <span>Step 01</span>
+              <div class="pipeline-svg">☁️</div>
+              <span>ASSET REQUEST</span>
+            </div>
+            <div class="pipeline-card">
+              <span>Step 02</span>
+              <div class="pipeline-svg">⚙️</div>
+              <span>IMAGEN GEN</span>
+            </div>
+            <div class="pipeline-card">
+              <span>Step 03</span>
+              <div class="pipeline-svg">🔍</div>
+              <span>4X UPSCALE</span>
+            </div>
+            <div class="pipeline-card">
+              <span>Step 04</span>
+              <div class="pipeline-svg">⚡</div>
+              <span>MOTION ENCODE</span>
+            </div>
+            <div class="pipeline-card active">
+              <span style="color: var(--orange);">Step 05</span>
+              <div class="pipeline-svg">🌐</div>
+              <span style="color: white;">CDN PUBLIC</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 06. process -->
+<section id="process" style="background: var(--sand); border-bottom: 1px solid rgba(0, 0, 0, 0.1);">
+  <div class="section-container">
+    <div class="split-grid">
+      <div>
+        <div class="mono" style="color: var(--orange); margin-bottom: 12px;">06 / PROCESS</div>
+        <h2 class="display services-title">
+          BUILT IN THE OPEN.<br>
+          DRIVEN BY <span style="color: var(--orange);">DATA.</span>
+        </h2>
+        <p style="margin-top: 20px; max-width: 380px; color: rgba(0,0,0,0.65);">
+          We operate under a transparent, code-synchronized production model. We measure everything we build so you can inspect progress in real-time.
+        </p>
+      </div>
+      <div>
+        <div class="timeline-container">
+          <div class="timeline-step active">
+            <div class="timeline-dot"></div>
+            <span class="mono" style="color: var(--orange); font-weight: 700;">01 / DISCOVERY & TOKENIZATION</span>
+            <h4>Syncing Brand Tokens</h4>
+            <p>We extract design primitives (variables, dimensions, color models) directly from mockups to create the base UI token system.</p>
+          </div>
+          <div class="timeline-step">
+            <div class="timeline-dot"></div>
+            <span class="mono" style="opacity: 0.5;">02 / CODE ARCHITECTURE</span>
+            <h4>TypeScript Construction</h4>
+            <p>Building modular components on strict typing architectures, ensuring clean dependency management without tech debt.</p>
+          </div>
+          <div class="timeline-step">
+            <div class="timeline-dot"></div>
+            <span class="mono" style="opacity: 0.5;">03 / ORCHESTRATION</span>
+            <h4>Webhook Integrations</h4>
+            <p>Wiring CRM services, Dialogflow conversation fulfillment models, and automated asset rendering tasks directly into the core runtime.</p>
+          </div>
+          <div class="timeline-step active">
+            <div class="timeline-dot"></div>
+            <span class="mono" style="color: var(--orange); font-weight: 700;">04 / PERFORMANCE AUDIT</span>
+            <h4>Lighthouse Verification</h4>
+            <p>Profiling page loading, asset size, and SEO metrics to guarantee rapid mechanical rendering speeds.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 07. work -->
+<section id="work" class="dark-bg">
+  <div class="section-container" style="display: block;">
+    <div class="mono" style="color: var(--orange); margin-bottom: 12px;">07 / WORK</div>
+    <h2 class="display services-title">
+      SELECTED SYSTEMS. <span style="color: var(--orange);">DELIVERED.</span>
+    </h2>
+    <p style="margin-top: 20px; max-width: 420px; color: rgba(255,255,255,0.75);">
+      We design digital systems that perform under load. Inspect some of our active project blueprints.
+    </p>
+    
+    <div class="work-grid">
+      <a href="/portfolio/harmans-trading" class="work-card">
+        <div style="display: flex; justify-content: space-between; font-size: 11px;">
+          <span class="mono" style="opacity: 0.5;">01 / PLATFORM</span>
+          <span class="mono" style="color: var(--orange);">Active</span>
+        </div>
+        <div>
+          <h3 class="display">Harmans Trading</h3>
+          <p>High-performance real-time trading interface.</p>
+          <div class="work-tags">
+            <span class="work-tag">Next.js</span>
+            <span class="work-tag">Tailwind</span>
+            <span class="work-tag">Trading API</span>
+          </div>
+        </div>
+      </a>
+      <a href="/portfolio/sunnah-grandeur" class="work-card">
+        <div style="display: flex; justify-content: space-between; font-size: 11px;">
+          <span class="mono" style="opacity: 0.5;">02 / COMMERCE</span>
+          <span class="mono" style="color: var(--orange);">Active</span>
+        </div>
+        <div>
+          <h3 class="display">Sunnah Grandeur</h3>
+          <p>Premium modest fashion storefront.</p>
+          <div class="work-tags">
+            <span class="work-tag">React</span>
+            <span class="work-tag">Stripe</span>
+            <span class="work-tag">Headless CMS</span>
+          </div>
+        </div>
+      </a>
+      <a href="/portfolio/salfas-bazar" class="work-card">
+        <div style="display: flex; justify-content: space-between; font-size: 11px;">
+          <span class="mono" style="opacity: 0.5;">03 / GROCERY</span>
+          <span class="mono" style="color: var(--orange);">Active</span>
+        </div>
+        <div>
+          <h3 class="display">Salfas Bazar</h3>
+          <p>Local organic marketplace system.</p>
+          <div class="work-tags">
+            <span class="work-tag">Vite</span>
+            <span class="work-tag">Firebase</span>
+            <span class="work-tag">Live Inventory</span>
+          </div>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- 08. contact -->
+<section id="contact" style="background: var(--sand);">
+  <div class="section-container">
+    <div class="split-grid">
+      <div>
+        <div class="mono" style="color: var(--orange); margin-bottom: 12px;">08 / CONTACT</div>
+        <h2 class="display services-title">
+          READY TO OPTIMIZE<br>
+          YOUR <span style="color: var(--orange);">ECOSYSTEM?</span>
+        </h2>
+        <p style="margin-top: 20px; max-width: 340px; color: rgba(0,0,0,0.65);">
+          Let&apos;s build something systemic together. Submit your requirements or claim a free performance audit.
+        </p>
+        
+        <div class="channels">
+          <div class="channel-row">
+            <span class="channel-label mono">EMAIL:</span>
+            <span class="channel-val font-mono"><a href="mailto:hello@galaxatech.com" style="color: inherit; text-decoration: none;">hello@galaxatech.com</a></span>
+          </div>
+          <div class="channel-row">
+            <span class="channel-label mono">WHATSAPP:</span>
+            <span class="channel-val font-mono"><a href="https://wa.me/8801959209103" target="_blank" style="color: inherit; text-decoration: none;">+880 1959-209103</a></span>
+          </div>
+          <div class="channel-row">
+            <span class="channel-label mono">OFFICE:</span>
+            <span class="channel-val font-mono text-black">DHAKA, BANGLADESH</span>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="form-panel">
+          <div id="form-content">
+            <div class="mono" style="font-weight: 700; border-bottom: 1px solid rgba(0, 0, 0, 0.1); padding-bottom: 12px; margin-bottom: 24px;">
+              AUDIT & PROJECT INTAKE
+            </div>
+            <form onsubmit="handleStaticSubmit(event)">
+              <div class="form-group">
+                <label for="c-name" class="form-label mono">Name *</label>
+                <input type="text" id="c-name" required class="form-input">
+              </div>
+              <div class="form-group">
+                <label for="c-email" class="form-label mono">Email Address *</label>
+                <input type="email" id="c-email" required class="form-input">
+              </div>
+              <div class="form-group">
+                <label for="c-company" class="form-label mono">Company Name</label>
+                <input type="text" id="c-company" class="form-input">
+              </div>
+              <div class="form-group">
+                <label for="c-brief" class="form-label mono">Project Brief / Specs</label>
+                <textarea id="c-brief" class="form-input" rows="3" style="resize: none;"></textarea>
+              </div>
+              <label class="form-checkbox">
+                <input type="checkbox" id="c-audit" style="accent-color: var(--orange);">
+                <span class="mono" style="font-size: 9px;">I&apos;d like to claim a free performance audit</span>
+              </label>
+              <button type="submit" class="btn-submit">Submit Request →</button>
+            </form>
+          </div>
+          <div id="success-message" class="success-panel">
+            <div style="width: 48px; height: 48px; background: rgba(255, 77, 6, 0.1); border: 1px solid var(--orange); display: flex; align-items: center; justify-content: center; margin: 0 auto 16px;">
+              <span style="color: var(--orange); font-size: 20px; font-weight: bold;">✓</span>
+            </div>
+            <strong class="mono">Request Received</strong>
+            <p style="font-size: 12px; opacity: 0.6; margin-top: 8px; max-width: 260px; margin-left: auto; margin-right: auto; line-height: 1.4;">
+              We have queued your intake ticket. An agent will respond via email/WhatsApp within 4 hours.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  // Accordion Controller
+  function toggleService(index) {
+    const items = document.querySelectorAll('.service-item');
+    items.forEach((item, idx) => {
+      if (idx === index) {
+        item.classList.add('active');
+        item.querySelector('.arrow').textContent = '↑';
+      } else {
+        item.classList.remove('active');
+        item.querySelector('.arrow').textContent = '↓';
+      }
+    });
+  }
+
+  // Ecosystem Node Info Hover Controller
+  const nodeData = {
+    brand: {
+      title: 'Orbit 01: Brand Identity & Design System',
+      desc: 'Syncs design variables and tokens directly into the codebase, preserving layout geometries and pixel-perfect aesthetics.'
+    },
+    dev: {
+      title: 'Orbit 02: Development & React Runtime',
+      desc: 'Modular component architectures built on Vite, Tailwind CSS, and strict TypeScript rules to ensure robust delivery.'
+    },
+    intel: {
+      title: 'Orbit 03: Intelligence & Conversational Flows',
+      desc: 'Stateful AI conversation design using Dialogflow CX and custom webhook parameters. See detail in Section 04 below.'
+    },
+    seo: {
+      title: 'Orbit 04: Optimization & SEO/CRO',
+      desc: 'Rigorous performance profiling, semantic accessibility, and clean crawl patterns to maximize conversions.'
+    },
+    media: {
+      title: 'Orbit 05: Media & Asset Pipelines',
+      desc: 'Automated cloud asset generation, upscaling, and animation workflows. See detail in Section 05 below.'
+    }
+  };
+
+  function showNodeInfo(nodeKey) {
+    const titleEl = document.getElementById('node-info-title');
+    const descEl = document.getElementById('node-info-desc');
+    if (nodeData[nodeKey]) {
+      titleEl.textContent = nodeData[nodeKey].title;
+      descEl.textContent = nodeData[nodeKey].desc;
+      titleEl.style.color = 'var(--orange)';
+    }
+  }
+
+  // Form Submission Mock Controller
+  function handleStaticSubmit(e) {
+    e.preventDefault();
+    document.getElementById('form-content').style.display = 'none';
+    document.getElementById('success-message').style.display = 'block';
+  }
+</script>
+</body>
+</html>
